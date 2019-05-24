@@ -4,6 +4,7 @@ import br.ufba.jnose.testfiledetector.Main;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
 import com.googlecode.wicket.jquery.ui.widget.progressbar.ProgressBar;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxIndicatorAppender;
 import org.apache.wicket.markup.html.form.TextField;
@@ -38,11 +39,11 @@ import org.apache.wicket.markup.html.WebPage;
 import static java.lang.System.out;
 
 public class HomePage extends WebPage {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String pastaPath = "/home/tassio/Experimento/projetos/base_blame/";
+    private String pastaPath = "/home/tassio/Experimento/projetos/base_blame/";
 
-	private Label lbPastaSelecionada;
+    private Label lbPastaSelecionada;
 
     private ProgressBar progressBar;
 
@@ -52,33 +53,54 @@ public class HomePage extends WebPage {
 
     private ListView<String> lvProjetos;
 
-	public HomePage(final PageParameters parameters) {
-		super(parameters);
+    public HomePage(final PageParameters parameters) {
+        super(parameters);
 
         listaProjetos = new ArrayList<>();
 
-		Form form = new Form<>("form");
+        Form form = new Form<>("form");
 
         lvProjetos = new ListView<String>("lvProjetos", listaProjetos) {
             @Override
             protected void populateItem(ListItem item) {
-                String projetoPath = (String)item.getModel().getObject();
+                String projetoPath = (String) item.getModel().getObject();
                 item.add(new Label("projeto", item.getModel()));
 
-                ExternalLink lkTestFileDetector = new ExternalLink("lkTestFileDetector","");
+                ProgressBar progressBar = new ProgressBar("progress", Model.of(0)) {
+                    private static final long serialVersionUID = 1L;
+                    @Override
+                    public void onValueChanged(IPartialPageRequestHandler handler) {
+//                        info("value: " + this.getDefaultModelObjectAsString());
+//                        handler.add(feedback);
+                    }
+                    @Override
+                    protected void onComplete(AjaxRequestTarget target) {
+//                        info("completed!");
+//                        target.add(feedback);
+                    }
+                };
+                progressBar.setOutputMarkupId(true);
+                item.add(progressBar);
+
+                ExternalLink lkTestFileDetector = new ExternalLink("lkTestFileDetector", "");
                 lkTestFileDetector.setOutputMarkupId(true);
                 lkTestFileDetector.setEnabled(false);
                 item.add(lkTestFileDetector);
 
-                Link lkProcessarProjeto = new Link<String>("lkProcessarProjeto") {
+                AjaxLink lkProcessarProjeto = new AjaxLink<String>("lkProcessarProjeto") {
                     @Override
-                    public void onClick() {
+                    public void onClick(AjaxRequestTarget target) {
                         System.out.println(projetoPath);
                         String csvLink = processarProjeto(projetoPath);
                         System.out.println("FINALIZADO!!");
                         lkTestFileDetector.setEnabled(true);
                         lkTestFileDetector.setDefaultModel(Model.of(csvLink));
-                        setResponsePage(HomePage.this);
+                        target.add(lkTestFileDetector);
+
+                        progressBar.setModel(Model.of(30));
+                        target.add(progressBar);
+
+//                        setResponsePage(HomePage.this);
                     }
                 };
 
@@ -91,39 +113,35 @@ public class HomePage extends WebPage {
         FeedbackPanel feedback = new JQueryFeedbackPanel("feedback");
         add(feedback.setOutputMarkupId(true));
 
-		TextField tfPastaPath = new TextField("tfPastaPath",new PropertyModel(this,"pastaPath"));
-		form.add(tfPastaPath);
+        TextField tfPastaPath = new TextField("tfPastaPath", new PropertyModel(this, "pastaPath"));
+        form.add(tfPastaPath);
 
-		Button btEnviar = new Button("btEnviar") {
-			@Override
-			public void onSubmit() {
-				System.out.println(pastaPath);
-				lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
+        Button btEnviar = new Button("btEnviar") {
+            @Override
+            public void onSubmit() {
+                System.out.println(pastaPath);
+                lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
                 progressBar.setModel(Model.of(50));
                 List<String> lista = listaPastas(pastaPath);
                 lvProjetos.setList(lista);
-			}
-		};
-		form.add(btEnviar);
+            }
+        };
+        form.add(btEnviar);
 
-		lbPastaSelecionada = new Label("lbPastaSelecionada",pastaPath);
-		add(lbPastaSelecionada);
+        lbPastaSelecionada = new Label("lbPastaSelecionada", pastaPath);
+        add(lbPastaSelecionada);
 
 
         // ProgressBar //
         progressBar = new ProgressBar("progress", Model.of(36)) {
             private static final long serialVersionUID = 1L;
-
             @Override
-            public void onValueChanged(IPartialPageRequestHandler handler)
-            {
+            public void onValueChanged(IPartialPageRequestHandler handler) {
                 info("value: " + this.getDefaultModelObjectAsString());
                 handler.add(feedback);
             }
-
             @Override
-            protected void onComplete(AjaxRequestTarget target)
-            {
+            protected void onComplete(AjaxRequestTarget target) {
 //                timer.stop(target); //wicket6
 
                 info("completed!");
@@ -133,12 +151,12 @@ public class HomePage extends WebPage {
 
         add(this.progressBar);
 
-		add(form);
+        add(form);
 
-	}
+    }
 
 
-	private List<String> listaPastas(String path){
+    private List<String> listaPastas(String path) {
         java.io.File[] directories = new java.io.File(path).listFiles(java.io.File::isDirectory);
         List<String> listaPastas = new ArrayList<String>();
 
@@ -155,11 +173,11 @@ public class HomePage extends WebPage {
         return listaPastas;
     }
 
-    private String processarProjeto(String pathProjeto){
-	    String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/"),pathProjeto.length()-1);
-	    String retorno = "";
+    private String processarProjeto(String pathProjeto) {
+        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/"), pathProjeto.length() - 1);
+        String retorno = "";
         try {
-            retorno = Main.start(pathProjeto,nameProjeto,"/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports");
+            retorno = Main.start(pathProjeto, nameProjeto, "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports");
         } catch (IOException e) {
             e.printStackTrace();
         }

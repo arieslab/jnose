@@ -57,12 +57,16 @@
 			<tr wicket:id="lvProjetos">
 				<td>
 					<span wicket:id="projeto"></span>
-				</td>
-				<td>
-					<a wicket:id="lkProcessarProjeto" class="btn btn-success btn-sm" >processar</a>
+					<br>
 					<a wicket:id="lkTestFileDetector" class="btn btn-outline-warning btn-sm" >testfiledetector.csv</a>
 					<a href="#" class="btn btn-outline-warning btn-sm" >testfilemapping.csv</a>
 					<a href="#" class="btn btn-outline-warning btn-sm" >testsmelldetector.csv</a>
+				</td>
+				<td>
+					<a wicket:id="lkProcessarProjeto" class="btn btn-success btn-sm" >processar</a>
+				</td>
+				<td style="width:30%">
+					<div wicket:id="progress"></div>
 				</td>
 			</tr>
 		</table>
