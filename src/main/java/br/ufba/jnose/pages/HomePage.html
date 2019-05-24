@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+
+<head>
+	<meta charset="utf-8" />
+	<title>JNose Test</title>
+	<link rel="shortcut icon" href="logo.png">
+
+	<link href='https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:regular,bold' rel='stylesheet'
+		type='text/css' />
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css" media="screen" title="Stylesheet" />
+</head>
+
+<body>
+
+	<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+		<a class="navbar-brand" href="#">
+			<img src="logo.png" style="width:30px; height: auto;" >&nbsp;
+			JNose
+		</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+			aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<!--<div class="collapse navbar-collapse" id="navbarsExampleDefault">-->
+			<!--<ul class="navbar-nav mr-auto">-->
+				<!--<li class="nav-item active">-->
+					<!--<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>-->
+				<!--</li>-->
+				<!--<li class="nav-item">-->
+					<!--<a class="nav-link" href="#">Link</a>-->
+				<!--</li>-->
+			<!--</ul>-->
+		<!--</div>-->
+	</nav>
+
+	<br><br><br>
+
+	<div class="container">
+
+
+		<form wicket:id="form">
+			Pastas com os projetos: <input wicket:id="tfPastaPath" type="text" style="width:70%" /><input wicket:id="btEnviar" type="submit" value="Selecionar Pasta" /><br>
+			<br>
+		</form>
+
+		<br><br>
+		Pasta Selecionada: <span wicket:id="lbPastaSelecionada"></span>
+		<br>
+		<input type="button" class="btn btn-success" value="Processar TODOS" /> <br>
+		<br>
+		<div wicket:id="progress"></div><br>
+		<br>
+		Projetos:<br>
+		<table class="table">
+			<tr wicket:id="lvProjetos">
+				<td>
+					<span wicket:id="projeto"></span>
+				</td>
+				<td>
+					<a wicket:id="lkProcessarProjeto" class="btn btn-success btn-sm" >processar</a>
+					<a wicket:id="lkTestFileDetector" class="btn btn-outline-warning btn-sm" >testfiledetector.csv</a>
+					<a href="#" class="btn btn-outline-warning btn-sm" >testfilemapping.csv</a>
+					<a href="#" class="btn btn-outline-warning btn-sm" >testsmelldetector.csv</a>
+				</td>
+			</tr>
+		</table>
+
+        <div wicket:id="feedback" style="width: 360px;"></div>
+
+	</div>
+
+	<script src="bootstrap/js/bootstrap.js"></script>
+
+</body>
+
+</html>
