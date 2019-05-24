@@ -9,12 +9,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Main {
 
-    public static String start(String pathFileCSV, String projectName, String projectPath, String reportPath) throws IOException {
+    private final static Logger LOGGER = Logger.getLogger(br.ufba.jnose.testfiledetector.Main.class.getName());
 
-        br.ufba.jnose.util.Main.textAreaLogProgram.textArea.setForeground(Color.GREEN);
+    public static String start(String pathFileCSV, String projectPath, String projectName ,String reportPath) throws IOException {
+
+        LOGGER.info("pathFileCSV: " + pathFileCSV + " - projectPath: " + projectPath + " - projectName: " + projectName + " - reportPath: " + reportPath);
 
         File selectedFile = new File(pathFileCSV);
         FileReader fileReader = new FileReader(selectedFile);

@@ -13,24 +13,7 @@ public class Main {
     }
 
     public static void start(String csvPath) throws Exception {
-        File selectedFile = null;
-
-        if (csvPath == null) {
-
-            JFileChooser chooser = new JFileChooser();
-            chooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-            FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                    "CSV", "csv");
-            chooser.setFileFilter(filter);
-            int returnVal = chooser.showOpenDialog(null);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                System.out.println("You chose to open this file: " +
-                        chooser.getSelectedFile().getName());
-                selectedFile = chooser.getSelectedFile();
-            }
-        } else {
-            selectedFile = new File(csvPath);
-        }
+        File selectedFile = new File(csvPath);
 
         BufferedReader in = new BufferedReader(new FileReader(selectedFile));
         String str;

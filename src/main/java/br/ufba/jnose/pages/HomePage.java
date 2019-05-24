@@ -3,15 +3,21 @@ package br.ufba.jnose.pages;
 import br.ufba.jnose.testfiledetector.Main;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
 import com.googlecode.wicket.jquery.ui.widget.progressbar.ProgressBar;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxIndicatorAppender;
+import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanel;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -66,41 +72,56 @@ public class HomePage extends WebPage {
                 String projetoPath = (String) item.getModel().getObject();
                 item.add(new Label("projeto", item.getModel()));
 
-                ProgressBar progressBar = new ProgressBar("progress", Model.of(0)) {
-                    private static final long serialVersionUID = 1L;
-                    @Override
-                    public void onValueChanged(IPartialPageRequestHandler handler) {
-//                        info("value: " + this.getDefaultModelObjectAsString());
-//                        handler.add(feedback);
-                    }
-                    @Override
-                    protected void onComplete(AjaxRequestTarget target) {
-//                        info("completed!");
-//                        target.add(feedback);
-                    }
-                };
+                ProgressBar progressBar = new ProgressBar("progress", Model.of(0));
                 progressBar.setOutputMarkupId(true);
                 item.add(progressBar);
+
 
                 ExternalLink lkTestFileDetector = new ExternalLink("lkTestFileDetector", "");
                 lkTestFileDetector.setOutputMarkupId(true);
                 lkTestFileDetector.setEnabled(false);
                 item.add(lkTestFileDetector);
 
+                ExternalLink lkTestFileMapping = new ExternalLink("lkTestFileMapping", "");
+                lkTestFileMapping.setOutputMarkupId(true);
+                lkTestFileMapping.setEnabled(false);
+                item.add(lkTestFileMapping);
+
+                ExternalLink lkTestSmellDetector = new ExternalLink("lkTestSmellDetector", "");
+                lkTestSmellDetector.setOutputMarkupId(true);
+                lkTestSmellDetector.setEnabled(false);
+                item.add(lkTestSmellDetector);
+
                 AjaxLink lkProcessarProjeto = new AjaxLink<String>("lkProcessarProjeto") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        System.out.println(projetoPath);
-                        String csvLink = processarProjeto(projetoPath);
-                        System.out.println("FINALIZADO!!");
+
+                        //############################ START ################################
+                        String csvFile = processarTestFileDetector(projetoPath);
+                        target.add(progressBar.setModel(Model.of(33)));
+                        String csvMapping = processarTestFileMapping(csvFile,projetoPath);
+                        target.add(progressBar.setModel(Model.of(66)));
+                        String csvTestSmells = processarTestSmellDetector(csvMapping,projetoPath);
+                        target.add(progressBar.setModel(Model.of(100)));
+                        //############################ END ################################
+
+
+                        String nameCSVFile = csvFile.substring(csvFile.lastIndexOf("/"),csvFile.length());
                         lkTestFileDetector.setEnabled(true);
-                        lkTestFileDetector.setDefaultModel(Model.of(csvLink));
+                        lkTestFileDetector.setDefaultModel(Model.of("reports"+nameCSVFile));
                         target.add(lkTestFileDetector);
 
-                        progressBar.setModel(Model.of(30));
-                        target.add(progressBar);
+                        String nameCSVMapping = csvMapping.substring(csvMapping.lastIndexOf("/"),csvMapping.length());
+                        lkTestFileMapping.setEnabled(true);
+                        lkTestFileMapping.setDefaultModel(Model.of("reports"+nameCSVMapping));
+                        target.add(lkTestFileMapping);
 
-//                        setResponsePage(HomePage.this);
+                        String namecsvTestSmells = csvTestSmells.substring(csvTestSmells.lastIndexOf("/"),csvTestSmells.length());
+                        lkTestSmellDetector.setEnabled(true);
+                        lkTestSmellDetector.setDefaultModel(Model.of("reports"+namecsvTestSmells));
+                        target.add(lkTestSmellDetector);
+
+
                     }
                 };
 
@@ -109,7 +130,6 @@ public class HomePage extends WebPage {
         };
         add(lvProjetos);
 
-        // FeedbackPanel //
         FeedbackPanel feedback = new JQueryFeedbackPanel("feedback");
         add(feedback.setOutputMarkupId(true));
 
@@ -135,11 +155,13 @@ public class HomePage extends WebPage {
         // ProgressBar //
         progressBar = new ProgressBar("progress", Model.of(36)) {
             private static final long serialVersionUID = 1L;
+
             @Override
             public void onValueChanged(IPartialPageRequestHandler handler) {
                 info("value: " + this.getDefaultModelObjectAsString());
                 handler.add(feedback);
             }
+
             @Override
             protected void onComplete(AjaxRequestTarget target) {
 //                timer.stop(target); //wicket6
@@ -173,14 +195,38 @@ public class HomePage extends WebPage {
         return listaPastas;
     }
 
-    private String processarProjeto(String pathProjeto) {
+    private String processarTestFileDetector(String pathProjeto) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/"), pathProjeto.length() - 1);
-        String retorno = "";
+        String pathCSV = "";
         try {
-            retorno = Main.start(pathProjeto, nameProjeto, "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports");
+            pathCSV = Main.start(pathProjeto, nameProjeto, "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return retorno;
+        return pathCSV;
     }
+
+    private String processarTestFileMapping(String pathFileCSV, String pathProjeto) {
+        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/"), pathProjeto.length() - 1);
+        String pathCSVMapping = "";
+        try {
+            pathCSVMapping = br.ufba.jnose.testfilemapping.Main.start(pathFileCSV, pathProjeto, nameProjeto, "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return pathCSVMapping;
+    }
+
+
+    private String processarTestSmellDetector(String pathCSVMapping, String pathProjeto) {
+        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/"), pathProjeto.length() - 1);
+        String csvTestSmells = "";
+        try {
+            csvTestSmells = br.ufba.jnose.testsmelldetector.Main.start(pathCSVMapping, nameProjeto , "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return csvTestSmells;
+    }
+
 }

@@ -20,8 +20,7 @@ public class Main {
 
     public static List<String> columnNames;
 
-    public static void start(String csvPath, Boolean window, String reportPath, String projectName) throws IOException {
-        br.ufba.jnose.util.Main.textAreaLogProgram.textArea.setForeground(Color.YELLOW);
+    public static String start(String csvPath, String projectName, String reportPath) throws IOException {
 
         File selectedFile = new File(csvPath);
         TestSmellDetector testSmellDetector = TestSmellDetector.createTestSmellDetector();
@@ -45,7 +44,9 @@ public class Main {
             testFiles.add(testFile);
         }
 
-        ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(reportPath+projectName+"_testsmesll.csv");
+        String csvTestSmells = reportPath+projectName+"_testsmesll.csv";
+
+        ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(csvTestSmells);
         List<String> columnValues;
         columnNames = testSmellDetector.getTestSmellNames();
         columnNames.add(0, "App");
@@ -65,24 +66,7 @@ public class Main {
         columnNames.add("METHOD_COVERED");
         resultsWriter.writeColumnName(columnNames);
 
-        File jacocoFile = new File(reportPath+"/"+projectName+"_jacoco.csv");
-        FileReader jacocoFileReader = new FileReader(jacocoFile);
-        BufferedReader jacocoIn = new BufferedReader(jacocoFileReader);
-
-        Map<String,String[]> jacocoMap = new HashMap<>();
-
-        boolean pularLinha = false;
-        while ((str = jacocoIn.readLine()) != null) {
-            if(pularLinha) {
-                String[] linha = str.split(",");
-                jacocoMap.put(linha[2], linha);
-            }else{
-                pularLinha = true;
-            }
-        }
-        jacocoIn.close();
-        jacocoFileReader.close();
-        jacocoFile.deleteOnExit();
+//        Map<String, String[]> jacocoMap = jacocoProcess(projectName, reportPath);
 
         TestFile tempFile;
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -109,20 +93,9 @@ public class Main {
                     columnValues.add("");
                 }
             }
-            columnValues.add(file.getLoc()+"");
-            String[] jacocoLinha = jacocoMap.get(targetFile);
-            if(jacocoLinha != null) {
-                columnValues.add(jacocoLinha[3]);
-                columnValues.add(jacocoLinha[4]);
-                columnValues.add(jacocoLinha[5]);
-                columnValues.add(jacocoLinha[6]);
-                columnValues.add(jacocoLinha[7]);
-                columnValues.add(jacocoLinha[8]);
-                columnValues.add(jacocoLinha[9]);
-                columnValues.add(jacocoLinha[10]);
-                columnValues.add(jacocoLinha[11]);
-                columnValues.add(jacocoLinha[12]);
-            }
+
+//            jacocoEscreverArquivo(columnValues, file, targetFile);
+
             resultsWriter.writeLine(columnValues);
 
         }
@@ -132,15 +105,48 @@ public class Main {
 //        new File(csvPath).deleteOnExit();
         System.out.println("Completed!");
 
-        if(window) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    Window.createAndShowGUI(resultsWriter.getOutputFile());
-                }
-            });
-        }
+        return csvTestSmells;
 
+    }
+
+//    private static void jacocoEscreverArquivo(List<String> columnValues, TestFile file, String targetFile) {
+//        columnValues.add(file.getLoc()+"");
+//        String[] jacocoLinha = jacocoMap.get(targetFile);
+//        if(jacocoLinha != null) {
+//            columnValues.add(jacocoLinha[3]);
+//            columnValues.add(jacocoLinha[4]);
+//            columnValues.add(jacocoLinha[5]);
+//            columnValues.add(jacocoLinha[6]);
+//            columnValues.add(jacocoLinha[7]);
+//            columnValues.add(jacocoLinha[8]);
+//            columnValues.add(jacocoLinha[9]);
+//            columnValues.add(jacocoLinha[10]);
+//            columnValues.add(jacocoLinha[11]);
+//            columnValues.add(jacocoLinha[12]);
+//        }
+//    }
+
+    private static Map<String, String[]> jacocoProcess(String projectName, String reportPath) throws IOException {
+        String str;
+        File jacocoFile = new File(reportPath+"/"+projectName+"_jacoco.csv");
+        FileReader jacocoFileReader = new FileReader(jacocoFile);
+        BufferedReader jacocoIn = new BufferedReader(jacocoFileReader);
+
+        Map<String,String[]> jacocoMap = new HashMap<>();
+
+        boolean pularLinha = false;
+        while ((str = jacocoIn.readLine()) != null) {
+            if(pularLinha) {
+                String[] linha = str.split(",");
+                jacocoMap.put(linha[2], linha);
+            }else{
+                pularLinha = true;
+            }
+        }
+        jacocoIn.close();
+        jacocoFileReader.close();
+        jacocoFile.deleteOnExit();
+        return jacocoMap;
     }
 
 
