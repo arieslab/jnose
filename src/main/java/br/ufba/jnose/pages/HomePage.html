@@ -5,9 +5,7 @@
     <meta charset="utf-8"/>
     <title>JNose Test</title>
     <link rel="shortcut icon" href="logo.png">
-
-    <link href='https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:regular,bold' rel='stylesheet'
-          type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:regular,bold' rel='stylesheet' type='text/css'/>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css" media="screen" title="Stylesheet"/>
 </head>
 
@@ -22,58 +20,54 @@
             aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
-    <!--<div class="collapse navbar-collapse" id="navbarsExampleDefault">-->
-    <!--<ul class="navbar-nav mr-auto">-->
-    <!--<li class="nav-item active">-->
-    <!--<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>-->
-    <!--</li>-->
-    <!--<li class="nav-item">-->
-    <!--<a class="nav-link" href="#">Link</a>-->
-    <!--</li>-->
-    <!--</ul>-->
-    <!--</div>-->
 </nav>
 
 <br><br><br>
 
 <div class="container">
 
-
     <form wicket:id="form">
         Pastas com os projetos: <input wicket:id="tfPastaPath" type="text" style="width:70%"/><input
-            wicket:id="btEnviar" type="submit" value="Selecionar Pasta"/><br>
-        <br>
+            wicket:id="btEnviar" type="submit" value="Selecionar Pasta"/>
     </form>
+    <br>
+    <div style="width:100%;background-color: black;color:white;">
+        Pasta Selecionada: <span wicket:id="lbPastaSelecionada"></span>
+    </div>
 
-    <br><br>
-    Pasta Selecionada: <span wicket:id="lbPastaSelecionada"></span>
-    <br>
-    <input type="button" class="btn btn-success" value="Processar TODOS"/> <br>
-    <br>
-    <div wicket:id="progress"></div>
-    <br>
     <br>
     Projetos:<br>
+    <div wicket:id="progress" style="width:100%;"></div>
     <table class="table">
+        <tr>
+            <td>
+                <a wicket:id="processarTodos" class="btn btn-success">Processar</a>
+                <div wicket:id="loadImg" class="spinner-border text-warning" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </td>
+        </tr>
+
         <tr wicket:id="lvProjetos">
             <td>
-                <span wicket:id="projeto"></span>
-                <br>
-                <a wicket:id="lkTestFileDetector" target="_blank" class="btn btn-outline-warning btn-sm">testfiledetector.csv</a>
-                <a wicket:id="lkTestFileMapping" target="_blank" class="btn btn-outline-warning btn-sm">testfilemapping.csv</a>
-                <a wicket:id="lkTestSmellDetector" target="_blank" class="btn btn-outline-warning btn-sm">testsmelldetector.csv</a>
+                <span wicket:id="idx"></span>
             </td>
             <td>
-                <a wicket:id="lkProcessarProjeto" class="btn btn-success btn-sm">processar</a>
-            </td>
-            <td style="width:30%">
-                <div wicket:id="progress"></div>
+                <span wicket:id="projeto"></span>
             </td>
         </tr>
     </table>
 
     <div wicket:id="feedback" style="width: 360px;"></div>
+
+    <div style="width:100%;height:100px;">
+        <a wicket:id="lkProcessarProjeto">LOG</a>
+
+        <textarea wicket:id="taLog" style="width:100%;height:100%;background-color: black;color:white;">
+            Teste
+        </textarea>
+
+    </div>
 
 </div>
 

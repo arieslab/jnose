@@ -3,16 +3,20 @@ package br.ufba.jnose.pages;
 import br.ufba.jnose.testfiledetector.Main;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
 import com.googlecode.wicket.jquery.ui.widget.progressbar.ProgressBar;
+import org.apache.commons.io.IOUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxIndicatorAppender;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -22,25 +26,24 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 import javax.servlet.ServletContext;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.util.thread.ICode;
+import org.apache.wicket.util.thread.Task;
+import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.time.TimeFrame;
+import org.slf4j.Logger;
 
 import static java.lang.System.out;
 
@@ -59,8 +62,75 @@ public class HomePage extends WebPage {
 
     private ListView<String> lvProjetos;
 
+    private TextArea taLog;
+
+    private Integer totalProcessado;
+
+    private Map<Integer, Integer> totalProgressBar;
+
+    private Boolean processando = false;
+
+    private WebMarkupContainer loadImg;
+
+    private AjaxLink processarTodos;
+
     public HomePage(final PageParameters parameters) {
         super(parameters);
+
+        totalProgressBar = new HashMap<>();
+
+        totalProcessado = 0;
+
+        taLog = new TextArea("taLog");
+        taLog.setOutputMarkupId(true);
+        add(taLog);
+        AjaxLink lkTextArea = new AjaxLink<String>("lkProcessarProjeto") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                try (FileInputStream inputStream = new FileInputStream("/home/tassio/Desenvolvimento/jnose/jnose/pom.xml")) {
+                    String everything = IOUtils.toString(inputStream);
+//                    taLog.setModel(Model.of(everything));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        add(lkTextArea);
+
+        AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
+            int cont = 0;
+
+            @Override
+            protected void onTimer(AjaxRequestTarget target) {
+                taLog.setModel(Model.of(cont + ""));
+                cont++;
+                target.add(taLog);
+
+                progressBar.setModel(Model.of(totalProcessado));
+                target.add(progressBar);
+
+                if (processando) {
+                    if (!loadImg.isVisible()) {
+                        loadImg.setVisible(true);
+                        target.add(loadImg);
+                    }
+                } else {
+                    if (loadImg.isVisible()) {
+                        loadImg.setVisible(false);
+                        target.add(loadImg);
+                    }
+                }
+
+            }
+        };
+        add(timer);
+
+
+        loadImg = new WebMarkupContainer("loadImg");
+        loadImg.setOutputMarkupId(true);
+        loadImg.setVisible(false);
+        loadImg.setOutputMarkupPlaceholderTag(true);
+        add(loadImg);
 
         listaProjetos = new ArrayList<>();
 
@@ -69,65 +139,12 @@ public class HomePage extends WebPage {
         lvProjetos = new ListView<String>("lvProjetos", listaProjetos) {
             @Override
             protected void populateItem(ListItem item) {
+                item.add(new Label("idx", item.getIndex()));
                 String projetoPath = (String) item.getModel().getObject();
                 item.add(new Label("projeto", item.getModel()));
-
-                ProgressBar progressBar = new ProgressBar("progress", Model.of(0));
-                progressBar.setOutputMarkupId(true);
-                item.add(progressBar);
-
-
-                ExternalLink lkTestFileDetector = new ExternalLink("lkTestFileDetector", "");
-                lkTestFileDetector.setOutputMarkupId(true);
-                lkTestFileDetector.setEnabled(false);
-                item.add(lkTestFileDetector);
-
-                ExternalLink lkTestFileMapping = new ExternalLink("lkTestFileMapping", "");
-                lkTestFileMapping.setOutputMarkupId(true);
-                lkTestFileMapping.setEnabled(false);
-                item.add(lkTestFileMapping);
-
-                ExternalLink lkTestSmellDetector = new ExternalLink("lkTestSmellDetector", "");
-                lkTestSmellDetector.setOutputMarkupId(true);
-                lkTestSmellDetector.setEnabled(false);
-                item.add(lkTestSmellDetector);
-
-                AjaxLink lkProcessarProjeto = new AjaxLink<String>("lkProcessarProjeto") {
-                    @Override
-                    public void onClick(AjaxRequestTarget target) {
-
-                        //############################ START ################################
-                        String csvFile = processarTestFileDetector(projetoPath);
-                        target.add(progressBar.setModel(Model.of(33)));
-                        String csvMapping = processarTestFileMapping(csvFile,projetoPath);
-                        target.add(progressBar.setModel(Model.of(66)));
-                        String csvTestSmells = processarTestSmellDetector(csvMapping,projetoPath);
-                        target.add(progressBar.setModel(Model.of(100)));
-                        //############################ END ################################
-
-
-                        String nameCSVFile = csvFile.substring(csvFile.lastIndexOf("/"),csvFile.length());
-                        lkTestFileDetector.setEnabled(true);
-                        lkTestFileDetector.setDefaultModel(Model.of("reports"+nameCSVFile));
-                        target.add(lkTestFileDetector);
-
-                        String nameCSVMapping = csvMapping.substring(csvMapping.lastIndexOf("/"),csvMapping.length());
-                        lkTestFileMapping.setEnabled(true);
-                        lkTestFileMapping.setDefaultModel(Model.of("reports"+nameCSVMapping));
-                        target.add(lkTestFileMapping);
-
-                        String namecsvTestSmells = csvTestSmells.substring(csvTestSmells.lastIndexOf("/"),csvTestSmells.length());
-                        lkTestSmellDetector.setEnabled(true);
-                        lkTestSmellDetector.setDefaultModel(Model.of("reports"+namecsvTestSmells));
-                        target.add(lkTestSmellDetector);
-
-
-                    }
-                };
-
-                item.add(lkProcessarProjeto);
             }
         };
+        lvProjetos.setOutputMarkupId(true);
         add(lvProjetos);
 
         FeedbackPanel feedback = new JQueryFeedbackPanel("feedback");
@@ -139,42 +156,63 @@ public class HomePage extends WebPage {
         Button btEnviar = new Button("btEnviar") {
             @Override
             public void onSubmit() {
-                System.out.println(pastaPath);
+                totalProcessado = 0;
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
-                progressBar.setModel(Model.of(50));
                 List<String> lista = listaPastas(pastaPath);
                 lvProjetos.setList(lista);
+                processarTodos.setEnabled(true);
             }
         };
         form.add(btEnviar);
 
+        processarTodos = new AjaxLink<String>("processarTodos") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
+                List<String> lista = listaPastas(pastaPath);
+                processarThread(lista, target);
+            }
+        };
+        processarTodos.setEnabled(false);
+        add(processarTodos);
+
         lbPastaSelecionada = new Label("lbPastaSelecionada", pastaPath);
         add(lbPastaSelecionada);
 
+        progressBar = new ProgressBar("progress", Model.of(0));
+        add(this.progressBar);
+        add(form);
+    }
 
-        // ProgressBar //
-        progressBar = new ProgressBar("progress", Model.of(36)) {
-            private static final long serialVersionUID = 1L;
 
+    private String processarThread(List<String> lista, AjaxRequestTarget target) {
+        totalProcessado = 0;
+
+        Integer totalLista = lista.size();
+        Integer valorSoma = 100 / totalLista;
+
+        String retorno = "";
+        Thread guruThread1 = new Thread("TODOS1") {
             @Override
-            public void onValueChanged(IPartialPageRequestHandler handler) {
-                info("value: " + this.getDefaultModelObjectAsString());
-                handler.add(feedback);
-            }
-
-            @Override
-            protected void onComplete(AjaxRequestTarget target) {
-//                timer.stop(target); //wicket6
-
-                info("completed!");
-                target.add(feedback);
+            public void run() {
+                processando = true;
+                for (String projetoPath : lista) {
+                    processarTODOS(projetoPath, target);
+                    totalProcessado = totalProcessado + valorSoma.intValue();
+                }
+                processando = false;
             }
         };
+        guruThread1.start();
+        return retorno;
+    }
 
-        add(this.progressBar);
 
-        add(form);
-
+    private String processarTODOS(String projetoPath, AjaxRequestTarget target) {
+        String csvFile = processarTestFileDetector(projetoPath);
+        String csvMapping = processarTestFileMapping(csvFile, projetoPath);
+        String csvTestSmells = processarTestSmellDetector(csvMapping, projetoPath);
+        return csvTestSmells;
     }
 
 
@@ -222,7 +260,7 @@ public class HomePage extends WebPage {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/"), pathProjeto.length() - 1);
         String csvTestSmells = "";
         try {
-            csvTestSmells = br.ufba.jnose.testsmelldetector.Main.start(pathCSVMapping, nameProjeto , "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports");
+            csvTestSmells = br.ufba.jnose.testsmelldetector.Main.start(pathCSVMapping, nameProjeto, "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports");
         } catch (IOException e) {
             e.printStackTrace();
         }
