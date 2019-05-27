@@ -36,17 +36,14 @@
         <input wicket:id="btEnviar" type="submit" value="Selecionar Pasta" class="btn btn-success btn-sm" />
     </form>
     <br>
-    <div style="width:100%;background-color: black;color:white;">
-        <a wicket:id="processarTodos" class="btn btn-success btn-sm">Processar</a>
-        <div wicket:id="loadImg" class="spinner-border text-warning" role="status" style="width:20px;height:20px;">
-            <span class="sr-only">Loading...</span>
-        </div>
-        <span wicket:id="lbProjetosSize"></span> projetos encontrados na pasta: <span
-            wicket:id="lbPastaSelecionada"></span>
-    </div>
-    <div wicket:id="progress" style="width:100%;"></div>
     <div style="overflow: auto; width: 100%; height:250px;background-color: #F5F5F5;">
         <table class="table">
+            <tr>
+                <th>Nome</th>
+                <th>Path</th>
+                <th>Processado</th>
+                <th>%</th>
+            </tr>
             <tr wicket:id="lvProjetos">
                 <td>
                     <span wicket:id="nomeProjeto"></span>
@@ -60,10 +57,23 @@
                 <td>
                     <span wicket:id="lbPorcentagem"></span>
                 </td>
+                <td>
+                    <span>error?</span>
+                </td>
 
             </tr>
         </table>
     </div>
+
+    <div style="width:100%;background-color: black;color:white;">
+        <a wicket:id="processarTodos" class="btn btn-success btn-sm">Processar</a>
+        <div wicket:id="loadImg" class="spinner-border text-warning" role="status" style="width:20px;height:20px;">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <span wicket:id="lbProjetosSize"></span> projetos encontrados na pasta: <span
+            wicket:id="lbPastaSelecionada"></span>
+    </div>
+    <div wicket:id="progress" style="width:100%;"></div>
 
     <div wicket:id="feedback" style="width: 360px;"></div>
 
