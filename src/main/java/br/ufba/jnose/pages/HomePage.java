@@ -74,8 +74,22 @@ public class HomePage extends WebPage {
 
     private AjaxLink processarTodos;
 
+    private Label lbProjetosSize;
+
+    private Label footTime;
+
     public HomePage(final PageParameters parameters) {
         super(parameters);
+
+        lbProjetosSize = new Label("lbProjetosSize",Model.of("0"));
+        lbProjetosSize.setOutputMarkupPlaceholderTag(true);
+        lbProjetosSize.setOutputMarkupId(true);
+        add(lbProjetosSize);
+
+        footTime = new Label("footTime");
+        footTime.setOutputMarkupId(true);
+        footTime.setOutputMarkupPlaceholderTag(true);
+        add(footTime);
 
         totalProgressBar = new HashMap<>();
 
@@ -102,9 +116,9 @@ public class HomePage extends WebPage {
 
             @Override
             protected void onTimer(AjaxRequestTarget target) {
-                taLog.setModel(Model.of(cont + ""));
+                footTime.setDefaultModel(Model.of(cont + ""));
                 cont++;
-                target.add(taLog);
+                target.add(footTime);
 
                 progressBar.setModel(Model.of(totalProcessado));
                 target.add(progressBar);
@@ -161,6 +175,7 @@ public class HomePage extends WebPage {
                 List<String> lista = listaPastas(pastaPath);
                 lvProjetos.setList(lista);
                 processarTodos.setEnabled(true);
+                lbProjetosSize.setDefaultModel(Model.of(lista.size()));
             }
         };
         form.add(btEnviar);
@@ -197,9 +212,10 @@ public class HomePage extends WebPage {
             public void run() {
                 processando = true;
                 for (String projetoPath : lista) {
-                    processarTODOS(projetoPath, target);
-                    totalProcessado = totalProcessado + valorSoma.intValue();
+                    processarTODOS(projetoPath, valorSoma);
                 }
+                int resto = 100 - totalProcessado;
+                totalProcessado = totalProcessado + resto;
                 processando = false;
             }
         };
@@ -208,10 +224,14 @@ public class HomePage extends WebPage {
     }
 
 
-    private String processarTODOS(String projetoPath, AjaxRequestTarget target) {
+    private String processarTODOS(String projetoPath, float valorProcProject) {
+        Float valorSoma = valorProcProject/3;
         String csvFile = processarTestFileDetector(projetoPath);
+        totalProcessado = totalProcessado + valorSoma.intValue();
         String csvMapping = processarTestFileMapping(csvFile, projetoPath);
+        totalProcessado = totalProcessado + valorSoma.intValue();
         String csvTestSmells = processarTestSmellDetector(csvMapping, projetoPath);
+        totalProcessado = totalProcessado + valorSoma.intValue();
         return csvTestSmells;
     }
 
