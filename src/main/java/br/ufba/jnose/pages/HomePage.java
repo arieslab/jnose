@@ -122,6 +122,8 @@ public class HomePage extends WebPage {
                 taLog.setDefaultModel(Model.of(logRetorno));
                 target.add(taLog);
 
+                Boolean todosProjetosProcessados = true;
+
                 for (Projeto projeto : listaProjetos) {
                     Label lbProcessado = projeto.lbProcessado;
                     lbProcessado.setDefaultModel(Model.of(projeto.getProcessado()));
@@ -130,6 +132,13 @@ public class HomePage extends WebPage {
                     Label lbPorcentagem = projeto.lbPorcentagem;
                     lbPorcentagem.setDefaultModel(Model.of(projeto.getProcentagem()));
                     target.add(lbPorcentagem);
+
+                    todosProjetosProcessados = todosProjetosProcessados && projeto.getProcessado();
+                }
+
+                if(todosProjetosProcessados){
+                    totalProcessado = (100 - totalProcessado) + totalProcessado;
+                    processando = false;
                 }
 
 
@@ -210,6 +219,7 @@ public class HomePage extends WebPage {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
+                processando = true;
                 processarThread(listaProjetos);
             }
         };
@@ -231,18 +241,27 @@ public class HomePage extends WebPage {
         Integer totalLista = lista.size();
         Integer valorSoma = 100 / totalLista;
 
-        new Thread() {
-            @Override
-            public void run() {
-                processando = true;
-                for (Projeto projeto : lista) {
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                processando = true;
+//                for (Projeto projeto : lista) {
+//                    processarTODOS(projeto, valorSoma);
+//                }
+//                int resto = 100 - totalProcessado;
+//                totalProcessado = totalProcessado + resto;
+//                processando = false;
+//            }
+//        }.start();
+
+        for (Projeto projeto : lista) {
+            new Thread() {
+                @Override
+                public void run() {
                     processarTODOS(projeto, valorSoma);
                 }
-                int resto = 100 - totalProcessado;
-                totalProcessado = totalProcessado + resto;
-                processando = false;
-            }
-        }.start();
+            }.start();
+        }
     }
 
 
