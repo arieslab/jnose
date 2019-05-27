@@ -33,6 +33,10 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -62,7 +66,7 @@ public class HomePage extends WebPage {
 
     private ListView<String> lvProjetos;
 
-    private TextArea taLog;
+    private Label taLog;
 
     private Integer totalProcessado;
 
@@ -97,7 +101,8 @@ public class HomePage extends WebPage {
 
         totalProcessado = 0;
 
-        taLog = new TextArea("taLog");
+        taLog = new Label("taLog");
+        taLog.setEscapeModelStrings(false);
         taLog.setOutputMarkupId(true);
         taLog.setOutputMarkupPlaceholderTag(true);
         add(taLog);
@@ -114,7 +119,7 @@ public class HomePage extends WebPage {
                 progressBar.setModel(Model.of(totalProcessado));
                 target.add(progressBar);
 
-                taLog.setModel(Model.of(logRetorno));
+                taLog.setDefaultModel(Model.of(logRetorno));
                 target.add(taLog);
 
                 if (processando) {
@@ -146,10 +151,12 @@ public class HomePage extends WebPage {
 
         lvProjetos = new ListView<String>("lvProjetos", listaProjetos) {
             @Override
-            protected void populateItem(ListItem item) {
+            protected void populateItem(ListItem<String> item) {
                 item.add(new Label("idx", item.getIndex()));
-                String projetoPath = (String) item.getModel().getObject();
-                item.add(new Label("projeto", item.getModel()));
+                String projetoPath = item.getModel().getObject().trim();
+                String name =  projetoPath.substring(projetoPath.lastIndexOf("/")+1, projetoPath.length());
+                item.add(new Label("nomeProjeto", name));
+                item.add(new Label("projeto", projetoPath));
             }
         };
         lvProjetos.setOutputMarkupId(true);
@@ -217,7 +224,8 @@ public class HomePage extends WebPage {
 
 
     private String processarTODOS(String projetoPath, float valorProcProject) {
-        logRetorno = logRetorno + "processando: " + projetoPath + "\n";
+        String name =  projetoPath.substring(projetoPath.lastIndexOf("/")+1,projetoPath.length());
+        logRetorno = dateNow() + name + " - started <br>" + logRetorno;
         Float valorSoma = valorProcProject/3;
         String csvFile = processarTestFileDetector(projetoPath);
         totalProcessado = totalProcessado + valorSoma.intValue();
@@ -237,7 +245,7 @@ public class HomePage extends WebPage {
             String pathPom = dir.getAbsolutePath() + "/pom.xml";
             if (new File(pathPom).exists()) {
                 out.println("Processando: " + dir.getAbsolutePath());
-                listaPastas.add(dir.getAbsolutePath());
+                listaPastas.add(dir.getAbsolutePath().trim());
             } else {
                 out.println("Não é um projeto MAVEN: " + dir.getAbsolutePath());
             }
@@ -247,8 +255,8 @@ public class HomePage extends WebPage {
     }
 
     private String processarTestFileDetector(String pathProjeto) {
-        logRetorno = logRetorno + "processando: " + pathProjeto + " TestFileDetector\n";
-        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/"), pathProjeto.length() - 1);
+        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/")+1, pathProjeto.length());
+        logRetorno = dateNow() + nameProjeto + " - <font style='color:red'>TestFileDetector</font> <br>" + logRetorno;
         String pathCSV = "";
         try {
             pathCSV = Main.start(pathProjeto, nameProjeto, "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports");
@@ -259,8 +267,8 @@ public class HomePage extends WebPage {
     }
 
     private String processarTestFileMapping(String pathFileCSV, String pathProjeto) {
-        logRetorno = logRetorno + "processando: " + pathProjeto + " TestFileMapping\n";
-        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/"), pathProjeto.length() - 1);
+        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/")+1, pathProjeto.length());
+        logRetorno = dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>" + logRetorno;
         String pathCSVMapping = "";
         try {
             pathCSVMapping = br.ufba.jnose.testfilemapping.Main.start(pathFileCSV, pathProjeto, nameProjeto, "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports");
@@ -272,8 +280,8 @@ public class HomePage extends WebPage {
 
 
     private String processarTestSmellDetector(String pathCSVMapping, String pathProjeto) {
-        logRetorno = logRetorno + "processando: " + pathProjeto + " TestSmellDetector\n";
-        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/"), pathProjeto.length() - 1);
+        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/")+1, pathProjeto.length());
+        logRetorno = dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>" + logRetorno;
         String csvTestSmells = "";
         try {
             csvTestSmells = br.ufba.jnose.testsmelldetector.Main.start(pathCSVMapping, nameProjeto, "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports");
@@ -281,6 +289,10 @@ public class HomePage extends WebPage {
             e.printStackTrace();
         }
         return csvTestSmells;
+    }
+
+    private String dateNow(){
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm:ss"))+" - ";
     }
 
 }
