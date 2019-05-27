@@ -60,11 +60,11 @@ public class HomePage extends WebPage {
 
     private ProgressBar progressBar;
 
-    private List<String> listaProjetos;
+    private List<Projeto> listaProjetos;
 
     private AjaxIndicatorAppender indicator = new AjaxIndicatorAppender();
 
-    private ListView<String> lvProjetos;
+    private ListView<Projeto> lvProjetos;
 
     private Label taLog;
 
@@ -87,7 +87,7 @@ public class HomePage extends WebPage {
     public HomePage(final PageParameters parameters) {
         super(parameters);
 
-        lbProjetosSize = new Label("lbProjetosSize",Model.of("0"));
+        lbProjetosSize = new Label("lbProjetosSize", Model.of("0"));
         lbProjetosSize.setOutputMarkupPlaceholderTag(true);
         lbProjetosSize.setOutputMarkupId(true);
         add(lbProjetosSize);
@@ -122,6 +122,17 @@ public class HomePage extends WebPage {
                 taLog.setDefaultModel(Model.of(logRetorno));
                 target.add(taLog);
 
+                for (Projeto projeto : listaProjetos) {
+                    Label lbProcessado = projeto.lbProcessado;
+                    lbProcessado.setDefaultModel(Model.of(projeto.getProcessado()));
+                    target.add(lbProcessado);
+
+                    Label lbPorcentagem = projeto.lbPorcentagem;
+                    lbPorcentagem.setDefaultModel(Model.of(projeto.getProcentagem()));
+                    target.add(lbPorcentagem);
+                }
+
+
                 if (processando) {
                     if (!loadImg.isVisible()) {
                         loadImg.setVisible(true);
@@ -149,17 +160,28 @@ public class HomePage extends WebPage {
 
         Form form = new Form<>("form");
 
-        lvProjetos = new ListView<String>("lvProjetos", listaProjetos) {
+        lvProjetos = new ListView<Projeto>("lvProjetos", listaProjetos) {
             @Override
-            protected void populateItem(ListItem<String> item) {
-                item.add(new Label("idx", item.getIndex()));
-                String projetoPath = item.getModel().getObject().trim();
-                String name =  projetoPath.substring(projetoPath.lastIndexOf("/")+1, projetoPath.length());
-                item.add(new Label("nomeProjeto", name));
-                item.add(new Label("projeto", projetoPath));
+            protected void populateItem(ListItem<Projeto> item) {
+                Projeto projeto = item.getModelObject();
+                item.add(new Label("nomeProjeto", projeto.getName()));
+                item.add(new Label("projeto", projeto.getPath()));
+
+                Label lbProcessado = new Label("lbProcessado", projeto.getProcessado());
+                lbProcessado.setOutputMarkupId(true);
+                lbProcessado.setOutputMarkupPlaceholderTag(true);
+                projeto.lbProcessado = lbProcessado;
+                item.add(lbProcessado);
+
+                Label lbPorcetagem = new Label("lbPorcentagem",projeto.getProcentagem());
+                lbPorcetagem.setOutputMarkupId(true);
+                lbPorcetagem.setOutputMarkupPlaceholderTag(true);
+                projeto.lbPorcentagem = lbPorcetagem;
+                item.add(lbPorcetagem);
             }
         };
         lvProjetos.setOutputMarkupId(true);
+        lvProjetos.setOutputMarkupPlaceholderTag(true);
         add(lvProjetos);
 
         FeedbackPanel feedback = new JQueryFeedbackPanel("feedback");
@@ -174,10 +196,12 @@ public class HomePage extends WebPage {
                 logRetorno = "";
                 totalProcessado = 0;
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
-                List<String> lista = listaPastas(pastaPath);
-                lvProjetos.setList(lista);
+
+                listaProjetos = listaProjetos(pastaPath);
+                lvProjetos.setList(listaProjetos);
+
                 processarTodos.setEnabled(true);
-                lbProjetosSize.setDefaultModel(Model.of(lista.size()));
+                lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
             }
         };
         form.add(btEnviar);
@@ -186,8 +210,7 @@ public class HomePage extends WebPage {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
-                List<String> lista = listaPastas(pastaPath);
-                processarThread(lista);
+                processarThread(listaProjetos);
             }
         };
         processarTodos.setEnabled(false);
@@ -202,7 +225,7 @@ public class HomePage extends WebPage {
     }
 
 
-    private void processarThread(List<String> lista) {
+    private void processarThread(List<Projeto> lista) {
         totalProcessado = 0;
 
         Integer totalLista = lista.size();
@@ -212,8 +235,8 @@ public class HomePage extends WebPage {
             @Override
             public void run() {
                 processando = true;
-                for (String projetoPath : lista) {
-                    processarTODOS(projetoPath, valorSoma);
+                for (Projeto projeto : lista) {
+                    processarTODOS(projeto, valorSoma);
                 }
                 int resto = 100 - totalProcessado;
                 totalProcessado = totalProcessado + resto;
@@ -223,39 +246,47 @@ public class HomePage extends WebPage {
     }
 
 
-    private String processarTODOS(String projetoPath, float valorProcProject) {
-        String name =  projetoPath.substring(projetoPath.lastIndexOf("/")+1,projetoPath.length());
-        logRetorno = dateNow() + name + " - started <br>" + logRetorno;
-        Float valorSoma = valorProcProject/3;
-        String csvFile = processarTestFileDetector(projetoPath);
+    private String processarTODOS(Projeto projeto, float valorProcProject) {
+        logRetorno = dateNow() + projeto.getName() + " - started <br>" + logRetorno;
+        Float valorSoma = valorProcProject / 3;
+
+        String csvFile = processarTestFileDetector(projeto.getPath());
         totalProcessado = totalProcessado + valorSoma.intValue();
-        String csvMapping = processarTestFileMapping(csvFile, projetoPath);
+        projeto.setProcentagem(33);
+
+        String csvMapping = processarTestFileMapping(csvFile, projeto.getPath());
         totalProcessado = totalProcessado + valorSoma.intValue();
-        String csvTestSmells = processarTestSmellDetector(csvMapping, projetoPath);
+        projeto.setProcentagem(66);
+
+        String csvTestSmells = processarTestSmellDetector(csvMapping, projeto.getPath());
         totalProcessado = totalProcessado + valorSoma.intValue();
+        projeto.setProcentagem(100);
+
+        projeto.setProcessado(true);
         return csvTestSmells;
     }
 
 
-    private List<String> listaPastas(String path) {
+    private List<Projeto> listaProjetos(String path) {
         java.io.File[] directories = new java.io.File(path).listFiles(java.io.File::isDirectory);
-        List<String> listaPastas = new ArrayList<String>();
+        List<Projeto> lista = new ArrayList<Projeto>();
 
         for (java.io.File dir : directories) {
             String pathPom = dir.getAbsolutePath() + "/pom.xml";
             if (new File(pathPom).exists()) {
-                out.println("Processando: " + dir.getAbsolutePath());
-                listaPastas.add(dir.getAbsolutePath().trim());
+                String pathProjeto = dir.getAbsolutePath().trim();
+                String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/") + 1, pathProjeto.length());
+                lista.add(new Projeto(nameProjeto, pathProjeto));
             } else {
                 out.println("Não é um projeto MAVEN: " + dir.getAbsolutePath());
             }
         }
 
-        return listaPastas;
+        return lista;
     }
 
     private String processarTestFileDetector(String pathProjeto) {
-        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/")+1, pathProjeto.length());
+        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/") + 1, pathProjeto.length());
         logRetorno = dateNow() + nameProjeto + " - <font style='color:red'>TestFileDetector</font> <br>" + logRetorno;
         String pathCSV = "";
         try {
@@ -267,7 +298,7 @@ public class HomePage extends WebPage {
     }
 
     private String processarTestFileMapping(String pathFileCSV, String pathProjeto) {
-        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/")+1, pathProjeto.length());
+        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/") + 1, pathProjeto.length());
         logRetorno = dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>" + logRetorno;
         String pathCSVMapping = "";
         try {
@@ -280,7 +311,7 @@ public class HomePage extends WebPage {
 
 
     private String processarTestSmellDetector(String pathCSVMapping, String pathProjeto) {
-        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/")+1, pathProjeto.length());
+        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/") + 1, pathProjeto.length());
         logRetorno = dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>" + logRetorno;
         String csvTestSmells = "";
         try {
@@ -291,8 +322,8 @@ public class HomePage extends WebPage {
         return csvTestSmells;
     }
 
-    private String dateNow(){
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm:ss"))+" - ";
+    private String dateNow() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm:ss")) + " - ";
     }
 
 }
