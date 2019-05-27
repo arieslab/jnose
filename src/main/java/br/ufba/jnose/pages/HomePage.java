@@ -258,7 +258,11 @@ public class HomePage extends WebPage {
             new Thread() {
                 @Override
                 public void run() {
-                    processarTODOS(projeto, valorSoma);
+                    try {
+                        processarTODOS(projeto, valorSoma);
+                    }catch (Exception e){
+                        projeto.bugs = projeto.bugs + "\n" + e.getMessage();
+                    }
                 }
             }.start();
         }

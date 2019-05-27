@@ -14,6 +14,7 @@ public class Projeto implements Serializable {
 
     public Label lbProcessado;
     public Label lbPorcentagem;
+    public String bugs;
 
     public Projeto(String name, String path) {
         this.name = name;
