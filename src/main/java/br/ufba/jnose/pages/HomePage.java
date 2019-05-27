@@ -78,6 +78,8 @@ public class HomePage extends WebPage {
 
     private Label footTime;
 
+    private String logRetorno = "";
+
     public HomePage(final PageParameters parameters) {
         super(parameters);
 
@@ -97,19 +99,8 @@ public class HomePage extends WebPage {
 
         taLog = new TextArea("taLog");
         taLog.setOutputMarkupId(true);
+        taLog.setOutputMarkupPlaceholderTag(true);
         add(taLog);
-        AjaxLink lkTextArea = new AjaxLink<String>("lkProcessarProjeto") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                try (FileInputStream inputStream = new FileInputStream("/home/tassio/Desenvolvimento/jnose/jnose/pom.xml")) {
-                    String everything = IOUtils.toString(inputStream);
-//                    taLog.setModel(Model.of(everything));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        add(lkTextArea);
 
         AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
             int cont = 0;
@@ -122,6 +113,9 @@ public class HomePage extends WebPage {
 
                 progressBar.setModel(Model.of(totalProcessado));
                 target.add(progressBar);
+
+                taLog.setModel(Model.of(logRetorno));
+                target.add(taLog);
 
                 if (processando) {
                     if (!loadImg.isVisible()) {
@@ -170,6 +164,7 @@ public class HomePage extends WebPage {
         Button btEnviar = new Button("btEnviar") {
             @Override
             public void onSubmit() {
+                logRetorno = "";
                 totalProcessado = 0;
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
                 List<String> lista = listaPastas(pastaPath);
@@ -185,7 +180,7 @@ public class HomePage extends WebPage {
             public void onClick(AjaxRequestTarget target) {
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
                 List<String> lista = listaPastas(pastaPath);
-                processarThread(lista, target);
+                processarThread(lista);
             }
         };
         processarTodos.setEnabled(false);
@@ -200,14 +195,13 @@ public class HomePage extends WebPage {
     }
 
 
-    private String processarThread(List<String> lista, AjaxRequestTarget target) {
+    private void processarThread(List<String> lista) {
         totalProcessado = 0;
 
         Integer totalLista = lista.size();
         Integer valorSoma = 100 / totalLista;
 
-        String retorno = "";
-        Thread guruThread1 = new Thread("TODOS1") {
+        new Thread() {
             @Override
             public void run() {
                 processando = true;
@@ -218,13 +212,12 @@ public class HomePage extends WebPage {
                 totalProcessado = totalProcessado + resto;
                 processando = false;
             }
-        };
-        guruThread1.start();
-        return retorno;
+        }.start();
     }
 
 
     private String processarTODOS(String projetoPath, float valorProcProject) {
+        logRetorno = logRetorno + "processando: " + projetoPath + "\n";
         Float valorSoma = valorProcProject/3;
         String csvFile = processarTestFileDetector(projetoPath);
         totalProcessado = totalProcessado + valorSoma.intValue();
@@ -254,6 +247,7 @@ public class HomePage extends WebPage {
     }
 
     private String processarTestFileDetector(String pathProjeto) {
+        logRetorno = logRetorno + "processando: " + pathProjeto + " TestFileDetector\n";
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/"), pathProjeto.length() - 1);
         String pathCSV = "";
         try {
@@ -265,6 +259,7 @@ public class HomePage extends WebPage {
     }
 
     private String processarTestFileMapping(String pathFileCSV, String pathProjeto) {
+        logRetorno = logRetorno + "processando: " + pathProjeto + " TestFileMapping\n";
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/"), pathProjeto.length() - 1);
         String pathCSVMapping = "";
         try {
@@ -277,6 +272,7 @@ public class HomePage extends WebPage {
 
 
     private String processarTestSmellDetector(String pathCSVMapping, String pathProjeto) {
+        logRetorno = logRetorno + "processando: " + pathProjeto + " TestSmellDetector\n";
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/"), pathProjeto.length() - 1);
         String csvTestSmells = "";
         try {
