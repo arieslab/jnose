@@ -125,13 +125,24 @@ public class HomePage extends WebPage {
                 Boolean todosProjetosProcessados = true;
 
                 for (Projeto projeto : listaProjetos) {
-                    Label lbProcessado = projeto.lbProcessado;
-                    lbProcessado.setDefaultModel(Model.of(projeto.getProcessado()));
-                    target.add(lbProcessado);
+//                    Label lbProcessado = projeto.lbProcessado;
+//                    lbProcessado.setDefaultModel(Model.of(projeto.getProcessado()));
+//                    target.add(lbProcessado);
+
+                    WebMarkupContainer iconProcessado = projeto.iconProcessado;
+                    iconProcessado.setVisible(projeto.getProcessado());
+                    WebMarkupContainer iconNaoProcessado = projeto.iconNaoProcessado;
+                    iconNaoProcessado.setVisible(!projeto.getProcessado());
+                    target.add(iconProcessado);
+                    target.add(iconNaoProcessado);
 
                     Label lbPorcentagem = projeto.lbPorcentagem;
                     lbPorcentagem.setDefaultModel(Model.of(projeto.getProcentagem()));
                     target.add(lbPorcentagem);
+
+                    WebMarkupContainer progressProject = projeto.progressProject;
+                    progressProject.add(new AttributeModifier("style","width: " + projeto.getProcentagem() + "%"));
+                    target.add(progressProject);
 
                     todosProjetosProcessados = todosProjetosProcessados && projeto.getProcessado();
                 }
@@ -176,17 +187,34 @@ public class HomePage extends WebPage {
                 item.add(new Label("nomeProjeto", projeto.getName()));
                 item.add(new Label("projeto", projeto.getPath()));
 
-                Label lbProcessado = new Label("lbProcessado", projeto.getProcessado());
-                lbProcessado.setOutputMarkupId(true);
-                lbProcessado.setOutputMarkupPlaceholderTag(true);
-                projeto.lbProcessado = lbProcessado;
-                item.add(lbProcessado);
+                WebMarkupContainer iconProcessado = new WebMarkupContainer("iconProcessado");
+                iconProcessado.setVisible(projeto.getProcessado());
+                iconProcessado.setOutputMarkupId(true);
+                iconProcessado.setOutputMarkupPlaceholderTag(true);
+                item.add(iconProcessado);
+                projeto.iconProcessado = iconProcessado;
+
+                WebMarkupContainer iconNaoProcessado = new WebMarkupContainer("iconNaoProcessado");
+                iconNaoProcessado.setVisible(!projeto.getProcessado());
+                iconNaoProcessado.setOutputMarkupId(true);
+                iconNaoProcessado.setOutputMarkupPlaceholderTag(true);
+                item.add(iconNaoProcessado);
+                projeto.iconNaoProcessado = iconNaoProcessado;
+
+
+                WebMarkupContainer progressProject = new WebMarkupContainer("progressProject");
+                progressProject.setOutputMarkupPlaceholderTag(true);
+                progressProject.setOutputMarkupId(true);//style="width: 25%"
+                progressProject.add(new AttributeModifier("style","width: " + projeto.getProcentagem() + "%"));
+                item.add(progressProject);
+                projeto.progressProject = progressProject;
 
                 Label lbPorcetagem = new Label("lbPorcentagem",projeto.getProcentagem());
                 lbPorcetagem.setOutputMarkupId(true);
                 lbPorcetagem.setOutputMarkupPlaceholderTag(true);
                 projeto.lbPorcentagem = lbPorcetagem;
-                item.add(lbPorcetagem);
+                progressProject.add(lbPorcetagem);
+
             }
         };
         lvProjetos.setOutputMarkupId(true);

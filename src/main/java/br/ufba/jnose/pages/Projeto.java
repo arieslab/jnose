@@ -1,5 +1,6 @@
 package br.ufba.jnose.pages;
 
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 
 import java.io.Serializable;
@@ -12,7 +13,11 @@ public class Projeto implements Serializable {
     private Boolean processado;
     private Integer procentagem;
 
-    public Label lbProcessado;
+    public WebMarkupContainer iconProcessado;
+    public WebMarkupContainer iconNaoProcessado;
+
+    public WebMarkupContainer progressProject;
+
     public Label lbPorcentagem;
     public String bugs;
 
