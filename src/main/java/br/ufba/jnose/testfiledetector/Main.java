@@ -24,7 +24,7 @@ public class Main {
         List<Path> files = fw.getJavaTestFiles(projectPath, true);
         TestFileDetector testFileDetector = TestFileDetector.createTestFileDetector();
 
-        String outFile = reportPath + projectName + "_TestFileDetection" + ".csv";
+        String outFile = reportPath + projectName + "_testfiledetection" + ".csv";
         ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(outFile);
 
         for (Path file : files) {

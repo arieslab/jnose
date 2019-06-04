@@ -84,6 +84,8 @@ public class HomePage extends WebPage {
 
     private String logRetorno = "";
 
+    private String dataProcessamentoAtual;
+
     public HomePage(final PageParameters parameters) {
         super(parameters);
 
@@ -215,6 +217,22 @@ public class HomePage extends WebPage {
                 projeto.lbPorcentagem = lbPorcetagem;
                 progressProject.add(lbPorcetagem);
 
+                WebMarkupContainer btMdel = new WebMarkupContainer("btModel");
+                btMdel.add(new AttributeModifier("data-target","#modal"+projeto.getName()));
+                item.add(btMdel);
+
+                WebMarkupContainer model = new WebMarkupContainer("model");
+                model.add(new AttributeModifier("id","modal"+projeto.getName()));
+                item.add(model);
+
+                ExternalLink linkCSV1 = new ExternalLink("linl1","/reports/"+dataProcessamentoAtual+"/"+projeto.getName()+"_testfiledetection.csv");
+                ExternalLink linkCSV2 = new ExternalLink("linl2","/reports/"+dataProcessamentoAtual+"/"+projeto.getName()+"_testmappingdetector.csv");
+                ExternalLink linkCSV3 = new ExternalLink("linl3","/reports/"+dataProcessamentoAtual+"/"+projeto.getName()+"_testsmesll.csv");
+
+                model.add(linkCSV1);
+                model.add(linkCSV2);
+                model.add(linkCSV3);
+
             }
         };
         lvProjetos.setOutputMarkupId(true);
@@ -230,6 +248,7 @@ public class HomePage extends WebPage {
         Button btEnviar = new Button("btEnviar") {
             @Override
             public void onSubmit() {
+                dataProcessamentoAtual = dateNowFolder();
                 logRetorno = "";
                 totalProcessado = 0;
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
@@ -248,7 +267,7 @@ public class HomePage extends WebPage {
             public void onClick(AjaxRequestTarget target) {
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
                 processando = true;
-                processarThread(listaProjetos);
+                processarProjetos(listaProjetos,dataProcessamentoAtual);
             }
         };
         processarTodos.setEnabled(false);
@@ -263,31 +282,25 @@ public class HomePage extends WebPage {
     }
 
 
-    private void processarThread(List<Projeto> lista) {
+    private void processarProjetos(List<Projeto> lista, String folderTime) {
+
+        boolean success = (new File("/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports/"+folderTime+"/")).mkdirs();
+        if (!success) {
+            System.out.println("Pasta Criada...");
+        }
+
+
         totalProcessado = 0;
 
         Integer totalLista = lista.size();
         Integer valorSoma = 100 / totalLista;
-
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                processando = true;
-//                for (Projeto projeto : lista) {
-//                    processarTODOS(projeto, valorSoma);
-//                }
-//                int resto = 100 - totalProcessado;
-//                totalProcessado = totalProcessado + resto;
-//                processando = false;
-//            }
-//        }.start();
 
         for (Projeto projeto : lista) {
             new Thread() {
                 @Override
                 public void run() {
                     try {
-                        processarTODOS(projeto, valorSoma);
+                        processarProjeto(projeto, valorSoma, folderTime);
                     }catch (Exception e){
                         projeto.bugs = projeto.bugs + "\n" + e.getMessage();
                     }
@@ -297,19 +310,19 @@ public class HomePage extends WebPage {
     }
 
 
-    private String processarTODOS(Projeto projeto, float valorProcProject) {
+    private String processarProjeto(Projeto projeto, float valorProcProject, String folderTime) {
         logRetorno = dateNow() + projeto.getName() + " - started <br>" + logRetorno;
         Float valorSoma = valorProcProject / 3;
 
-        String csvFile = processarTestFileDetector(projeto.getPath());
+        String csvFile = processarTestFileDetector(projeto.getPath(), folderTime);
         totalProcessado = totalProcessado + valorSoma.intValue();
         projeto.setProcentagem(33);
 
-        String csvMapping = processarTestFileMapping(csvFile, projeto.getPath());
+        String csvMapping = processarTestFileMapping(csvFile, projeto.getPath(), folderTime);
         totalProcessado = totalProcessado + valorSoma.intValue();
         projeto.setProcentagem(66);
 
-        String csvTestSmells = processarTestSmellDetector(csvMapping, projeto.getPath());
+        String csvTestSmells = processarTestSmellDetector(csvMapping, projeto.getPath(), folderTime);
         totalProcessado = totalProcessado + valorSoma.intValue();
         projeto.setProcentagem(100);
 
@@ -336,24 +349,24 @@ public class HomePage extends WebPage {
         return lista;
     }
 
-    private String processarTestFileDetector(String pathProjeto) {
+    private String processarTestFileDetector(String pathProjeto, String folderTime) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/") + 1, pathProjeto.length());
         logRetorno = dateNow() + nameProjeto + " - <font style='color:red'>TestFileDetector</font> <br>" + logRetorno;
         String pathCSV = "";
         try {
-            pathCSV = Main.start(pathProjeto, nameProjeto, "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports");
+            pathCSV = Main.start(pathProjeto, nameProjeto, "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports/"+folderTime+"/");
         } catch (IOException e) {
             e.printStackTrace();
         }
         return pathCSV;
     }
 
-    private String processarTestFileMapping(String pathFileCSV, String pathProjeto) {
+    private String processarTestFileMapping(String pathFileCSV, String pathProjeto, String folderTime) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/") + 1, pathProjeto.length());
         logRetorno = dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>" + logRetorno;
         String pathCSVMapping = "";
         try {
-            pathCSVMapping = br.ufba.jnose.testfilemapping.Main.start(pathFileCSV, pathProjeto, nameProjeto, "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports");
+            pathCSVMapping = br.ufba.jnose.testfilemapping.Main.start(pathFileCSV, pathProjeto, nameProjeto, "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports/"+folderTime+"/");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -361,12 +374,12 @@ public class HomePage extends WebPage {
     }
 
 
-    private String processarTestSmellDetector(String pathCSVMapping, String pathProjeto) {
+    private String processarTestSmellDetector(String pathCSVMapping, String pathProjeto, String folderTime) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/") + 1, pathProjeto.length());
         logRetorno = dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>" + logRetorno;
         String csvTestSmells = "";
         try {
-            csvTestSmells = br.ufba.jnose.testsmelldetector.Main.start(pathCSVMapping, nameProjeto, "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports");
+            csvTestSmells = br.ufba.jnose.testsmelldetector.Main.start(pathCSVMapping, nameProjeto, "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports/"+folderTime+"/");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -375,6 +388,10 @@ public class HomePage extends WebPage {
 
     private String dateNow() {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm:ss")) + " - ";
+    }
+
+    private String dateNowFolder() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
     }
 
 }

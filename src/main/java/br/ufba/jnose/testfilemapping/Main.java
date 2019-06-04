@@ -37,7 +37,7 @@ public class Main {
         }
 
         System.out.println("Saving results. Total lines:" + testFiles.size());
-        String outFile = reportPath + projectName + "_TestMappingDetector" + ".csv";
+        String outFile = reportPath + projectName + "_testmappingdetector" + ".csv";
         ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(outFile);
 
         List<String> columnValues = null;
