@@ -319,23 +319,22 @@ public class HomePage extends WebPage {
 
     private String processarProjeto(Projeto projeto, float valorProcProject, String folderTime) {
         logRetorno = dateNow() + projeto.getName() + " - started <br>" + logRetorno;
-        Float valorSoma = valorProcProject / 3;
+        Float valorSoma = valorProcProject / 4;
 
-        try {
-            execCommand("mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Drat.skip=true", projeto.getPath());
-            ReportGenerator reportGenerator = new ReportGenerator(new File(projeto.getPath()), new File("/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports/" + folderTime +"/"));
-            reportGenerator.create();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        totalProcessado = 5;
+        projeto.setProcentagem(5);
+
+        processarCobertura(projeto, folderTime);
+        totalProcessado = totalProcessado + valorSoma.intValue();
+        projeto.setProcentagem(25);
 
         String csvFile = processarTestFileDetector(projeto.getPath(), folderTime);
         totalProcessado = totalProcessado + valorSoma.intValue();
-        projeto.setProcentagem(33);
+        projeto.setProcentagem(50);
 
         String csvMapping = processarTestFileMapping(csvFile, projeto.getPath(), folderTime);
         totalProcessado = totalProcessado + valorSoma.intValue();
-        projeto.setProcentagem(66);
+        projeto.setProcentagem(75);
 
         String csvTestSmells = processarTestSmellDetector(csvMapping, projeto.getPath(), folderTime);
         totalProcessado = totalProcessado + valorSoma.intValue();
@@ -343,6 +342,16 @@ public class HomePage extends WebPage {
 
         projeto.setProcessado(true);
         return csvTestSmells;
+    }
+
+    private void processarCobertura(Projeto projeto, String folderTime) {
+        try {
+            execCommand("mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Drat.skip=true", projeto.getPath());
+            ReportGenerator reportGenerator = new ReportGenerator(new File(projeto.getPath()), new File("/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports/" + folderTime +"/"));
+            reportGenerator.create();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 
