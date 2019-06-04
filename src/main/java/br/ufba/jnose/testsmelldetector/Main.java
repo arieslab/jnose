@@ -20,6 +20,8 @@ public class Main {
 
     public static List<String> columnNames;
 
+    public static Map<String, String[]> jacocoMap;
+
     public static String start(String csvPath, String projectName, String reportPath) throws IOException {
 
         File selectedFile = new File(csvPath);
@@ -67,6 +69,7 @@ public class Main {
         resultsWriter.writeColumnName(columnNames);
 
 //        Map<String, String[]> jacocoMap = jacocoProcess(projectName, reportPath);
+        jacocoMap = jacocoProcess(projectName, reportPath);
 
         TestFile tempFile;
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -94,7 +97,7 @@ public class Main {
                 }
             }
 
-//            jacocoEscreverArquivo(columnValues, file, targetFile);
+            jacocoEscreverArquivo(columnValues, file, targetFile);
 
             resultsWriter.writeLine(columnValues);
 
@@ -109,22 +112,22 @@ public class Main {
 
     }
 
-//    private static void jacocoEscreverArquivo(List<String> columnValues, TestFile file, String targetFile) {
-//        columnValues.add(file.getLoc()+"");
-//        String[] jacocoLinha = jacocoMap.get(targetFile);
-//        if(jacocoLinha != null) {
-//            columnValues.add(jacocoLinha[3]);
-//            columnValues.add(jacocoLinha[4]);
-//            columnValues.add(jacocoLinha[5]);
-//            columnValues.add(jacocoLinha[6]);
-//            columnValues.add(jacocoLinha[7]);
-//            columnValues.add(jacocoLinha[8]);
-//            columnValues.add(jacocoLinha[9]);
-//            columnValues.add(jacocoLinha[10]);
-//            columnValues.add(jacocoLinha[11]);
-//            columnValues.add(jacocoLinha[12]);
-//        }
-//    }
+    private static void jacocoEscreverArquivo(List<String> columnValues, TestFile file, String targetFile) {
+        columnValues.add(file.getLoc()+"");
+        String[] jacocoLinha = jacocoMap.get(targetFile);
+        if(jacocoLinha != null) {
+            columnValues.add(jacocoLinha[3]);
+            columnValues.add(jacocoLinha[4]);
+            columnValues.add(jacocoLinha[5]);
+            columnValues.add(jacocoLinha[6]);
+            columnValues.add(jacocoLinha[7]);
+            columnValues.add(jacocoLinha[8]);
+            columnValues.add(jacocoLinha[9]);
+            columnValues.add(jacocoLinha[10]);
+            columnValues.add(jacocoLinha[11]);
+            columnValues.add(jacocoLinha[12]);
+        }
+    }
 
     private static Map<String, String[]> jacocoProcess(String projectName, String reportPath) throws IOException {
         String str;

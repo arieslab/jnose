@@ -1,5 +1,6 @@
 package br.ufba.jnose.pages;
 
+import br.ufba.jnose.cobertura.ReportGenerator;
 import br.ufba.jnose.testfiledetector.Main;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
 import com.googlecode.wicket.jquery.ui.widget.progressbar.ProgressBar;
@@ -54,7 +55,9 @@ import static java.lang.System.out;
 public class HomePage extends WebPage {
     private static final long serialVersionUID = 1L;
 
+//    private String pastaPath = "/home/tassio/Experimento/projetos/base_artigo_2/";
     private String pastaPath = "/home/tassio/Experimento/projetos/base_blame/";
+
 
     private Label lbPastaSelecionada;
 
@@ -225,13 +228,17 @@ public class HomePage extends WebPage {
                 model.add(new AttributeModifier("id","modal"+projeto.getName()));
                 item.add(model);
 
+                ExternalLink linkCSV0 = new ExternalLink("linl0","/reports/"+dataProcessamentoAtual+"/"+projeto.getName()+"_jacoco.csv");
                 ExternalLink linkCSV1 = new ExternalLink("linl1","/reports/"+dataProcessamentoAtual+"/"+projeto.getName()+"_testfiledetection.csv");
                 ExternalLink linkCSV2 = new ExternalLink("linl2","/reports/"+dataProcessamentoAtual+"/"+projeto.getName()+"_testmappingdetector.csv");
                 ExternalLink linkCSV3 = new ExternalLink("linl3","/reports/"+dataProcessamentoAtual+"/"+projeto.getName()+"_testsmesll.csv");
 
+                model.add(linkCSV0);
                 model.add(linkCSV1);
                 model.add(linkCSV2);
                 model.add(linkCSV3);
+
+                model.add(new Label("nomeProjeto", projeto.getName()));
 
             }
         };
@@ -314,6 +321,14 @@ public class HomePage extends WebPage {
         logRetorno = dateNow() + projeto.getName() + " - started <br>" + logRetorno;
         Float valorSoma = valorProcProject / 3;
 
+        try {
+            execCommand("mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Drat.skip=true", projeto.getPath());
+            ReportGenerator reportGenerator = new ReportGenerator(new File(projeto.getPath()), new File("/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports/" + folderTime +"/"));
+            reportGenerator.create();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         String csvFile = processarTestFileDetector(projeto.getPath(), folderTime);
         totalProcessado = totalProcessado + valorSoma.intValue();
         projeto.setProcentagem(33);
@@ -386,12 +401,38 @@ public class HomePage extends WebPage {
         return csvTestSmells;
     }
 
+
+//    private String processarCobertura(String pathCSVMapping, String pathProjeto, String folderTime){
+//        try{
+//            br.ufba.jnose.cobertura.Main.start();
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return "";
+//    }
+
     private String dateNow() {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm:ss")) + " - ";
     }
 
     private String dateNowFolder() {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+    }
+
+    private static void execCommand(final String commandLine, String pathExecute) {
+        int r = 0;
+        try {
+            Process p = Runtime.getRuntime().exec(commandLine, null, new File(pathExecute));
+            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String lineOut;
+            while ((lineOut = input.readLine()) != null) {
+                System.out.println(lineOut);
+            }
+            input.close();
+            r = p.waitFor();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
