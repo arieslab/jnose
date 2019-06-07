@@ -32,7 +32,9 @@ public class Main {
         String str;
 
         String[] lineItem;
+
         TestFile testFile;
+
         List<TestFile> testFiles = new ArrayList<>();
         while ((str = in.readLine()) != null) {
             System.out.println(str);

@@ -11,6 +11,7 @@ public class Projeto implements Serializable {
     private String name;
     private String path;
     private Boolean processado;
+    private Boolean processado2;
     private Integer procentagem;
 
     public WebMarkupContainer iconProcessado;
@@ -25,13 +26,15 @@ public class Projeto implements Serializable {
         this.name = name;
         this.path = path;
         this.processado = false;
+        this.processado2 = false;
         this.procentagem = 0;
     }
 
-    public Projeto(String name, String path, Boolean processado, Integer procentagem) {
+    public Projeto(String name, String path, Boolean processado, Boolean processado2, Integer procentagem) {
         this.name = name;
         this.path = path;
         this.processado = processado;
+        this.processado2 = processado2;
         this.procentagem = procentagem;
     }
 
@@ -52,11 +55,15 @@ public class Projeto implements Serializable {
     }
 
     public Boolean getProcessado() {
-        return processado;
+        return processado && processado2;
     }
 
     public void setProcessado(Boolean processado) {
         this.processado = processado;
+    }
+
+    public void setProcessado2(Boolean processado2) {
+        this.processado2 = processado2;
     }
 
     public Integer getProcentagem() {
