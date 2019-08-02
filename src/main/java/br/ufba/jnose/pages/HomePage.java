@@ -417,14 +417,16 @@ public class HomePage extends WebPage {
         java.io.File[] directories = new java.io.File(path).listFiles(java.io.File::isDirectory);
         List<Projeto> lista = new ArrayList<Projeto>();
 
-        for (java.io.File dir : directories) {
-            String pathPom = dir.getAbsolutePath() + "/pom.xml";
-            if (new File(pathPom).exists()) {
-                String pathProjeto = dir.getAbsolutePath().trim();
-                String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/") + 1, pathProjeto.length());
-                lista.add(new Projeto(nameProjeto, pathProjeto));
-            } else {
-                out.println("Não é um projeto MAVEN: " + dir.getAbsolutePath());
+        if(directories != null){
+            for (java.io.File dir : directories) {
+                String pathPom = dir.getAbsolutePath() + "/pom.xml";
+                if (new File(pathPom).exists()) {
+                    String pathProjeto = dir.getAbsolutePath().trim();
+                    String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/") + 1, pathProjeto.length());
+                    lista.add(new Projeto(nameProjeto, pathProjeto));
+                } else {
+                    out.println("Não é um projeto MAVEN: " + dir.getAbsolutePath());
+                }
             }
         }
 
