@@ -65,11 +65,15 @@ import static java.lang.System.out;
 import static com.google.common.collect.Lists.newArrayList;
 
 
+
 public class HomePage extends WebPage {
     private static final long serialVersionUID = 1L;
 
-    //    private String pastaPath = "/home/tassio/Experimento/projetos/base_artigo_2/";
-    private String pastaPath = "/home/tassio/Experimento/projetos/base_blame/";
+    private String pastaPath = "/home/tassio/Pesquisa/piloto_01/";
+
+    private String pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
+
+    private String pastaPathReport = pathAppToWebapp + "/reports/";
 
     private Label lbPastaSelecionada;
 
@@ -179,7 +183,7 @@ public class HomePage extends WebPage {
                 }
 
                 if(processado && mesclado == false && !listaProjetos.isEmpty()) {
-                    mesclarGeral(listaProjetos, "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports/" + dataProcessamentoAtual + "/");
+                    mesclarGeral(listaProjetos, pastaPathReport + dataProcessamentoAtual + "/");
                     mesclado = true;
                 }
 
@@ -328,7 +332,7 @@ public class HomePage extends WebPage {
 
     private void processarProjetos(List<Projeto> lista, String folderTime) {
 
-        boolean success = (new File("/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports/" + folderTime + "/")).mkdirs();
+        boolean success = (new File(pastaPathReport + folderTime + "/")).mkdirs();
         if (!success) System.out.println("Pasta Criada...");
 
         totalProcessado = 0;
@@ -405,7 +409,7 @@ public class HomePage extends WebPage {
         logRetorno = dateNow() + projeto.getName() + " - <font style='color:blue'>Cobertura</font> <br>" + logRetorno;
         try {
             execCommand("mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Drat.skip=true", projeto.getPath());
-            ReportGenerator reportGenerator = new ReportGenerator(new File(projeto.getPath()), new File("/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports/" + folderTime + "/"));
+            ReportGenerator reportGenerator = new ReportGenerator(new File(projeto.getPath()), new File(pastaPathReport + folderTime + "/"));
             reportGenerator.create();
         } catch (Exception e) {
             e.printStackTrace();
@@ -438,7 +442,7 @@ public class HomePage extends WebPage {
         logRetorno = dateNow() + nameProjeto + " - <font style='color:red'>TestFileDetector</font> <br>" + logRetorno;
         String pathCSV = "";
         try {
-            pathCSV = Main.start(pathProjeto, nameProjeto, "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports/" + folderTime + "/");
+            pathCSV = Main.start(pathProjeto, nameProjeto, pastaPathReport + folderTime + "/");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -450,7 +454,7 @@ public class HomePage extends WebPage {
         logRetorno = dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>" + logRetorno;
         String pathCSVMapping = "";
         try {
-            pathCSVMapping = br.ufba.jnose.testfilemapping.Main.start(pathFileCSV, pathProjeto, nameProjeto, "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports/" + folderTime + "/");
+            pathCSVMapping = br.ufba.jnose.testfilemapping.Main.start(pathFileCSV, pathProjeto, nameProjeto, pastaPathReport + folderTime + "/");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -463,7 +467,7 @@ public class HomePage extends WebPage {
         logRetorno = dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>" + logRetorno;
         String csvTestSmells = "";
         try {
-            csvTestSmells = br.ufba.jnose.testsmelldetector.Main.start(pathCSVMapping, nameProjeto, "/home/tassio/Desenvolvimento/jnose/jnose/src/main/webapp/reports/" + folderTime + "/");
+            csvTestSmells = br.ufba.jnose.testsmelldetector.Main.start(pathCSVMapping, nameProjeto, pastaPathReport + folderTime + "/");
         } catch (IOException e) {
             e.printStackTrace();
         }
