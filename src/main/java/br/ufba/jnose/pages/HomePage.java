@@ -1,5 +1,6 @@
 package br.ufba.jnose.pages;
 
+import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.cobertura.ReportGenerator;
 import br.ufba.jnose.testfiledetector.Main;
 import br.ufba.jnose.testsmelldetector.testsmell.TestSmellDetector;
@@ -370,7 +371,9 @@ public class HomePage extends WebPage {
     private void processarProjeto2(Projeto projeto, float valorProcProject, String folderTime) {
         Float valorSoma = valorProcProject / 4;
 
-        processarCobertura(projeto, folderTime);
+        if(WicketApplication.COBERTURA_ON) {
+            processarCobertura(projeto, folderTime);
+        }
         totalProcessado = totalProcessado + valorSoma.intValue();
         projeto.setProcentagem(25);
         projeto.setProcessado2(true);
@@ -384,7 +387,9 @@ public class HomePage extends WebPage {
         totalProcessado = 5;
         projeto.setProcentagem(totalProcessado);
 
-        processarCobertura(projeto, folderTime);
+        if(WicketApplication.COBERTURA_ON) {
+            processarCobertura(projeto, folderTime);
+        }
         projeto.setProcessado2(true);
         totalProcessado = totalProcessado + valorSoma.intValue();
         projeto.setProcentagem(25);
@@ -495,6 +500,7 @@ public class HomePage extends WebPage {
     private static void execCommand(final String commandLine, String pathExecute) {
         int r = 0;
         try {
+            //"/home/tassio/Desenvolvimento/apache-maven-3.6.1/bin/mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Drat.skip=true"
             Process p = Runtime.getRuntime().exec(commandLine, null, new File(pathExecute));
             BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String lineOut;
@@ -527,16 +533,18 @@ public class HomePage extends WebPage {
         columnNames.add(2, "ProductionFileName");
         columnNames.add("LOC");
         //jacoco
-        columnNames.add("INSTRUCTION_MISSED");
-        columnNames.add("INSTRUCTION_COVERED");
-        columnNames.add("BRANCH_MISSED");
-        columnNames.add("BRANCH_COVERED");
-        columnNames.add("LINE_MISSED");
-        columnNames.add("LINE_COVERED");
-        columnNames.add("COMPLEXITY_MISSED");
-        columnNames.add("COMPLEXITY_COVERED");
-        columnNames.add("METHOD_MISSED");
-        columnNames.add("METHOD_COVERED");
+        if(WicketApplication.COBERTURA_ON) {
+            columnNames.add("INSTRUCTION_MISSED");
+            columnNames.add("INSTRUCTION_COVERED");
+            columnNames.add("BRANCH_MISSED");
+            columnNames.add("BRANCH_COVERED");
+            columnNames.add("LINE_MISSED");
+            columnNames.add("LINE_COVERED");
+            columnNames.add("COMPLEXITY_MISSED");
+            columnNames.add("COMPLEXITY_COVERED");
+            columnNames.add("METHOD_MISSED");
+            columnNames.add("METHOD_COVERED");
+        }
 //        try {
 //            resultsWriter.writeColumnName(columnNames);
 //        } catch (IOException e) {

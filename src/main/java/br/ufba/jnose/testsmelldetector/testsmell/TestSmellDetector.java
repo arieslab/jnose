@@ -74,6 +74,7 @@ public class TestSmellDetector {
 
         if(!testFile.getTestFilePath().isEmpty()) {
             testFileInputStream = new FileInputStream(testFile.getTestFilePath());
+            //Linha que dar problema de memoria.
             testFileCompilationUnit = JavaParser.parse(testFileInputStream);
         }
 

@@ -176,7 +176,8 @@
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>${jetty9.version}</version>
-				<!--<configuration>-->
+				<configuration>
+<!--					<jvmArgs>-Xms10024m -Xmx10024m -server -XX:+UseConcMarkSweepGC</jvmArgs>-->
 					<!--<systemProperties>-->
 						<!--<systemProperty>-->
 							<!--<name>maven.project.build.directory.test-classes</name>-->
@@ -184,7 +185,7 @@
 						<!--</systemProperty>-->
 					<!--</systemProperties>-->
 					<!--<jettyXml>${project.basedir}/src/test/jetty/jetty.xml,${project.basedir}/src/test/jetty/jetty-ssl.xml,${project.basedir}/src/test/jetty/jetty-http.xml,${project.basedir}/src/test/jetty/jetty-https.xml</jettyXml>-->
-				<!--</configuration>-->
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

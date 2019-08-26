@@ -1,5 +1,6 @@
 package br.ufba.jnose.testsmelldetector;
 
+import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.util.ResultsWriter;
 import br.ufba.jnose.testsmelldetector.testsmell.AbstractSmell;
 import br.ufba.jnose.testsmelldetector.testsmell.TestFile;
@@ -58,50 +59,62 @@ public class Main {
         columnNames.add(2, "ProductionFileName");
         columnNames.add("LOC");
         //jacoco
-        columnNames.add("INSTRUCTION_MISSED");
-        columnNames.add("INSTRUCTION_COVERED");
-        columnNames.add("BRANCH_MISSED");
-        columnNames.add("BRANCH_COVERED");
-        columnNames.add("LINE_MISSED");
-        columnNames.add("LINE_COVERED");
-        columnNames.add("COMPLEXITY_MISSED");
-        columnNames.add("COMPLEXITY_COVERED");
-        columnNames.add("METHOD_MISSED");
-        columnNames.add("METHOD_COVERED");
+        if(WicketApplication.COBERTURA_ON) {
+            columnNames.add("INSTRUCTION_MISSED");
+            columnNames.add("INSTRUCTION_COVERED");
+            columnNames.add("BRANCH_MISSED");
+            columnNames.add("BRANCH_COVERED");
+            columnNames.add("LINE_MISSED");
+            columnNames.add("LINE_COVERED");
+            columnNames.add("COMPLEXITY_MISSED");
+            columnNames.add("COMPLEXITY_COVERED");
+            columnNames.add("METHOD_MISSED");
+            columnNames.add("METHOD_COVERED");
+        }
         resultsWriter.writeColumnName(columnNames);
 
-//        Map<String, String[]> jacocoMap = jacocoProcess(projectName, reportPath);
-        jacocoMap = jacocoProcess(projectName, reportPath);
+        if(WicketApplication.COBERTURA_ON) {
+            jacocoMap = jacocoProcess(projectName, reportPath);
+        }
 
         TestFile tempFile;
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date;
         
         for (TestFile file : testFiles) {
-            date = new Date();
-            System.out.println(dateFormat.format(date) + " Processing: "+file.getTestFilePath());
-            System.out.println("Processing: "+file.getTestFilePath());
+            try {
+                date = new Date();
+                System.out.println(dateFormat.format(date) + " Processing: " + file.getTestFilePath());
+                System.out.println("Processing: " + file.getTestFilePath());
 
-            tempFile = testSmellDetector.detectSmells(file);
+                tempFile = testSmellDetector.detectSmells(file);
 
-            columnValues = new ArrayList<>();
-            columnValues.add(file.getApp());
-            columnValues.add(file.getTestFileName().replace(".java",""));
-            String targetFile = file.getProductionFileName().replace(".java","");
-            columnValues.add(targetFile);
-            for (AbstractSmell smell : tempFile.getTestSmells()) {
-                smell.getSmellyElements();
-                try {
-                    columnValues.add(String.valueOf(smell.getSmellyElements().stream().filter(x -> x.getHasSmell()).count()));
+                columnValues = new ArrayList<>();
+                columnValues.add(file.getApp());
+                columnValues.add(file.getTestFileName().replace(".java", ""));
+                String targetFile = file.getProductionFileName().replace(".java", "");
+                columnValues.add(targetFile);
+                for (AbstractSmell smell : tempFile.getTestSmells()) {
+                    smell.getSmellyElements();
+                    try {
+                        columnValues.add(String.valueOf(smell.getSmellyElements().stream().filter(x -> x.getHasSmell()).count()));
+                    } catch (NullPointerException e) {
+                        columnValues.add("");
+                    }
                 }
-                catch (NullPointerException e){
-                    columnValues.add("");
+
+                if(WicketApplication.COBERTURA_ON) {
+                    jacocoEscreverArquivo(columnValues, file, targetFile);
                 }
+
+                resultsWriter.writeLine(columnValues);
+            }catch (Error e){
+                e.printStackTrace();
+                System.out.println("Continuando a o processo!");
+            }catch (Exception e){
+                e.printStackTrace();
+                System.out.println("Continuando a o processo!");
             }
-
-            jacocoEscreverArquivo(columnValues, file, targetFile);
-
-            resultsWriter.writeLine(columnValues);
 
         }
 

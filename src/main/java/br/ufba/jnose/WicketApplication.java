@@ -6,6 +6,9 @@ import org.apache.wicket.protocol.http.WebApplication;
 import br.ufba.jnose.pages.HomePage;
 
 public class WicketApplication extends WebApplication {
+
+    public static boolean COBERTURA_ON = false;
+
     @Override
     public Class<? extends WebPage> getHomePage() {
         return HomePage.class;

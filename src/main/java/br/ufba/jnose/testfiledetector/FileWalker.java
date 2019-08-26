@@ -23,8 +23,12 @@ public class FileWalker {
                             String fileNameWithoutExtension = filePath.getFileName().toString().substring(0, filePath.getFileName().toString().lastIndexOf("."));
                             //test files should have 'test(s)' as either a prefix or suffix
                             if (filePath.toString().toLowerCase().endsWith(".java") &&
-                                    (fileNameWithoutExtension.toLowerCase().startsWith("test") || fileNameWithoutExtension.toLowerCase().endsWith("test") ||
-                                        fileNameWithoutExtension.toLowerCase().startsWith("tests") || fileNameWithoutExtension.toLowerCase().endsWith("tests"))) {
+                                    (fileNameWithoutExtension.toLowerCase().startsWith("test") ||
+                                            fileNameWithoutExtension.toLowerCase().endsWith("test") ||
+                                        fileNameWithoutExtension.toLowerCase().startsWith("tests") ||
+                                            fileNameWithoutExtension.toLowerCase().endsWith("tests") ||
+                                            fileNameWithoutExtension.toLowerCase().matches("^.*test\\d*$")
+                                    )) {
                                 files.add(filePath);
                             }
                         }
@@ -69,8 +73,12 @@ public class FileWalker {
                 String fileNameWithoutExtension = file.getFileName().toString().substring(0, file.getFileName().toString().lastIndexOf("."));
                 //test files should have 'test(s)' as either a prefix or suffix
                 if (file.toString().toLowerCase().endsWith(".java") &&
-                        (fileNameWithoutExtension.toLowerCase().startsWith("test") || fileNameWithoutExtension.toLowerCase().endsWith("test") ||
-                            fileNameWithoutExtension.toLowerCase().startsWith("tests") || fileNameWithoutExtension.toLowerCase().endsWith("tests"))) {
+                        (fileNameWithoutExtension.toLowerCase().startsWith("test") ||
+                                fileNameWithoutExtension.toLowerCase().endsWith("test") ||
+                            fileNameWithoutExtension.toLowerCase().startsWith("tests") ||
+                                fileNameWithoutExtension.toLowerCase().endsWith("tests") ||
+                                fileNameWithoutExtension.toLowerCase().matches("^.*test\\d*$")
+                        )) {
                     files.add(file);
                 }
             }
