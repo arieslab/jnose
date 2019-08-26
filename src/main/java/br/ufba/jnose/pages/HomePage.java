@@ -16,6 +16,7 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxIndicatorAppender;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanel;
@@ -110,8 +111,19 @@ public class HomePage extends WebPage {
 
     private ExternalLink linkCSVFinal;
 
+    private boolean processarCobertura;
+
     public HomePage(final PageParameters parameters) {
         super(parameters);
+
+        AjaxCheckBox acbCobertura = new AjaxCheckBox("acbCobertura", new PropertyModel(this, "processarCobertura")) {
+            @Override
+            protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
+                WicketApplication.COBERTURA_ON = processarCobertura;
+                out.println("COBERTURA_ON: "+processarCobertura);
+            }
+        };
+        add(acbCobertura);
 
         lbProjetosSize = new Label("lbProjetosSize", Model.of("0"));
         lbProjetosSize.setOutputMarkupPlaceholderTag(true);
