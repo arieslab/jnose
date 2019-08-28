@@ -7,6 +7,7 @@ public class TestFile {
     private String app, testFilePath, productionFilePath;
     private List<AbstractSmell> testSmells;
     private Integer loc;
+    private Integer qtdMethods;
 
     public String getApp() {
         return app;
@@ -29,15 +30,20 @@ public class TestFile {
     }
 
     public TestFile(String app, String testFilePath, String productionFilePath) {
-        this(app,testFilePath,productionFilePath,null);
+        this(app,testFilePath,productionFilePath,null,null);
     }
 
-    public TestFile(String app, String testFilePath, String productionFilePath, Integer loc) {
+    public TestFile(String app, String testFilePath, String productionFilePath, Integer loc, Integer qtdMethods) {
         this.app = app;
         this.testFilePath = testFilePath;
         this.productionFilePath = productionFilePath;
         this.testSmells = new ArrayList<>();
         this.loc = loc;
+        this.qtdMethods = qtdMethods;
+    }
+
+    public Integer getQtdMethods(){
+        return this.qtdMethods;
     }
 
     public void setLoc(Integer loc) {

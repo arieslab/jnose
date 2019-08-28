@@ -28,11 +28,13 @@ public class Main {
         String pathFile;
         while ((pathFile = in.readLine()) != null) {
             int loc = Integer.parseInt(pathFile.split(",")[1]);
+            int qtdMethods = Integer.parseInt(pathFile.split(",")[2]);
             pathFile = pathFile.split(",")[0];
             System.out.println("Detecting: " + pathFile);
             MappingDetector mappingDetector = new MappingDetector();
             TestFile tf = mappingDetector.detectMapping(pathFile, projectPath);
             tf.setLoc(loc);
+            tf.setMethodsSize(qtdMethods);
             testFiles.add(tf);
         }
 
@@ -48,6 +50,7 @@ public class Main {
             columnValues.add(1, testFiles.get(i).getFilePath());
             columnValues.add(2, testFiles.get(i).getProductionFilePath());
             columnValues.add(3, testFiles.get(i).getLoc()+"");
+            columnValues.add(4, testFiles.get(i).getMethodsSize()+"");
             if(!testFiles.get(i).getProductionFilePath().isEmpty())
             resultsWriter.writeLine(columnValues);
         }

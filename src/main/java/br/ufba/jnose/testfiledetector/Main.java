@@ -29,9 +29,11 @@ public class Main {
 
         for (Path file : files) {
             try {
+
                 ClassEntity classEntity = testFileDetector.runAnalysis(file);
                 List<String> list = new ArrayList<String>();
-                list.add(classEntity.getFilePath() + "," + getLineCount(classEntity));
+                list.add(classEntity.getFilePath() + "," + getLineCount(classEntity) + "," + classEntity.getMethods().size()+"");
+
                 resultsWriter.writeLine(list);
             } catch (Exception e) {
                 e.printStackTrace();

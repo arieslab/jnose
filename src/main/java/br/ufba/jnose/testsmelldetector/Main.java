@@ -41,10 +41,10 @@ public class Main {
             System.out.println(str);
             lineItem = str.split(",");
             if(lineItem[2] == null){
-                testFile = new TestFile(lineItem[0], lineItem[1], "",0);
+                testFile = new TestFile(lineItem[0], lineItem[1], "",0,0);
             }
             else{
-                testFile = new TestFile(lineItem[0], lineItem[1], lineItem[2], Integer.parseInt(lineItem[3]));
+                testFile = new TestFile(lineItem[0], lineItem[1], lineItem[2], Integer.parseInt(lineItem[3]),Integer.parseInt(lineItem[4]));
             }
             testFiles.add(testFile);
         }
@@ -53,12 +53,18 @@ public class Main {
 
         ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(csvTestSmells);
         List<String> columnValues;
+
+        //Coluna name testsmells
         columnNames = testSmellDetector.getTestSmellNames();
+
+        //add colunas de descrição anterior a lista dos testsmells
         columnNames.add(0, "App");
         columnNames.add(1, "TestFileName");
         columnNames.add(2, "ProductionFileName");
-        columnNames.add("LOC");
-        //jacoco
+        columnNames.add(3,"LOC");
+        columnNames.add(4,"numberMethods");
+
+        //jacoco - lista de dados de cobertura posterior
         if(WicketApplication.COBERTURA_ON) {
             columnNames.add("INSTRUCTION_MISSED");
             columnNames.add("INSTRUCTION_COVERED");
@@ -90,10 +96,20 @@ public class Main {
                 tempFile = testSmellDetector.detectSmells(file);
 
                 columnValues = new ArrayList<>();
+
+                //dados da classe
                 columnValues.add(file.getApp());
                 columnValues.add(file.getTestFileName().replace(".java", ""));
                 String targetFile = file.getProductionFileName().replace(".java", "");
                 columnValues.add(targetFile);
+
+                //LOC
+                columnValues.add(file.getLoc().toString());
+
+                //NUMBER METHODS
+                columnValues.add(file.getQtdMethods().toString());
+
+                //add test smells
                 for (AbstractSmell smell : tempFile.getTestSmells()) {
                     smell.getSmellyElements();
                     try {
