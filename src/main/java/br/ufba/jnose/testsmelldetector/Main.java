@@ -144,7 +144,9 @@ public class Main {
     }
 
     private static void jacocoEscreverArquivo(List<String> columnValues, TestFile file, String targetFile) {
-        columnValues.add(file.getLoc()+"");
+
+//        columnValues.add(file.getLoc()+"");
+
         String[] jacocoLinha = jacocoMap.get(targetFile);
         if(jacocoLinha != null) {
             columnValues.add(jacocoLinha[3]);
