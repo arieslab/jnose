@@ -426,6 +426,7 @@ public class HomePage extends WebPage {
         logRetorno = dateNow() + projeto.getName() + " - <font style='color:blue'>Cobertura</font> <br>" + logRetorno;
         try {
             execCommand("mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Drat.skip=true", projeto.getPath());
+//            execCommand("mvn clean install -Drat.skip=true", projeto.getPath());
             ReportGenerator reportGenerator = new ReportGenerator(new File(projeto.getPath()), new File(pastaPathReport + folderTime + "/"));
             reportGenerator.create();
         } catch (Exception e) {

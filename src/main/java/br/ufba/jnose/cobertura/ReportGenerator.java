@@ -22,17 +22,22 @@ public class ReportGenerator {
 
 	private final String title;
 
-	private final File executionDataFile;
-	private final File classesDirectory;
-	private final File sourceDirectory;
-	private final File reportDirectory;
+	private File executionDataFile;
+	private File classesDirectory;
+	private File sourceDirectory;
+	private File reportDirectory;
 
 	private ExecFileLoader execFileLoader;
 
 	public ReportGenerator(final File projectDirectory, final File coveragereport) {
 		this.title = projectDirectory.getName();
 		this.executionDataFile = new File(projectDirectory, "target/jacoco.exec");
-		this.classesDirectory = new File(projectDirectory, "target/classes");
+		this.classesDirectory = new File(projectDirectory, "target/generated-classes");
+
+		if(!this.classesDirectory.exists()){
+			this.classesDirectory = new File(projectDirectory, "target/classes");
+		}
+
 		this.sourceDirectory = new File(projectDirectory, "src/main/java");
 		this.reportDirectory = new File(coveragereport, "");
 	}
@@ -89,7 +94,11 @@ public class ReportGenerator {
 		final Analyzer analyzer = new Analyzer(
 				execFileLoader.getExecutionDataStore(), coverageBuilder);
 
-		analyzer.analyzeAll(classesDirectory);
+		try {
+			analyzer.analyzeAll(classesDirectory);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 
 		return coverageBuilder.getBundle(title);
 	}
