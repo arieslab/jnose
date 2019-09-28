@@ -21,8 +21,8 @@ https://dl.acm.org/citation.cfm?doid=3350768.3350775
 </p>
 
 Preinstallation Requirements:
-- JDK
-- Maven
+- JDK 1.8
+- Maven 3
 
 How to run:
 - git clone git@github.com:tassiovirginio/jnose.git
