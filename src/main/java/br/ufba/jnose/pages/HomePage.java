@@ -162,7 +162,15 @@ public class HomePage extends WebPage {
 
                 Boolean todosProjetosProcessados = true;
 
-                for (Projeto projeto : listaProjetos) {
+                List<Projeto> listaProjetosProcessar = new ArrayList<>();
+
+                for(Projeto projeto:listaProjetos){
+                    if(projeto.getParaProcessar()){
+                        listaProjetosProcessar.add(projeto);
+                    }
+                }
+
+                for (Projeto projeto : listaProjetosProcessar) {
 //                    Label lbProcessado = projeto.lbProcessado;
 //                    lbProcessado.setDefaultModel(Model.of(projeto.getProcessado()));
 //                    target.add(lbProcessado);
@@ -237,6 +245,32 @@ public class HomePage extends WebPage {
             @Override
             protected void populateItem(ListItem<Projeto> item) {
                 Projeto projeto = item.getModelObject();
+
+                AjaxCheckBox paraProcessarACB = new AjaxCheckBox("paraProcessarACB", new PropertyModel(projeto, "paraProcessar")) {
+                    @Override
+                    protected void onUpdate(AjaxRequestTarget target) {
+//                        projeto.setParaProcessado(paraProcessarACB);
+
+                        List<Projeto> listaProjetosProcessar = new ArrayList<>();
+                        for(Projeto projeto:listaProjetos) if (projeto.getParaProcessar()) listaProjetosProcessar.add(projeto);
+
+                        if(listaProjetosProcessar.size() > 0) {
+                            processarTodos.setEnabled(true);
+                        }else{
+                            processarTodos.setEnabled(false);
+                        }
+                        target.add(processarTodos);
+
+
+                        lbProjetosSize.setDefaultModel(Model.of(listaProjetosProcessar.size()));
+                        target.add(lbProjetosSize);
+                    }
+                };
+                item.add(paraProcessarACB);
+
+//                CheckBox paraProcessarCB = new CheckBox("paraProcessarACB", new PropertyModel(projeto, "paraProcessar"));
+//                item.add(paraProcessarCB);
+
                 item.add(new Label("nomeProjeto", projeto.getName()));
                 item.add(new Label("projeto", projeto.getPath()));
 
@@ -328,7 +362,15 @@ public class HomePage extends WebPage {
             public void onClick(AjaxRequestTarget target) {
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
                 processando = true;
-                processarProjetos(listaProjetos, dataProcessamentoAtual);
+
+                List<Projeto> listaParaProcessar = new ArrayList<>();
+                for(Projeto projeto:listaProjetos){
+                    if(projeto.getParaProcessar()){
+                        listaParaProcessar.add(projeto);
+                    }
+                }
+
+                processarProjetos(listaParaProcessar, dataProcessamentoAtual);
             }
         };
         processarTodos.setEnabled(false);
@@ -351,7 +393,12 @@ public class HomePage extends WebPage {
         totalProcessado = 0;
 
         Integer totalLista = lista.size();
-        Integer valorSoma = 100 / totalLista;
+        Integer valorSoma;
+        if(totalLista > 0) {
+            valorSoma = 100 / totalLista;
+        }else{
+            valorSoma = 0;
+        }
 
         for (Projeto projeto : lista) {
 //            new Thread() {
@@ -442,7 +489,7 @@ public class HomePage extends WebPage {
         if(directories != null){
             for (java.io.File dir : directories) {
                 String pathPom = dir.getAbsolutePath() + "/pom.xml";
-                if (new File(pathPom).exists()) {
+                if (new File(pathPom).exists() ) {//&& pathPom.contains("evo")
                     String pathProjeto = dir.getAbsolutePath().trim();
                     String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/") + 1, pathProjeto.length());
                     lista.add(new Projeto(nameProjeto, pathProjeto));

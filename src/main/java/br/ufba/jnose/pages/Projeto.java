@@ -10,6 +10,7 @@ public class Projeto implements Serializable {
 
     private String name;
     private String path;
+    private Boolean paraProcessar;
     private Boolean processado;
     private Boolean processado2;
     private Integer procentagem;
@@ -28,6 +29,7 @@ public class Projeto implements Serializable {
         this.processado = false;
         this.processado2 = false;
         this.procentagem = 0;
+        this.paraProcessar = true;
     }
 
     public Projeto(String name, String path, Boolean processado, Boolean processado2, Integer procentagem) {
@@ -36,6 +38,15 @@ public class Projeto implements Serializable {
         this.processado = processado;
         this.processado2 = processado2;
         this.procentagem = procentagem;
+        this.paraProcessar = true;
+    }
+
+    public Boolean getParaProcessar() {
+        return paraProcessar;
+    }
+
+    public void setParaProcessar(Boolean paraProcessar) {
+        this.paraProcessar = paraProcessar;
     }
 
     public String getName() {
