@@ -199,12 +199,12 @@ public class HomePage extends WebPage {
                 }
 
                 boolean processado = true;
-                for (Projeto p : listaProjetos) {
+                for (Projeto p : listaProjetosProcessar) {
                     processado = processado && p.getProcessado();
                 }
 
-                if(processado && mesclado == false && !listaProjetos.isEmpty()) {
-                    mesclarGeral(listaProjetos, pastaPathReport + dataProcessamentoAtual + "/");
+                if(processado && mesclado == false && !listaProjetosProcessar.isEmpty()) {
+                    mesclarGeral(listaProjetosProcessar, pastaPathReport + dataProcessamentoAtual + "/");
                     mesclado = true;
                 }
 
