@@ -29,6 +29,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.PropertyModel;
@@ -46,6 +48,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.thread.ICode;
@@ -71,7 +74,7 @@ import static com.google.common.collect.Lists.newArrayList;
 public class HomePage extends WebPage {
     private static final long serialVersionUID = 1L;
 
-    private String pastaPath = "/home/tassio/Pesquisa/piloto_01/";
+    private String pastaPath = "";
 
     private String pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
 
@@ -89,6 +92,8 @@ public class HomePage extends WebPage {
 
     private Label taLog;
 
+    private Label taLogInfo;
+
     private Integer totalProcessado;
 
     private Map<Integer, Integer> totalProgressBar;
@@ -105,6 +110,8 @@ public class HomePage extends WebPage {
 
     private String logRetorno = "";
 
+    static public String logRetornoInfo = "";
+
     private String dataProcessamentoAtual;
 
     private boolean mesclado = false;
@@ -116,11 +123,16 @@ public class HomePage extends WebPage {
     public HomePage(final PageParameters parameters) {
         super(parameters);
 
+        Cookie pastaPathCookie = ((WebRequest) getRequest()).getCookie("pastaPath");
+        pastaPath = pastaPathCookie.getValue();
+        logRetornoInfo = "pastaPathCookie: "+pastaPath + " <br>" + logRetornoInfo;
+
         AjaxCheckBox acbCobertura = new AjaxCheckBox("acbCobertura", new PropertyModel(this, "processarCobertura")) {
             @Override
             protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
                 WicketApplication.COBERTURA_ON = processarCobertura;
                 out.println("COBERTURA_ON: "+processarCobertura);
+                logRetornoInfo = "COBERTURA_ON: "+processarCobertura + " <br>" + logRetornoInfo;
             }
         };
         add(acbCobertura);
@@ -145,6 +157,12 @@ public class HomePage extends WebPage {
         taLog.setOutputMarkupPlaceholderTag(true);
         add(taLog);
 
+        taLogInfo = new Label("taLogInfo");
+        taLogInfo.setEscapeModelStrings(false);
+        taLogInfo.setOutputMarkupId(true);
+        taLogInfo.setOutputMarkupPlaceholderTag(true);
+        add(taLogInfo);
+
         AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
             int cont = 0;
 
@@ -159,6 +177,9 @@ public class HomePage extends WebPage {
 
                 taLog.setDefaultModel(Model.of(logRetorno));
                 target.add(taLog);
+
+                taLogInfo.setDefaultModel(Model.of(logRetornoInfo));
+                target.add(taLogInfo);
 
                 Boolean todosProjetosProcessados = true;
 
@@ -345,6 +366,7 @@ public class HomePage extends WebPage {
                 mesclado = false;
                 dataProcessamentoAtual = dateNowFolder();
                 logRetorno = "";
+                logRetornoInfo = "";
                 totalProcessado = 0;
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
 
@@ -353,6 +375,10 @@ public class HomePage extends WebPage {
 
                 processarTodos.setEnabled(true);
                 lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
+
+                Cookie pastaPathCookie = new Cookie("pastaPath", pastaPath);
+                ((WebResponse)getResponse()).addCookie(pastaPathCookie);
+
             }
         };
         form.add(btEnviar);
@@ -494,7 +520,9 @@ public class HomePage extends WebPage {
                     String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/") + 1, pathProjeto.length());
                     lista.add(new Projeto(nameProjeto, pathProjeto));
                 } else {
-                    out.println("Não é um projeto MAVEN: " + dir.getAbsolutePath());
+                    String msg = "Não é um projeto MAVEN: " + dir.getAbsolutePath();
+                    out.println(msg);
+                    logRetornoInfo = msg + " <br>" + logRetornoInfo;
                 }
             }
         }
@@ -566,6 +594,7 @@ public class HomePage extends WebPage {
             String lineOut;
             while ((lineOut = input.readLine()) != null) {
                 System.out.println(lineOut);
+                logRetornoInfo = lineOut + " <br>" + logRetornoInfo;
             }
             input.close();
             r = p.waitFor();
