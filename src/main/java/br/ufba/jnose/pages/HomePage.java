@@ -124,8 +124,13 @@ public class HomePage extends WebPage {
         super(parameters);
 
         Cookie pastaPathCookie = ((WebRequest) getRequest()).getCookie("pastaPath");
-        pastaPath = pastaPathCookie.getValue();
-        logRetornoInfo = "pastaPathCookie: "+pastaPath + " <br>" + logRetornoInfo;
+        if(pastaPathCookie != null) {
+            pastaPath = pastaPathCookie.getValue();
+        }else{
+            pastaPath = "";
+        }
+
+        logRetornoInfo = "pastaPathCookie: " + pastaPath + " <br>" + logRetornoInfo;
 
         AjaxCheckBox acbCobertura = new AjaxCheckBox("acbCobertura", new PropertyModel(this, "processarCobertura")) {
             @Override
