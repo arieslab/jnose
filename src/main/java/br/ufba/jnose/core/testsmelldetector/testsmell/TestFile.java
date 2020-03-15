@@ -4,10 +4,75 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestFile {
-    private String app, testFilePath, productionFilePath;
+    private String app, testFilePath, productionFilePath, commitId, commitName, commitDate, commitMsg;
     private List<AbstractSmell> testSmells;
     private Integer loc;
     private Integer qtdMethods;
+
+    public TestFile(String commitId, String commitName,String commitDate,String commitMsg, String app, String testFilePath, String productionFilePath, Integer loc, Integer qtdMethods) {
+        this.commitId = commitId;
+        this.commitName = commitName;
+        this.commitDate = commitDate;
+        this.commitMsg = commitMsg;
+        this.app = app;
+        this.testFilePath = testFilePath;
+        this.productionFilePath = productionFilePath;
+        this.testSmells = new ArrayList<>();
+        this.loc = loc;
+        this.qtdMethods = qtdMethods;
+    }
+
+    public void setApp(String app) {
+        this.app = app;
+    }
+
+    public void setTestFilePath(String testFilePath) {
+        this.testFilePath = testFilePath;
+    }
+
+    public void setProductionFilePath(String productionFilePath) {
+        this.productionFilePath = productionFilePath;
+    }
+
+    public String getCommitId() {
+        return commitId;
+    }
+
+    public void setCommitId(String commitId) {
+        this.commitId = commitId;
+    }
+
+    public String getCommitName() {
+        return commitName;
+    }
+
+    public void setCommitName(String commitName) {
+        this.commitName = commitName;
+    }
+
+    public String getCommitDate() {
+        return commitDate;
+    }
+
+    public void setCommitDate(String commitDate) {
+        this.commitDate = commitDate;
+    }
+
+    public String getCommitMsg() {
+        return commitMsg;
+    }
+
+    public void setCommitMsg(String commitMsg) {
+        this.commitMsg = commitMsg;
+    }
+
+    public void setTestSmells(List<AbstractSmell> testSmells) {
+        this.testSmells = testSmells;
+    }
+
+    public void setQtdMethods(Integer qtdMethods) {
+        this.qtdMethods = qtdMethods;
+    }
 
     public String getApp() {
         return app;

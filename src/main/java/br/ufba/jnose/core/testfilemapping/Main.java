@@ -14,6 +14,57 @@ public class Main {
 
     private final static Logger LOGGER = Logger.getLogger(br.ufba.jnose.core.testfiledetector.Main.class.getName());
 
+    public static List<String[]>  start(List<String[]> listTestFile, String projectPath, String projectName) throws IOException {
+
+        List<TestFile> testFiles = new ArrayList<>();
+
+        for(String[] linhaSplit:listTestFile) {
+
+            String commitId = linhaSplit[0];
+            String commitName = linhaSplit[1];
+            String commitDate = linhaSplit[2];
+            String commitMsg = linhaSplit[3];
+
+            String pathFile = linhaSplit[4];
+            int loc = Integer.parseInt(linhaSplit[5]);
+            int qtdMethods = Integer.parseInt(linhaSplit[6]);
+
+            System.out.println("Detecting: " + pathFile);
+            MappingDetector mappingDetector = new MappingDetector();
+            TestFile tf = mappingDetector.detectMapping(pathFile, projectPath);
+            tf.setLoc(loc);
+            tf.setMethodsSize(qtdMethods);
+            tf.setCommitId(commitId);
+            tf.setCommitName(commitName);
+            tf.setCommitDate(commitDate);
+            tf.setCommitMsg(commitMsg);
+            testFiles.add(tf);
+        }
+
+        System.out.println("Saving results. Total lines:" + testFiles.size());
+
+        List<String[]> listRetorno = new ArrayList<>();
+
+        for (int i = 0; i < testFiles.size(); i++) {
+
+            String[] linha = {
+                    testFiles.get(i).getCommitId(),
+                    testFiles.get(i).getCommitName(),
+                    testFiles.get(i).getCommitDate(),
+                    testFiles.get(i).getCommitMsg(),
+                    projectName,
+                    testFiles.get(i).getFilePath(),
+                    testFiles.get(i).getProductionFilePath(),
+                    testFiles.get(i).getLoc()+"",
+                    testFiles.get(i).getMethodsSize()+""
+            };
+
+            listRetorno.add(linha);
+        }
+
+        return listRetorno;
+    }
+
     public static String start(String pathFileCSV, String projectPath, String projectName ,String reportPath) throws IOException {
 
         LOGGER.info("pathFileCSV: " + pathFileCSV + " - projectPath: " + projectPath + " - projectName: " + projectName + " - reportPath: " + reportPath);

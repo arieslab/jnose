@@ -11,6 +11,43 @@ public class TestFile {
 
     private int qtd = 0;
 
+    private String commitId = "";
+    private String commitName = "";
+    private String commitDate = "";
+    private String commitMsg = "";
+
+    public String getCommitId() {
+        return commitId;
+    }
+
+    public void setCommitId(String commitId) {
+        this.commitId = commitId;
+    }
+
+    public String getCommitName() {
+        return commitName;
+    }
+
+    public void setCommitName(String commitName) {
+        this.commitName = commitName;
+    }
+
+    public String getCommitDate() {
+        return commitDate;
+    }
+
+    public void setCommitDate(String commitDate) {
+        this.commitDate = commitDate;
+    }
+
+    public String getCommitMsg() {
+        return commitMsg;
+    }
+
+    public void setCommitMsg(String commitMsg) {
+        this.commitMsg = commitMsg;
+    }
+
     public void setLoc(int loc) {
         this.loc = loc;
     }

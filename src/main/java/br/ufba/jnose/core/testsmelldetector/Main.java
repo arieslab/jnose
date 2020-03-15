@@ -14,12 +14,100 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Main {
 
     public static List<String> columnNames;
 
     public static Map<String, String[]> jacocoMap;
+
+    public static List<String[]> start(List<String[]> listMapping, Boolean cabecalho) throws IOException {
+
+        TestSmellDetector testSmellDetector = TestSmellDetector.createTestSmellDetector();
+
+        TestFile testFile;
+
+        List<TestFile> testFiles = new ArrayList<>();
+        for(String[] lineItem:listMapping) {
+
+            if(lineItem[3] == null){
+                testFile = new TestFile(lineItem[0],lineItem[1],lineItem[2],lineItem[3],lineItem[4], lineItem[5], "",0,0);
+            }
+            else{
+                testFile = new TestFile(lineItem[0],lineItem[1],lineItem[2],lineItem[3],lineItem[4], lineItem[5], lineItem[6], Integer.parseInt(lineItem[7]),Integer.parseInt(lineItem[8]));
+            }
+            testFiles.add(testFile);
+        }
+
+        List<String[]> listTestSmells = new ArrayList<>();
+
+        if(cabecalho) {
+            List<String> listaNameTestSmells = testSmellDetector.getTestSmellNames();
+            String[] arrayNameTestSmells = listaNameTestSmells.toArray(new String[listaNameTestSmells.size()]);
+            String[] linhaColumnNames = {"CommitID","CommitName","CommitDate","CommitMsg", "App", "TestFileName", "ProductionFileName", "LOC", "numberMethods"};
+            String[] linhaColumn = Stream.concat(Arrays.stream(linhaColumnNames), Arrays.stream(arrayNameTestSmells)).toArray(String[]::new);
+            listTestSmells.add(linhaColumn);
+        }
+
+
+        TestFile tempFile;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date;
+
+        for (TestFile file : testFiles) {
+            try {
+                date = new Date();
+                System.out.println(dateFormat.format(date) + " Processing: " + file.getTestFilePath());
+                System.out.println("Processing: " + file.getTestFilePath());
+
+                tempFile = testSmellDetector.detectSmells(file);
+
+                List<String> columnValues = new ArrayList<>();
+
+                //dados da classe
+                columnValues.add(file.getCommitId());
+                columnValues.add(file.getCommitName());
+                columnValues.add(file.getCommitDate());
+                columnValues.add(file.getCommitMsg());
+
+                columnValues.add(file.getApp());
+                columnValues.add(file.getTestFileName().replace(".java", ""));
+                String targetFile = file.getProductionFileName().replace(".java", "");
+                columnValues.add(targetFile);
+
+                //LOC
+                columnValues.add(file.getLoc().toString());
+
+                //NUMBER METHODS
+                columnValues.add(file.getQtdMethods().toString());
+
+                //add test smells
+                for (AbstractSmell smell : tempFile.getTestSmells()) {
+//                    if(smell != null) {//verificar porque esta vindo smells nulls
+//                        smell.getSmellyElements();
+                    try {
+                        columnValues.add(String.valueOf(smell.getSmellyElements().stream().filter(x -> x.getHasSmell()).count()));
+                    } catch (NullPointerException e) {
+                        columnValues.add("");
+                    }
+//                    }
+                }
+
+                String[] linha = columnValues.toArray(new String[columnValues.size()]);
+
+                listTestSmells.add(linha);
+
+            }catch (Error e){
+                e.printStackTrace();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+
+        return listTestSmells;
+    }
 
     public static String start(String csvPath, String projectName, String reportPath) throws IOException {
 

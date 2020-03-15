@@ -2,8 +2,15 @@
     <div class="container">
         <form wicket:id="form">
             Pastas com os projetos: <input wicket:id="tfPastaPath" type="text" style="width:70%"/>
-            <input wicket:id="btEnviar" type="submit" value="Selecionar Diretório" class="btn btn-success btn-sm"/>
+            <input wicket:id="btEnviar" type="submit" value="Carregar" class="btn btn-success btn-sm"/>
         </form>
+        <label>Nome do projeto:&nbsp;</label><label style="color: lawngreen;" wicket:id="projetoName"></label><br>
+        <label>Número de commits:&nbsp;</label><label style="color: orangered;" wicket:id="projetoCommits"></label><br>
+        <br>
+        <form wicket:id="form2">
+            <input wicket:id="btEnviar2" type="submit" value="Executar" class="btn btn-success btn-sm"/>
+        </form>
+        <label>Processando:&nbsp;</label><label style="color: orangered;" wicket:id="commitsProcessados"></label>
         <br>
         <table class="table table-hover table-sm">
             <tr class="table">
@@ -28,13 +35,9 @@
             </tr>
         </table>
 
-        <div style="width:100%;background-color: black;color:white;">
-            <a class="btn btn-success btn-sm">Processar</a>
+        <div style="width:100%;height:240px;background-color: black;color:white;overflow: auto;font-size: 12px;">
+            <span wicket:id="taLogInfo" style="width:100%;height:100%;background-color: black;color:white;">000</span>
         </div>
-
-        <div style="width:100%;"></div>
-
-        <div style="width: 360px;"></div>
 
     </div>
 

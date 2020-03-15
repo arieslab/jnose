@@ -1,9 +1,11 @@
 package br.ufba.jnose.pages;
 
+import br.ufba.jnose.core.evolution.Commit;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Projeto implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -14,6 +16,10 @@ public class Projeto implements Serializable {
     private Boolean processado;
     private Boolean processado2;
     private Integer procentagem;
+
+    private List<Commit> listaCommits;
+
+    private Integer commits;
 
     public WebMarkupContainer iconProcessado;
     public WebMarkupContainer iconNaoProcessado;
@@ -30,6 +36,7 @@ public class Projeto implements Serializable {
         this.processado2 = false;
         this.procentagem = 0;
         this.paraProcessar = true;
+        this.commits = 0;
     }
 
     public Projeto(String name, String path, Boolean processado, Boolean processado2, Integer procentagem) {
@@ -39,6 +46,24 @@ public class Projeto implements Serializable {
         this.processado2 = processado2;
         this.procentagem = procentagem;
         this.paraProcessar = true;
+        this.commits = 0;
+    }
+
+
+    public List<Commit> getListaCommits() {
+        return listaCommits;
+    }
+
+    public void setListaCommits(List<Commit> listaCommits) {
+        this.listaCommits = listaCommits;
+    }
+
+    public Integer getCommits() {
+        return commits;
+    }
+
+    public void setCommits(Integer commits) {
+        this.commits = commits;
     }
 
     public Boolean getParaProcessar() {
