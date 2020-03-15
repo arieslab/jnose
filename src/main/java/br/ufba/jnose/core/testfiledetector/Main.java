@@ -1,5 +1,6 @@
 package br.ufba.jnose.core.testfiledetector;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -16,16 +17,26 @@ import br.ufba.jnose.util.ResultsWriter;
 
 public class Main {
 
-    public static List<String[]> start(String projectPath, Commit commit) throws IOException {
+    public static List<String[]> start(String projectPath, Commit commit) {
 
         FileWalker fw = new FileWalker();
-        List<Path> files = fw.getJavaTestFiles(projectPath, true);
+        List<Path> files = null;
+        try {
+            files = fw.getJavaTestFiles(projectPath, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         TestFileDetector testFileDetector = TestFileDetector.createTestFileDetector();
 
         List<String[]> retorno = new ArrayList<>();
 
         for (Path file : files) {
-            ClassEntity classEntity = testFileDetector.runAnalysis(file);
+            ClassEntity classEntity = null;
+            try {
+                classEntity = testFileDetector.runAnalysis(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
             DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_hhmmss");
             String dateString = dateFormat.format(commit.date);
             String[] linhaArray = {commit.id, commit.name, dateString, commit.msg, classEntity.getFilePath(), getLineCount(classEntity) + "", classEntity.getMethods().size() + ""};
@@ -52,7 +63,7 @@ public class Main {
 
                 ClassEntity classEntity = testFileDetector.runAnalysis(file);
                 List<String> list = new ArrayList<String>();
-                list.add(classEntity.getFilePath() + "," + getLineCount(classEntity) + "," + classEntity.getMethods().size()+"");
+                list.add(classEntity.getFilePath() + "," + getLineCount(classEntity) + "," + classEntity.getMethods().size() + "");
 
                 resultsWriter.writeLine(list);
             } catch (Exception e) {
@@ -62,15 +73,22 @@ public class Main {
         return resultsWriter.getOutputFile();
     }
 
-    private static int getLineCount(ClassEntity classEntity) throws IOException {
-        LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(classEntity.getFilePath()));
+    private static int getLineCount(ClassEntity classEntity) {
         int lineNumber = 0;
-        int data = lineNumberReader.read();
-        while (data != -1) {
-            data = lineNumberReader.read();
-            lineNumber = lineNumberReader.getLineNumber();
+        LineNumberReader lineNumberReader = null;
+        try {
+            lineNumberReader = new LineNumberReader(new FileReader(classEntity.getFilePath()));
+            int data = lineNumberReader.read();
+            while (data != -1) {
+                data = lineNumberReader.read();
+                lineNumber = lineNumberReader.getLineNumber();
+            }
+            lineNumberReader.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        lineNumberReader.close();
         return lineNumber;
     }
 }

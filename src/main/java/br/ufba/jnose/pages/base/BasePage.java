@@ -12,10 +12,6 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.time.Duration;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 public class BasePage extends WebPage {
     private static final long serialVersionUID = 1L;
 

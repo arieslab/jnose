@@ -7,6 +7,8 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
@@ -32,9 +34,7 @@ public class EvolutionPage extends BasePage {
 
     private Boolean testSmellsTask = false;
 
-    private int total = 0;
-
-    private int cont = 0;
+    private Integer cont = 0;
 
     private String projetoPath;
 
@@ -46,32 +46,30 @@ public class EvolutionPage extends BasePage {
 
     private Label commitsProcessados;
 
-    public String logRetornoInfo = "";
+    private Projeto projetoSelecionado;
 
-    public Projeto projetoSelecionado;
+    private String logRetornoInfo = "";
 
-    private Integer qtdCommitsProcessados = 0;
+    private TextField tfPastaPath;
 
     public EvolutionPage() {
 
+        Form form = new Form("form");
+
+        form.add(new AjaxSubmitLink("carregarProjetoLnk") {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target) {
+                projetoSelecionado = carregarProjeto(projetoPath,target);
+            }
+        });
+
         projetoName = new Label("projetoName", "");
-        projetoName.setEscapeModelStrings(false);
         projetoName.setOutputMarkupId(true);
-        projetoName.setOutputMarkupPlaceholderTag(true);
-        add(projetoName);
+        form.add(projetoName);
 
         projetoCommits = new Label("projetoCommits", "");
-        projetoCommits.setEscapeModelStrings(false);
         projetoCommits.setOutputMarkupId(true);
-        projetoCommits.setOutputMarkupPlaceholderTag(true);
-        add(projetoCommits);
-
-        commitsProcessados = new Label("commitsProcessados", "");
-        commitsProcessados.setEscapeModelStrings(false);
-        commitsProcessados.setOutputMarkupId(true);
-        commitsProcessados.setOutputMarkupPlaceholderTag(true);
-        add(commitsProcessados);
-
+        form.add(projetoCommits);
 
         taLogInfo = new Label("taLogInfo");
         taLogInfo.setEscapeModelStrings(false);
@@ -79,77 +77,70 @@ public class EvolutionPage extends BasePage {
         taLogInfo.setOutputMarkupPlaceholderTag(true);
         add(taLogInfo);
 
+        commitsProcessados = new Label("commitsProcessados", PropertyModel.of(this, "cont"));
+        commitsProcessados.setEscapeModelStrings(false);
+        commitsProcessados.setOutputMarkupId(true);
+        commitsProcessados.setOutputMarkupPlaceholderTag(true);
+        add(commitsProcessados);
 
-        Form form = new Form<>("form");
-        TextField tfPastaPath = new TextField("tfPastaPath", new PropertyModel(this, "projetoPath"));
+        tfPastaPath = new TextField("tfPastaPath", new PropertyModel(this, "projetoPath"));
+        tfPastaPath.setEscapeModelStrings(false);
+        tfPastaPath.setOutputMarkupId(true);
+        tfPastaPath.setOutputMarkupPlaceholderTag(true);
         form.add(tfPastaPath);
-
-        Button btEnviar = new Button("btEnviar") {
-            @Override
-            public void onSubmit() {
-                projetoSelecionado = carregarProjeto(projetoPath);
-            }
-        };
-        form.add(btEnviar);
         add(form);
 
-        Form form2 = new Form<>("form2");
-        Button btEnviar2 = new Button("btEnviar2") {
+
+        AjaxLink executarLnk = new AjaxLink<String>("executarLnk") {
             @Override
-            public void onSubmit() {
-                try {
-                    processar(projetoSelecionado,commitsProcessados);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            public void onClick(AjaxRequestTarget target) {
+                processar(projetoSelecionado,target);
             }
         };
-        form2.add(btEnviar2);
-        add(form2);
+        add(executarLnk);
 
 
         AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
             @Override
             protected void onTimer(AjaxRequestTarget target) {
-                taLogInfo.setDefaultModel(Model.of(logRetornoInfo));
-                target.add(taLogInfo);
+//                System.out.println("Timer funcionando...");
 
-                commitsProcessados.setDefaultModel(Model.of(qtdCommitsProcessados));
+//                System.out.println("logRetornoInfo: " + logRetornoInfo);
+//                taLogInfo.setDefaultModel(Model.of(logRetornoInfo));
+//                target.add(taLogInfo);
+
+//                System.out.println("commits processados: " + qtdCommitsProcessados);
+//                Label commitsProcessados = new Label()
+
+                commitsProcessados.setDefaultModelObject(cont);
                 target.add(commitsProcessados);
             }
         };
         add(timer);
     }
 
-    private Projeto carregarProjeto(String pathProjeto) {
-
+    private Projeto carregarProjeto(String pathProjeto,AjaxRequestTarget target) {
         String[] listas = pathProjeto.split("/");
-
-        String nomeProjeto = listas[listas.length-1];
-
-        Projeto projeto = new Projeto(nomeProjeto,pathProjeto);
-
+        String nomeProjeto = listas[listas.length - 1];
+        Projeto projeto = new Projeto(nomeProjeto, pathProjeto);
         execCommand("git checkout master", projeto.getPath());
-
         ArrayList<Commit> lista = gitLogOneLine(projeto.getPath());
-
         projeto.setListaCommits(lista);
         projeto.setName(projeto.getName());
         projeto.setPath(projeto.getPath());
         projeto.setCommits(lista.size());
-
         projetoName.setDefaultModelObject(projeto.getName());
+        target.add(projetoName);
         projetoCommits.setDefaultModelObject(projeto.getCommits());
-
+        target.add(projetoCommits);
         return projeto;
     }
 
 
-    private void processar(Projeto projeto, Label commitsProcessados) throws Exception {
+    private void processar(Projeto projeto, AjaxRequestTarget target) {
 
         List<Commit> lista = projeto.getListaCommits();
 
-        //ULTIMO -> PRIMEIRO
         Collections.sort(lista, new Comparator<Commit>() {
             public int compare(Commit o1, Commit o2) {
                 if (o1.date == null || o2.date == null) return 0;
@@ -158,24 +149,30 @@ public class EvolutionPage extends BasePage {
         });
 
         ResultsWriter resultsWriter = null;
-        if (testSmellsTask) {
+        if (true) {
             String reportPathFinal = pathReport + "/" + dateNow() + "/";
             boolean success = (new File(reportPathFinal)).mkdirs();
             if (!success) System.out.println("Pasta Criada...");
             String nameProjeto = projetoPath.substring(projetoPath.lastIndexOf("/") + 1, projetoPath.length());
             String csvTestSmells = reportPathFinal + nameProjeto + "_testsmesll.csv";
-            resultsWriter = ResultsWriter.createResultsWriter(csvTestSmells);
+            try {
+                resultsWriter = ResultsWriter.createResultsWriter(csvTestSmells);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         //Para cada commit executa uma busca
         for (Commit commit : projeto.getListaCommits()) {
             cont++;
 
-            qtdCommitsProcessados = cont;
+            commitsProcessados.setDefaultModelObject(cont.toString());
+            target.add(commitsProcessados);
+
+            System.out.println("cont: " + cont);
 
             logRetornoInfo = "Indo para -> " + commit.id + "<br>" + logRetornoInfo;
             execCommand("git checkout " + commit.id, projetoPath);
-            Thread.sleep(5);
 
             boolean cabecalho = true;
 
@@ -184,7 +181,11 @@ public class EvolutionPage extends BasePage {
                 List<String[]> listaTestSmells = processarTestSmells(projetoPath, commit, pathReport, cabecalho);
                 for (String[] linhaArray : listaTestSmells) {
                     List<String> list = Arrays.asList(linhaArray);
-                    resultsWriter.writeLine(list);
+                    try {
+                        resultsWriter.writeLine(list);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 cabecalho = false;
                 System.out.println("arquivo final -> " + resultsWriter.getOutputFile());
@@ -193,7 +194,7 @@ public class EvolutionPage extends BasePage {
         }
     }
 
-    private static void execCommand(final String commandLine, String pathExecute) {
+    private void execCommand(final String commandLine, String pathExecute) {
         int r = 0;
         try {
             Process p = Runtime.getRuntime().exec(commandLine, null, new File(pathExecute));
@@ -209,7 +210,7 @@ public class EvolutionPage extends BasePage {
         }
     }
 
-    private static ArrayList<Commit> gitLogOneLine(String pathExecute) {
+    private ArrayList<Commit> gitLogOneLine(String pathExecute) {
         ArrayList<Commit> lista = new ArrayList<>();
         int r = 0;
         try {
@@ -233,11 +234,11 @@ public class EvolutionPage extends BasePage {
         return lista;
     }
 
-    private static String dateNow() {
+    private String dateNow() {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
     }
 
-    private static List<String[]> processarTestSmells(String pathProjeto, Commit commit, String pastaPathReport, Boolean cabecalho) throws IOException {
+    private List<String[]> processarTestSmells(String pathProjeto, Commit commit, String pastaPathReport, Boolean cabecalho) {
         System.out.println("TestSmells: " + pathProjeto + " - " + pastaPathReport);
         List<String[]> listTestFile = processarTestFileDetector(pathProjeto, commit);
         List<String[]> listMapping = processarTestFileMapping(listTestFile, pathProjeto);
@@ -245,19 +246,29 @@ public class EvolutionPage extends BasePage {
         return listTestSmells;
     }
 
-    private static List<String[]> processarTestFileDetector(String pathProjeto, Commit commit) throws IOException {
+    private List<String[]> processarTestFileDetector(String pathProjeto, Commit commit) {
         return br.ufba.jnose.core.testfiledetector.Main.start(pathProjeto, commit);
     }
 
-    private static List<String[]> processarTestFileMapping(List<String[]> listTestFile, String pathProjeto) throws IOException {
+    private List<String[]> processarTestFileMapping(List<String[]> listTestFile, String pathProjeto) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/") + 1, pathProjeto.length());
         List<String[]> listaResultado = new ArrayList<>();
-        listaResultado = br.ufba.jnose.core.testfilemapping.Main.start(listTestFile, pathProjeto, nameProjeto);
+        try {
+            listaResultado = br.ufba.jnose.core.testfilemapping.Main.start(listTestFile, pathProjeto, nameProjeto);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return listaResultado;
     }
 
-    private static List<String[]> processarTestSmellDetector(List<String[]> listMapping, Boolean cabecalho) throws IOException {
-        return br.ufba.jnose.core.testsmelldetector.Main.start(listMapping, cabecalho);
+    private static List<String[]> processarTestSmellDetector(List<String[]> listMapping, Boolean cabecalho) {
+        List<String[]> lista = null;
+        try {
+            return br.ufba.jnose.core.testsmelldetector.Main.start(listMapping, cabecalho);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lista;
     }
 
 }

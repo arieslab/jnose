@@ -1,15 +1,14 @@
 <wicket:extend xmlns:wicket="http://wicket.apache.org">
     <div class="container">
         <form wicket:id="form">
-            Pastas com os projetos: <input wicket:id="tfPastaPath" type="text" style="width:70%"/>
-            <input wicket:id="btEnviar" type="submit" value="Carregar" class="btn btn-success btn-sm"/>
+        Pastas com os projetos: <input wicket:id="tfPastaPath" type="text" style="width:70%"/><br>
+            <a wicket:id="carregarProjetoLnk" class="btn btn-success btn-sm">Carregar</a><br>
+            <label>Nome do projeto:&nbsp;</label><label style="color: lawngreen;" wicket:id="projetoName"></label><br>
+            <label>Número de commits:&nbsp;</label><label style="color: orangered;" wicket:id="projetoCommits"></label><br>
         </form>
-        <label>Nome do projeto:&nbsp;</label><label style="color: lawngreen;" wicket:id="projetoName"></label><br>
-        <label>Número de commits:&nbsp;</label><label style="color: orangered;" wicket:id="projetoCommits"></label><br>
+
         <br>
-        <form wicket:id="form2">
-            <input wicket:id="btEnviar2" type="submit" value="Executar" class="btn btn-success btn-sm"/>
-        </form>
+        <a wicket:id="executarLnk" class="btn btn-success btn-sm">Executar</a>
         <label>Processando:&nbsp;</label><label style="color: orangered;" wicket:id="commitsProcessados"></label>
         <br>
         <table class="table table-hover table-sm">
