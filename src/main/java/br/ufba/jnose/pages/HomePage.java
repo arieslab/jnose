@@ -1,75 +1,46 @@
 package br.ufba.jnose.pages;
 
 import br.ufba.jnose.WicketApplication;
-import br.ufba.jnose.cobertura.ReportGenerator;
-import br.ufba.jnose.testfiledetector.Main;
-import br.ufba.jnose.testsmelldetector.testsmell.TestSmellDetector;
+import br.ufba.jnose.core.cobertura.ReportGenerator;
+import br.ufba.jnose.pages.base.BasePage;
+import br.ufba.jnose.core.testfiledetector.Main;
+import br.ufba.jnose.core.testsmelldetector.testsmell.TestSmellDetector;
 import br.ufba.jnose.util.ResultsWriter;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
 import com.googlecode.wicket.jquery.ui.widget.progressbar.ProgressBar;
-import org.apache.commons.io.IOUtils;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
-import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxIndicatorAppender;
-import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanel;
-import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
-import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Stream;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.util.thread.ICode;
-import org.apache.wicket.util.thread.Task;
 import org.apache.wicket.util.time.Duration;
-import org.apache.wicket.util.time.TimeFrame;
-import org.slf4j.Logger;
 
 import static java.lang.System.out;
 
-import java.io.*;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
 import java.util.List;
 
-import static java.lang.System.out;
 import static com.google.common.collect.Lists.newArrayList;
 
 
@@ -107,8 +78,6 @@ public class HomePage extends BasePage {
     private AjaxLink processarTodos;
 
     private Label lbProjetosSize;
-
-    private Label footTime;
 
     private String logRetorno = "";
 
@@ -148,11 +117,6 @@ public class HomePage extends BasePage {
         lbProjetosSize.setOutputMarkupId(true);
         add(lbProjetosSize);
 
-        footTime = new Label("footTime");
-        footTime.setOutputMarkupId(true);
-        footTime.setOutputMarkupPlaceholderTag(true);
-        add(footTime);
-
         totalProgressBar = new HashMap<>();
 
         totalProcessado = 0;
@@ -174,10 +138,6 @@ public class HomePage extends BasePage {
 
             @Override
             protected void onTimer(AjaxRequestTarget target) {
-                footTime.setDefaultModel(Model.of(cont + ""));
-                cont++;
-                target.add(footTime);
-
                 progressBar.setModel(Model.of(totalProcessado));
                 target.add(progressBar);
 
@@ -554,7 +514,7 @@ public class HomePage extends BasePage {
         logRetorno = dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>" + logRetorno;
         String pathCSVMapping = "";
         try {
-            pathCSVMapping = br.ufba.jnose.testfilemapping.Main.start(pathFileCSV, pathProjeto, nameProjeto, pastaPathReport + folderTime + "/");
+            pathCSVMapping = br.ufba.jnose.core.testfilemapping.Main.start(pathFileCSV, pathProjeto, nameProjeto, pastaPathReport + folderTime + "/");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -567,7 +527,7 @@ public class HomePage extends BasePage {
         logRetorno = dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>" + logRetorno;
         String csvTestSmells = "";
         try {
-            csvTestSmells = br.ufba.jnose.testsmelldetector.Main.start(pathCSVMapping, nameProjeto, pastaPathReport + folderTime + "/");
+            csvTestSmells = br.ufba.jnose.core.testsmelldetector.Main.start(pathCSVMapping, nameProjeto, pastaPathReport + folderTime + "/");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -656,7 +616,7 @@ public class HomePage extends BasePage {
 
         try {
             ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(reportPath + "all" + "_testsmesll.csv");
-            resultsWriter.writeColumnName(br.ufba.jnose.testsmelldetector.Main.columnNames);
+            resultsWriter.writeColumnName(br.ufba.jnose.core.testsmelldetector.Main.columnNames);
 
             if (listaProjetos.size() != 0) {
                 for (Projeto projeto : listaProjetos) {
