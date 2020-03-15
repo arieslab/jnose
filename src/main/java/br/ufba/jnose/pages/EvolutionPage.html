@@ -5,11 +5,13 @@
             <a wicket:id="carregarProjetoLnk" class="btn btn-success btn-sm">Carregar</a><br>
             <label>Nome do projeto:&nbsp;</label><label style="color: lawngreen;" wicket:id="projetoName"></label><br>
             <label>Número de commits:&nbsp;</label><label style="color: orangered;" wicket:id="projetoCommits"></label><br>
+            <br>
+            <a wicket:id="executarLnk" class="btn btn-success btn-sm">Executar</a><br>
+            <label>Processando:&nbsp;</label>
+            <label style="color: orangered;" wicket:id="commitsProcessados"></label><br>
+            <label style="color: orangered;" wicket:id="csvLogGit"></label>
         </form>
 
-        <br>
-        <a wicket:id="executarLnk" class="btn btn-success btn-sm">Executar</a>
-        <label>Processando:&nbsp;</label><label style="color: orangered;" wicket:id="commitsProcessados"></label>
         <br>
         <table class="table table-hover table-sm">
             <tr class="table">

@@ -46,11 +46,15 @@ public class EvolutionPage extends BasePage {
 
     private Label commitsProcessados;
 
+    private Label csvLogGit;
+
     private Projeto projetoSelecionado;
 
     private String logRetornoInfo = "";
 
     private TextField tfPastaPath;
+
+    private String pathCSV;
 
     public EvolutionPage() {
 
@@ -59,7 +63,7 @@ public class EvolutionPage extends BasePage {
         form.add(new AjaxSubmitLink("carregarProjetoLnk") {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
-                projetoSelecionado = carregarProjeto(projetoPath,target);
+                projetoSelecionado = carregarProjeto(projetoPath, target);
             }
         });
 
@@ -81,35 +85,41 @@ public class EvolutionPage extends BasePage {
         commitsProcessados.setEscapeModelStrings(false);
         commitsProcessados.setOutputMarkupId(true);
         commitsProcessados.setOutputMarkupPlaceholderTag(true);
-        add(commitsProcessados);
+        form.add(commitsProcessados);
+
+        csvLogGit = new Label("csvLogGit", PropertyModel.of(this, "pathCSV"));
+        csvLogGit.setEscapeModelStrings(false);
+        csvLogGit.setOutputMarkupId(true);
+        csvLogGit.setOutputMarkupPlaceholderTag(true);
+        form.add(csvLogGit);
 
         tfPastaPath = new TextField("tfPastaPath", new PropertyModel(this, "projetoPath"));
         tfPastaPath.setEscapeModelStrings(false);
         tfPastaPath.setOutputMarkupId(true);
         tfPastaPath.setOutputMarkupPlaceholderTag(true);
         form.add(tfPastaPath);
-        add(form);
-
 
         AjaxLink executarLnk = new AjaxLink<String>("executarLnk") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                processar(projetoSelecionado,target);
+                processar(projetoSelecionado, target);
             }
         };
-        add(executarLnk);
+        form.add(executarLnk);
+
+        add(form);
 
 
         AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
             @Override
             protected void onTimer(AjaxRequestTarget target) {
-//                System.out.println("Timer funcionando...");
+                System.out.println("Timer funcionando...");
 
-//                System.out.println("logRetornoInfo: " + logRetornoInfo);
-//                taLogInfo.setDefaultModel(Model.of(logRetornoInfo));
-//                target.add(taLogInfo);
+                System.out.println("logRetornoInfo: " + logRetornoInfo);
+                taLogInfo.setDefaultModel(Model.of(logRetornoInfo));
+                target.add(taLogInfo);
 
-//                System.out.println("commits processados: " + qtdCommitsProcessados);
+                System.out.println("commits processados: " + cont);
 //                Label commitsProcessados = new Label()
 
                 commitsProcessados.setDefaultModelObject(cont);
@@ -119,7 +129,7 @@ public class EvolutionPage extends BasePage {
         add(timer);
     }
 
-    private Projeto carregarProjeto(String pathProjeto,AjaxRequestTarget target) {
+    private Projeto carregarProjeto(String pathProjeto, AjaxRequestTarget target) {
         String[] listas = pathProjeto.split("/");
         String nomeProjeto = listas[listas.length - 1];
         Projeto projeto = new Projeto(nomeProjeto, pathProjeto);
@@ -153,8 +163,7 @@ public class EvolutionPage extends BasePage {
             String reportPathFinal = pathReport + "/" + dateNow() + "/";
             boolean success = (new File(reportPathFinal)).mkdirs();
             if (!success) System.out.println("Pasta Criada...");
-            String nameProjeto = projetoPath.substring(projetoPath.lastIndexOf("/") + 1, projetoPath.length());
-            String csvTestSmells = reportPathFinal + nameProjeto + "_testsmesll.csv";
+            String csvTestSmells = reportPathFinal + projeto.getName() + "_testsmesll.csv";
             try {
                 resultsWriter = ResultsWriter.createResultsWriter(csvTestSmells);
             } catch (IOException e) {
@@ -166,7 +175,7 @@ public class EvolutionPage extends BasePage {
         for (Commit commit : projeto.getListaCommits()) {
             cont++;
 
-            commitsProcessados.setDefaultModelObject(cont.toString());
+            commitsProcessados.setDefaultModel(Model.of(cont));
             target.add(commitsProcessados);
 
             System.out.println("cont: " + cont);
@@ -174,22 +183,21 @@ public class EvolutionPage extends BasePage {
             logRetornoInfo = "Indo para -> " + commit.id + "<br>" + logRetornoInfo;
             execCommand("git checkout " + commit.id, projetoPath);
 
-            boolean cabecalho = true;
 
             //criando a lista de testsmells
-            if (testSmellsTask) {
-                List<String[]> listaTestSmells = processarTestSmells(projetoPath, commit, pathReport, cabecalho);
-                for (String[] linhaArray : listaTestSmells) {
-                    List<String> list = Arrays.asList(linhaArray);
-                    try {
-                        resultsWriter.writeLine(list);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            List<String[]> listaTestSmells = processarTestSmells(projetoPath, commit, pathReport, true);
+            for (String[] linhaArray : listaTestSmells) {
+                List<String> list = Arrays.asList(linhaArray);
+                try {
+                    resultsWriter.writeLine(list);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                cabecalho = false;
-                System.out.println("arquivo final -> " + resultsWriter.getOutputFile());
             }
+
+            System.out.println("arquivo final -> " + resultsWriter.getOutputFile());
+            csvLogGit.setDefaultModelObject(resultsWriter.getOutputFile());
+            target.add(csvLogGit);
 
         }
     }
