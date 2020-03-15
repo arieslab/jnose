@@ -20,6 +20,8 @@ import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxIndicatorAppender;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanel;
+import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
+import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -28,6 +30,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
@@ -70,8 +73,7 @@ import static java.lang.System.out;
 import static com.google.common.collect.Lists.newArrayList;
 
 
-
-public class HomePage extends WebPage {
+public class HomePage extends BasePage {
     private static final long serialVersionUID = 1L;
 
     private String pastaPath = "";
@@ -120,13 +122,12 @@ public class HomePage extends WebPage {
 
     private boolean processarCobertura;
 
-    public HomePage(final PageParameters parameters) {
-        super(parameters);
+    public HomePage() {
 
         Cookie pastaPathCookie = ((WebRequest) getRequest()).getCookie("pastaPath");
-        if(pastaPathCookie != null) {
+        if (pastaPathCookie != null) {
             pastaPath = pastaPathCookie.getValue();
-        }else{
+        } else {
             pastaPath = "";
         }
 
@@ -136,8 +137,8 @@ public class HomePage extends WebPage {
             @Override
             protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
                 WicketApplication.COBERTURA_ON = processarCobertura;
-                out.println("COBERTURA_ON: "+processarCobertura);
-                logRetornoInfo = "COBERTURA_ON: "+processarCobertura + " <br>" + logRetornoInfo;
+                out.println("COBERTURA_ON: " + processarCobertura);
+                logRetornoInfo = "COBERTURA_ON: " + processarCobertura + " <br>" + logRetornoInfo;
             }
         };
         add(acbCobertura);
@@ -190,8 +191,8 @@ public class HomePage extends WebPage {
 
                 List<Projeto> listaProjetosProcessar = new ArrayList<>();
 
-                for(Projeto projeto:listaProjetos){
-                    if(projeto.getParaProcessar()){
+                for (Projeto projeto : listaProjetos) {
+                    if (projeto.getParaProcessar()) {
                         listaProjetosProcessar.add(projeto);
                     }
                 }
@@ -229,7 +230,7 @@ public class HomePage extends WebPage {
                     processado = processado && p.getProcessado();
                 }
 
-                if(processado && mesclado == false && !listaProjetosProcessar.isEmpty()) {
+                if (processado && mesclado == false && !listaProjetosProcessar.isEmpty()) {
                     mesclarGeral(listaProjetosProcessar, pastaPathReport + dataProcessamentoAtual + "/");
                     mesclado = true;
                 }
@@ -247,7 +248,7 @@ public class HomePage extends WebPage {
                     }
                 }
 
-                if(dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
+                if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
                     linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + "/" + "all_testsmesll.csv"));
                     target.add(linkCSVFinal);
                 }
@@ -278,11 +279,12 @@ public class HomePage extends WebPage {
 //                        projeto.setParaProcessado(paraProcessarACB);
 
                         List<Projeto> listaProjetosProcessar = new ArrayList<>();
-                        for(Projeto projeto:listaProjetos) if (projeto.getParaProcessar()) listaProjetosProcessar.add(projeto);
+                        for (Projeto projeto : listaProjetos)
+                            if (projeto.getParaProcessar()) listaProjetosProcessar.add(projeto);
 
-                        if(listaProjetosProcessar.size() > 0) {
+                        if (listaProjetosProcessar.size() > 0) {
                             processarTodos.setEnabled(true);
-                        }else{
+                        } else {
                             processarTodos.setEnabled(false);
                         }
                         target.add(processarTodos);
@@ -382,7 +384,7 @@ public class HomePage extends WebPage {
                 lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
 
                 Cookie pastaPathCookie = new Cookie("pastaPath", pastaPath);
-                ((WebResponse)getResponse()).addCookie(pastaPathCookie);
+                ((WebResponse) getResponse()).addCookie(pastaPathCookie);
 
             }
         };
@@ -395,8 +397,8 @@ public class HomePage extends WebPage {
                 processando = true;
 
                 List<Projeto> listaParaProcessar = new ArrayList<>();
-                for(Projeto projeto:listaProjetos){
-                    if(projeto.getParaProcessar()){
+                for (Projeto projeto : listaProjetos) {
+                    if (projeto.getParaProcessar()) {
                         listaParaProcessar.add(projeto);
                     }
                 }
@@ -425,9 +427,9 @@ public class HomePage extends WebPage {
 
         Integer totalLista = lista.size();
         Integer valorSoma;
-        if(totalLista > 0) {
+        if (totalLista > 0) {
             valorSoma = 100 / totalLista;
-        }else{
+        } else {
             valorSoma = 0;
         }
 
@@ -461,7 +463,7 @@ public class HomePage extends WebPage {
     private void processarProjeto2(Projeto projeto, float valorProcProject, String folderTime) {
         Float valorSoma = valorProcProject / 4;
 
-        if(WicketApplication.COBERTURA_ON) {
+        if (WicketApplication.COBERTURA_ON) {
             processarCobertura(projeto, folderTime);
         }
         totalProcessado = totalProcessado + valorSoma.intValue();
@@ -477,7 +479,7 @@ public class HomePage extends WebPage {
         totalProcessado = 5;
         projeto.setProcentagem(totalProcessado);
 
-        if(WicketApplication.COBERTURA_ON) {
+        if (WicketApplication.COBERTURA_ON) {
             processarCobertura(projeto, folderTime);
         }
         projeto.setProcessado2(true);
@@ -517,10 +519,10 @@ public class HomePage extends WebPage {
         java.io.File[] directories = new java.io.File(path).listFiles(java.io.File::isDirectory);
         List<Projeto> lista = new ArrayList<Projeto>();
 
-        if(directories != null){
+        if (directories != null) {
             for (java.io.File dir : directories) {
                 String pathPom = dir.getAbsolutePath() + "/pom.xml";
-                if (new File(pathPom).exists() ) {//&& pathPom.contains("evo")
+                if (new File(pathPom).exists()) {//&& pathPom.contains("evo")
                     String pathProjeto = dir.getAbsolutePath().trim();
                     String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/") + 1, pathProjeto.length());
                     lista.add(new Projeto(nameProjeto, pathProjeto));
@@ -627,7 +629,7 @@ public class HomePage extends WebPage {
         columnNames.add(2, "ProductionFileName");
         columnNames.add("LOC");
         //jacoco
-        if(WicketApplication.COBERTURA_ON) {
+        if (WicketApplication.COBERTURA_ON) {
             columnNames.add("INSTRUCTION_MISSED");
             columnNames.add("INSTRUCTION_COVERED");
             columnNames.add("BRANCH_MISSED");
@@ -682,6 +684,13 @@ public class HomePage extends WebPage {
             e.printStackTrace();
         }
 
+    }
+
+    private static class TabPanel1 extends Panel {
+        private static final long serialVersionUID = 1L;
+        public TabPanel1(String id) {
+            super(id);
+        }
     }
 
 }

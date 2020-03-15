@@ -1,36 +1,4 @@
-<!DOCTYPE html>
-<html xmlns:wicket="http://wicket.apache.org">
-
-<head>
-    <meta charset="utf-8"/>
-    <title>JNose Test</title>
-    <link rel="shortcut icon" href="logo.png">
-    <link href='https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:regular,bold' rel='stylesheet'
-          type='text/css'/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css" media="screen" title="Stylesheet"/>
-    <link rel="stylesheet" href="style.css" type="text/css"/>
-</head>
-
-<body>
-
-<div style="position: fixed;bottom: 0;width: 100%;">
-    <span wicket:id="footTime"></span>
-</div>
-
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">
-        <img src="logo.png" style="width:30px; height: auto;">&nbsp;
-        JNose
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
-            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</nav>
-
-<br><br><br>
-
+<wicket:extend>
 <div class="container">
     Cobertura: <input type="checkbox" wicket:id="acbCobertura" />
     <br>
@@ -161,8 +129,4 @@
     </div>
 </div>
 
-<script src="bootstrap/js/bootstrap.js"></script>
-
-</body>
-
-</html>
+</wicket:extend>
