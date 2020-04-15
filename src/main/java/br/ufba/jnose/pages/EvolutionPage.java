@@ -3,19 +3,17 @@ package br.ufba.jnose.pages;
 import br.ufba.jnose.core.evolution.Commit;
 import br.ufba.jnose.pages.base.BasePage;
 import br.ufba.jnose.util.ResultsWriter;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.time.Duration;
 
 import java.io.BufferedReader;
@@ -30,33 +28,37 @@ import java.util.*;
 public class EvolutionPage extends BasePage {
     private static final long serialVersionUID = 1L;
 
-    private String pathReport = "/home/tassio/Desenvolvimento/repo.git/jnose/report/revolution";
+    private String pathReport = "";
 
-    private Boolean testSmellsTask = false;
+    private String pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
+
+    final private Boolean testSmellsTask = false;
 
     private Integer cont = 0;
 
     private String projetoPath;
 
-    private Label taLogInfo;
+    final private Label taLogInfo;
 
-    private Label projetoName;
+    final private Label projetoName;
 
-    private Label projetoCommits;
+    final private Label projetoCommits;
 
-    private Label commitsProcessados;
+    final private Label commitsProcessados;
 
-    private Label csvLogGit;
+    final private Label csvLogGit;
 
     private Projeto projetoSelecionado;
 
     private String logRetornoInfo = "";
 
-    private TextField tfPastaPath;
+    final private TextField tfPastaPath;
 
     private String pathCSV;
 
     public EvolutionPage() {
+
+        pathReport = pathAppToWebapp + "/reports/revolution";
 
         Form form = new Form("form");
 
