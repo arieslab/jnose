@@ -2,6 +2,8 @@ package br.ufba.jnose.core.testfilemapping;
 
 import br.ufba.jnose.util.Util;
 
+import java.io.File;
+
 public class TestFile {
 
     private String filePath, productionFilePath;
@@ -65,7 +67,7 @@ public class TestFile {
     }
 
     public String getFileName() {
-        return data[data.length - 1];
+        return new File(filePath).getName();
     }
 
     public String getFilePath() {
@@ -80,48 +82,48 @@ public class TestFile {
         this.productionFilePath = productionFilePath;
     }
 
-    public String getProjectRootFolder() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < data.length-1; i++) {
-            stringBuilder.append(data[i] + Util.separator);
-        }
-        return stringBuilder.toString();
-    }
+//    public String getProjectRootFolder() {
+//        StringBuilder stringBuilder = new StringBuilder();
+//        for (int i = 0; i < data.length-1; i++) {
+//            stringBuilder.append(data[i] + Util.separator);
+//        }
+//        return stringBuilder.toString();
+//    }
 
-    public String getAppName() {
-        return data[3];
-    }
+//    public String getAppName() {
+//        return data[3];
+//    }
 
-    public String getTagName() {
-        return data[4];
-    }
+//    public String getTagName() {
+//        return data[4];
+//    }
 
     public TestFile(String filePath) {
         this.filePath = filePath;
-        data = filePath.split(Util.separator);
+//        data = filePath.split(Util.separator+"");
     }
 
-    public String getRelativeTestFilePath(){
-        String[] splitString = filePath.split(Util.separator);
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < 5; i++) {
-            stringBuilder.append(splitString[i] + Util.separator);
-        }
-        return filePath.substring(stringBuilder.toString().length()).replace(Util.separator,Util.separator);
-    }
+//    public String getRelativeTestFilePath(){
+//        String[] splitString = filePath.split(Util.separator);
+//        StringBuilder stringBuilder = new StringBuilder();
+//        for (int i = 0; i < 5; i++) {
+//            stringBuilder.append(splitString[i] + Util.separator);
+//        }
+//        return filePath.substring(stringBuilder.toString().length()).replace(Util.separator,Util.separator);
+//    }
 
-    public String getRelativeProductionFilePath(){
-        if (!productionFilePath.isEmpty()){
-            String[] splitString = productionFilePath.split(Util.separator);
-            StringBuilder stringBuilder = new StringBuilder();
-            for (int i = 0; i < 5; i++) {
-                stringBuilder.append(splitString[i] + Util.separator);
-            }
-            return productionFilePath.substring(stringBuilder.toString().length()).replace(Util.separator,Util.separator);
-        }
-        else{
-            return "";
-        }
-
-    }
+//    public String getRelativeProductionFilePath(){
+//        if (!productionFilePath.isEmpty()){
+//            String[] splitString = productionFilePath.split(Util.separator);
+//            StringBuilder stringBuilder = new StringBuilder();
+//            for (int i = 0; i < 5; i++) {
+//                stringBuilder.append(splitString[i] + Util.separator);
+//            }
+//            return productionFilePath.substring(stringBuilder.toString().length()).replace(Util.separator,Util.separator);
+//        }
+//        else{
+//            return "";
+//        }
+//
+//    }
 }

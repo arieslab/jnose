@@ -29,6 +29,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
 
 import java.io.*;
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -191,7 +192,7 @@ public class HomePage extends BasePage {
                 }
 
                 if (processado && mesclado == false && !listaProjetosProcessar.isEmpty()) {
-                    mesclarGeral(listaProjetosProcessar, pastaPathReport + dataProcessamentoAtual + "/");
+                    mesclarGeral(listaProjetosProcessar, pastaPathReport + dataProcessamentoAtual + File.separatorChar);
                     mesclado = true;
                 }
 
@@ -209,7 +210,7 @@ public class HomePage extends BasePage {
                 }
 
                 if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
-                    linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + "/" + "all_testsmesll.csv"));
+                    linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv"));
                     target.add(linkCSVFinal);
                 }
 
@@ -298,10 +299,10 @@ public class HomePage extends BasePage {
                 model.add(new AttributeModifier("id", "modal" + projeto.getName()));
                 item.add(model);
 
-                ExternalLink linkCSV0 = new ExternalLink("linl0", "/reports/" + dataProcessamentoAtual + "/" + projeto.getName() + "_jacoco.csv");
-                ExternalLink linkCSV1 = new ExternalLink("linl1", "/reports/" + dataProcessamentoAtual + "/" + projeto.getName() + "_testfiledetection.csv");
-                ExternalLink linkCSV2 = new ExternalLink("linl2", "/reports/" + dataProcessamentoAtual + "/" + projeto.getName() + "_testmappingdetector.csv");
-                ExternalLink linkCSV3 = new ExternalLink("linl3", "/reports/" + dataProcessamentoAtual + "/" + projeto.getName() + "_testsmesll.csv");
+                ExternalLink linkCSV0 = new ExternalLink("linl0", "/reports/" + dataProcessamentoAtual + File.separatorChar + projeto.getName() + "_jacoco.csv");
+                ExternalLink linkCSV1 = new ExternalLink("linl1", "/reports/" + dataProcessamentoAtual + File.separatorChar + projeto.getName() + "_testfiledetection.csv");
+                ExternalLink linkCSV2 = new ExternalLink("linl2", "/reports/" + dataProcessamentoAtual + File.separatorChar + projeto.getName() + "_testmappingdetector.csv");
+                ExternalLink linkCSV3 = new ExternalLink("linl3", "/reports/" + dataProcessamentoAtual + File.separatorChar + projeto.getName() + "_testsmesll.csv");
 
                 model.add(linkCSV0);
                 model.add(linkCSV1);
@@ -316,7 +317,7 @@ public class HomePage extends BasePage {
         lvProjetos.setOutputMarkupPlaceholderTag(true);
         add(lvProjetos);
 
-        linkCSVFinal = new ExternalLink("linkCSVFinal", "/reports/" + dataProcessamentoAtual + "/" + "all_testsmesll.csv");
+        linkCSVFinal = new ExternalLink("linkCSVFinal", "/reports/" + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv");
         linkCSVFinal.setOutputMarkupId(true);
         linkCSVFinal.setOutputMarkupPlaceholderTag(true);
         add(linkCSVFinal);
@@ -337,14 +338,21 @@ public class HomePage extends BasePage {
                 totalProcessado = 0;
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
 
-                listaProjetos = listaProjetos(pastaPath);
+                File file = new File(pastaPath);
+                System.out.println(file.toURI());
+
+                System.out.println(file.toPath().toUri());
+
+//                pastaPath.replace("\\",File.separatorChar);
+
+                listaProjetos = listaProjetos(file.toURI());
                 lvProjetos.setList(listaProjetos);
 
                 processarTodos.setEnabled(true);
                 lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
 
-                Cookie pastaPathCookie = new Cookie("pastaPath", pastaPath);
-                ((WebResponse) getResponse()).addCookie(pastaPathCookie);
+//                Cookie pastaPathCookie = new Cookie("pastaPath", pastaPath);
+//                ((WebResponse) getResponse()).addCookie(pastaPathCookie);
 
             }
         };
@@ -380,7 +388,7 @@ public class HomePage extends BasePage {
 
     private void processarProjetos(List<Projeto> lista, String folderTime) {
 
-        boolean success = (new File(pastaPathReport + folderTime + "/")).mkdirs();
+        boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
         if (!success) System.out.println("Pasta Criada...");
 
         totalProcessado = 0;
@@ -467,7 +475,7 @@ public class HomePage extends BasePage {
         try {
             execCommand("mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Drat.skip=true", projeto.getPath());
 //            execCommand("mvn clean install -Drat.skip=true", projeto.getPath());
-            ReportGenerator reportGenerator = new ReportGenerator(new File(projeto.getPath()), new File(pastaPathReport + folderTime + "/"));
+            ReportGenerator reportGenerator = new ReportGenerator(new File(projeto.getPath()), new File(pastaPathReport + folderTime + File.separatorChar));
             reportGenerator.create();
         } catch (Exception e) {
             e.printStackTrace();
@@ -475,16 +483,18 @@ public class HomePage extends BasePage {
     }
 
 
-    private List<Projeto> listaProjetos(String path) {
-        java.io.File[] directories = new java.io.File(path).listFiles(java.io.File::isDirectory);
+    private List<Projeto> listaProjetos(URI path) {
+        java.io.File[] directories = new File(path).listFiles(java.io.File::isDirectory);
         List<Projeto> lista = new ArrayList<Projeto>();
 
         if (directories != null) {
             for (java.io.File dir : directories) {
-                String pathPom = dir.getAbsolutePath() + "/pom.xml";
+                String pathPom = dir.getAbsolutePath() + File.separatorChar + "pom.xml";
+
+//                new File(dir.toURI()).exists();
                 if (new File(pathPom).exists()) {//&& pathPom.contains("evo")
                     String pathProjeto = dir.getAbsolutePath().trim();
-                    String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/") + 1, pathProjeto.length());
+                    String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
                     lista.add(new Projeto(nameProjeto, pathProjeto));
                 } else {
                     String msg = "Não é um projeto MAVEN: " + dir.getAbsolutePath();
@@ -498,11 +508,11 @@ public class HomePage extends BasePage {
     }
 
     private String processarTestFileDetector(String pathProjeto, String folderTime) {
-        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/") + 1, pathProjeto.length());
+        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
         logRetorno = dateNow() + nameProjeto + " - <font style='color:red'>TestFileDetector</font> <br>" + logRetorno;
         String pathCSV = "";
         try {
-            pathCSV = Main.start(pathProjeto, nameProjeto, pastaPathReport + folderTime + "/");
+            pathCSV = Main.start(pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -510,11 +520,11 @@ public class HomePage extends BasePage {
     }
 
     private String processarTestFileMapping(String pathFileCSV, String pathProjeto, String folderTime) {
-        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/") + 1, pathProjeto.length());
+        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
         logRetorno = dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>" + logRetorno;
         String pathCSVMapping = "";
         try {
-            pathCSVMapping = br.ufba.jnose.core.testfilemapping.Main.start(pathFileCSV, pathProjeto, nameProjeto, pastaPathReport + folderTime + "/");
+            pathCSVMapping = br.ufba.jnose.core.testfilemapping.Main.start(pathFileCSV, pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -523,11 +533,11 @@ public class HomePage extends BasePage {
 
 
     private String processarTestSmellDetector(String pathCSVMapping, String pathProjeto, String folderTime) {
-        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/") + 1, pathProjeto.length());
+        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
         logRetorno = dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>" + logRetorno;
         String csvTestSmells = "";
         try {
-            csvTestSmells = br.ufba.jnose.core.testsmelldetector.Main.start(pathCSVMapping, nameProjeto, pastaPathReport + folderTime + "/");
+            csvTestSmells = br.ufba.jnose.core.testsmelldetector.Main.start(pathCSVMapping, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
         } catch (IOException e) {
             e.printStackTrace();
         }
