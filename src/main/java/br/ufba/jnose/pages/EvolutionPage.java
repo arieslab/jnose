@@ -133,7 +133,9 @@ public class EvolutionPage extends BasePage {
     }
 
     private Projeto carregarProjeto(String pathProjeto, AjaxRequestTarget target) {
-        String[] listas = pathProjeto.split("/");
+//        File filePathProjeto = new File(pathProjeto);
+        String preSplit = pathProjeto.replace(File.separator,"/");
+        String[] listas = preSplit.split("/");
         String nomeProjeto = listas[listas.length - 1];
         Projeto projeto = new Projeto(nomeProjeto, pathProjeto);
         execCommand("git checkout master", projeto.getPath());
@@ -163,7 +165,7 @@ public class EvolutionPage extends BasePage {
 
         ResultsWriter resultsWriter = null;
         if (true) {
-            String reportPathFinal = pathReport + "/" + dateNow() + "/";
+            String reportPathFinal = pathReport + File.separatorChar + dateNow() + File.separatorChar;
             boolean success = (new File(reportPathFinal)).mkdirs();
             if (!success) System.out.println("Pasta Criada...");
             String csvTestSmells = reportPathFinal + projeto.getName() + "_testsmesll.csv";
@@ -262,7 +264,7 @@ public class EvolutionPage extends BasePage {
     }
 
     private List<String[]> processarTestFileMapping(List<String[]> listTestFile, String pathProjeto) {
-        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf("/") + 1, pathProjeto.length());
+        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separator) + 1, pathProjeto.length());
         List<String[]> listaResultado = new ArrayList<>();
         try {
             listaResultado = br.ufba.jnose.core.testfilemapping.Main.start(listTestFile, pathProjeto, nameProjeto);
