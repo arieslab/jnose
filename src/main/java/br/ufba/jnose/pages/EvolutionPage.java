@@ -5,16 +5,14 @@ import br.ufba.jnose.pages.base.BasePage;
 import br.ufba.jnose.util.ResultsWriter;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.time.Duration;
 
 import java.io.BufferedReader;
@@ -102,7 +100,7 @@ public class EvolutionPage extends BasePage {
         tfPastaPath.setOutputMarkupPlaceholderTag(true);
         form.add(tfPastaPath);
 
-        AjaxLink executarLnk = new AjaxLink<String>("executarLnk") {
+        IndicatingAjaxLink executarLnk = new IndicatingAjaxLink<String>("executarLnk") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 processar(projetoSelecionado, target);

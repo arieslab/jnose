@@ -29,6 +29,16 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-native-websocket-javax</artifactId>
+			<version>${wicket.version}</version>
+		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.apache.wicket</groupId>-->
+<!--			<artifactId>wicket-native-websocket-jetty9</artifactId>-->
+<!--			<version>7.16.0</version>-->
+<!--		</dependency>-->
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
 			<version>${wicket.version}</version>
 		</dependency>

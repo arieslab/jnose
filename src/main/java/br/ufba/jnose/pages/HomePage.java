@@ -11,9 +11,9 @@ import com.googlecode.wicket.jquery.ui.widget.progressbar.ProgressBar;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxIndicatorAppender;
+import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -76,7 +76,7 @@ public class HomePage extends BasePage {
 
     private WebMarkupContainer loadImg;
 
-    private AjaxLink processarTodos;
+    private IndicatingAjaxLink processarTodos;
 
     private Label lbProjetosSize;
 
@@ -358,7 +358,7 @@ public class HomePage extends BasePage {
         };
         form.add(btEnviar);
 
-        processarTodos = new AjaxLink<String>("processarTodos") {
+        processarTodos = new IndicatingAjaxLink<String>("processarTodos") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
