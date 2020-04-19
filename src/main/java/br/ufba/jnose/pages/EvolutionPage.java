@@ -9,6 +9,7 @@ import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -55,7 +56,13 @@ public class EvolutionPage extends BasePage {
 
     private String pathCSV;
 
+    private static final List<String> TYPES = Arrays
+            .asList(new String[] { "Commits", "Tags"});
+
+    private String selected = "Commits";
+
     public EvolutionPage() {
+
 
         pathReport = pathAppToWebapp + "/reports/revolution";
 
@@ -67,6 +74,10 @@ public class EvolutionPage extends BasePage {
                 projetoSelecionado = carregarProjeto(projetoPath, target);
             }
         });
+
+        RadioChoice<String> radioCommitsTags = new RadioChoice<String>(
+                "radioCommitsTags", new PropertyModel<String>(this, "selected"), TYPES);
+        form.add(radioCommitsTags);
 
         projetoName = new Label("projetoName", "");
         projetoName.setOutputMarkupId(true);
@@ -137,8 +148,16 @@ public class EvolutionPage extends BasePage {
         String nomeProjeto = listas[listas.length - 1];
         Projeto projeto = new Projeto(nomeProjeto, pathProjeto);
         execCommand("git checkout master", projeto.getPath());
-        ArrayList<Commit> lista = gitLogOneLine(projeto.getPath());
-        projeto.setListaCommits(lista);
+
+        ArrayList<Commit> lista = null;
+        if(selected.trim().equals("Commits")) {
+            lista = gitLogOneLine(projeto.getPath());
+            projeto.setListaCommits(lista);
+        }else{
+            lista = gitTags(projeto.getPath());
+            projeto.setListaCommits(lista);
+        }
+
         projeto.setName(projeto.getName());
         projeto.setPath(projeto.getPath());
         projeto.setCommits(lista.size());
@@ -222,6 +241,30 @@ public class EvolutionPage extends BasePage {
     }
 
     private ArrayList<Commit> gitLogOneLine(String pathExecute) {
+        ArrayList<Commit> lista = new ArrayList<>();
+        int r = 0;
+        try {
+            //b8f638fa,Gary Gregory,2019-08-09,Javadoc.
+            Process p = Runtime.getRuntime().exec("git log --pretty=format:%h,%an,%ad,%s --date=iso8601", null, new File(pathExecute));
+            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String lineOut;
+            while ((lineOut = input.readLine()) != null) {
+                String[] arrayCommit = lineOut.split(",");
+                String id = arrayCommit[0];
+                String name = arrayCommit[1];
+                Date date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(arrayCommit[2]);
+                String msg = arrayCommit[3];
+                lista.add(new Commit(id, name, date, msg));
+            }
+            input.close();
+            r = p.waitFor();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+    private ArrayList<Commit> gitTags(String pathExecute) {
         ArrayList<Commit> lista = new ArrayList<>();
         int r = 0;
         try {

@@ -2,9 +2,17 @@
     <div class="container">
         <form wicket:id="form">
         Pastas com os projetos: <input wicket:id="tfPastaPath" type="text" style="width:70%"/><br>
+
+            Tipo de Busca:<br>
+
+            <span wicket:id="radioCommitsTags">
+
+            </span>
+
+            <br>
             <a wicket:id="carregarProjetoLnk" class="btn btn-success btn-sm">Carregar</a><br>
             <label>Nome do projeto:&nbsp;</label><label style="color: lawngreen;" wicket:id="projetoName"></label><br>
-            <label>Número de commits:&nbsp;</label><label style="color: orangered;" wicket:id="projetoCommits"></label><br>
+            <label>Número de commits/tags:&nbsp;</label><label style="color: orangered;" wicket:id="projetoCommits"></label><br>
             <br>
             <a wicket:id="executarLnk" class="btn btn-success btn-sm">Executar</a><br>
             <label>Processando:&nbsp;</label>
