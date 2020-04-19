@@ -269,15 +269,44 @@ public class EvolutionPage extends BasePage {
         int r = 0;
         try {
             //b8f638fa,Gary Gregory,2019-08-09,Javadoc.
-            Process p = Runtime.getRuntime().exec("git log --pretty=format:%h,%an,%ad,%s --date=iso8601", null, new File(pathExecute));
+            Process p = Runtime.getRuntime().exec("git tag", null, new File(pathExecute));
             BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String lineOut;
             while ((lineOut = input.readLine()) != null) {
-                String[] arrayCommit = lineOut.split(",");
-                String id = arrayCommit[0];
-                String name = arrayCommit[1];
-                Date date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(arrayCommit[2]);
-                String msg = arrayCommit[3];
+                String tagName = lineOut.trim();
+                Process detalhes = Runtime.getRuntime().exec("git show " + tagName, null, new File(pathExecute));
+                BufferedReader input2 = new BufferedReader(new InputStreamReader(detalhes.getInputStream()));
+                String commit = "";
+                String lineOut2;
+
+                String id = "";
+                String name = "";
+                Date date = null;
+                String msg = "";
+
+                while ((lineOut2 = input2.readLine()) != null) {
+                    System.out.println(lineOut2);
+
+                    if(lineOut2.trim().contains("Tagger:")){
+                        name = lineOut2.trim().replace("Tagger:","").trim();
+                    }
+
+                    if(lineOut2.trim().contains("Date:")){
+                        String dateString = lineOut2.trim().replace("Date:","").trim();
+//                        dateString = dateString.replace("+0000","").trim();
+                        SimpleDateFormat formatter5 = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy Z",Locale.US);
+                        System.out.println(formatter5.format(new Date()));
+
+                        date = formatter5.parse(dateString);
+                    }
+
+                    if(lineOut2.trim().contains("commit ")){
+                        id = lineOut2.trim().replace("commit ","").trim();
+                    }
+
+
+                }
+
                 lista.add(new Commit(id, name, date, msg));
             }
             input.close();
