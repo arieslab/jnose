@@ -30,8 +30,10 @@ public class Main {
             int qtdMethods = Integer.parseInt(linhaSplit[6]);
 
             System.out.println("Detecting: " + pathFile);
+
             MappingDetector mappingDetector = new MappingDetector();
             TestFile tf = mappingDetector.detectMapping(pathFile, projectPath);
+
             tf.setLoc(loc);
             tf.setMethodsSize(qtdMethods);
             tf.setCommitId(commitId);

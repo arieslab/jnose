@@ -27,13 +27,11 @@ public class JNoseUtils {
         System.out.println("Hello World");
         Path startDir = Paths.get(directoryPath);
 
-
         List<TestClass> list = getFilesTest(directoryPath);
 
         list.parallelStream().forEach(f -> {
             System.out.println(f.toString());
         });
-
     }
 
 
@@ -53,6 +51,7 @@ public class JNoseUtils {
                             testClass.pathFile = filePath;
 
                             if (isTestFile(testClass)) {
+                                System.out.println("TestClass Detect -> " + testClass.pathFile);
                                 files.add(testClass);
                             }
                         }

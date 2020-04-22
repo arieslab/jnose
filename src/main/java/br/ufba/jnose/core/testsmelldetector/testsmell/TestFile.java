@@ -1,5 +1,6 @@
 package br.ufba.jnose.core.testsmelldetector.testsmell;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,7 +146,7 @@ public class TestFile {
     }
 
     public String getProductionFileName() {
-        int lastIndex = productionFilePath.lastIndexOf("/");
+        int lastIndex = productionFilePath.lastIndexOf(File.separatorChar);
         if (lastIndex == -1)
             return "";
         return productionFilePath.substring(lastIndex + 1, productionFilePath.length());

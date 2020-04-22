@@ -52,7 +52,7 @@ public class HomePage extends BasePage {
 
     private String pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
 
-    private String pastaPathReport = pathAppToWebapp + "/reports/";
+    private String pastaPathReport = pathAppToWebapp + File.separatorChar + "reports" + File.separatorChar;
 
     private Label lbPastaSelecionada;
 
@@ -317,7 +317,7 @@ public class HomePage extends BasePage {
         lvProjetos.setOutputMarkupPlaceholderTag(true);
         add(lvProjetos);
 
-        linkCSVFinal = new ExternalLink("linkCSVFinal", "/reports/" + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv");
+        linkCSVFinal = new ExternalLink("linkCSVFinal", File.separatorChar + "reports" + File.separatorChar + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv");
         linkCSVFinal.setOutputMarkupId(true);
         linkCSVFinal.setOutputMarkupPlaceholderTag(true);
         add(linkCSVFinal);
