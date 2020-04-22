@@ -140,6 +140,9 @@ public class GeneralFixture extends AbstractSmell {
 
                 testMethod = new TestMethod(n.getNameAsString());
                 testMethod.setHasSmell(fixtureCount.size() != setupFields.size());
+                testMethod.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
+                testMethod.addDataItem("end",String.valueOf(n.getRange().get().end.line));
+
                 smellyElementList.add(testMethod);
 
                 fixtureCount = new HashSet();;

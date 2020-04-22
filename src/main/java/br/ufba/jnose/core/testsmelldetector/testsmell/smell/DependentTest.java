@@ -78,7 +78,10 @@ public class DependentTest extends AbstractSmell {
                 calledMethods = new ArrayList<>();
 
                 super.visit(n, arg);
-                testMethods.add(new DependentTest.TestMethod(n, calledMethods));
+
+                TestMethod testMethod = new DependentTest.TestMethod(n, calledMethods);
+
+                testMethods.add(testMethod);
             }
         }
 

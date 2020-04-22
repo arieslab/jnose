@@ -82,6 +82,9 @@ public class ConditionalTestLogic extends AbstractSmell {
                 testMethod.addDataItem("ForCount", String.valueOf(forCount));
                 testMethod.addDataItem("WhileCount", String.valueOf(whileCount));
 
+                testMethod.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
+                testMethod.addDataItem("end",String.valueOf(n.getRange().get().end.line));
+
                 smellyElementList.add(testMethod);
 
                 //reset values for next method

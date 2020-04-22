@@ -83,6 +83,10 @@ public class ConstructorInitialization extends AbstractSmell {
                 if(!constructorAllowed) {
                     testClass = new TestClass(n.getNameAsString());
                     testClass.setHasSmell(true);
+
+                    testClass.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
+                    testClass.addDataItem("end",String.valueOf(n.getRange().get().end.line));
+
                     smellyElementList.add(testClass);
                 }
             }

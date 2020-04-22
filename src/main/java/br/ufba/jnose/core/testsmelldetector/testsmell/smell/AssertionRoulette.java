@@ -73,6 +73,10 @@ public class AssertionRoulette extends AbstractSmell {
             if (Util.isValidTestMethod(n)) {
                 currentMethod = n;
                 testMethod = new TestMethod(n.getNameAsString());
+
+                testMethod.getData().put("begin",n.getRange().get().begin.line+"");
+                testMethod.getData().put("end",n.getRange().get().end.line+"");
+
                 testMethod.setHasSmell(false); //default value is false (i.e. no smell)
                 super.visit(n, arg);
 

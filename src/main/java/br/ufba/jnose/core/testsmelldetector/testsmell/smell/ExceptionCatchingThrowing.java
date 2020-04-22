@@ -73,6 +73,10 @@ public class ExceptionCatchingThrowing extends AbstractSmell {
                 currentMethod = n;
                 testMethod = new TestMethod(n.getNameAsString());
                 testMethod.setHasSmell(false); //default value is false (i.e. no smell)
+
+                testMethod.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
+                testMethod.addDataItem("end",String.valueOf(n.getRange().get().end.line));
+
                 super.visit(n, arg);
 
                 if (n.getThrownExceptions().size() >= 1)

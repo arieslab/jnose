@@ -1,6 +1,5 @@
 package br.ufba.jnose.core;
 
-import br.ufba.jnose.core.testfiledetector.entity.ClassEntity;
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
 import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestFile;
@@ -73,9 +72,8 @@ public class JNoseUtils {
     private static boolean isTestFile(TestClass testClass) {
         Boolean isTestFile = false;
         try {
-            ClassEntity classEntity = new ClassEntity(testClass.pathFile);
             FileInputStream fileInputStream = null;
-            fileInputStream = new FileInputStream(classEntity.getFilePath());
+            fileInputStream = new FileInputStream(testClass.pathFile.toFile());
             CompilationUnit compilationUnit = JavaParser.parse(fileInputStream);
             testClass.numberLine = compilationUnit.getRange().get().end.line;
             for (NodeList node : compilationUnit.getNodeLists()){
@@ -125,20 +123,21 @@ public class JNoseUtils {
     public static void getTestSmells(TestClass testClass){
         TestSmellDetector testSmellDetector = TestSmellDetector.createTestSmellDetector();
         TestFile testFile = new TestFile("Teste",testClass.pathFile.toString(),testClass.productionFile,testClass.numberLine,testClass.numberMethods);
-        //String app, String testFilePath, String productionFilePath, Integer loc, Integer qtdMethods
+
         try {
             TestFile tempFile = testSmellDetector.detectSmells(testFile);
             for (AbstractSmell smell : tempFile.getTestSmells()) {
                 smell.getSmellyElements();
                 for (SmellyElement smellyElement : smell.getSmellyElements()){
                     if(smellyElement.getHasSmell()){
-
-//                        System.out.println(smellyElement);
-
                         TestSmell testSmell = new TestSmell();
                         testSmell.name = smell.getSmellName();
+                        smell.getSmellyElements().get(0).getData().get("begin");
+
                         testSmell.method = smellyElement.getElementName();
-//                        testSmell.lineNumber = smellyElement.xxxxx();
+                        testSmell.begin = smellyElement.getData().get("begin");
+                        testSmell.end = smellyElement.getData().get("end");
+                        testSmell.lineNumber = smellyElement.getData().get("begin");
 
                         testClass.listTestSmell.add(testSmell);
                     }
@@ -173,8 +172,10 @@ public class JNoseUtils {
     public static class TestSmell{
         public String name;
         public String method;
-        public Long lineNumber;
+        public String lineNumber;
         public String code;
+        public String begin;
+        public String end;
 
         @Override
         public String toString() {
@@ -183,6 +184,7 @@ public class JNoseUtils {
                     ", method='" + method + '\'' +
                     ", lineNumber=" + lineNumber +
                     ", code='" + code + '\'' +
+                    ", range='[" + begin + "-" + end + "]" +'\'' +
                     '}';
         }
     }

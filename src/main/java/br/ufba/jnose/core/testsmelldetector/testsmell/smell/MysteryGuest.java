@@ -117,7 +117,8 @@ public class MysteryGuest extends AbstractSmell {
                 testMethod = new TestMethod(n.getNameAsString());
                 testMethod.setHasSmell(false); //default value is false (i.e. no smell)
                 super.visit(n, arg);
-
+                testMethod.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
+                testMethod.addDataItem("end",String.valueOf(n.getRange().get().end.line));
                 testMethod.setHasSmell(mysteryCount > 0);
                 testMethod.addDataItem("MysteryCount", String.valueOf(mysteryCount));
 
