@@ -52,6 +52,17 @@ public class JNoseUtils {
 
                             if (isTestFile(testClass)) {
                                 System.out.println("TestClass Detect -> " + testClass.pathFile);
+
+                                String productionFileName = "";
+
+                                int index = testClass.name.toLowerCase().lastIndexOf("test");
+                                if (index == 0) {
+                                    productionFileName = testClass.name.substring(4, testClass.name.length());
+                                } else {
+                                    productionFileName = testClass.name.substring(0, testClass.name.toLowerCase().lastIndexOf("test")) + ".java";
+                                }
+
+                                testClass.productionFile = getFileProduction(startDir.toString(),productionFileName);
                                 files.add(testClass);
                             }
                         }
@@ -96,11 +107,33 @@ public class JNoseUtils {
         return isTestClass;
     }
 
+    public static String getFileProduction(String directoryPath,String productionFileName) {
+
+        final String[] retorno = {""};
+
+        try {
+            Path startDir = Paths.get(directoryPath);
+
+            Files.walk(startDir)
+                    .filter(Files::isRegularFile)
+                    .forEach(filePath -> {
+                        if (filePath.getFileName().toString().toLowerCase().equals(productionFileName.toLowerCase())) {
+                            retorno[0] = filePath.toString();
+                        }
+                    });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return retorno[0];
+    }
+
     public static class TestClass{
         public Path pathFile;
         public String name;
         public Integer numberMethods;
         public Integer numberLine;
+        public String productionFile;
 
         @Override
         public String toString() {
@@ -109,6 +142,7 @@ public class JNoseUtils {
                     ", name='" + name + '\'' +
                     ", numberMethods=" + numberMethods +
                     ", numberLine=" + numberLine +
+                    ", productionFile='" + productionFile + '\'' +
                     '}';
         }
     }
