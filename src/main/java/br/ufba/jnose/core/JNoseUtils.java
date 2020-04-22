@@ -1,6 +1,10 @@
 package br.ufba.jnose.core;
 
 import br.ufba.jnose.core.testfiledetector.entity.ClassEntity;
+import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
+import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
+import br.ufba.jnose.core.testsmelldetector.testsmell.TestFile;
+import br.ufba.jnose.core.testsmelldetector.testsmell.TestSmellDetector;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.NodeList;
@@ -37,38 +41,32 @@ public class JNoseUtils {
 
     public static List<TestClass> getFilesTest(String directoryPath) throws IOException {
         List<TestClass> files = new ArrayList<>();
-
         Path startDir = Paths.get(directoryPath);
-
         Files.walk(startDir)
                 .filter(Files::isRegularFile)
                 .forEach(filePath -> {
                     if (filePath.getFileName().toString().lastIndexOf(".") != -1) {
                         String fileNameWithoutExtension = filePath.getFileName().toString().substring(0, filePath.getFileName().toString().lastIndexOf(".")).toLowerCase();
                         if (filePath.toString().toLowerCase().endsWith(".java") && fileNameWithoutExtension.matches("^.*test\\d*$")){
-
                             TestClass testClass = new TestClass();
                             testClass.pathFile = filePath;
-
                             if (isTestFile(testClass)) {
                                 System.out.println("TestClass Detect -> " + testClass.pathFile);
-
                                 String productionFileName = "";
-
                                 int index = testClass.name.toLowerCase().lastIndexOf("test");
-                                if (index == 0) {
-                                    productionFileName = testClass.name.substring(4, testClass.name.length());
-                                } else {
+                                if (index > 0) {
                                     productionFileName = testClass.name.substring(0, testClass.name.toLowerCase().lastIndexOf("test")) + ".java";
                                 }
-
                                 testClass.productionFile = getFileProduction(startDir.toString(),productionFileName);
-                                files.add(testClass);
+
+                                if(!testClass.productionFile.isEmpty()){
+                                    getTestSmells(testClass);
+                                    files.add(testClass);
+                                }
                             }
                         }
                     }
                 });
-
         return files;
     }
 
@@ -107,13 +105,10 @@ public class JNoseUtils {
         return isTestClass;
     }
 
-    public static String getFileProduction(String directoryPath,String productionFileName) {
-
+    public static String getFileProduction(String directoryPath, String productionFileName) {
         final String[] retorno = {""};
-
         try {
             Path startDir = Paths.get(directoryPath);
-
             Files.walk(startDir)
                     .filter(Files::isRegularFile)
                     .forEach(filePath -> {
@@ -124,8 +119,34 @@ public class JNoseUtils {
         }catch (Exception e){
             e.printStackTrace();
         }
-
         return retorno[0];
+    }
+
+    public static void getTestSmells(TestClass testClass){
+        TestSmellDetector testSmellDetector = TestSmellDetector.createTestSmellDetector();
+        TestFile testFile = new TestFile("Teste",testClass.pathFile.toString(),testClass.productionFile,testClass.numberLine,testClass.numberMethods);
+        //String app, String testFilePath, String productionFilePath, Integer loc, Integer qtdMethods
+        try {
+            TestFile tempFile = testSmellDetector.detectSmells(testFile);
+            for (AbstractSmell smell : tempFile.getTestSmells()) {
+                smell.getSmellyElements();
+                for (SmellyElement smellyElement : smell.getSmellyElements()){
+                    if(smellyElement.getHasSmell()){
+
+//                        System.out.println(smellyElement);
+
+                        TestSmell testSmell = new TestSmell();
+                        testSmell.name = smell.getSmellName();
+                        testSmell.method = smellyElement.getElementName();
+//                        testSmell.lineNumber = smellyElement.xxxxx();
+
+                        testClass.listTestSmell.add(testSmell);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static class TestClass{
@@ -134,6 +155,7 @@ public class JNoseUtils {
         public Integer numberMethods;
         public Integer numberLine;
         public String productionFile;
+        public List<TestSmell> listTestSmell = new ArrayList<>();
 
         @Override
         public String toString() {
@@ -143,6 +165,24 @@ public class JNoseUtils {
                     ", numberMethods=" + numberMethods +
                     ", numberLine=" + numberLine +
                     ", productionFile='" + productionFile + '\'' +
+                    ", listTestSmell=" + listTestSmell +
+                    '}';
+        }
+    }
+
+    public static class TestSmell{
+        public String name;
+        public String method;
+        public Long lineNumber;
+        public String code;
+
+        @Override
+        public String toString() {
+            return "TestSmell{" +
+                    "name='" + name + '\'' +
+                    ", method='" + method + '\'' +
+                    ", lineNumber=" + lineNumber +
+                    ", code='" + code + '\'' +
                     '}';
         }
     }

@@ -125,11 +125,11 @@ public class TestFile {
     }
 
     public String getTagName() {
-        return testFilePath.split("/")[4];
+        return testFilePath.split(File.separator)[4];
     }
 
     public String getTestFileName() {
-        int lastIndex = testFilePath.lastIndexOf("/");
+        int lastIndex = testFilePath.lastIndexOf(File.separator);
         return testFilePath.substring(lastIndex + 1, testFilePath.length());
     }
 
@@ -153,22 +153,22 @@ public class TestFile {
     }
 
     public String getRelativeTestFilePath() {
-        String[] splitString = testFilePath.split("/");
+        String[] splitString = testFilePath.split(File.separator);
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < 5; i++) {
-            stringBuilder.append(splitString[i] + "/");
+            stringBuilder.append(splitString[i] + File.separator);
         }
-        return testFilePath.substring(stringBuilder.toString().length()).replace("\\", "/");
+        return testFilePath.substring(stringBuilder.toString().length()).replace(File.separator, File.separator);
     }
 
     public String getRelativeProductionFilePath() {
         if (!productionFilePath.isEmpty()) {
-            String[] splitString = productionFilePath.split("/");
+            String[] splitString = productionFilePath.split(File.separator);
             StringBuilder stringBuilder = new StringBuilder();
             for (int i = 0; i < 5; i++) {
-                stringBuilder.append(splitString[i] + "/");
+                stringBuilder.append(splitString[i] + File.separator);
             }
-            return productionFilePath.substring(stringBuilder.toString().length()).replace("/", "/");
+            return productionFilePath.substring(stringBuilder.toString().length()).replace(File.separator, File.separator);
         } else {
             return "";
 
