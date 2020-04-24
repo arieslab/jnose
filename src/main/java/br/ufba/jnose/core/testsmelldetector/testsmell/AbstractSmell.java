@@ -1,6 +1,8 @@
 package br.ufba.jnose.core.testsmelldetector.testsmell;
 
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.List;
 public abstract class AbstractSmell {
     private String smellName;
     protected List<SmellyElement> smellyElementList;
+    protected VoidVisitorAdapter classVisitor;
 
     public AbstractSmell(String smellName) {
         this.smellName = smellName;

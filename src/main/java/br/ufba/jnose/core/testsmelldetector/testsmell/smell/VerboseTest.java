@@ -26,7 +26,6 @@ public class VerboseTest extends AbstractSmell {
      */
     @Override
     public void runAnalysis(CompilationUnit testFileCompilationUnit, CompilationUnit productionFileCompilationUnit, String testFileName, String productionFileName) throws FileNotFoundException {
-        VerboseTest.ClassVisitor classVisitor;
         classVisitor = new VerboseTest.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
     }

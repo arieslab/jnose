@@ -42,8 +42,6 @@ public class LazyTest extends AbstractSmell {
         if (productionFileCompilationUnit == null)
             throw new FileNotFoundException();
 
-        LazyTest.ClassVisitor classVisitor;
-
         classVisitor = new LazyTest.ClassVisitor(PRODUCTION_FILE);
         classVisitor.visit(productionFileCompilationUnit, null);
 

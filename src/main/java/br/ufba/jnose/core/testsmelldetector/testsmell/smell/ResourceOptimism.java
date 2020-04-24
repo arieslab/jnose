@@ -26,7 +26,6 @@ public class ResourceOptimism extends AbstractSmell {
      */
     @Override
     public void runAnalysis(CompilationUnit testFileCompilationUnit, CompilationUnit productionFileCompilationUnit, String testFileName, String productionFileName) throws FileNotFoundException {
-        ResourceOptimism.ClassVisitor classVisitor;
         classVisitor = new ResourceOptimism.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
     }

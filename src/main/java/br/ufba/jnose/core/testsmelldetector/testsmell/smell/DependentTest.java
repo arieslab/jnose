@@ -26,7 +26,6 @@ public class DependentTest extends AbstractSmell {
     @Override
     public void runAnalysis(CompilationUnit testFileCompilationUnit, CompilationUnit productionFileCompilationUnit,
             String testFileName, String productionFileName) throws FileNotFoundException {
-        DependentTest.ClassVisitor classVisitor;
         classVisitor = new DependentTest.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
 

@@ -29,7 +29,6 @@ public class ExceptionCatchingThrowing extends AbstractSmell {
      */
     @Override
     public void runAnalysis(CompilationUnit testFileCompilationUnit, CompilationUnit productionFileCompilationUnit, String testFileName, String productionFileName) throws FileNotFoundException {
-        ExceptionCatchingThrowing.ClassVisitor classVisitor;
         classVisitor = new ExceptionCatchingThrowing.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
     }

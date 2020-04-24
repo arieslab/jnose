@@ -39,8 +39,6 @@ public class EagerTest extends AbstractSmell {
         if (productionFileCompilationUnit == null)
             throw new FileNotFoundException();
 
-        EagerTest.ClassVisitor classVisitor;
-
         classVisitor = new EagerTest.ClassVisitor(PRODUCTION_FILE);
         classVisitor.visit(productionFileCompilationUnit, null);
 

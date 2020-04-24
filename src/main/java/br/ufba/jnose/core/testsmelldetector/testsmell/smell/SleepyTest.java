@@ -29,7 +29,6 @@ public class SleepyTest extends AbstractSmell {
      */
     @Override
     public void runAnalysis(CompilationUnit testFileCompilationUnit, CompilationUnit productionFileCompilationUnit, String testFileName, String productionFileName) throws FileNotFoundException {
-        SleepyTest.ClassVisitor classVisitor;
         classVisitor = new SleepyTest.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
     }

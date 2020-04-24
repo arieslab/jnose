@@ -28,7 +28,6 @@ public class UnknownTest extends AbstractSmell {
      */
     @Override
     public void runAnalysis(CompilationUnit testFileCompilationUnit, CompilationUnit productionFileCompilationUnit, String testFileName, String productionFileName) throws FileNotFoundException {
-        UnknownTest.ClassVisitor classVisitor;
         classVisitor = new UnknownTest.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
     }

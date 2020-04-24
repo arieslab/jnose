@@ -26,7 +26,6 @@ public class MagicNumberTest  extends AbstractSmell {
      */
     @Override
     public void runAnalysis(CompilationUnit testFileCompilationUnit, CompilationUnit productionFileCompilationUnit, String testFileName, String productionFileName) throws FileNotFoundException {
-        MagicNumberTest.ClassVisitor classVisitor;
         classVisitor = new MagicNumberTest.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
     }
