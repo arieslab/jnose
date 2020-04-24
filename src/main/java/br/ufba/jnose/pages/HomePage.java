@@ -496,8 +496,7 @@ public class HomePage extends BasePage {
             for (java.io.File dir : directories) {
                 String pathPom = dir.getAbsolutePath() + File.separatorChar + "pom.xml";
 
-//                new File(dir.toURI()).exists();
-                if (new File(pathPom).exists()) {//&& pathPom.contains("evo")
+                if (new File(pathPom).exists()) {
                     String pathProjeto = dir.getAbsolutePath().trim();
                     String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
                     lista.add(new Projeto(nameProjeto, pathProjeto));
