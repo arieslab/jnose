@@ -1,10 +1,12 @@
-package br.ufba.jnose.core;
+package br.ufba.jnose;
 
-import br.ufba.jnose.core.evolution.Commit;
+import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
 import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestFile;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestSmellDetector;
+import br.ufba.jnose.dto.TestClass;
+import br.ufba.jnose.dto.TestSmell;
 import br.ufba.jnose.util.ResultsWriter;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
@@ -42,11 +44,11 @@ public class JNoseUtils {
 
         LOGGER.info("projectPath: " + projectPath + " - projectName: " + projectName + " - reportPath: " + reportPath);
 
-        List<JNoseUtils.TestClass> files = JNoseUtils.getFilesTest(projectPath);
+        List<TestClass> files = JNoseUtils.getFilesTest(projectPath);
         String outFile = reportPath + projectName + "_testfiledetection" + ".csv";
         ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(outFile);
 
-        for (JNoseUtils.TestClass testClass : files) {
+        for (TestClass testClass : files) {
             try {
                 List<String> list = new ArrayList<String>();
                 list.add(testClass.pathFile + "," + testClass.numberLine + "," + testClass.numberMethods + "");
@@ -58,10 +60,10 @@ public class JNoseUtils {
         return resultsWriter.getOutputFile();
     }
 
-    public static List<String[]>  testfilemapping(List<JNoseUtils.TestClass> listTestClass, Commit commit, String projectPath, String projectName) throws IOException {
+    public static List<String[]>  testfilemapping(List<TestClass> listTestClass, Commit commit, String projectPath, String projectName) throws IOException {
         System.out.println("Saving results. Total lines:" + listTestClass.size());
         List<String[]> listRetorno = new ArrayList<>();
-        for (JNoseUtils.TestClass testClass: listTestClass) {
+        for (TestClass testClass: listTestClass) {
             String[] linha = {
                     commit.id,
                     commit.name,
@@ -78,7 +80,7 @@ public class JNoseUtils {
         return listRetorno;
     }
 
-    public static String testfilemapping(List<JNoseUtils.TestClass> listTestClass, String pathFileCSV, String projectPath, String projectName, String reportPath) throws IOException {
+    public static String testfilemapping(List<TestClass> listTestClass, String pathFileCSV, String projectPath, String projectName, String reportPath) throws IOException {
         LOGGER.info("pathFileCSV: " + pathFileCSV + " - projectPath: " + projectPath + " - projectName: " + projectName + " - reportPath: " + reportPath);
         File selectedFile = new File(pathFileCSV);
         FileReader fileReader = new FileReader(selectedFile);
@@ -87,7 +89,7 @@ public class JNoseUtils {
         String outFile = reportPath + projectName + "_testmappingdetector" + ".csv";
         ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(outFile);
         List<String> columnValues = null;
-        for (JNoseUtils.TestClass testClass: listTestClass){
+        for (TestClass testClass: listTestClass){
             columnValues = new ArrayList<>();
             columnValues.add(0, projectName);
             columnValues.add(1, testClass.pathFile.toString());
@@ -210,45 +212,6 @@ public class JNoseUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    public static class TestClass{
-        public Path pathFile;
-        public String name;
-        public Integer numberMethods;
-        public Integer numberLine;
-        public String productionFile;
-        public List<TestSmell> listTestSmell = new ArrayList<>();
-
-        @Override
-        public String toString() {
-            return "TestClass{" +
-                    "pathFile=" + pathFile +
-                    ", name='" + name + '\'' +
-                    ", numberMethods=" + numberMethods +
-                    ", numberLine=" + numberLine +
-                    ", productionFile='" + productionFile + '\'' +
-                    ", listTestSmell=" + listTestSmell +
-                    '}';
-        }
-    }
-
-    public static class TestSmell{
-        public String name;
-        public String method;
-        public String lineNumber;
-        public String begin;
-        public String end;
-
-        @Override
-        public String toString() {
-            return "TestSmell{" +
-                    "name='" + name + '\'' +
-                    ", method='" + method + '\'' +
-                    ", lineNumber=" + lineNumber +
-                    ", range='[" + begin + "-" + end + "]" +'\'' +
-                    '}';
         }
     }
 

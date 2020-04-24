@@ -1,6 +1,5 @@
-package br.ufba.jnose.pages;
+package br.ufba.jnose.dto;
 
-import br.ufba.jnose.core.evolution.Commit;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 

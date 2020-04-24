@@ -1,4 +1,4 @@
-package br.ufba.jnose.core.evolution;
+package br.ufba.jnose.dto;
 
 import java.io.Serializable;
 import java.util.Date;
