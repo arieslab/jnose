@@ -51,7 +51,7 @@ public class EagerTest extends AbstractSmell {
 
 
     public long getHasSmellCount() {
-        return smellyElementList.stream().filter(x -> x.getHasSmell()).count();
+        return smellyElementList.parallelStream().filter(x -> x.getHasSmell()).count();
     }
     /**
      * Analyze the test file for test methods that exhibit the 'Eager Test' smell

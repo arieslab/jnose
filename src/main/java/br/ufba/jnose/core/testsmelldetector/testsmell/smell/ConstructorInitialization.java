@@ -40,7 +40,7 @@ public class ConstructorInitialization extends AbstractSmell {
      */
     @Override
     public boolean getHasSmell() {
-        return smellyElementList.stream().filter(x -> x.getHasSmell()).count() >= 1;
+        return smellyElementList.parallelStream().filter(x -> x.getHasSmell()).count() >= 1;
     }
 
     /**
