@@ -2,11 +2,8 @@ package br.ufba.jnose.pages.base;
 
 import br.ufba.jnose.pages.EvolutionPage;
 import br.ufba.jnose.pages.HomePage;
-import br.ufba.jnose.pages.WebSocketPage;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -39,13 +36,6 @@ public class BasePage extends WebPage {
             }
         };
 
-        Link WebSocketPage = new Link<String>("linkWebSocketPage") {
-            @Override
-            public void onClick() {
-                setResponsePage(WebSocketPage.class);
-            }
-        };
-
         Link linkResults = new Link<String>("linkResults") {
             @Override
             public void onClick() {
@@ -55,13 +45,10 @@ public class BasePage extends WebPage {
 
         add(linkHome);
         add(linkEvolution);
-        add(WebSocketPage);
         add(linkResults);
-
 
         AbstractAjaxTimerBehavior timerHome = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
             int cont = 0;
-
             @Override
             protected void onTimer(AjaxRequestTarget target) {
                 footTime.setDefaultModel(Model.of(cont + ""));

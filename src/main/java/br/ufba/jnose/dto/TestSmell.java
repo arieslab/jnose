@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class TestSmell implements Serializable {
     private static final long serialVersionUID = 1L;
-    
+
     public String name;
     public String method;
     public String lineNumber;
