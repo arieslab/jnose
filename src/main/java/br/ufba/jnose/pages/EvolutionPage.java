@@ -66,8 +66,7 @@ public class EvolutionPage extends BasePage {
 
     public EvolutionPage() {
 
-
-        pathReport = pathAppToWebapp + "/reports/revolution";
+        pathReport = pathAppToWebapp + File.separator + "reports" + File.separator + "revolution";
 
         Form form = new Form("form");
 
@@ -223,8 +222,8 @@ public class EvolutionPage extends BasePage {
             System.out.println("arquivo final -> " + resultsWriter.getOutputFile());
             csvLogGit.setDefaultModelObject(resultsWriter.getOutputFile());
             target.add(csvLogGit);
-
         }
+        execCommand("git checkout master", projetoPath);
     }
 
     private void execCommand(final String commandLine, String pathExecute) {
