@@ -26,7 +26,12 @@ public abstract class AbstractSmell {
      * Returns true if any of the elements has a smell
      */
     public boolean getHasSmell() {return smellyElementList.parallelStream().filter(x -> x.getHasSmell()).count() >= 1;}
+
+    /**
+     * Returns number of smell
+     */
     public long getHasSmellCount() { return smellyElementList.parallelStream().filter(x -> x.getHasSmell()).count();}
+
     /**
      * Test Smell Name
      */
