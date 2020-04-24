@@ -1,6 +1,6 @@
 package br.ufba.jnose.pages;
 
-import br.ufba.jnose.JNoseUtils;
+import br.ufba.jnose.util.JNoseUtils;
 import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.dto.Projeto;
 import br.ufba.jnose.dto.TestClass;

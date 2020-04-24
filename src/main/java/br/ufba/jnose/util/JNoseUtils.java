@@ -1,4 +1,4 @@
-package br.ufba.jnose;
+package br.ufba.jnose.util;
 
 import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
@@ -7,7 +7,6 @@ import br.ufba.jnose.core.testsmelldetector.testsmell.TestFile;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestSmellDetector;
 import br.ufba.jnose.dto.TestClass;
 import br.ufba.jnose.dto.TestSmell;
-import br.ufba.jnose.util.ResultsWriter;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.NodeList;
