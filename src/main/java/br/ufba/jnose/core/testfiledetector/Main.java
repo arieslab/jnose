@@ -13,27 +13,27 @@ import br.ufba.jnose.util.ResultsWriter;
 
 public class Main {
 
-    public static List<String[]> start(String projectPath, Commit commit) {
-
-        List<JNoseUtils.TestClass> files = null;
-        try {
-            files = JNoseUtils.getFilesTest(projectPath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        List<String[]> retorno = new ArrayList<>();
-
-        for (JNoseUtils.TestClass testClass : files) {
-            DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_hhmmss");
-            String dateString = dateFormat.format(commit.date);
-            String[] linhaArray = {commit.id, commit.name, dateString, commit.msg, testClass.pathFile.toString(), testClass.numberLine.toString(), testClass.numberMethods.toString()};
-            retorno.add(linhaArray);
-        }
-        return retorno;
-    }
-
     private final static Logger LOGGER = Logger.getLogger(Main.class.getName());
+
+//    public static List<String[]> start(String projectPath, Commit commit) {
+//
+//        List<JNoseUtils.TestClass> files = null;
+//        try {
+//            files = JNoseUtils.getFilesTest(projectPath);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        List<String[]> retorno = new ArrayList<>();
+//
+//        for (JNoseUtils.TestClass testClass : files) {
+//            DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_hhmmss");
+//            String dateString = dateFormat.format(commit.date);
+//            String[] linhaArray = {commit.id, commit.name, dateString, commit.msg, testClass.pathFile.toString(), testClass.numberLine.toString(), testClass.numberMethods.toString()};
+//            retorno.add(linhaArray);
+//        }
+//        return retorno;
+//    }
 
     public static String start(String projectPath, String projectName, String reportPath) throws IOException {
 
@@ -55,8 +55,8 @@ public class Main {
         return resultsWriter.getOutputFile();
     }
 
-    public static List<JNoseUtils.TestClass> start2(String projectPath, String projectName, String reportPath) throws IOException {
-        return JNoseUtils.getFilesTest(projectPath);
-    }
+//    public static List<JNoseUtils.TestClass> start2(String projectPath, String projectName, String reportPath) throws IOException {
+//        return JNoseUtils.getFilesTest(projectPath);
+//    }
 
 }

@@ -328,7 +328,6 @@ public class EvolutionPage extends BasePage {
         List<String[]> listTestSmells = null;
         try {
             System.out.println("TestSmells: " + pathProjeto + " - " + pastaPathReport);
-//        List<String[]> listTestFile = processarTestFileDetector(pathProjeto, commit);
             List<JNoseUtils.TestClass> listTestFile = JNoseUtils.getFilesTest(pathProjeto);
             List<String[]> listMapping = processarTestFileMapping(listTestFile, commit, pathProjeto);
             listTestSmells = processarTestSmellDetector(listMapping, cabecalho);
@@ -337,21 +336,6 @@ public class EvolutionPage extends BasePage {
         }
         return listTestSmells;
     }
-
-    private List<String[]> processarTestFileDetector(String pathProjeto, Commit commit) {
-        return br.ufba.jnose.core.testfiledetector.Main.start(pathProjeto, commit);
-    }
-
-//    private List<String[]> processarTestFileMapping(List<String[]> listTestFile, String pathProjeto) {
-//        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separator) + 1, pathProjeto.length());
-//        List<String[]> listaResultado = new ArrayList<>();
-//        try {
-//            listaResultado = br.ufba.jnose.core.testfilemapping.Main.start(listTestFile, pathProjeto, nameProjeto);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return listaResultado;
-//    }
 
     private List<String[]> processarTestFileMapping(List<JNoseUtils.TestClass> listTestClass, Commit commit, String pathProjeto) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separator) + 1, pathProjeto.length());

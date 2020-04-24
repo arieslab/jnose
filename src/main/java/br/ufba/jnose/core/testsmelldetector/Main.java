@@ -222,17 +222,11 @@ public class Main {
 
         in.close();
         fileReader.close();
-//        new File(csvPath).deleteOnExit();
         System.out.println("Completed!");
-
         return csvTestSmells;
-
     }
 
     private static void jacocoEscreverArquivo(List<String> columnValues, TestFile file, String targetFile) {
-
-//        columnValues.add(file.getLoc()+"");
-
         String[] jacocoLinha = jacocoMap.get(targetFile);
         if(jacocoLinha != null) {
             columnValues.add(jacocoLinha[3]);
