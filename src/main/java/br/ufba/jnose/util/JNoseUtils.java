@@ -158,7 +158,7 @@ public class JNoseUtils {
                 ClassOrInterfaceDeclaration classAtual = ((ClassOrInterfaceDeclaration) node);
                 testClass.name = classAtual.getNameAsString();
                 NodeList<?> nodeList_members = classAtual.getMembers();
-                testClass.numberMethods = nodeList_members.size();
+                testClass.numberMethods = classAtual.getMembers().size();
                 isTestClass = flowClass(nodeList_members,testClass);
             }else if(node instanceof MethodDeclaration) {
                 isTestClass = flowClass(((MethodDeclaration) node).getAnnotations(),testClass);

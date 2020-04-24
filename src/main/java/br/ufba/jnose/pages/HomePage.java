@@ -295,10 +295,10 @@ public class HomePage extends BasePage {
                 model.add(new AttributeModifier("id", "modal" + projeto.getName()));
                 item.add(model);
 
-                ExternalLink linkCSV0 = new ExternalLink("linl0", "/reports/" + dataProcessamentoAtual + File.separatorChar + projeto.getName() + "_jacoco.csv");
-                ExternalLink linkCSV1 = new ExternalLink("linl1", "/reports/" + dataProcessamentoAtual + File.separatorChar + projeto.getName() + "_testfiledetection.csv");
-                ExternalLink linkCSV2 = new ExternalLink("linl2", "/reports/" + dataProcessamentoAtual + File.separatorChar + projeto.getName() + "_testmappingdetector.csv");
-                ExternalLink linkCSV3 = new ExternalLink("linl3", "/reports/" + dataProcessamentoAtual + File.separatorChar + projeto.getName() + "_testsmesll.csv");
+                ExternalLink linkCSV0 = new ExternalLink("linl0", File.separator + "reports" + File.separator + dataProcessamentoAtual + File.separatorChar + projeto.getName() + "_jacoco.csv");
+                ExternalLink linkCSV1 = new ExternalLink("linl1", File.separator + "reports" + File.separator + dataProcessamentoAtual + File.separatorChar + projeto.getName() + "_testfiledetection.csv");
+                ExternalLink linkCSV2 = new ExternalLink("linl2", File.separator + "reports" + File.separator + dataProcessamentoAtual + File.separatorChar + projeto.getName() + "_testmappingdetector.csv");
+                ExternalLink linkCSV3 = new ExternalLink("linl3", File.separator + "reports" + File.separator + dataProcessamentoAtual + File.separatorChar + projeto.getName() + "_testsmesll.csv");
 
                 model.add(linkCSV0);
                 model.add(linkCSV1);
@@ -674,13 +674,6 @@ public class HomePage extends BasePage {
             e.printStackTrace();
         }
 
-    }
-
-    private static class TabPanel1 extends Panel {
-        private static final long serialVersionUID = 1L;
-        public TabPanel1(String id) {
-            super(id);
-        }
     }
 
 }
