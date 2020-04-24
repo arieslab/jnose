@@ -1,10 +1,13 @@
 package br.ufba.jnose.dto;
 
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestClass{
+public class TestClass implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     public Path pathFile;
     public String name;
     public Integer numberMethods;

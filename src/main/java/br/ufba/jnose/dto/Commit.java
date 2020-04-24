@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Commit implements Serializable {
-    private static final long serialVersionUID = 11312L;
+    private static final long serialVersionUID = 1L;
 
     public String id;
     public String name;

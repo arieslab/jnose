@@ -1,6 +1,10 @@
 package br.ufba.jnose.dto;
 
-public class TestSmell{
+import java.io.Serializable;
+
+public class TestSmell implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     public String name;
     public String method;
     public String lineNumber;
