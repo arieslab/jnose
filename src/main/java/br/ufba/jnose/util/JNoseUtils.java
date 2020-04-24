@@ -198,7 +198,6 @@ public class JNoseUtils {
                     if(smellyElement.getHasSmell()){
                         TestSmell testSmell = new TestSmell();
                         testSmell.name = smell.getSmellName();
-                        smell.getSmellyElements().get(0).getData().get("begin");
 
                         testSmell.method = smellyElement.getElementName();
                         testSmell.begin = smellyElement.getData().get("begin");
