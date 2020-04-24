@@ -143,7 +143,7 @@ public class JNoseUtils {
             CompilationUnit compilationUnit = JavaParser.parse(fileInputStream);
             testClass.numberLine = compilationUnit.getRange().get().end.line;
             for (NodeList node : compilationUnit.getNodeLists()){
-                isTestFile = navegarClass(node,testClass);
+                isTestFile = flowClass(node,testClass);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -151,7 +151,7 @@ public class JNoseUtils {
         return isTestFile;
     }
 
-    private static Boolean navegarClass(NodeList<?> nodeList,TestClass testClass) {
+    private static Boolean flowClass(NodeList<?> nodeList, TestClass testClass) {
         boolean isTestClass = false;
         for (Object node : nodeList) {
             if (node instanceof ClassOrInterfaceDeclaration) {
@@ -159,9 +159,9 @@ public class JNoseUtils {
                 testClass.name = classAtual.getNameAsString();
                 NodeList<?> nodeList_members = classAtual.getMembers();
                 testClass.numberMethods = nodeList_members.size();
-                isTestClass = navegarClass(nodeList_members,testClass);
+                isTestClass = flowClass(nodeList_members,testClass);
             }else if(node instanceof MethodDeclaration) {
-                isTestClass = navegarClass(((MethodDeclaration) node).getAnnotations(),testClass);
+                isTestClass = flowClass(((MethodDeclaration) node).getAnnotations(),testClass);
             }else if(node instanceof MarkerAnnotationExpr){
                 return ((MarkerAnnotationExpr) node).getNameAsString().toLowerCase().equals("test");
             }
