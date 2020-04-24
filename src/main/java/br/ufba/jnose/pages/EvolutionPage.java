@@ -341,7 +341,7 @@ public class EvolutionPage extends BasePage {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separator) + 1, pathProjeto.length());
         List<String[]> listaResultado = new ArrayList<>();
         try {
-            listaResultado = br.ufba.jnose.core.testfilemapping.Main.start(listTestClass,commit, pathProjeto, nameProjeto);
+            listaResultado = JNoseUtils.testfilemapping(listTestClass,commit, pathProjeto, nameProjeto);
         } catch (IOException e) {
             e.printStackTrace();
         }

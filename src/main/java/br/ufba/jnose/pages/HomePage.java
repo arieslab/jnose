@@ -4,7 +4,6 @@ import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.core.JNoseUtils;
 import br.ufba.jnose.core.cobertura.ReportGenerator;
 import br.ufba.jnose.pages.base.BasePage;
-import br.ufba.jnose.core.testfiledetector.Main;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestSmellDetector;
 import br.ufba.jnose.util.ResultsWriter;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
@@ -24,7 +23,6 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.http.WebRequest;
-import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -516,7 +514,7 @@ public class HomePage extends BasePage {
         logRetorno = dateNow() + nameProjeto + " - <font style='color:red'>TestFileDetector</font> <br>" + logRetorno;
         String pathCSV = "";
         try {
-            pathCSV = Main.start(pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
+            pathCSV = JNoseUtils.testfiledetector(pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -540,7 +538,7 @@ public class HomePage extends BasePage {
         logRetorno = dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>" + logRetorno;
         String pathCSVMapping = "";
         try {
-            pathCSVMapping = br.ufba.jnose.core.testfilemapping.Main.start(listTestClass,pathFileCSV, pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
+            pathCSVMapping = JNoseUtils.testfilemapping(listTestClass,pathFileCSV, pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
         } catch (IOException e) {
             e.printStackTrace();
         }

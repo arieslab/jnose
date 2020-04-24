@@ -1,9 +1,11 @@
 package br.ufba.jnose.core;
 
+import br.ufba.jnose.core.evolution.Commit;
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
 import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestFile;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestSmellDetector;
+import br.ufba.jnose.util.ResultsWriter;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.NodeList;
@@ -11,16 +13,17 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class JNoseUtils {
+
+    private final static Logger LOGGER = Logger.getLogger(JNoseUtils.class.getName());
 
     private static String directoryPath = "/home/tassio/Desenvolvimento/projetos";
 
@@ -33,6 +36,70 @@ public class JNoseUtils {
         list.parallelStream().forEach(f -> {
             System.out.println(f.toString());
         });
+    }
+
+    public static String testfiledetector(String projectPath, String projectName, String reportPath) throws IOException {
+
+        LOGGER.info("projectPath: " + projectPath + " - projectName: " + projectName + " - reportPath: " + reportPath);
+
+        List<JNoseUtils.TestClass> files = JNoseUtils.getFilesTest(projectPath);
+        String outFile = reportPath + projectName + "_testfiledetection" + ".csv";
+        ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(outFile);
+
+        for (JNoseUtils.TestClass testClass : files) {
+            try {
+                List<String> list = new ArrayList<String>();
+                list.add(testClass.pathFile + "," + testClass.numberLine + "," + testClass.numberMethods + "");
+                resultsWriter.writeLine(list);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return resultsWriter.getOutputFile();
+    }
+
+    public static List<String[]>  testfilemapping(List<JNoseUtils.TestClass> listTestClass, Commit commit, String projectPath, String projectName) throws IOException {
+        System.out.println("Saving results. Total lines:" + listTestClass.size());
+        List<String[]> listRetorno = new ArrayList<>();
+        for (JNoseUtils.TestClass testClass: listTestClass) {
+            String[] linha = {
+                    commit.id,
+                    commit.name,
+                    commit.date.toString(),
+                    commit.msg,
+                    projectName,
+                    testClass.pathFile.toString(),
+                    testClass.productionFile,
+                    testClass.numberLine+"",
+                    testClass.numberMethods+""
+            };
+            listRetorno.add(linha);
+        }
+        return listRetorno;
+    }
+
+    public static String testfilemapping(List<JNoseUtils.TestClass> listTestClass, String pathFileCSV, String projectPath, String projectName, String reportPath) throws IOException {
+        LOGGER.info("pathFileCSV: " + pathFileCSV + " - projectPath: " + projectPath + " - projectName: " + projectName + " - reportPath: " + reportPath);
+        File selectedFile = new File(pathFileCSV);
+        FileReader fileReader = new FileReader(selectedFile);
+        BufferedReader in = new BufferedReader(fileReader);
+        System.out.println("Saving results. Total lines:" + listTestClass.size());
+        String outFile = reportPath + projectName + "_testmappingdetector" + ".csv";
+        ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(outFile);
+        List<String> columnValues = null;
+        for (JNoseUtils.TestClass testClass: listTestClass){
+            columnValues = new ArrayList<>();
+            columnValues.add(0, projectName);
+            columnValues.add(1, testClass.pathFile.toString());
+            columnValues.add(2, testClass.productionFile);
+            columnValues.add(3, testClass.numberLine+"");
+            columnValues.add(4, testClass.numberMethods+"");
+            resultsWriter.writeLine(columnValues);
+        }
+        System.out.println("Completed!");
+        in.close();
+        fileReader.close();
+        return resultsWriter.getOutputFile();
     }
 
 
