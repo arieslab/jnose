@@ -6,38 +6,18 @@ import com.github.javaparser.ast.expr.ConditionalExpr;
 import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
-import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestMethod;
 import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 
 /*
 This class check a test method for the existence of loops and conditional statements in the methods body
  */
 public class ConditionalTestLogic extends AbstractSmell {
-    private List<SmellyElement> smellyElementList;
 
     public ConditionalTestLogic() {
-        smellyElementList = new ArrayList<>();
-    }
-
-    /**
-     * Checks of 'Conditional Test Logic' smell
-     */
-    @Override
-    public String getSmellName() {
-        return "Conditional Test Logic";
-    }
-
-    /**
-     * Returns true if any of the elements has a smell
-     */
-    @Override
-    public boolean getHasSmell() {
-        return smellyElementList.parallelStream().filter(x -> x.getHasSmell()).count() >= 1;
+        super("Conditional Test Logic");
     }
 
     /**
@@ -49,15 +29,6 @@ public class ConditionalTestLogic extends AbstractSmell {
         classVisitor = new ConditionalTestLogic.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
     }
-
-    /**
-     * Returns the set of analyzed elements (i.e. test methods)
-     */
-    @Override
-    public List<SmellyElement> getSmellyElements() {
-        return smellyElementList;
-    }
-
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
         private MethodDeclaration currentMethod = null;

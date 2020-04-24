@@ -8,7 +8,6 @@ import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestClass;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -17,26 +16,8 @@ This code marks the class as smelly if the class name corresponds to the name of
  */
 public class DefaultTest extends AbstractSmell {
 
-    private List<SmellyElement> smellyElementList;
-
     public DefaultTest() {
-        smellyElementList = new ArrayList<>();
-    }
-
-    /**
-     * Checks of 'Default Test' smell
-     */
-    @Override
-    public String getSmellName() {
-        return "Default Test";
-    }
-
-    /**
-     * Returns true if any of the elements has a smell
-     */
-    @Override
-    public boolean getHasSmell() {
-        return smellyElementList.parallelStream().filter(x -> x.getHasSmell()).count() >= 1;
+        super("Default Test");
     }
 
     @Override

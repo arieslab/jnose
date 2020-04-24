@@ -5,7 +5,6 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
-import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
 import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
 
 import java.io.FileNotFoundException;
@@ -14,28 +13,11 @@ import java.util.List;
 
 public class DependentTest extends AbstractSmell {
 
-    private List<SmellyElement> smellyElementList;
     private List<TestMethod> testMethods;
 
     public DependentTest() {
-        smellyElementList = new ArrayList<>();
+        super("Dependent Test");
         testMethods = new ArrayList<>();
-    }
-
-    /**
-     * Checks of 'DependentTest' smell
-     */
-    @Override
-    public String getSmellName() {
-        return "Dependent Test";
-    }
-
-    /**
-     * Returns true if any of the elements has a smell
-     */
-    @Override
-    public boolean getHasSmell() {
-        return smellyElementList.parallelStream().filter(x -> x.getHasSmell()).count() >= 1;
     }
 
     /**
@@ -56,14 +38,6 @@ public class DependentTest extends AbstractSmell {
             }
         }
 
-    }
-
-    /**
-     * Returns the set of analyzed elements (i.e. test methods)
-     */
-    @Override
-    public List<SmellyElement> getSmellyElements() {
-        return smellyElementList;
     }
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {

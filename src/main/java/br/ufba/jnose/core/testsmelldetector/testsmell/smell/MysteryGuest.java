@@ -24,26 +24,8 @@ import java.util.List;
  */
 public class MysteryGuest extends AbstractSmell {
 
-    private List<SmellyElement> smellyElementList;
-
     public MysteryGuest() {
-        smellyElementList = new ArrayList<>();
-    }
-
-    /**
-     * Checks of 'Mystery Guest' smell
-     */
-    @Override
-    public String getSmellName() {
-        return "Mystery Guest";
-    }
-
-    /**
-     * Returns true if any of the elements has a smell
-     */
-    @Override
-    public boolean getHasSmell() {
-        return smellyElementList.parallelStream().filter(x -> x.getHasSmell()).count() >= 1;
+        super("Mystery Guest");
     }
 
     /**
@@ -54,14 +36,6 @@ public class MysteryGuest extends AbstractSmell {
         MysteryGuest.ClassVisitor classVisitor;
         classVisitor = new MysteryGuest.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
-    }
-
-    /**
-     * Returns the set of analyzed elements (i.e. test methods)
-     */
-    @Override
-    public List<SmellyElement> getSmellyElements() {
-        return smellyElementList;
     }
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {

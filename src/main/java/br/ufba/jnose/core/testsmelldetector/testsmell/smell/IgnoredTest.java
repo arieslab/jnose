@@ -6,36 +6,15 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
-import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestClass;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestMethod;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class IgnoredTest extends AbstractSmell {
 
-    private List<SmellyElement> smellyElementList;
-
     public IgnoredTest() {
-        smellyElementList = new ArrayList<>();
-    }
-
-    /**
-     * Checks of 'Ignored Test' smell
-     */
-    @Override
-    public String getSmellName() {
-        return "IgnoredTest";
-    }
-
-    /**
-     * Returns true if any of the elements has a smell
-     */
-    @Override
-    public boolean getHasSmell() {
-        return smellyElementList.parallelStream().filter(x -> x.getHasSmell()).count() >= 1;
+        super("IgnoredTest");
     }
 
     /**
@@ -46,14 +25,6 @@ public class IgnoredTest extends AbstractSmell {
         IgnoredTest.ClassVisitor classVisitor;
         classVisitor = new IgnoredTest.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
-    }
-
-    /**
-     * Returns the set of analyzed elements (i.e. test methods)
-     */
-    @Override
-    public List<SmellyElement> getSmellyElements() {
-        return smellyElementList;
     }
 
     /**

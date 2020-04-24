@@ -4,13 +4,10 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
-import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestMethod;
 import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class checks if a test method is empty (i.e. the method does not contain statements in its body)
@@ -18,26 +15,8 @@ import java.util.List;
  */
 public class EmptyTest extends AbstractSmell {
 
-    private List<SmellyElement> smellyElementList;
-
     public EmptyTest() {
-        smellyElementList = new ArrayList<>();
-    }
-
-    /**
-     * Checks of 'Empty Test' smell
-     */
-    @Override
-    public String getSmellName() {
-        return "EmptyTest";
-    }
-
-    /**
-     * Returns true if any of the elements has a smell
-     */
-    @Override
-    public boolean getHasSmell() {
-        return smellyElementList.parallelStream().filter(x -> x.getHasSmell()).count() >= 1;
+        super("EmptyTest");
     }
 
     /**
@@ -48,14 +27,6 @@ public class EmptyTest extends AbstractSmell {
         EmptyTest.ClassVisitor classVisitor;
         classVisitor = new EmptyTest.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
-    }
-
-    /**
-     * Returns the set of analyzed elements (i.e. test methods)
-     */
-    @Override
-    public List<SmellyElement> getSmellyElements() {
-        return smellyElementList;
     }
 
     /**

@@ -1,7 +1,6 @@
 package br.ufba.jnose.core.testsmelldetector.testsmell.smell;
 
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
-import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestMethod;
 import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
 import com.github.javaparser.ast.CompilationUnit;
@@ -24,35 +23,13 @@ public class EagerTest extends AbstractSmell {
     private static final String TEST_FILE = "Test";
     private static final String PRODUCTION_FILE = "Production";
     private String productionClassName;
-    private List<SmellyElement> smellyElementList;
     private List<MethodDeclaration> productionMethods;
 
     public EagerTest() {
+        super("Eager Test");
         productionMethods = new ArrayList<>();
-        smellyElementList = new ArrayList<>();
     }
 
-    /**
-     * Checks of 'Eager Test' smell
-     */
-    @Override
-    public String getSmellName() {
-        return "Eager Test";
-    }
-
-    /**
-     * Returns true if any of the elements has a smell
-     */
-    @Override
-    public boolean getHasSmell() {
-        return getHasSmellCount() >= 1;
-    }
-
-
-
-    public long getHasSmellCount() {
-        return smellyElementList.parallelStream().filter(x -> x.getHasSmell()).count();
-    }
     /**
      * Analyze the test file for test methods that exhibit the 'Eager Test' smell
      */
@@ -71,15 +48,6 @@ public class EagerTest extends AbstractSmell {
         classVisitor.visit(testFileCompilationUnit, null);
 
     }
-
-    /**
-     * Returns the set of analyzed elements (i.e. test methods)
-     */
-    @Override
-    public List<SmellyElement> getSmellyElements() {
-        return smellyElementList;
-    }
-
 
     /**
      * Visitor class

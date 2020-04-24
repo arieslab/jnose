@@ -6,13 +6,9 @@ import com.github.javaparser.ast.body.ConstructorDeclaration;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
-import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestClass;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-
 
 /*
 This class checks if the code file contains a Constructor. Ideally, the test suite should not have a constructor. Initialization of fields should be in the setUP() method
@@ -20,27 +16,10 @@ If this code detects the existence of a constructor, it sets the class as smelly
  */
 public class ConstructorInitialization extends AbstractSmell {
 
-    private List<SmellyElement> smellyElementList;
     private String testFileName;
 
     public ConstructorInitialization() {
-        smellyElementList = new ArrayList<>();
-    }
-
-    /**
-     * Checks of 'Constructor Initialization' smell
-     */
-    @Override
-    public String getSmellName() {
-        return "Constructor Initialization";
-    }
-
-    /**
-     * Returns true if any of the elements has a smell
-     */
-    @Override
-    public boolean getHasSmell() {
-        return smellyElementList.parallelStream().filter(x -> x.getHasSmell()).count() >= 1;
+        super("Constructor Initialization");
     }
 
     /**
@@ -53,15 +32,6 @@ public class ConstructorInitialization extends AbstractSmell {
         classVisitor = new ConstructorInitialization.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
     }
-
-    /**
-     * Returns the set of analyzed elements (i.e. test methods)
-     */
-    @Override
-    public List<SmellyElement> getSmellyElements() {
-        return smellyElementList;
-    }
-
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
         TestClass testClass;

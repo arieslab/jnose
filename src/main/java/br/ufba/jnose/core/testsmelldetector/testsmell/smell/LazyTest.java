@@ -24,30 +24,13 @@ public class LazyTest extends AbstractSmell {
     private static final String TEST_FILE = "Test";
     private static final String PRODUCTION_FILE = "Production";
     private String productionClassName;
-    private List<SmellyElement> smellyElementList;
     private List<MethodUsage> calledProductionMethods;
     private List<MethodDeclaration> productionMethods;
 
     public LazyTest() {
+        super("Lazy Test");
         productionMethods = new ArrayList<>();
-        smellyElementList = new ArrayList<>();
         calledProductionMethods = new ArrayList<>();
-    }
-
-    /**
-     * Checks of 'Lazy Test' smell
-     */
-    @Override
-    public String getSmellName() {
-        return "Lazy Test";
-    }
-
-    /**
-     * Returns true if any of the elements has a smell
-     */
-    @Override
-    public boolean getHasSmell() {
-        return smellyElementList.parallelStream().filter(x -> x.getHasSmell()).count() >= 1;
     }
 
     /**
@@ -79,14 +62,6 @@ public class LazyTest extends AbstractSmell {
                 }
             }
         }
-    }
-
-    /**
-     * Returns the set of analyzed elements (i.e. test methods)
-     */
-    @Override
-    public List<SmellyElement> getSmellyElements() {
-        return smellyElementList;
     }
 
     private class MethodUsage {

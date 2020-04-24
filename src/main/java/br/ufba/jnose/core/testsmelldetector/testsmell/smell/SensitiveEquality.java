@@ -6,36 +6,15 @@ import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
-import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestMethod;
 import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SensitiveEquality extends AbstractSmell {
 
-    private List<SmellyElement> smellyElementList;
-
     public SensitiveEquality() {
-        smellyElementList = new ArrayList<>();
-    }
-
-    /**
-     * Checks of 'Sensitive Equality' smell
-     */
-    @Override
-    public String getSmellName() {
-        return "Sensitive Equality";
-    }
-
-    /**
-     * Returns true if any of the elements has a smell
-     */
-    @Override
-    public boolean getHasSmell() {
-        return smellyElementList.parallelStream().filter(x -> x.getHasSmell()).count() >= 1;
+        super("Sensitive Equality");
     }
 
     /**
@@ -46,14 +25,6 @@ public class SensitiveEquality extends AbstractSmell {
         SensitiveEquality.ClassVisitor classVisitor;
         classVisitor = new SensitiveEquality.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
-    }
-
-    /**
-     * Returns the set of analyzed elements (i.e. test methods)
-     */
-    @Override
-    public List<SmellyElement> getSmellyElements() {
-        return smellyElementList;
     }
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
@@ -106,9 +77,7 @@ public class SensitiveEquality extends AbstractSmell {
                         }
                     }
                 }
-
             }
         }
-
     }
 }

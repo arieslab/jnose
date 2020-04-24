@@ -17,26 +17,8 @@ import java.util.List;
 
 public class MagicNumberTest  extends AbstractSmell {
 
-    private List<SmellyElement> smellyElementList;
-
     public MagicNumberTest() {
-        smellyElementList = new ArrayList<>();
-    }
-
-    /**
-     * Checks of 'MagicNumberTest' smell
-     */
-    @Override
-    public String getSmellName() {
-        return "Magic Number Test";
-    }
-
-    /**
-     * Returns true if any of the elements has a smell
-     */
-    @Override
-    public boolean getHasSmell() {
-        return smellyElementList.parallelStream().filter(x -> x.getHasSmell()).count() >= 1;
+        super("Magic Number Test");
     }
 
     /**

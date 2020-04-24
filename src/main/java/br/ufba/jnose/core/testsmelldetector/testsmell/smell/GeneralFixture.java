@@ -21,33 +21,16 @@ import java.util.*;
 
 public class GeneralFixture extends AbstractSmell {
 
-    private List<SmellyElement> smellyElementList;
     List<MethodDeclaration> methodList;
     MethodDeclaration setupMethod;
     List<FieldDeclaration> fieldList;
     List<String> setupFields;
 
     public GeneralFixture() {
-        smellyElementList = new ArrayList<>();
+        super("General Fixture");
         methodList = new ArrayList<>();
         fieldList = new ArrayList<>();
         setupFields = new ArrayList<>();
-    }
-
-    /**
-     * Checks of 'General Fixture' smell
-     */
-    @Override
-    public String getSmellName() {
-        return "General Fixture";
-    }
-
-    /**
-     * Returns true if any of the elements has a smell
-     */
-    @Override
-    public boolean getHasSmell() {
-        return smellyElementList.parallelStream().filter(x -> x.getHasSmell()).count() >= 1;
     }
 
     @Override
@@ -85,15 +68,6 @@ public class GeneralFixture extends AbstractSmell {
             classVisitor.visit(method, null);
         }
     }
-
-    /**
-     * Returns the set of analyzed elements (i.e. test methods)
-     */
-    @Override
-    public List<SmellyElement> getSmellyElements() {
-        return smellyElementList;
-    }
-
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
         private MethodDeclaration methodDeclaration = null;
