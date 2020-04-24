@@ -1,5 +1,6 @@
 package br.ufba.jnose.pages;
 
+import br.ufba.jnose.core.JNoseUtils;
 import br.ufba.jnose.core.evolution.Commit;
 import br.ufba.jnose.pages.base.BasePage;
 import br.ufba.jnose.util.ResultsWriter;
@@ -20,6 +21,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -322,10 +325,16 @@ public class EvolutionPage extends BasePage {
     }
 
     private List<String[]> processarTestSmells(String pathProjeto, Commit commit, String pastaPathReport, Boolean cabecalho) {
-        System.out.println("TestSmells: " + pathProjeto + " - " + pastaPathReport);
-        List<String[]> listTestFile = processarTestFileDetector(pathProjeto, commit);
-        List<String[]> listMapping = processarTestFileMapping(listTestFile, pathProjeto);
-        List<String[]> listTestSmells = processarTestSmellDetector(listMapping, cabecalho);
+        List<String[]> listTestSmells = null;
+        try {
+            System.out.println("TestSmells: " + pathProjeto + " - " + pastaPathReport);
+//        List<String[]> listTestFile = processarTestFileDetector(pathProjeto, commit);
+            List<JNoseUtils.TestClass> listTestFile = JNoseUtils.getFilesTest(pathProjeto);
+            List<String[]> listMapping = processarTestFileMapping(listTestFile, commit, pathProjeto);
+            listTestSmells = processarTestSmellDetector(listMapping, cabecalho);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return listTestSmells;
     }
 
@@ -333,11 +342,22 @@ public class EvolutionPage extends BasePage {
         return br.ufba.jnose.core.testfiledetector.Main.start(pathProjeto, commit);
     }
 
-    private List<String[]> processarTestFileMapping(List<String[]> listTestFile, String pathProjeto) {
+//    private List<String[]> processarTestFileMapping(List<String[]> listTestFile, String pathProjeto) {
+//        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separator) + 1, pathProjeto.length());
+//        List<String[]> listaResultado = new ArrayList<>();
+//        try {
+//            listaResultado = br.ufba.jnose.core.testfilemapping.Main.start(listTestFile, pathProjeto, nameProjeto);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return listaResultado;
+//    }
+
+    private List<String[]> processarTestFileMapping(List<JNoseUtils.TestClass> listTestClass, Commit commit, String pathProjeto) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separator) + 1, pathProjeto.length());
         List<String[]> listaResultado = new ArrayList<>();
         try {
-            listaResultado = br.ufba.jnose.core.testfilemapping.Main.start(listTestFile, pathProjeto, nameProjeto);
+            listaResultado = br.ufba.jnose.core.testfilemapping.Main.start(listTestClass,commit, pathProjeto, nameProjeto);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,6 +1,7 @@
 package br.ufba.jnose.pages;
 
 import br.ufba.jnose.WicketApplication;
+import br.ufba.jnose.core.JNoseUtils;
 import br.ufba.jnose.core.cobertura.ReportGenerator;
 import br.ufba.jnose.pages.base.BasePage;
 import br.ufba.jnose.core.testfiledetector.Main;
@@ -440,7 +441,7 @@ public class HomePage extends BasePage {
     }
 
 
-    private String processarProjeto(Projeto projeto, float valorProcProject, String folderTime) {
+    private String processarProjeto(Projeto projeto, float valorProcProject, String folderTime) throws IOException {
         logRetorno = dateNow() + projeto.getName() + " - started <br>" + logRetorno;
         Float valorSoma = valorProcProject / 4;
 
@@ -458,9 +459,13 @@ public class HomePage extends BasePage {
         totalProcessado = totalProcessado + valorSoma.intValue();
         projeto.setProcentagem(50);
 
-        String csvMapping = processarTestFileMapping(csvFile, projeto.getPath(), folderTime);
+
+        List<JNoseUtils.TestClass> listaTestClass = JNoseUtils.getFilesTest(projeto.getPath());
+        String csvMapping = processarTestFileMapping(listaTestClass,csvFile, projeto.getPath(), folderTime);
         totalProcessado = totalProcessado + valorSoma.intValue();
         projeto.setProcentagem(75);
+
+
 
         String csvTestSmells = processarTestSmellDetector(csvMapping, projeto.getPath(), folderTime);
         totalProcessado = totalProcessado + valorSoma.intValue();
@@ -519,12 +524,24 @@ public class HomePage extends BasePage {
         return pathCSV;
     }
 
-    private String processarTestFileMapping(String pathFileCSV, String pathProjeto, String folderTime) {
+//    private String processarTestFileMapping(String pathFileCSV, String pathProjeto, String folderTime) {
+//        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
+//        logRetorno = dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>" + logRetorno;
+//        String pathCSVMapping = "";
+//        try {
+//            pathCSVMapping = br.ufba.jnose.core.testfilemapping.Main.start(pathFileCSV, pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return pathCSVMapping;
+//    }
+
+    private String processarTestFileMapping(List<JNoseUtils.TestClass> listTestClass,String pathFileCSV, String pathProjeto, String folderTime) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
         logRetorno = dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>" + logRetorno;
         String pathCSVMapping = "";
         try {
-            pathCSVMapping = br.ufba.jnose.core.testfilemapping.Main.start(pathFileCSV, pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
+            pathCSVMapping = br.ufba.jnose.core.testfilemapping.Main.start(listTestClass,pathFileCSV, pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -543,6 +560,18 @@ public class HomePage extends BasePage {
         }
         return csvTestSmells;
     }
+
+//    private String processarTestSmellDetector(List<JNoseUtils.TestClass> listTestClass, String pathProjeto) {
+//        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
+//        logRetorno = dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>" + logRetorno;
+//        String csvTestSmells = "";
+//        try {
+//            csvTestSmells = br.ufba.jnose.core.testsmelldetector.Main.start(listTestClass);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return csvTestSmells;
+//    }
 
 
 //    private String processarCobertura(String pathCSVMapping, String pathProjeto, String folderTime){

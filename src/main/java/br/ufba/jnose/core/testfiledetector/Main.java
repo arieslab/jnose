@@ -55,4 +55,8 @@ public class Main {
         return resultsWriter.getOutputFile();
     }
 
+    public static List<JNoseUtils.TestClass> start2(String projectPath, String projectName, String reportPath) throws IOException {
+        return JNoseUtils.getFilesTest(projectPath);
+    }
+
 }

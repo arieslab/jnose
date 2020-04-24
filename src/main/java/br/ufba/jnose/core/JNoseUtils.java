@@ -22,12 +22,10 @@ import java.util.List;
 
 public class JNoseUtils {
 
-    private String filePath = "C:\\projetos\\commons-io\\src\\test\\java\\org\\apache\\commons\\io\\CopyUtilsTest.java";
-
-    private static String directoryPath = "C:\\projetos\\commons-io";
+    private static String directoryPath = "/home/tassio/Desenvolvimento/projetos";
 
     public static void main(String[] args) throws IOException {
-        System.out.println("Hello World");
+        System.out.println("JNoseUtils");
         Path startDir = Paths.get(directoryPath);
 
         List<TestClass> list = getFilesTest(directoryPath);
@@ -173,7 +171,6 @@ public class JNoseUtils {
         public String name;
         public String method;
         public String lineNumber;
-        public String code;
         public String begin;
         public String end;
 
@@ -183,7 +180,6 @@ public class JNoseUtils {
                     "name='" + name + '\'' +
                     ", method='" + method + '\'' +
                     ", lineNumber=" + lineNumber +
-                    ", code='" + code + '\'' +
                     ", range='[" + begin + "-" + end + "]" +'\'' +
                     '}';
         }
