@@ -22,7 +22,6 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.markup.html.basic.Label;
@@ -47,47 +46,26 @@ public class HomePage extends BasePage {
     private static final long serialVersionUID = 1L;
 
     private String pastaPath = "";
-
     private String pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
-
     private String pastaPathReport = pathAppToWebapp + File.separatorChar + "reports" + File.separatorChar;
-
     private Label lbPastaSelecionada;
-
     private ProgressBar progressBar;
-
     private List<Projeto> listaProjetos;
-
     private AjaxIndicatorAppender indicator = new AjaxIndicatorAppender();
-
     private ListView<Projeto> lvProjetos;
-
     private Label taLog;
-
     private Label taLogInfo;
-
     private Integer totalProcessado;
-
     private Map<Integer, Integer> totalProgressBar;
-
     private Boolean processando = false;
-
     private WebMarkupContainer loadImg;
-
     private IndicatingAjaxLink processarTodos;
-
     private Label lbProjetosSize;
-
     private String logRetorno = "";
-
     static public String logRetornoInfo = "";
-
     private String dataProcessamentoAtual;
-
     private boolean mesclado = false;
-
     private ExternalLink linkCSVFinal;
-
     private boolean processarCobertura;
 
     public HomePage() {
@@ -157,9 +135,6 @@ public class HomePage extends BasePage {
                 }
 
                 for (Projeto projeto : listaProjetosProcessar) {
-//                    Label lbProcessado = projeto.lbProcessado;
-//                    lbProcessado.setDefaultModel(Model.of(projeto.getProcessado()));
-//                    target.add(lbProcessado);
 
                     WebMarkupContainer iconProcessado = projeto.iconProcessado;
                     iconProcessado.setVisible(projeto.getProcessado());
@@ -330,11 +305,6 @@ public class HomePage extends BasePage {
         Button btEnviar = new Button("btEnviar") {
             @Override
             public void onSubmit() {
-
-//                if(pastaPath.isEmpty()){
-//                    getFeedbackMessages().error(form,"Digite o valor do projeto.");
-//                }
-
                 mesclado = false;
                 dataProcessamentoAtual = dateNowFolder();
                 logRetorno = "";
@@ -343,12 +313,6 @@ public class HomePage extends BasePage {
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
 
                 File file = new File(pastaPath);
-                System.out.println(file.toURI());
-
-                System.out.println(file.toPath().toUri());
-
-//                pastaPath.replace("\\",File.separatorChar);
-
                 listaProjetos = listaProjetos(file.toURI());
                 lvProjetos.setList(listaProjetos);
 
@@ -357,7 +321,6 @@ public class HomePage extends BasePage {
 
                 Cookie pastaPathCookie = new Cookie("pastaPath", "\""+pastaPath+"\"");
                 ((WebResponse) getResponse()).addCookie(pastaPathCookie);
-
             }
         };
         form.add(btEnviar);
@@ -367,14 +330,12 @@ public class HomePage extends BasePage {
             public void onClick(AjaxRequestTarget target) {
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
                 processando = true;
-
                 List<Projeto> listaParaProcessar = new ArrayList<>();
                 for (Projeto projeto : listaProjetos) {
                     if (projeto.getParaProcessar()) {
                         listaParaProcessar.add(projeto);
                     }
                 }
-
                 processarProjetos(listaParaProcessar, dataProcessamentoAtual);
             }
         };
@@ -406,17 +367,6 @@ public class HomePage extends BasePage {
         }
 
         for (Projeto projeto : lista) {
-//            new Thread() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        processarProjeto2(projeto, valorSoma, folderTime);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        projeto.bugs = projeto.bugs + "\n" + e.getMessage();
-//                    }
-//                }
-//            }.start();
             new Thread() {
                 @Override
                 public void run() {
@@ -430,17 +380,6 @@ public class HomePage extends BasePage {
             }.start();
         }
 
-    }
-
-    private void processarProjeto2(Projeto projeto, float valorProcProject, String folderTime) {
-        Float valorSoma = valorProcProject / 4;
-
-        if (WicketApplication.COBERTURA_ON) {
-            processarCobertura(projeto, folderTime);
-        }
-        totalProcessado = totalProcessado + valorSoma.intValue();
-        projeto.setProcentagem(25);
-        projeto.setProcessado2(true);
     }
 
 
@@ -479,7 +418,6 @@ public class HomePage extends BasePage {
         logRetorno = dateNow() + projeto.getName() + " - <font style='color:blue'>Cobertura</font> <br>" + logRetorno;
         try {
             execCommand("mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Drat.skip=true", projeto.getPath());
-//            execCommand("mvn clean install -Drat.skip=true", projeto.getPath());
             ReportGenerator reportGenerator = new ReportGenerator(new File(projeto.getPath()), new File(pastaPathReport + folderTime + File.separatorChar));
             reportGenerator.create();
         } catch (Exception e) {
@@ -523,18 +461,6 @@ public class HomePage extends BasePage {
         return pathCSV;
     }
 
-//    private String processarTestFileMapping(String pathFileCSV, String pathProjeto, String folderTime) {
-//        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-//        logRetorno = dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>" + logRetorno;
-//        String pathCSVMapping = "";
-//        try {
-//            pathCSVMapping = br.ufba.jnose.core.testfilemapping.Main.start(pathFileCSV, pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return pathCSVMapping;
-//    }
-
     private String processarTestFileMapping(List<TestClass> listTestClass,String pathFileCSV, String pathProjeto, String folderTime) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
         logRetorno = dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>" + logRetorno;
@@ -560,28 +486,6 @@ public class HomePage extends BasePage {
         return csvTestSmells;
     }
 
-//    private String processarTestSmellDetector(List<JNoseUtils.TestClass> listTestClass, String pathProjeto) {
-//        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-//        logRetorno = dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>" + logRetorno;
-//        String csvTestSmells = "";
-//        try {
-//            csvTestSmells = br.ufba.jnose.core.testsmelldetector.Main.start(listTestClass);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return csvTestSmells;
-//    }
-
-
-//    private String processarCobertura(String pathCSVMapping, String pathProjeto, String folderTime){
-//        try{
-//            br.ufba.jnose.cobertura.Main.start();
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return "";
-//    }
-
     private String dateNow() {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm:ss")) + " - ";
     }
@@ -593,7 +497,6 @@ public class HomePage extends BasePage {
     private static void execCommand(final String commandLine, String pathExecute) {
         int r = 0;
         try {
-            //"/home/tassio/Desenvolvimento/apache-maven-3.6.1/bin/mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Drat.skip=true"
             Process p = Runtime.getRuntime().exec(commandLine, null, new File(pathExecute));
             BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String lineOut;
@@ -611,14 +514,6 @@ public class HomePage extends BasePage {
     public static List<String> columnNames;
 
     private static void gerarDadosGeral() {
-//        String csvTestSmells = reportPath+projectName+"_testsmesll.csv";
-
-//        ResultsWriter resultsWriter = null;
-//        try {
-//            resultsWriter = ResultsWriter.createResultsWriter(csvTestSmells);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
         List<String> columnValues;
         TestSmellDetector testSmellDetector = TestSmellDetector.createTestSmellDetector();
         columnNames = testSmellDetector.getTestSmellNames();
@@ -639,18 +534,12 @@ public class HomePage extends BasePage {
             columnNames.add("METHOD_MISSED");
             columnNames.add("METHOD_COVERED");
         }
-//        try {
-//            resultsWriter.writeColumnName(columnNames);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
 
     private void mesclarGeral(List<Projeto> listaProjetos, String reportPath) {
 
         logRetorno = dateNow() + "<font style='color:orange'>Mesclando resultados</font> <br>" + logRetorno;
-
 
         try {
             ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(reportPath + "all" + "_testsmesll.csv");
@@ -674,14 +563,10 @@ public class HomePage extends BasePage {
                     }
                     jacocoIn.close();
                     jacocoFileReader.close();
-//                    jacocoFile.deleteOnExit();
                 }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
 }
