@@ -35,6 +35,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import javax.servlet.http.Cookie;
+
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.time.Duration;
 import java.util.List;
 
@@ -322,11 +324,17 @@ public class HomePage extends BasePage {
         add(feedback.setOutputMarkupId(true));
 
         TextField tfPastaPath = new TextField("tfPastaPath", new PropertyModel(this, "pastaPath"));
+        tfPastaPath.setRequired(true);
         form.add(tfPastaPath);
 
         Button btEnviar = new Button("btEnviar") {
             @Override
             public void onSubmit() {
+
+//                if(pastaPath.isEmpty()){
+//                    getFeedbackMessages().error(form,"Digite o valor do projeto.");
+//                }
+
                 mesclado = false;
                 dataProcessamentoAtual = dateNowFolder();
                 logRetorno = "";
@@ -347,8 +355,8 @@ public class HomePage extends BasePage {
                 processarTodos.setEnabled(true);
                 lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
 
-//                Cookie pastaPathCookie = new Cookie("pastaPath", pastaPath);
-//                ((WebResponse) getResponse()).addCookie(pastaPathCookie);
+                Cookie pastaPathCookie = new Cookie("pastaPath", "\""+pastaPath+"\"");
+                ((WebResponse) getResponse()).addCookie(pastaPathCookie);
 
             }
         };

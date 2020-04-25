@@ -6,6 +6,7 @@ import br.ufba.jnose.dto.Projeto;
 import br.ufba.jnose.dto.TestClass;
 import br.ufba.jnose.pages.base.BasePage;
 import br.ufba.jnose.util.ResultsWriter;
+import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -14,6 +15,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -32,31 +34,18 @@ public class EvolutionPage extends BasePage {
     private static final long serialVersionUID = 1L;
 
     private String pathReport = "";
-
     private String pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
-
     final private Boolean testSmellsTask = false;
-
     private Integer cont = 0;
-
     private String projetoPath;
-
     final private Label taLogInfo;
-
     final private Label projetoName;
-
     final private Label projetoCommits;
-
     final private Label commitsProcessados;
-
     final private Label csvLogGit;
-
     private Projeto projetoSelecionado;
-
     private String logRetornoInfo = "";
-
     final private TextField tfPastaPath;
-
     private String pathCSV;
 
     private static final List<String> TYPES = Arrays
@@ -76,6 +65,9 @@ public class EvolutionPage extends BasePage {
                 projetoSelecionado = carregarProjeto(projetoPath, target);
             }
         });
+
+        FeedbackPanel feedback = new JQueryFeedbackPanel("feedback");
+        add(feedback.setOutputMarkupId(true));
 
         RadioChoice<String> radioCommitsTags = new RadioChoice<String>(
                 "radioCommitsTags", new PropertyModel<String>(this, "selected"), TYPES);
@@ -108,6 +100,7 @@ public class EvolutionPage extends BasePage {
         form.add(csvLogGit);
 
         tfPastaPath = new TextField("tfPastaPath", new PropertyModel(this, "projetoPath"));
+        tfPastaPath.setRequired(true);
         tfPastaPath.setEscapeModelStrings(false);
         tfPastaPath.setOutputMarkupId(true);
         tfPastaPath.setOutputMarkupPlaceholderTag(true);

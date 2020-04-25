@@ -244,7 +244,7 @@ public class Main {
 
     private static Map<String, String[]> jacocoProcess(String projectName, String reportPath) throws IOException {
         String str;
-        File jacocoFile = new File(reportPath+"/"+projectName+"_jacoco.csv");
+        File jacocoFile = new File(reportPath + File.separator + projectName+"_jacoco.csv");
         FileReader jacocoFileReader = new FileReader(jacocoFile);
         BufferedReader jacocoIn = new BufferedReader(jacocoFileReader);
 
