@@ -22,7 +22,7 @@ public class Main {
 
     public static Map<String, String[]> jacocoMap;
 
-    public static List<String[]> start(List<String[]> listMapping, Boolean cabecalho) throws IOException {
+    public static List<String[]> start(List<String[]> listMapping, Boolean cabecalho){
 
         TestSmellDetector testSmellDetector = TestSmellDetector.createTestSmellDetector();
 

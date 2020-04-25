@@ -35,21 +35,22 @@ public class EvolutionPage extends BasePage {
 
     private String pathReport = "";
     private String pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
-    final private Boolean testSmellsTask = false;
     private Integer cont = 0;
-    private String projetoPath;
+
     final private Label taLogInfo;
     final private Label projetoName;
     final private Label projetoCommits;
     final private Label commitsProcessados;
     final private Label csvLogGit;
+    final private TextField tfPastaPath;
+
     private Projeto projetoSelecionado;
     private String logRetornoInfo = "";
-    final private TextField tfPastaPath;
-    private String pathCSV;
 
-    private static final List<String> TYPES = Arrays
-            .asList(new String[] { "Commits", "Tags"});
+    private String projetoPath; //used
+    private String pathCSV; //used
+
+    private static final List<String> TYPES = Arrays.asList(new String[]{"Commits", "Tags"});
 
     private String selected = "Commits";
 
@@ -111,9 +112,7 @@ public class EvolutionPage extends BasePage {
             }
         };
         form.add(executarLnk);
-
         add(form);
-
 
         AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
             @Override
@@ -129,17 +128,17 @@ public class EvolutionPage extends BasePage {
 
     private Projeto carregarProjeto(String pathProjeto, AjaxRequestTarget target) {
 
-        String preSplit = pathProjeto.replace(File.separator,"/");
+        String preSplit = pathProjeto.replace(File.separator, "/");
         String[] listas = preSplit.split("/");
         String nomeProjeto = listas[listas.length - 1];
         Projeto projeto = new Projeto(nomeProjeto, pathProjeto);
         execCommand("git checkout master", projeto.getPath());
 
         ArrayList<Commit> lista = null;
-        if(selected.trim().equals("Commits")) {
+        if (selected.trim().equals("Commits")) {
             lista = gitLogOneLine(projeto.getPath());
             projeto.setListaCommits(lista);
-        }else{
+        } else {
             lista = gitTags(projeto.getPath());
             projeto.setListaCommits(lista);
         }
@@ -165,16 +164,16 @@ public class EvolutionPage extends BasePage {
         });
 
         ResultsWriter resultsWriter = null;
-        if (true) {
-            String reportPathFinal = pathReport + File.separatorChar + dateNow() + File.separatorChar;
-            boolean success = (new File(reportPathFinal)).mkdirs();
-            if (!success) System.out.println("Pasta Criada...");
-            String csvTestSmells = reportPathFinal + projeto.getName() + "_testsmesll.csv";
-            try {
-                resultsWriter = ResultsWriter.createResultsWriter(csvTestSmells);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        String reportPathFinal = pathReport + File.separatorChar + dateNow() + File.separatorChar;
+
+        boolean success = (new File(reportPathFinal)).mkdirs();
+        if (!success) System.out.println("Pasta Criada...");
+
+        String csvTestSmells = reportPathFinal + projeto.getName() + "_testsmesll.csv";
+        try {
+            resultsWriter = ResultsWriter.createResultsWriter(csvTestSmells);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         //Para cada commit executa uma busca
@@ -185,7 +184,7 @@ public class EvolutionPage extends BasePage {
             execCommand("git checkout " + commit.id, projetoPath);
 
             //criando a lista de testsmells
-            List<String[]> listaTestSmells = processarTestSmells(projetoPath, commit, pathReport, true);
+            List<String[]> listaTestSmells = processarTestSmells(projetoPath, commit, true);
             for (String[] linhaArray : listaTestSmells) {
                 List<String> list = Arrays.asList(linhaArray);
                 try {
@@ -246,6 +245,7 @@ public class EvolutionPage extends BasePage {
             Process p = Runtime.getRuntime().exec("git tag", null, new File(pathExecute));
             BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String lineOut;
+
             while ((lineOut = input.readLine()) != null) {
                 String tagName = lineOut.trim();
                 Process detalhes = Runtime.getRuntime().exec("git show " + tagName, null, new File(pathExecute));
@@ -259,22 +259,16 @@ public class EvolutionPage extends BasePage {
                 String msg = "";
 
                 while ((lineOut2 = input2.readLine()) != null) {
-                    System.out.println(lineOut2);
-
-                    if(lineOut2.trim().contains("Tagger:")){
-                        name = lineOut2.trim().replace("Tagger:","").trim();
+                    if (lineOut2.trim().contains("Tagger:")) {
+                        name = lineOut2.trim().replace("Tagger:", "").trim();
                     }
-
-                    if(lineOut2.trim().contains("Date:")){
-                        String dateString = lineOut2.trim().replace("Date:","").trim();
-                        SimpleDateFormat formatter5 = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy Z",Locale.US);
-                        System.out.println(formatter5.format(new Date()));
-
+                    if (lineOut2.trim().contains("Date:")) {
+                        String dateString = lineOut2.trim().replace("Date:", "").trim();
+                        SimpleDateFormat formatter5 = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy Z", Locale.US);
                         date = formatter5.parse(dateString);
                     }
-
-                    if(lineOut2.trim().contains("commit ")){
-                        id = lineOut2.trim().replace("commit ","").trim();
+                    if (lineOut2.trim().contains("commit ")) {
+                        id = lineOut2.trim().replace("commit ", "").trim();
                     }
                 }
                 lista.add(new Commit(id, name, date, msg));
@@ -291,37 +285,18 @@ public class EvolutionPage extends BasePage {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
     }
 
-    private List<String[]> processarTestSmells(String pathProjeto, Commit commit, String pastaPathReport, Boolean cabecalho) {
+    private List<String[]> processarTestSmells(String pathProjeto, Commit commit, Boolean cabecalho) {
         List<String[]> listTestSmells = null;
         try {
             List<TestClass> listTestFile = JNoseUtils.getFilesTest(pathProjeto);
-            List<String[]> listMapping = processarTestFileMapping(listTestFile, commit, pathProjeto);
-            listTestSmells = processarTestSmellDetector(listMapping, cabecalho);
-        }catch (Exception e){
+            String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separator) + 1, pathProjeto.length());
+            List<String[]> listaResultado = JNoseUtils.testfilemapping(listTestFile, commit, pathProjeto, nameProjeto);
+            listTestSmells = br.ufba.jnose.core.testsmelldetector.Main.start(listaResultado, cabecalho);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return listTestSmells;
     }
 
-    private List<String[]> processarTestFileMapping(List<TestClass> listTestClass, Commit commit, String pathProjeto) {
-        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separator) + 1, pathProjeto.length());
-        List<String[]> listaResultado = new ArrayList<>();
-        try {
-            listaResultado = JNoseUtils.testfilemapping(listTestClass,commit, pathProjeto, nameProjeto);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return listaResultado;
-    }
-
-    private static List<String[]> processarTestSmellDetector(List<String[]> listMapping, Boolean cabecalho) {
-        List<String[]> lista = null;
-        try {
-            return br.ufba.jnose.core.testsmelldetector.Main.start(listMapping, cabecalho);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return lista;
-    }
 
 }
