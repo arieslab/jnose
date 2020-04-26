@@ -22,6 +22,20 @@ public class TestSmellDetector {
     public static Boolean dependentTest = true;
     public static Boolean duplicateAssert = true;
     public static Boolean eagerTest = true;
+    public static Boolean emptyTest = true;
+    public static Boolean exceptionCatchingThrowing = true;
+    public static Boolean generalFixture = true;
+    public static Boolean mysteryGuest = true;
+    public static Boolean printStatement = true;
+    public static Boolean redundantAssertion = true;
+    public static Boolean sensitiveEquality = true;
+    public static Boolean verboseTest = true;
+    public static Boolean sleepyTest = true;
+    public static Boolean lazyTest = true;
+    public static Boolean unknownTest = true;
+    public static Boolean ignoredTest = true;
+    public static Boolean resourceOptimism = true;
+    public static Boolean magicNumberTest = true;
 
     /**
      * Instantiates the various test smell analyzer classes and loads the objects into an List
@@ -32,27 +46,26 @@ public class TestSmellDetector {
 
     private void initializeSmells(){
         testSmells = new ArrayList<>();
-
+        if(unknownTest) testSmells.add(new UnknownTest());
+        if(ignoredTest) testSmells.add(new IgnoredTest());
+        if(resourceOptimism) testSmells.add(new ResourceOptimism());
+        if(magicNumberTest) testSmells.add(new MagicNumberTest());
+        if(redundantAssertion) testSmells.add(new RedundantAssertion());
+        if(sensitiveEquality) testSmells.add(new SensitiveEquality());
+        if(verboseTest) testSmells.add(new VerboseTest());
+        if(sleepyTest) testSmells.add(new SleepyTest());
+        if(lazyTest) testSmells.add(new LazyTest());
+        if(duplicateAssert) testSmells.add(new DuplicateAssert());
+        if(eagerTest) testSmells.add(new EagerTest());
         if(assertionRoulette) testSmells.add(new AssertionRoulette());
         if(conditionalTestLogic) testSmells.add(new ConditionalTestLogic());
         if(constructorInitialization) testSmells.add(new ConstructorInitialization());
         if(defaultTest) testSmells.add(new DefaultTest());
-        testSmells.add(new EmptyTest());
-        testSmells.add(new ExceptionCatchingThrowing());
-        testSmells.add(new GeneralFixture());
-        testSmells.add(new MysteryGuest());
-        testSmells.add(new PrintStatement());
-        testSmells.add(new RedundantAssertion());
-        testSmells.add(new SensitiveEquality());
-        testSmells.add(new VerboseTest());
-        testSmells.add(new SleepyTest());
-        if(eagerTest) testSmells.add(new EagerTest());
-        testSmells.add(new LazyTest());
-        if(duplicateAssert) testSmells.add(new DuplicateAssert());
-        testSmells.add(new UnknownTest());
-        testSmells.add(new IgnoredTest());
-        testSmells.add(new ResourceOptimism());
-        testSmells.add(new MagicNumberTest());
+        if(emptyTest) testSmells.add(new EmptyTest());
+        if(exceptionCatchingThrowing) testSmells.add(new ExceptionCatchingThrowing());
+        if(generalFixture) testSmells.add(new GeneralFixture());
+        if(mysteryGuest) testSmells.add(new MysteryGuest());
+        if(printStatement) testSmells.add(new PrintStatement());
         if(dependentTest)testSmells.add(new DependentTest());
     }
 

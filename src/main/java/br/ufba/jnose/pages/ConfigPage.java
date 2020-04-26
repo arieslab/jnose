@@ -9,17 +9,44 @@ import org.apache.wicket.model.PropertyModel;
 public class ConfigPage extends BasePage {
     private static final long serialVersionUID = 1L;
 
-
-    private Boolean assertionRoulette;
-    private Boolean conditionalTestLogic;
-    private Boolean constructorInitialization;
-    private Boolean defaultTest;
-    private Boolean dependentTest;
-    private Boolean duplicateAssert;
-    private Boolean eagerTest;
+    public Boolean assertionRoulette;
+    public Boolean conditionalTestLogic;
+    public Boolean constructorInitialization;
+    public Boolean defaultTest;
+    public Boolean dependentTest;
+    public Boolean duplicateAssert;
+    public Boolean eagerTest;
+    public Boolean lazyTest;
+    public Boolean unknownTest;
+    public Boolean ignoredTest;
+    public Boolean resourceOptimism;
+    public Boolean magicNumberTest;
+    public Boolean printStatement;
+    public Boolean redundantAssertion;
+    public Boolean sensitiveEquality;
+    public Boolean verboseTest;
+    public Boolean sleepyTest;
+    public Boolean emptyTest;
+    public Boolean exceptionCatchingThrowing;
+    public Boolean generalFixture;
+    public Boolean mysteryGuest;
 
     public ConfigPage() {
 
+        emptyTest = TestSmellDetector.emptyTest;
+        exceptionCatchingThrowing = TestSmellDetector.exceptionCatchingThrowing;
+        generalFixture = TestSmellDetector.generalFixture;
+        mysteryGuest = TestSmellDetector.mysteryGuest;
+        sleepyTest = TestSmellDetector.sleepyTest;
+        verboseTest = TestSmellDetector.verboseTest;
+        sensitiveEquality = TestSmellDetector.sensitiveEquality;
+        redundantAssertion = TestSmellDetector.redundantAssertion;
+        printStatement = TestSmellDetector.printStatement;
+        magicNumberTest = TestSmellDetector.magicNumberTest;
+        resourceOptimism = TestSmellDetector.resourceOptimism;
+        ignoredTest = TestSmellDetector.ignoredTest;
+        unknownTest = TestSmellDetector.unknownTest;
+        lazyTest = TestSmellDetector.lazyTest;
         assertionRoulette = TestSmellDetector.assertionRoulette;
         conditionalTestLogic = TestSmellDetector.conditionalTestLogic;
         constructorInitialization = TestSmellDetector.constructorInitialization;
@@ -31,14 +58,20 @@ public class ConfigPage extends BasePage {
         Form form = new Form<String>("form"){
             @Override
             protected void onSubmit() {
-                System.out.println(assertionRoulette);
-                System.out.println(conditionalTestLogic);
-                System.out.println(constructorInitialization);
-                System.out.println(defaultTest);
-                System.out.println(dependentTest);
-                System.out.println(duplicateAssert);
-                System.out.println(eagerTest);
-
+                TestSmellDetector.emptyTest = emptyTest;
+                TestSmellDetector.exceptionCatchingThrowing = exceptionCatchingThrowing;
+                TestSmellDetector.generalFixture = generalFixture;
+                TestSmellDetector.mysteryGuest = mysteryGuest;
+                TestSmellDetector.sleepyTest = sleepyTest;
+                TestSmellDetector.verboseTest = verboseTest;
+                TestSmellDetector.sensitiveEquality = sensitiveEquality;
+                TestSmellDetector.redundantAssertion = redundantAssertion;
+                TestSmellDetector.printStatement = printStatement;
+                TestSmellDetector.magicNumberTest = magicNumberTest;
+                TestSmellDetector.resourceOptimism = resourceOptimism;
+                TestSmellDetector.ignoredTest = ignoredTest;
+                TestSmellDetector.unknownTest = unknownTest;
+                TestSmellDetector.lazyTest = lazyTest;
                 TestSmellDetector.assertionRoulette = assertionRoulette;
                 TestSmellDetector.conditionalTestLogic = conditionalTestLogic;
                 TestSmellDetector.constructorInitialization = constructorInitialization;
@@ -46,7 +79,6 @@ public class ConfigPage extends BasePage {
                 TestSmellDetector.dependentTest = dependentTest;
                 TestSmellDetector.duplicateAssert = duplicateAssert;
                 TestSmellDetector.eagerTest = eagerTest;
-
             }
         };
 
@@ -57,6 +89,20 @@ public class ConfigPage extends BasePage {
         form.add(new CheckBox("cbDependentTest", new PropertyModel<>(this, "dependentTest")));
         form.add(new CheckBox("cbDuplicateAssert", new PropertyModel<>(this, "duplicateAssert")));
         form.add(new CheckBox("cbEagerTest", new PropertyModel<>(this, "eagerTest")));
+        form.add(new CheckBox("cbEmptyTest", new PropertyModel<>(this, "emptyTest")));
+        form.add(new CheckBox("cbExceptionCatchingThrowing", new PropertyModel<>(this, "exceptionCatchingThrowing")));
+        form.add(new CheckBox("cbGeneralFixture", new PropertyModel<>(this, "generalFixture")));
+        form.add(new CheckBox("cbMysteryGuest", new PropertyModel<>(this, "mysteryGuest")));
+        form.add(new CheckBox("cbSleepyTest", new PropertyModel<>(this, "sleepyTest")));
+        form.add(new CheckBox("cbVerboseTest", new PropertyModel<>(this, "verboseTest")));
+        form.add(new CheckBox("cbSensitiveEquality", new PropertyModel<>(this, "sensitiveEquality")));
+        form.add(new CheckBox("cbRedundantAssertion", new PropertyModel<>(this, "redundantAssertion")));
+        form.add(new CheckBox("cbPrintStatement", new PropertyModel<>(this, "printStatement")));
+        form.add(new CheckBox("cbMagicNumberTest", new PropertyModel<>(this, "magicNumberTest")));
+        form.add(new CheckBox("cbResourceOptimism", new PropertyModel<>(this, "resourceOptimism")));
+        form.add(new CheckBox("cbIgnoredTest", new PropertyModel<>(this, "ignoredTest")));
+        form.add(new CheckBox("cbUnknownTest", new PropertyModel<>(this, "unknownTest")));
+        form.add(new CheckBox("cbLazyTest", new PropertyModel<>(this, "lazyTest")));
 
         add(form);
 
