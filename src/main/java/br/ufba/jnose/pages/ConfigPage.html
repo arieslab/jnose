@@ -1,0 +1,100 @@
+<wicket:extend xmlns:wicket="http://wicket.apache.org">
+    <div class="container">
+
+        <form wicket:id="form">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Test Smells</h5>
+                    <!-- Default unchecked -->
+                    <div class="custom-control custom-checkbox">
+                        <input wicket:id="cbAssertionRoulette" type="checkbox">
+                        <label>AssertionRoulette</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input wicket:id="cbConditionalTestLogic" type="checkbox">
+                        <label>ConditionalTestLogic</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input wicket:id="cbConstructorInitialization" type="checkbox" >
+                        <label>ConstructorInitialization</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input wicket:id="cbDefaultTest" type="checkbox" >
+                        <label>DefaultTest</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input wicket:id="cbDependentTest" type="checkbox" >
+                        <label>DependentTest</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input wicket:id="cbDuplicateAssert" type="checkbox" >
+                        <label>DuplicateAssert</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input wicket:id="cbEagerTest" type="checkbox" id="EagerTest">
+                        <label>EagerTest</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="EmptyTest">
+                        <label>EmptyTest</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="ExceptionCatchingThrowing">
+                        <label>ExceptionCatchingThrowing</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="GeneralFixture">
+                        <label>GeneralFixture</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="IgnoredTest">
+                        <label>IgnoredTest</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="LazyTest">
+                        <label>LazyTest</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="MagicNumberTest">
+                        <label>MagicNumberTest</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="MysteryGuest">
+                        <label>MysteryGuest</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="PrintStatement">
+                        <label>PrintStatement</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="RedundantAssertion">
+                        <label>RedundantAssertion</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="ResourceOptimism">
+                        <label>ResourceOptimism</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="SensitiveEquality">
+                        <label>SensitiveEquality</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="SleepyTest">
+                        <label>SleepyTest</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="UnknownTest">
+                        <label>UnknownTest</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="VerboseTest">
+                        <label>VerboseTest</label>
+                    </div>
+                </div>
+            </div>
+            <input type="submit" value="Salvar" />
+        </form>
+
+
+    </div>
+</wicket:extend>

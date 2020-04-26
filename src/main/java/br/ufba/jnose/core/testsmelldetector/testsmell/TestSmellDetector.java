@@ -15,6 +15,14 @@ public class TestSmellDetector {
 
     private List<AbstractSmell> testSmells;
 
+    public static Boolean assertionRoulette = true;
+    public static Boolean conditionalTestLogic = true;
+    public static Boolean constructorInitialization = true;
+    public static Boolean defaultTest = true;
+    public static Boolean dependentTest = true;
+    public static Boolean duplicateAssert = true;
+    public static Boolean eagerTest = true;
+
     /**
      * Instantiates the various test smell analyzer classes and loads the objects into an List
      */
@@ -24,10 +32,11 @@ public class TestSmellDetector {
 
     private void initializeSmells(){
         testSmells = new ArrayList<>();
-        testSmells.add(new AssertionRoulette());
-        testSmells.add(new ConditionalTestLogic());
-        testSmells.add(new ConstructorInitialization());
-        testSmells.add(new DefaultTest());
+
+        if(assertionRoulette) testSmells.add(new AssertionRoulette());
+        if(conditionalTestLogic) testSmells.add(new ConditionalTestLogic());
+        if(constructorInitialization) testSmells.add(new ConstructorInitialization());
+        if(defaultTest) testSmells.add(new DefaultTest());
         testSmells.add(new EmptyTest());
         testSmells.add(new ExceptionCatchingThrowing());
         testSmells.add(new GeneralFixture());
@@ -37,14 +46,14 @@ public class TestSmellDetector {
         testSmells.add(new SensitiveEquality());
         testSmells.add(new VerboseTest());
         testSmells.add(new SleepyTest());
-        testSmells.add(new EagerTest());
+        if(eagerTest) testSmells.add(new EagerTest());
         testSmells.add(new LazyTest());
-        testSmells.add(new DuplicateAssert());
+        if(duplicateAssert) testSmells.add(new DuplicateAssert());
         testSmells.add(new UnknownTest());
         testSmells.add(new IgnoredTest());
         testSmells.add(new ResourceOptimism());
         testSmells.add(new MagicNumberTest());
-        testSmells.add(new DependentTest());
+        if(dependentTest)testSmells.add(new DependentTest());
     }
 
     /**

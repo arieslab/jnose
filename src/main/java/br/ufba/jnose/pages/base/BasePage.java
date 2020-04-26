@@ -1,5 +1,6 @@
 package br.ufba.jnose.pages.base;
 
+import br.ufba.jnose.pages.ConfigPage;
 import br.ufba.jnose.pages.EvolutionPage;
 import br.ufba.jnose.pages.HomePage;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
@@ -36,16 +37,16 @@ public class BasePage extends WebPage {
             }
         };
 
-        Link linkResults = new Link<String>("linkResults") {
+        Link linkConfig = new Link<String>("linkConfig") {
             @Override
             public void onClick() {
-                setResponsePage(HomePage.class);
+                setResponsePage(ConfigPage.class);
             }
         };
 
         add(linkHome);
         add(linkEvolution);
-        add(linkResults);
+        add(linkConfig);
 
         AbstractAjaxTimerBehavior timerHome = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
             int cont = 0;
