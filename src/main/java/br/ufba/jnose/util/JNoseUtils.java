@@ -103,6 +103,47 @@ public class JNoseUtils {
         return resultsWriter.getOutputFile();
     }
 
+    public static String newReport(List<TestClass> listTestClass, String projectName, String reportPath) throws IOException {
+        System.out.println("Saving results. Total lines:" + listTestClass.size());
+        String outFile = reportPath + File.separator + projectName + "_report_by_testsmells" + ".csv";
+        ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(outFile);
+        List<String> columnValues = null;
+
+        columnValues = new ArrayList<>();
+        columnValues.add(0, "projectName");
+        columnValues.add(1, "name");
+        columnValues.add(2, "pathFile");
+        columnValues.add(3, "productionFile");
+        columnValues.add(4, "loc");
+        columnValues.add(5, "qtdMethods");
+        columnValues.add(6, "testSmellName");
+        columnValues.add(7, "testSmellMethod");
+        columnValues.add(8, "testSmellLine");
+        columnValues.add(9, "testSmellLineBegin");
+        columnValues.add(10, "testSmellLineEnd");
+        resultsWriter.writeLine(columnValues);
+
+        for (TestClass testClass: listTestClass){
+            for (TestSmell testSmell : testClass.listTestSmell){
+                columnValues = new ArrayList<>();
+                columnValues.add(0, projectName);
+                columnValues.add(1, testClass.name);
+                columnValues.add(2, testClass.pathFile.toString());
+                columnValues.add(3, testClass.productionFile);
+                columnValues.add(4, testClass.numberLine.toString());
+                columnValues.add(5, testClass.numberMethods.toString());
+                columnValues.add(6, testSmell.name);
+                columnValues.add(7, testSmell.method);
+                columnValues.add(8, testSmell.lineNumber);
+                columnValues.add(9, testSmell.begin);
+                columnValues.add(10, testSmell.end);
+                resultsWriter.writeLine(columnValues);
+            }
+        }
+        System.out.println("Completed!");
+        return resultsWriter.getOutputFile();
+    }
+
 
     public static List<TestClass> getFilesTest(String directoryPath) throws IOException {
         List<TestClass> files = new ArrayList<>();

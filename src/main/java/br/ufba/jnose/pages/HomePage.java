@@ -66,6 +66,8 @@ public class HomePage extends BasePage {
     private String dataProcessamentoAtual;
     private boolean mesclado = false;
     private ExternalLink linkCSVFinal;
+    private ExternalLink linkCSVFinal2;
+    private String newReport = "";
     private boolean processarCobertura;
 
     public HomePage() {
@@ -184,6 +186,10 @@ public class HomePage extends BasePage {
                 if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
                     linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv"));
                     target.add(linkCSVFinal);
+
+                    out.println(newReport);
+                    linkCSVFinal2.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv"));
+                    target.add(linkCSVFinal2);
                 }
 
             }
@@ -287,6 +293,11 @@ public class HomePage extends BasePage {
         linkCSVFinal.setOutputMarkupPlaceholderTag(true);
         add(linkCSVFinal);
 
+        linkCSVFinal2 = new ExternalLink("linkCSVFinal2", File.separatorChar + "reports" + File.separatorChar + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv");
+        linkCSVFinal2.setOutputMarkupId(true);
+        linkCSVFinal2.setOutputMarkupPlaceholderTag(true);
+        add(linkCSVFinal2);
+
         FeedbackPanel feedback = new JQueryFeedbackPanel("feedback");
         add(feedback.setOutputMarkupId(true));
 
@@ -385,6 +396,8 @@ public class HomePage extends BasePage {
         if (WicketApplication.COBERTURA_ON) {
             processarCobertura(projeto, folderTime);
         }
+
+
         projeto.setProcessado2(true);
         totalProcessado = totalProcessado + valorSoma.intValue();
         projeto.setProcentagem(25);
@@ -397,6 +410,9 @@ public class HomePage extends BasePage {
         String csvMapping = processarTestFileMapping(listaTestClass,csvFile, projeto.getPath(), folderTime);
         totalProcessado = totalProcessado + valorSoma.intValue();
         projeto.setProcentagem(75);
+
+        newReport = JNoseUtils.newReport(listaTestClass, projeto.getName(), pastaPathReport + File.separator + folderTime);
+        out.println(newReport);
 
         String csvTestSmells = processarTestSmellDetector(csvMapping, projeto.getPath(), folderTime);
         totalProcessado = totalProcessado + valorSoma.intValue();
