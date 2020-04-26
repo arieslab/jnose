@@ -169,7 +169,6 @@ public class HomePage extends BasePage {
                     mesclado = true;
                 }
 
-
                 if (processando) {
                     if (!loadImg.isVisible()) {
                         loadImg.setVisible(true);
@@ -191,7 +190,6 @@ public class HomePage extends BasePage {
         };
         add(timer);
 
-
         loadImg = new WebMarkupContainer("loadImg");
         loadImg.setOutputMarkupId(true);
         loadImg.setVisible(false);
@@ -210,7 +208,6 @@ public class HomePage extends BasePage {
                 AjaxCheckBox paraProcessarACB = new AjaxCheckBox("paraProcessarACB", new PropertyModel(projeto, "paraProcessar")) {
                     @Override
                     protected void onUpdate(AjaxRequestTarget target) {
-//                        projeto.setParaProcessado(paraProcessarACB);
 
                         List<Projeto> listaProjetosProcessar = new ArrayList<>();
                         for (Projeto projeto : listaProjetos)
@@ -223,15 +220,11 @@ public class HomePage extends BasePage {
                         }
                         target.add(processarTodos);
 
-
                         lbProjetosSize.setDefaultModel(Model.of(listaProjetosProcessar.size()));
                         target.add(lbProjetosSize);
                     }
                 };
                 item.add(paraProcessarACB);
-
-//                CheckBox paraProcessarCB = new CheckBox("paraProcessarACB", new PropertyModel(projeto, "paraProcessar"));
-//                item.add(paraProcessarCB);
 
                 item.add(new Label("nomeProjeto", projeto.getName()));
                 item.add(new Label("projeto", projeto.getPath()));
@@ -249,7 +242,6 @@ public class HomePage extends BasePage {
                 iconNaoProcessado.setOutputMarkupPlaceholderTag(true);
                 item.add(iconNaoProcessado);
                 projeto.iconNaoProcessado = iconNaoProcessado;
-
 
                 WebMarkupContainer progressProject = new WebMarkupContainer("progressProject");
                 progressProject.setOutputMarkupPlaceholderTag(true);
