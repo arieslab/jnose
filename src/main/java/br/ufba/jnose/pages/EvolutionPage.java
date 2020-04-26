@@ -70,6 +70,8 @@ public class EvolutionPage extends BasePage {
 
         RadioChoice<String> radioCommitsTags = new RadioChoice<String>(
                 "radioCommitsTags", new PropertyModel<String>(this, "selected"), TYPES);
+        radioCommitsTags.setPrefix(" ");
+        radioCommitsTags.setSuffix("<br>");
         form.add(radioCommitsTags);
 
         projetoName = new Label("projetoName", "");
