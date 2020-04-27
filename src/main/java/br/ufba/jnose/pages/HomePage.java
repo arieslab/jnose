@@ -67,7 +67,6 @@ public class HomePage extends BasePage {
     private String dataProcessamentoAtual;
     private boolean mesclado = false;
     private ExternalLink linkCSVFinal;
-    private String newReport = "";
     private boolean processarCobertura;
 
     public HomePage() {
@@ -186,8 +185,6 @@ public class HomePage extends BasePage {
                 if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
                     linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv"));
                     target.add(linkCSVFinal);
-
-                    out.println(newReport);
                 }
 
             }
@@ -403,9 +400,6 @@ public class HomePage extends BasePage {
         String csvMapping = processarTestFileMapping(listaTestClass, csvFile, projeto.getPath(), folderTime);
         totalProcessado = totalProcessado + valorSoma.intValue();
         projeto.setProcentagem(75);
-
-        newReport = JNoseUtils.newReport(listaTestClass, pastaPathReport + File.separator + folderTime);
-        out.println(newReport);
 
         String csvTestSmells = processarTestSmellDetector(csvMapping, projeto.getPath(), folderTime);
         totalProcessado = totalProcessado + valorSoma.intValue();
