@@ -55,7 +55,7 @@ public class ConfigPage extends BasePage {
         duplicateAssert = TestSmellDetector.duplicateAssert;
         eagerTest = TestSmellDetector.eagerTest;
 
-        Form form = new Form<String>("form"){
+        Form form = new Form<String>("form") {
             @Override
             protected void onSubmit() {
                 TestSmellDetector.emptyTest = emptyTest;

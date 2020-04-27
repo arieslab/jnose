@@ -226,7 +226,7 @@ public class ByTestSmellsPage extends BasePage {
                 processarTodos.setEnabled(true);
                 lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
 
-                Cookie pastaPathCookie = new Cookie("pastaPath", "\""+pastaPath+"\"");
+                Cookie pastaPathCookie = new Cookie("pastaPath", "\"" + pastaPath + "\"");
                 ((WebResponse) getResponse()).addCookie(pastaPathCookie);
             }
         };
@@ -285,7 +285,7 @@ public class ByTestSmellsPage extends BasePage {
 
         try {
             newReport = JNoseUtils.newReport(listaTestClass, pastaPathReport + File.separator + folderTime);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

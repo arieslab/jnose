@@ -37,6 +37,7 @@ import javax.servlet.http.Cookie;
 
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.time.Duration;
+
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -314,7 +315,7 @@ public class HomePage extends BasePage {
                 processarTodos.setEnabled(true);
                 lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
 
-                Cookie pastaPathCookie = new Cookie("pastaPath", "\""+pastaPath+"\"");
+                Cookie pastaPathCookie = new Cookie("pastaPath", "\"" + pastaPath + "\"");
                 ((WebResponse) getResponse()).addCookie(pastaPathCookie);
             }
         };
@@ -399,7 +400,7 @@ public class HomePage extends BasePage {
         projeto.setProcentagem(50);
 
         List<TestClass> listaTestClass = JNoseUtils.getFilesTest(projeto.getPath());
-        String csvMapping = processarTestFileMapping(listaTestClass,csvFile, projeto.getPath(), folderTime);
+        String csvMapping = processarTestFileMapping(listaTestClass, csvFile, projeto.getPath(), folderTime);
         totalProcessado = totalProcessado + valorSoma.intValue();
         projeto.setProcentagem(75);
 
@@ -461,12 +462,12 @@ public class HomePage extends BasePage {
         return pathCSV;
     }
 
-    private String processarTestFileMapping(List<TestClass> listTestClass,String pathFileCSV, String pathProjeto, String folderTime) {
+    private String processarTestFileMapping(List<TestClass> listTestClass, String pathFileCSV, String pathProjeto, String folderTime) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
         logRetorno = dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>" + logRetorno;
         String pathCSVMapping = "";
         try {
-            pathCSVMapping = JNoseUtils.testfilemapping(listTestClass,pathFileCSV, pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
+            pathCSVMapping = JNoseUtils.testfilemapping(listTestClass, pathFileCSV, pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
         } catch (IOException e) {
             e.printStackTrace();
         }
