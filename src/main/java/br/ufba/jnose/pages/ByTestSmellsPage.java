@@ -1,6 +1,5 @@
 package br.ufba.jnose.pages;
 
-import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.dto.Projeto;
 import br.ufba.jnose.dto.TestClass;
 import br.ufba.jnose.pages.base.BasePage;
@@ -55,7 +54,6 @@ public class ByTestSmellsPage extends BasePage {
     private Integer totalProcessado;
     private Map<Integer, Integer> totalProgressBar;
     private Boolean processando = false;
-    private WebMarkupContainer loadImg;
     private IndicatingAjaxLink processarTodos;
     private Label lbProjetosSize;
     private String dataProcessamentoAtual;
@@ -130,18 +128,6 @@ public class ByTestSmellsPage extends BasePage {
                     processado = processado && p.getProcessado();
                 }
 
-                if (processando) {
-                    if (!loadImg.isVisible()) {
-                        loadImg.setVisible(true);
-                        target.add(loadImg);
-                    }
-                } else {
-                    if (loadImg.isVisible()) {
-                        loadImg.setVisible(false);
-                        target.add(loadImg);
-                    }
-                }
-
                 if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
                     linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_report_by_testsmells.csv"));
                     target.add(linkCSVFinal);
@@ -150,12 +136,6 @@ public class ByTestSmellsPage extends BasePage {
             }
         };
         add(timer);
-
-        loadImg = new WebMarkupContainer("loadImg");
-        loadImg.setOutputMarkupId(true);
-        loadImg.setVisible(false);
-        loadImg.setOutputMarkupPlaceholderTag(true);
-        add(loadImg);
 
         listaProjetos = new ArrayList<>();
 

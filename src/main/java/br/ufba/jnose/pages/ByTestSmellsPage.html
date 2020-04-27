@@ -2,7 +2,7 @@
     <div class="container">
         <br>
         <form wicket:id="form">
-            Pastas com os projetos: <input wicket:id="tfPastaPath" type="text" style="width:70%"/>
+            Pastas com os projetos: <input wicket:id="tfPastaPath" type="text" class="form-control" style="width:70%"/>
             <input wicket:id="btEnviar" type="submit" value="Selecionar" class="btn btn-success btn-sm"/>
         </form>
         <br>
@@ -45,9 +45,6 @@
 
         <div style="width:100%;background-color: black;color:white;">
             <a wicket:id="processarTodos" class="btn btn-success btn-sm">Processar</a>
-            <div wicket:id="loadImg" class="spinner-border text-warning" role="status" style="width:20px;height:20px;">
-                <span class="sr-only">Loading...</span>
-            </div>
             <span wicket:id="lbProjetosSize"></span> projetos encontrados na pasta: <span
                 wicket:id="lbPastaSelecionada"></span>
         </div>
