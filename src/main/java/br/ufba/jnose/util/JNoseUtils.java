@@ -103,9 +103,9 @@ public class JNoseUtils {
         return resultsWriter.getOutputFile();
     }
 
-    public static String newReport(List<TestClass> listTestClass, String projectName, String reportPath) throws IOException {
+    public static String newReport(List<TestClass> listTestClass, String reportPath) throws IOException {
         System.out.println("Saving results. Total lines:" + listTestClass.size());
-        String outFile = reportPath + File.separator + projectName + "_report_by_testsmells" + ".csv";
+        String outFile = reportPath + File.separator + "all" + "_report_by_testsmells" + ".csv";
         ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(outFile);
         List<String> columnValues = null;
 
@@ -126,7 +126,7 @@ public class JNoseUtils {
         for (TestClass testClass: listTestClass){
             for (TestSmell testSmell : testClass.listTestSmell){
                 columnValues = new ArrayList<>();
-                columnValues.add(0, projectName);
+                columnValues.add(0, testClass.projectName);
                 columnValues.add(1, testClass.name);
                 columnValues.add(2, testClass.pathFile.toString());
                 columnValues.add(3, testClass.productionFile);
@@ -146,6 +146,7 @@ public class JNoseUtils {
 
 
     public static List<TestClass> getFilesTest(String directoryPath) throws IOException {
+        String projectName = directoryPath.substring(directoryPath.lastIndexOf(File.separatorChar) + 1, directoryPath.length());
         List<TestClass> files = new ArrayList<>();
         Path startDir = Paths.get(directoryPath);
         Files.walk(startDir)
@@ -155,6 +156,7 @@ public class JNoseUtils {
                         String fileNameWithoutExtension = filePath.getFileName().toString().substring(0, filePath.getFileName().toString().lastIndexOf(".")).toLowerCase();
                         if (filePath.toString().toLowerCase().endsWith(".java") && fileNameWithoutExtension.matches("^.*test\\d*$")){
                             TestClass testClass = new TestClass();
+                            testClass.projectName = projectName;
                             testClass.pathFile = filePath;
                             if (isTestFile(testClass)) {
                                 System.out.println("TestClass Detect -> " + testClass.pathFile);

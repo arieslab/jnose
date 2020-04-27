@@ -1,5 +1,6 @@
 package br.ufba.jnose.pages.base;
 
+import br.ufba.jnose.pages.ByTestSmellsPage;
 import br.ufba.jnose.pages.ConfigPage;
 import br.ufba.jnose.pages.EvolutionPage;
 import br.ufba.jnose.pages.HomePage;
@@ -30,6 +31,13 @@ public class BasePage extends WebPage {
             }
         };
 
+        Link linkByTestSmells = new Link<String>("linkByTestSmells") {
+            @Override
+            public void onClick() {
+                setResponsePage(ByTestSmellsPage.class);
+            }
+        };
+
         Link linkEvolution = new Link<String>("linkEvolution") {
             @Override
             public void onClick() {
@@ -47,6 +55,7 @@ public class BasePage extends WebPage {
         add(linkHome);
         add(linkEvolution);
         add(linkConfig);
+        add(linkByTestSmells);
 
         AbstractAjaxTimerBehavior timerHome = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
             int cont = 0;
