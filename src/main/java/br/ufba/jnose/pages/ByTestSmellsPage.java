@@ -57,10 +57,8 @@ public class ByTestSmellsPage extends BasePage {
     private IndicatingAjaxLink processarTodos;
     private Label lbProjetosSize;
     private String dataProcessamentoAtual;
-    private boolean mesclado = false;
     private ExternalLink linkCSVFinal;
     private String newReport = "";
-    private boolean processarCobertura;
 
     public ByTestSmellsPage() {
 
@@ -217,7 +215,6 @@ public class ByTestSmellsPage extends BasePage {
         Button btEnviar = new Button("btEnviar") {
             @Override
             public void onSubmit() {
-                mesclado = false;
                 dataProcessamentoAtual = dateNowFolder();
                 totalProcessado = 0;
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));

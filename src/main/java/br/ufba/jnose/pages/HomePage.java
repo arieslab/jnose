@@ -66,7 +66,6 @@ public class HomePage extends BasePage {
     private String dataProcessamentoAtual;
     private boolean mesclado = false;
     private ExternalLink linkCSVFinal;
-    private ExternalLink linkCSVFinal2;
     private String newReport = "";
     private boolean processarCobertura;
 
@@ -188,8 +187,6 @@ public class HomePage extends BasePage {
                     target.add(linkCSVFinal);
 
                     out.println(newReport);
-                    linkCSVFinal2.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv"));
-                    target.add(linkCSVFinal2);
                 }
 
             }
@@ -292,11 +289,6 @@ public class HomePage extends BasePage {
         linkCSVFinal.setOutputMarkupId(true);
         linkCSVFinal.setOutputMarkupPlaceholderTag(true);
         add(linkCSVFinal);
-
-        linkCSVFinal2 = new ExternalLink("linkCSVFinal2", File.separatorChar + "reports" + File.separatorChar + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv");
-        linkCSVFinal2.setOutputMarkupId(true);
-        linkCSVFinal2.setOutputMarkupPlaceholderTag(true);
-        add(linkCSVFinal2);
 
         FeedbackPanel feedback = new JQueryFeedbackPanel("feedback");
         add(feedback.setOutputMarkupId(true));
