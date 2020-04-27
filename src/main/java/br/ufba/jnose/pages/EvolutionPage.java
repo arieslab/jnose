@@ -165,18 +165,13 @@ public class EvolutionPage extends BasePage {
             }
         });
 
-        ResultsWriter resultsWriter = null;
         String reportPathFinal = pathReport + File.separatorChar + dateNow() + File.separatorChar;
 
         boolean success = (new File(reportPathFinal)).mkdirs();
         if (!success) System.out.println("Pasta Criada...");
 
         String csvTestSmells = reportPathFinal + projeto.getName() + "_testsmesll.csv";
-        try {
-            resultsWriter = ResultsWriter.createResultsWriter(csvTestSmells);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(csvTestSmells);
 
         //Para cada commit executa uma busca
         for (Commit commit : projeto.getListaCommits()) {
@@ -189,11 +184,7 @@ public class EvolutionPage extends BasePage {
             List<String[]> listaTestSmells = processarTestSmells(projetoPath, commit, true);
             for (String[] linhaArray : listaTestSmells) {
                 List<String> list = Arrays.asList(linhaArray);
-                try {
-                    resultsWriter.writeLine(list);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                resultsWriter.writeLine(list);
             }
             csvLogGit.setDefaultModelObject(resultsWriter.getOutputFile());
             target.add(csvLogGit);
