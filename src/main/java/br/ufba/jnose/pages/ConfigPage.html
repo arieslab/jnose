@@ -7,92 +7,270 @@
                     <h5 class="card-title">Test Smells</h5>
                     <!-- Default unchecked -->
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbAssertionRoulette" type="checkbox">
-                        <label>AssertionRoulette</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbAssertionRoulette" type="checkbox">
+                                <label>AssertionRoulette: </label>
+                                Este test smell ocorre quando o método de teste tem uma série de assertions sem uma
+                                descrição. Se um assertion falhar, não se sabe qual deles gerou a falha e seu motivo.
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbConditionalTestLogic" type="checkbox">
-                        <label>ConditionalTestLogic</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbConditionalTestLogic" type="checkbox">
+                                <label>ConditionalTestLogic: </label>
+                                Testes contendo lógica condicional (instruções IF ou loops).
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbConstructorInitialization" type="checkbox" >
-                        <label>ConstructorInitialization</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbConstructorInitialization" type="checkbox">
+                                <label>ConstructorInitialization: </label>
+                                Métodos de teste que apresentam um construtor. Idealmente, o conjunto de testes não deve
+                                ter um construtor. A inicialização dos campos deve estar no método setUp(). Os
+                                desenvolvedores que desconhecem o objetivo do método setUp() permitiriam esse test smell
+                                criando um construtor para o conjunto de testes.
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbDefaultTest" type="checkbox" >
-                        <label>DefaultTest</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbDefaultTest" type="checkbox">
+                                <label>DefaultTest: </label>
+                                Por padrão, o uma IDE cria classes de teste padrão quando um projeto é criado. Essas
+                                classes de teste de modelo devem servir como um exemplo para os desenvolvedores ao
+                                escrever testes de unidade e devem ser removidas ou renomeadas. A presença desses
+                                arquivos no projeto fará com que os desenvolvedores comecem a adicionar métodos de teste
+                                a esses arquivos, tornando a classe de teste padrão um contêiner de todos os casos de
+                                teste e violando as boas práticas de teste. Os problemas também surgiriam quando as
+                                classes precisassem ser renomeadas no futuro.
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbDependentTest" type="checkbox" >
-                        <label>DependentTest</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbDependentTest" type="checkbox">
+                                <label>DependentTest: </label>
+                                Quando um teste falha, vários outros testes falham sem motivo aparente, porque dependem
+                                dos efeitos colaterais de um teste executado anteriormente. Os testes não podem ser
+                                executados sozinhos e são difíceis de manter.
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbDuplicateAssert" type="checkbox" >
-                        <label>DuplicateAssert</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbDuplicateAssert" type="checkbox">
+                                <label>DuplicateAssert: </label>
+                                Esse smell ocorre quando um método de teste testa a mesma condição várias vezes no mesmo
+                                método de teste.
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbEagerTest" type="checkbox" >
-                        <label>EagerTest</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbEagerTest" type="checkbox">
+                                <label>EagerTest: </label>
+                                Quando um método de teste verifica vários métodos do objeto a ser testado, é difícil ler
+                                e entender e, portanto, é mais difícil usá-lo como documentação. Além disso, torna os
+                                testes mais dependentes uns dos outros e mais difíceis de manter.
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbEmptyTest" type="checkbox" >
-                        <label>EmptyTest</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbEmptyTest" type="checkbox">
+                                <label>EmptyTest: </label>
+                                Métodos de teste que não contêm instruções executáveis.
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbExceptionCatchingThrowing" type="checkbox" >
-                        <label>ExceptionCatchingThrowing</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbExceptionCatchingThrowing" type="checkbox">
+                                <label>ExceptionCatchingThrowing: </label>
+                                Esse test smell ocorre quando a aprovação ou reprovação de um método de teste depende
+                                explicitamente do método de produção que gera uma exceção.
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbGeneralFixture" type="checkbox" >
-                        <label>GeneralFixture</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbGeneralFixture" type="checkbox">
+                                <label>GeneralFixture: </label>
+                                No framework JUnit, um programador pode escrever um método \textit{setUp} que será
+                                executado antes de cada método de teste para criar um ambiente para os testes serem
+                                executados. O test smell se torna evidente quando o ambiente \textit{setUp} é muito
+                                geral e os testes necessitam apenas de parte dessa configuração. Os métodos
+                                \textit{setUp} começam a ficar grandes e seu entendimento é reduzido, e com o acréscimo
+                                de funções, começa a ficar lento. O perigo de ter teste que leve muito tempo para ser
+                                concluído, interferindo com o processo de desenvolvimento, incentiva os programadores a
+                                não execução dos testes.
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbIgnoredTest" type="checkbox" >
-                        <label>IgnoredTest</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbIgnoredTest" type="checkbox">
+                                <label>IgnoredTest: </label>
+                                A partir do JUnit 4 é fornecido aos desenvolvedores a capacidade de impedir a execução
+                                de métodos de teste. No entanto, esses métodos de teste ignorados resultam em sobrecarga
+                                no que diz respeito ao tempo de compilação e um aumento na complexidade do código e no
+                                tempo de compreensão.
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbLazyTest" type="checkbox" >
-                        <label>LazyTest</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbLazyTest" type="checkbox">
+                                <label>LazyTest: </label>
+                                Esse test smell ocorre quando vários métodos de teste verificam o mesmo método usando o
+                                mesmo equipamento (mas, por exemplo, verificam os valores de diferentes variáveis de
+                                instância). Esses testes geralmente só têm significado quando são considerados juntos.
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbMagicNumberTest" type="checkbox" >
-                        <label>MagicNumberTest</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbMagicNumberTest" type="checkbox">
+                                <label>MagicNumberTest: </label>
+                                Muitos ``Números Mágicos'' ou Strings usados ao criar objetos que provavelmente resultam
+                                em um teste irrepetível.
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbMysteryGuest" type="checkbox" >
-                        <label>MysteryGuest</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbMysteryGuest" type="checkbox">
+                                <label>MysteryGuest: </label>
+                                Quando um teste se utiliza de recursos externos, como por exemplo um arquivo necessário
+                                a sua execução, esse recurso externo não torna o teste autônomo. Consequentemente, não
+                                há informações suficientes para entender a funcionalidade testada, dificultando a
+                                utilização desse teste como documentação. Além disso, esses recursos externos podem ser
+                                compartilhados. E o seu uso introduz dependências ocultas: se alguma força altera ou
+                                exclui esse recurso, os testes começam a falhar.
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbPrintStatement" type="checkbox" >
-                        <label>PrintStatement</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbPrintStatement" type="checkbox">
+                                <label>PrintStatement (???): </label>
+                                As instruções de impressão nos testes de unidade são redundantes, pois os testes de
+                                unidade são executados como parte de um script automatizado. Consome recursos ou
+                                aumentar o tempo de execução.
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbRedundantAssertion" type="checkbox" >
-                        <label>RedundantAssertion</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbRedundantAssertion" type="checkbox">
+                                <label>RedundantAssertion: </label>
+                                Esse smell ocorre quando os métodos de teste contêm declarações de asserção sempre
+                                verdadeiras ou falsas. Um teste destina-se a retornar um resultado binário,
+                                independentemente de o resultado pretendido estar correto ou não, e não deve retornar a
+                                mesma saída, independentemente da entrada.
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbResourceOptimism" type="checkbox" >
-                        <label>ResourceOptimism</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbResourceOptimism" type="checkbox">
+                                <label>ResourceOptimism: </label>
+                                O código de teste que faz suposições otimistas sobre a existência ou ausência de um
+                                determinado recurso externo, e o estado deste recursos externos (como diretórios
+                                particulares ou tabelas de banco de dados) pode causar um comportamento não
+                                determinístico nos resultados do teste. A situação em que os testes rodam bem em um
+                                momento e falham em outro não é uma situação que o teste deve ocorrer.
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbSensitiveEquality" type="checkbox" >
-                        <label>SensitiveEquality</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbSensitiveEquality" type="checkbox">
+                                <label>SensitiveEquality: </label>
+                                É rápido e fácil escrever verificações de igualdade usando \textit{string}. Uma maneira
+                                típica é calcular um resultado real, mapeá-lo para uma string, que é então comparada a
+                                uma string literal que representa o valor esperado. Tais testes, no entanto, podem
+                                depender de muitos detalhes irrelevantes, como vírgulas, citações, espaços, etc. Sempre
+                                que uma \textit{string} é alterada, os testes começam a falhar. A solução é substituir
+                                as verificações de igualdade que utiliza \textit{string} por verificações reais de
+                                igualdade;
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbSleepyTest" type="checkbox" >
-                        <label>SleepyTest</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbSleepyTest" type="checkbox">
+                                <label>SleepyTest: </label>
+                                Os desenvolvedores introduzem esse test smell quando precisam pausar a execução de
+                                instruções em um método de teste por um certo período e continuar a execução.
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbUnknownTest" type="checkbox" >
-                        <label>UnknownTest</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbUnknownTest" type="checkbox">
+                                <label>UnknownTest: </label>
+                                Um método de teste sem uma condição de \textit{assertion}, o teste sempre vai resultar
+                                como válido, não resultando em uma exceção. Essa prática de programação dificulta a
+                                compreensibilidade do teste.
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <div class="custom-control custom-checkbox">
-                        <input wicket:id="cbVerboseTest" type="checkbox" >
-                        <label>VerboseTest</label>
+                        <div class="card" style="background-color: #5a6268;">
+                            <div class="card-body">
+                                <input wicket:id="cbVerboseTest" type="checkbox">
+                                <label>VerboseTest: </label>
+                                Excesso de código de teste ou Lógica de Teste Condicional (Conditional Test Logic).
+                                Difícil verificar a exatidão dele e mais propenso a conter erros;
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <input type="submit" value="Salvar" />
+            <input type="submit" value="Salvar"/>
         </form>
 
 
