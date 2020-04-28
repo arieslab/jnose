@@ -2,17 +2,27 @@
     <div class="container">
         <div wicket:id="feedback" style="width: 360px;"></div>
         <form wicket:id="form">
-        Pastas com os projetos: <input wicket:id="tfPastaPath" type="text" style="width:70%"/><br>
-            Tipo de Busca:<br>
-            <div class="custom-control custom-radio">
-                <span wicket:id="radioCommitsTags"></span>
+        Pastas com os projetos: <input wicket:id="tfPastaPath" type="text" class="form-control"/>
+            <br>
+            <div class="card" style="background-color: #5a6268;">
+                <div class="card-body">
+                    Tipo de Busca:<br>
+                    <div class="custom-control custom-radio">
+                        <span wicket:id="radioCommitsTags"></span>
+                    </div>
+                    <a wicket:id="carregarProjetoLnk" class="btn btn-success btn-sm">Carregar</a>
+                </div>
             </div>
             <br>
-            <a wicket:id="carregarProjetoLnk" class="btn btn-success btn-sm">Carregar</a><br>
-            <label>Nome do projeto:&nbsp;</label><label style="color: lawngreen;" wicket:id="projetoName"></label><br>
-            <label>Número de commits/tags:&nbsp;</label><label style="color: orangered;" wicket:id="projetoCommits"></label><br>
-            <br>
-            <a wicket:id="executarLnk" class="btn btn-success btn-sm">Executar</a><br>
+            <div class="card" style="background-color: #5a6268;">
+                <div class="card-body">
+                    <label>Nome do projeto:&nbsp;</label><label style="color: lawngreen;" wicket:id="projetoName"></label><br>
+                    <label>Número de commits/tags:&nbsp;</label><label style="color: orangered;" wicket:id="projetoCommits"></label><br>
+                    <br>
+                    <a wicket:id="executarLnk" class="btn btn-success btn-sm">Executar</a><br>
+                </div>
+            </div>
+
             <label>Processando:&nbsp;</label>
             <label style="color: orangered;" wicket:id="commitsProcessados"></label><br>
             <label style="color: orangered;" wicket:id="csvLogGit"></label>

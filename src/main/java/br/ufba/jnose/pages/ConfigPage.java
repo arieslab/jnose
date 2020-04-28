@@ -2,6 +2,7 @@ package br.ufba.jnose.pages;
 
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestSmellDetector;
 import br.ufba.jnose.pages.base.BasePage;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.PropertyModel;
@@ -81,6 +82,108 @@ public class ConfigPage extends BasePage {
                 TestSmellDetector.eagerTest = eagerTest;
             }
         };
+
+        form.add(new Button("btAll"){
+            @Override
+            public void onSubmit() {
+                TestSmellDetector.emptyTest = true;
+                TestSmellDetector.exceptionCatchingThrowing = true;
+                TestSmellDetector.generalFixture = true;
+                TestSmellDetector.mysteryGuest = true;
+                TestSmellDetector.sleepyTest = true;
+                TestSmellDetector.verboseTest = true;
+                TestSmellDetector.sensitiveEquality = true;
+                TestSmellDetector.redundantAssertion = true;
+                TestSmellDetector.printStatement = true;
+                TestSmellDetector.magicNumberTest = true;
+                TestSmellDetector.resourceOptimism = true;
+                TestSmellDetector.ignoredTest = true;
+                TestSmellDetector.unknownTest = true;
+                TestSmellDetector.lazyTest = true;
+                TestSmellDetector.assertionRoulette = true;
+                TestSmellDetector.conditionalTestLogic = true;
+                TestSmellDetector.constructorInitialization = true;
+                TestSmellDetector.defaultTest = true;
+                TestSmellDetector.dependentTest = true;
+                TestSmellDetector.duplicateAssert = true;
+                TestSmellDetector.eagerTest = true;
+
+                emptyTest = TestSmellDetector.emptyTest;
+                exceptionCatchingThrowing = TestSmellDetector.exceptionCatchingThrowing;
+                generalFixture = TestSmellDetector.generalFixture;
+                mysteryGuest = TestSmellDetector.mysteryGuest;
+                sleepyTest = TestSmellDetector.sleepyTest;
+                verboseTest = TestSmellDetector.verboseTest;
+                sensitiveEquality = TestSmellDetector.sensitiveEquality;
+                redundantAssertion = TestSmellDetector.redundantAssertion;
+                printStatement = TestSmellDetector.printStatement;
+                magicNumberTest = TestSmellDetector.magicNumberTest;
+                resourceOptimism = TestSmellDetector.resourceOptimism;
+                ignoredTest = TestSmellDetector.ignoredTest;
+                unknownTest = TestSmellDetector.unknownTest;
+                lazyTest = TestSmellDetector.lazyTest;
+                assertionRoulette = TestSmellDetector.assertionRoulette;
+                conditionalTestLogic = TestSmellDetector.conditionalTestLogic;
+                constructorInitialization = TestSmellDetector.constructorInitialization;
+                defaultTest = TestSmellDetector.defaultTest;
+                dependentTest = TestSmellDetector.dependentTest;
+                duplicateAssert = TestSmellDetector.duplicateAssert;
+                eagerTest = TestSmellDetector.eagerTest;
+
+                ConfigPage.this.setResponsePage(ConfigPage.class);
+            }
+        });
+
+        form.add(new Button("btDAll"){
+            @Override
+            public void onSubmit() {
+                TestSmellDetector.emptyTest = false;
+                TestSmellDetector.exceptionCatchingThrowing = false;
+                TestSmellDetector.generalFixture = false;
+                TestSmellDetector.mysteryGuest = false;
+                TestSmellDetector.sleepyTest = false;
+                TestSmellDetector.verboseTest = false;
+                TestSmellDetector.sensitiveEquality = false;
+                TestSmellDetector.redundantAssertion = false;
+                TestSmellDetector.printStatement = false;
+                TestSmellDetector.magicNumberTest = false;
+                TestSmellDetector.resourceOptimism = false;
+                TestSmellDetector.ignoredTest = false;
+                TestSmellDetector.unknownTest = false;
+                TestSmellDetector.lazyTest = false;
+                TestSmellDetector.assertionRoulette = false;
+                TestSmellDetector.conditionalTestLogic = false;
+                TestSmellDetector.constructorInitialization = false;
+                TestSmellDetector.defaultTest = false;
+                TestSmellDetector.dependentTest = false;
+                TestSmellDetector.duplicateAssert = false;
+                TestSmellDetector.eagerTest = false;
+
+                emptyTest = TestSmellDetector.emptyTest;
+                exceptionCatchingThrowing = TestSmellDetector.exceptionCatchingThrowing;
+                generalFixture = TestSmellDetector.generalFixture;
+                mysteryGuest = TestSmellDetector.mysteryGuest;
+                sleepyTest = TestSmellDetector.sleepyTest;
+                verboseTest = TestSmellDetector.verboseTest;
+                sensitiveEquality = TestSmellDetector.sensitiveEquality;
+                redundantAssertion = TestSmellDetector.redundantAssertion;
+                printStatement = TestSmellDetector.printStatement;
+                magicNumberTest = TestSmellDetector.magicNumberTest;
+                resourceOptimism = TestSmellDetector.resourceOptimism;
+                ignoredTest = TestSmellDetector.ignoredTest;
+                unknownTest = TestSmellDetector.unknownTest;
+                lazyTest = TestSmellDetector.lazyTest;
+                assertionRoulette = TestSmellDetector.assertionRoulette;
+                conditionalTestLogic = TestSmellDetector.conditionalTestLogic;
+                constructorInitialization = TestSmellDetector.constructorInitialization;
+                defaultTest = TestSmellDetector.defaultTest;
+                dependentTest = TestSmellDetector.dependentTest;
+                duplicateAssert = TestSmellDetector.duplicateAssert;
+                eagerTest = TestSmellDetector.eagerTest;
+
+                ConfigPage.this.setResponsePage(ConfigPage.class);
+            }
+        });
 
         form.add(new CheckBox("cbAssertionRoulette", new PropertyModel<>(this, "assertionRoulette")));
         form.add(new CheckBox("cbConditionalTestLogic", new PropertyModel<>(this, "conditionalTestLogic")));
