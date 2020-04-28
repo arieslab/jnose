@@ -20,29 +20,27 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">By ClassTest</h5>
-
+                Aqui temos a opção de passar o endereço de uma pasta local e realizar uma busca por test smells. Com o seguinte retorno: Nome do Projeto, Classe de Teste, Classe de Produção, LOC, Quantidade de Mètodos, e a quantidade de cada um dos 21 test smells encontrados por classe de teste.
             </div>
         </div>
         <br>
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">By TestSmells</h5>
-
+                Nesta opção podemos passar o endedreço da pasta do "projeto" o qual sera realizada uma busca por test smells. Com o seguinte retorno: Nome do Projeto, Classe de Teste, Classe de Produção, nome do test smells, nome do método, linha da ocorrência, linha inicial da ocorrência, linha final da ocorrência.
             </div>
         </div>
         <br>
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Evolutions</h5>
-
+                Utilizando o controle de versão do GIT podemos realizar uma busca de test smells em cada commit realizado ou tag existente no historico do projeto.
+                <br>
+                O retorno é o mesmo do ByClassTest, com as informações do commit adicionais: id do commit, nome de quem fez o commit, data do commit e msg do commit.
+                <br> <br>
+                Para funcionar o projeto tem que ser clonado: git clone https://endereço.do.projeto
             </div>
         </div>
         <br>
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Configurações</h5>
-
-            </div>
-        </div>
     </div>
 </wicket:extend>
