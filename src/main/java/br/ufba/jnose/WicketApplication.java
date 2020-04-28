@@ -1,9 +1,8 @@
 package br.ufba.jnose;
 
+import br.ufba.jnose.pages.HomePage;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
-
-import br.ufba.jnose.pages.HomePage;
 
 public class WicketApplication extends WebApplication {
 

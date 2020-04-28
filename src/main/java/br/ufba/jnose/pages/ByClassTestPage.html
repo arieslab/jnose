@@ -1,0 +1,137 @@
+<wicket:extend xmlns:wicket="http://wicket.apache.org">
+    <div class="container">
+        <input wicket:id="acbCobertura" type="checkbox">
+        <label style="color: yellow;">Cobertura: </label> Ativar o fluxo de cobertura.
+        <br>
+        <form wicket:id="form">
+            Pastas com os projetos: <input class="form-control" wicket:id="tfPastaPath" type="text"/>
+            <input wicket:id="btEnviar" type="submit" value="Selecionar Diretório" class="btn btn-success btn-sm"/>
+        </form>
+        <br>
+        <div style="overflow: auto; width: 100%; height:250px;background-color: #555;">
+            <table class="table table-sm">
+                <tr style="color: yellow;">
+                    <th style="text-align: center;"></th>
+                    <th style="text-align: center;">Nome</th>
+                    <th style="text-align: center;">Path</th>
+                    <th style="text-align: center;">Concluído</th>
+                    <th style="width: 100px;text-align: center;">%</th>
+                    <th></th>
+                </tr>
+                <tr wicket:id="lvProjetos">
+                    <td style="text-align: center;">
+                        <input type="checkbox" wicket:id="paraProcessarACB"/>
+                    </td>
+                    <td style="text-align: center;">
+                        <span wicket:id="nomeProjeto"></span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span wicket:id="projeto"></span>
+                    </td>
+                    <td style="text-align: center;">
+                    <span>
+                        <i wicket:id="iconProcessado" class="material-icons green" style="">check_circle</i>
+                        <i wicket:id="iconNaoProcessado" class="material-icons red" style="">cancel</i>
+                    </span>
+                    </td>
+                    <td style="text-align: center;">
+                        <div class="progress">
+                            <div wicket:id="progressProject" class="progress-bar" role="progressbar" style="width: 25%"
+                                 aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                <span wicket:id="lbPorcentagem"></span>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="text-align: center;">
+                        <button wicket:id="btModel" type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                                data-target="#model1">
+                            Detalhes
+                        </button>
+                    </td>
+
+                    <div wicket:id="model" class="modal fade" id="model1" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Resultados</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Projeto: <span wicket:id="nomeProjeto"></span>
+                                    <br><br>
+                                    <a wicket:id="linl0" target="_blank">jacoco.csv</a><br>
+                                    <a wicket:id="linl1" target="_blank">testfiledetector.csv</a><br>
+                                    <a wicket:id="linl2" target="_blank">testfilemapping.csv</a><br>
+                                    <a wicket:id="linl3" target="_blank">testsmelldetector.csv</a><br>
+                                    <br>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </tr>
+            </table>
+        </div>
+
+        <div style="width:100%;background-color: black;color:white;">
+            <a wicket:id="processarTodos" class="btn btn-success btn-sm">Processar</a>
+            <div wicket:id="loadImg" class="spinner-border text-warning" role="status" style="width:20px;height:20px;">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <span wicket:id="lbProjetosSize"></span> projetos encontrados na pasta: <span
+                wicket:id="lbPastaSelecionada"></span>
+        </div>
+        <div wicket:id="progress" style="width:100%;"></div>
+
+        <div wicket:id="feedback" style="width: 360px;"></div>
+
+        <br>
+
+        <div style="width:100%;height:90px;background-color: black;color:white;overflow: auto;font-size: 12px;">
+            <span wicket:id="taLog" style="width:100%;height:100%;background-color: black;color:white;"></span>
+        </div>
+        <br>
+        <div style="width:100%;height:120px;background-color: black;color:white;overflow: auto;font-size: 12px;">
+            <span wicket:id="taLogInfo" style="width:100%;height:100%;background-color: black;color:white;"></span>
+        </div>
+
+    </div>
+
+    <br>
+
+    <div style="width:100%;text-align: center;">
+        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#exampleModalCenter">
+            Resultados
+        </button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Resultados</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <br>
+                    <a target="_blank" wicket:id="linkCSVFinal">all_testsmells.csv</a><br>
+                    <br>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</wicket:extend>

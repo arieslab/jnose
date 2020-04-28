@@ -3,7 +3,7 @@ package br.ufba.jnose.pages.base;
 import br.ufba.jnose.pages.ByTestSmellsPage;
 import br.ufba.jnose.pages.ConfigPage;
 import br.ufba.jnose.pages.EvolutionPage;
-import br.ufba.jnose.pages.HomePage;
+import br.ufba.jnose.pages.ByClassTestPage;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebPage;
@@ -27,7 +27,7 @@ public class BasePage extends WebPage {
         Link linkHome = new Link<String>("linkHome") {
             @Override
             public void onClick() {
-                setResponsePage(HomePage.class);
+                setResponsePage(ByClassTestPage.class);
             }
         };
 
