@@ -172,6 +172,9 @@ public class EvolutionPage extends BasePage {
         String csvTestSmells = reportPathFinal + projeto.getName() + "_testsmesll.csv";
         ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(csvTestSmells);
 
+
+        boolean vizualizarCabecalho = true;
+
         //Para cada commit executa uma busca
         for (Commit commit : projeto.getListaCommits()) {
             cont++;
@@ -180,13 +183,15 @@ public class EvolutionPage extends BasePage {
             execCommand("git checkout " + commit.id, projetoPath);
 
             //criando a lista de testsmells
-            List<String[]> listaTestSmells = processarTestSmells(projetoPath, commit, true);
+            List<String[]> listaTestSmells = processarTestSmells(projetoPath, commit, vizualizarCabecalho);
             for (String[] linhaArray : listaTestSmells) {
                 List<String> list = Arrays.asList(linhaArray);
                 resultsWriter.writeLine(list);
             }
             csvLogGit.setDefaultModelObject(resultsWriter.getOutputFile());
             target.add(csvLogGit);
+
+            vizualizarCabecalho = false;
         }
         execCommand("git checkout master", projetoPath);
     }
