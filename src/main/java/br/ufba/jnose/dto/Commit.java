@@ -10,12 +10,21 @@ public class Commit implements Serializable {
     public String name;
     public Date date;
     public String msg;
+    public String tag;
 
     public Commit(String id, String name, Date date, String msg) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.msg = msg;
+    }
+
+    public Commit(String id, String name, Date date, String msg, String tag) {
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.msg = msg;
+        this.tag = tag;
     }
 
     @Override
@@ -25,6 +34,7 @@ public class Commit implements Serializable {
                 ", name='" + name + '\'' +
                 ", date=" + date +
                 ", msg='" + msg + '\'' +
+                ", tag='" + tag + '\'' +
                 '}';
     }
 }

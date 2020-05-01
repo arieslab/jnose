@@ -32,10 +32,10 @@ public class Main {
         for(String[] lineItem:listMapping) {
 
             if(lineItem[3] == null){
-                testFile = new TestFile(lineItem[0],lineItem[1],lineItem[2],lineItem[3],lineItem[4], lineItem[5], "",0,0);
+                testFile = new TestFile(lineItem[0],lineItem[1],lineItem[2],lineItem[3],lineItem[4], lineItem[5],lineItem[6], "",0,0);
             }
             else{
-                testFile = new TestFile(lineItem[0],lineItem[1],lineItem[2],lineItem[3],lineItem[4], lineItem[5], lineItem[6], Integer.parseInt(lineItem[7]),Integer.parseInt(lineItem[8]));
+                testFile = new TestFile(lineItem[0],lineItem[1],lineItem[2],lineItem[3],lineItem[4],lineItem[5], lineItem[6], lineItem[7], Integer.parseInt(lineItem[8]),Integer.parseInt(lineItem[9]));
             }
             testFiles.add(testFile);
         }
@@ -45,7 +45,7 @@ public class Main {
         if(cabecalho) {
             List<String> listaNameTestSmells = testSmellDetector.getTestSmellNames();
             String[] arrayNameTestSmells = listaNameTestSmells.toArray(new String[listaNameTestSmells.size()]);
-            String[] linhaColumnNames = {"CommitID","CommitName","CommitDate","CommitMsg", "App", "TestFileName", "ProductionFileName", "LOC", "numberMethods"};
+            String[] linhaColumnNames = {"CommitID","CommitName","CommitDate","CommitMsg","Tag", "App", "TestFileName", "ProductionFileName", "LOC", "numberMethods"};
             String[] linhaColumn = Stream.concat(Arrays.stream(linhaColumnNames), Arrays.stream(arrayNameTestSmells)).toArray(String[]::new);
             listTestSmells.add(linhaColumn);
         }
@@ -70,6 +70,7 @@ public class Main {
                 columnValues.add(file.getCommitName());
                 columnValues.add(file.getCommitDate());
                 columnValues.add(file.getCommitMsg());
+                columnValues.add(file.getTag());
 
                 columnValues.add(file.getApp());
                 columnValues.add(file.getTestFileName().replace(".java", ""));

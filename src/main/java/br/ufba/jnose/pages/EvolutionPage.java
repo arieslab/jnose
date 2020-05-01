@@ -268,7 +268,7 @@ public class EvolutionPage extends BasePage {
                         id = lineOut2.trim().replace("commit ", "").trim();
                     }
                 }
-                lista.add(new Commit(id, name, date, msg));
+                lista.add(new Commit(id, name, date, msg, tagName));
             }
             input.close();
             r = p.waitFor();

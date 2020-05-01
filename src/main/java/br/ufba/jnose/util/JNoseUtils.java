@@ -68,6 +68,7 @@ public class JNoseUtils {
                     commit.name,
                     commit.date.toString(),
                     commit.msg,
+                    commit.tag,
                     projectName,
                     testClass.pathFile.toString(),
                     testClass.productionFile,

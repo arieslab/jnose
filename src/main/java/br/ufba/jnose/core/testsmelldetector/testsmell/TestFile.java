@@ -5,22 +5,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestFile {
-    private String app, testFilePath, productionFilePath, commitId, commitName, commitDate, commitMsg;
+    private String app, testFilePath, productionFilePath, commitId, commitName, commitDate, commitMsg, tag;
     private List<AbstractSmell> testSmells;
     private Integer loc;
     private Integer qtdMethods;
 
-    public TestFile(String commitId, String commitName,String commitDate,String commitMsg, String app, String testFilePath, String productionFilePath, Integer loc, Integer qtdMethods) {
+    public TestFile(String commitId, String commitName,String commitDate,String commitMsg, String tag,String app, String testFilePath, String productionFilePath, Integer loc, Integer qtdMethods) {
         this.commitId = commitId;
         this.commitName = commitName;
         this.commitDate = commitDate;
         this.commitMsg = commitMsg;
+        this.tag = tag;
         this.app = app;
         this.testFilePath = testFilePath;
         this.productionFilePath = productionFilePath;
         this.testSmells = new ArrayList<>();
         this.loc = loc;
         this.qtdMethods = qtdMethods;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     public void setApp(String app) {
