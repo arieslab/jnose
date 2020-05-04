@@ -15,7 +15,9 @@ public class TestClass implements Serializable {
     public Integer numberLine;
     public String productionFile;
     public List<TestSmell> listTestSmell = new ArrayList<>();
-    public String junitVersion;
+    public JunitVersion junitVersion;
+
+    public enum JunitVersion{JUnit3, JUnit4, JUnit5}
 
     @Override
     public String toString() {

@@ -128,7 +128,7 @@ public class JNoseUtils {
                 columnValues.add(1, testClass.name);
                 columnValues.add(2, testClass.pathFile.toString());
                 columnValues.add(3, testClass.productionFile);
-                columnValues.add(4, testClass.junitVersion);
+                columnValues.add(4, testClass.junitVersion.name());
                 columnValues.add(5, testClass.numberLine.toString());
                 columnValues.add(6, testClass.numberMethods.toString());
                 columnValues.add(7, testSmell.name);
@@ -198,11 +198,11 @@ public class JNoseUtils {
     private static void detectJUnitVersion(NodeList<ImportDeclaration> nodeList, TestClass testClass) {
         for (ImportDeclaration node : nodeList) {
             if (node.getNameAsString().contains("org.junit.jupiter")) {
-                testClass.junitVersion = "JUnit5";
+                testClass.junitVersion = TestClass.JunitVersion.JUnit5;
             } else if (node.getNameAsString().contains("org.junit")) {
-                testClass.junitVersion = "JUnit4";
+                testClass.junitVersion = TestClass.JunitVersion.JUnit4;
             } else if (node.getNameAsString().contains("junit.framework")) {
-                testClass.junitVersion = "JUnit3";
+                testClass.junitVersion = TestClass.JunitVersion.JUnit3;
             }
         }
     }
