@@ -15,6 +15,7 @@ public class TestClass implements Serializable {
     public Integer numberLine;
     public String productionFile;
     public List<TestSmell> listTestSmell = new ArrayList<>();
+    public String junitVersion;
 
     @Override
     public String toString() {
@@ -24,6 +25,7 @@ public class TestClass implements Serializable {
                 ", name='" + name + '\'' +
                 ", numberMethods=" + numberMethods +
                 ", numberLine=" + numberLine +
+                ", junitVersion='" + junitVersion + '\'' +
                 ", productionFile='" + productionFile + '\'' +
                 ", listTestSmell=" + listTestSmell +
                 '}';

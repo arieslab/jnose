@@ -9,6 +9,7 @@ import br.ufba.jnose.dto.TestClass;
 import br.ufba.jnose.dto.TestSmell;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
@@ -59,10 +60,10 @@ public class JNoseUtils {
         return resultsWriter.getOutputFile();
     }
 
-    public static List<String[]>  testfilemapping(List<TestClass> listTestClass, Commit commit, String projectPath, String projectName) throws IOException {
+    public static List<String[]> testfilemapping(List<TestClass> listTestClass, Commit commit, String projectPath, String projectName) throws IOException {
         System.out.println("Saving results. Total lines:" + listTestClass.size());
         List<String[]> listRetorno = new ArrayList<>();
-        for (TestClass testClass: listTestClass) {
+        for (TestClass testClass : listTestClass) {
             String[] linha = {
                     commit.id,
                     commit.name,
@@ -72,8 +73,8 @@ public class JNoseUtils {
                     projectName,
                     testClass.pathFile.toString(),
                     testClass.productionFile,
-                    testClass.numberLine+"",
-                    testClass.numberMethods+""
+                    testClass.numberLine + "",
+                    testClass.numberMethods + ""
             };
             listRetorno.add(linha);
         }
@@ -89,13 +90,13 @@ public class JNoseUtils {
         String outFile = reportPath + projectName + "_testmappingdetector" + ".csv";
         ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(outFile);
         List<String> columnValues = null;
-        for (TestClass testClass: listTestClass){
+        for (TestClass testClass : listTestClass) {
             columnValues = new ArrayList<>();
             columnValues.add(0, projectName);
             columnValues.add(1, testClass.pathFile.toString());
             columnValues.add(2, testClass.productionFile);
-            columnValues.add(3, testClass.numberLine+"");
-            columnValues.add(4, testClass.numberMethods+"");
+            columnValues.add(3, testClass.numberLine + "");
+            columnValues.add(4, testClass.numberMethods + "");
             resultsWriter.writeLine(columnValues);
         }
         System.out.println("Completed!");
@@ -124,8 +125,8 @@ public class JNoseUtils {
         columnValues.add(10, "testSmellLineEnd");
         resultsWriter.writeLine(columnValues);
 
-        for (TestClass testClass: listTestClass){
-            for (TestSmell testSmell : testClass.listTestSmell){
+        for (TestClass testClass : listTestClass) {
+            for (TestSmell testSmell : testClass.listTestSmell) {
                 columnValues = new ArrayList<>();
                 columnValues.add(0, testClass.projectName);
                 columnValues.add(1, testClass.name);
@@ -155,7 +156,7 @@ public class JNoseUtils {
                 .forEach(filePath -> {
                     if (filePath.getFileName().toString().lastIndexOf(".") != -1) {
                         String fileNameWithoutExtension = filePath.getFileName().toString().substring(0, filePath.getFileName().toString().lastIndexOf(".")).toLowerCase();
-                        if (filePath.toString().toLowerCase().endsWith(".java") && fileNameWithoutExtension.matches("^.*test\\d*$")){
+                        if (filePath.toString().toLowerCase().endsWith(".java") && fileNameWithoutExtension.matches("^.*test\\d*$")) {
                             TestClass testClass = new TestClass();
                             testClass.projectName = projectName;
                             testClass.pathFile = filePath;
@@ -166,9 +167,9 @@ public class JNoseUtils {
                                 if (index > 0) {
                                     productionFileName = testClass.name.substring(0, testClass.name.toLowerCase().lastIndexOf("test")) + ".java";
                                 }
-                                testClass.productionFile = getFileProduction(startDir.toString(),productionFileName);
+                                testClass.productionFile = getFileProduction(startDir.toString(), productionFileName);
 
-                                if(!testClass.productionFile.isEmpty()){
+                                if (!testClass.productionFile.isEmpty()) {
                                     getTestSmells(testClass);
                                     files.add(testClass);
                                 }
@@ -186,13 +187,27 @@ public class JNoseUtils {
             fileInputStream = new FileInputStream(testClass.pathFile.toFile());
             CompilationUnit compilationUnit = JavaParser.parse(fileInputStream);
             testClass.numberLine = compilationUnit.getRange().get().end.line;
-            for (NodeList node : compilationUnit.getNodeLists()){
-                isTestFile = flowClass(node,testClass);
+            detectJUnitVersion(compilationUnit.getImports(), testClass);
+            List<NodeList<?>> nodeList = compilationUnit.getNodeLists();
+            for (NodeList node : nodeList) {
+                isTestFile = flowClass(node, testClass);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         return isTestFile;
+    }
+
+    private static void detectJUnitVersion(NodeList<ImportDeclaration> nodeList, TestClass testClass) {
+        for (ImportDeclaration node : nodeList) {
+            if (node.getNameAsString().contains("org.junit.jupiter")) {
+                testClass.junitVersion = "JUnit5";
+            } else if (node.getNameAsString().contains("org.junit")) {
+                testClass.junitVersion = "JUnit4";
+            } else if (node.getNameAsString().contains("junit.framework")) {
+                testClass.junitVersion = "JUnit3";
+            }
+        }
     }
 
     private static Boolean flowClass(NodeList<?> nodeList, TestClass testClass) {
@@ -203,10 +218,10 @@ public class JNoseUtils {
                 testClass.name = classAtual.getNameAsString();
                 NodeList<?> nodeList_members = classAtual.getMembers();
                 testClass.numberMethods = classAtual.getMembers().size();
-                isTestClass = flowClass(nodeList_members,testClass);
-            }else if(node instanceof MethodDeclaration) {
-                isTestClass = flowClass(((MethodDeclaration) node).getAnnotations(),testClass);
-            }else if(node instanceof MarkerAnnotationExpr){
+                isTestClass = flowClass(nodeList_members, testClass);
+            } else if (node instanceof MethodDeclaration) {
+                isTestClass = flowClass(((MethodDeclaration) node).getAnnotations(), testClass);
+            } else if (node instanceof MarkerAnnotationExpr) {
                 return ((MarkerAnnotationExpr) node).getNameAsString().toLowerCase().equals("test");
             }
         }
@@ -224,22 +239,22 @@ public class JNoseUtils {
                             retorno[0] = filePath.toString();
                         }
                     });
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return retorno[0];
     }
 
-    public static void getTestSmells(TestClass testClass){
+    public static void getTestSmells(TestClass testClass) {
         TestSmellDetector testSmellDetector = TestSmellDetector.createTestSmellDetector();
-        TestFile testFile = new TestFile("Teste",testClass.pathFile.toString(),testClass.productionFile,testClass.numberLine,testClass.numberMethods);
+        TestFile testFile = new TestFile("Teste", testClass.pathFile.toString(), testClass.productionFile, testClass.numberLine, testClass.numberMethods);
 
         try {
             TestFile tempFile = testSmellDetector.detectSmells(testFile);
             for (AbstractSmell smell : tempFile.getTestSmells()) {
                 smell.getSmellyElements();
-                for (SmellyElement smellyElement : smell.getSmellyElements()){
-                    if(smellyElement.getHasSmell()){
+                for (SmellyElement smellyElement : smell.getSmellyElements()) {
+                    if (smellyElement.getHasSmell()) {
                         TestSmell testSmell = new TestSmell();
                         testSmell.name = smell.getSmellName();
 
