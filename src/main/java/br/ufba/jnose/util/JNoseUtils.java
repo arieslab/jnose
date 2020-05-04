@@ -31,13 +31,8 @@ public class JNoseUtils {
 
     public static void main(String[] args) throws IOException {
         System.out.println("JNoseUtils");
-        Path startDir = Paths.get(directoryPath);
-
         List<TestClass> list = getFilesTest(directoryPath);
-
-        list.parallelStream().forEach(f -> {
-            System.out.println(f.toString());
-        });
+        list.parallelStream().forEach(f -> System.out.println(f.toString()));
     }
 
     public static String testfiledetector(String projectPath, String projectName, String reportPath) throws IOException {
