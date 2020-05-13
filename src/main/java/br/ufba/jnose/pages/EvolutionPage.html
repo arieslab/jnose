@@ -2,28 +2,28 @@
     <div class="container">
         <div wicket:id="feedback" style="width: 360px;"></div>
         <form wicket:id="form">
-        Pastas com os projetos: <input wicket:id="tfPastaPath" type="text" class="form-control"/>
+            Folders with projects: <input wicket:id="tfPastaPath" type="text" class="form-control"/>
             <br>
             <div class="card" style="background-color: #dcdcdc;">
                 <div class="card-body">
-                    Tipo de Busca:<br>
+                    Search Type:<br>
                     <div class="custom-control custom-radio">
                         <span wicket:id="radioCommitsTags"></span>
                     </div>
-                    <a wicket:id="carregarProjetoLnk" class="btn btn-success btn-sm">Carregar</a>
+                    <a wicket:id="carregarProjetoLnk" class="btn btn-success btn-sm">Upload Project</a>
                 </div>
             </div>
             <br>
             <div class="card" style="background-color: #d4d4d4;">
                 <div class="card-body">
-                    <label>Nome do projeto:&nbsp;</label><label style="color: lawngreen;" wicket:id="projetoName"></label><br>
-                    <label>Número de commits/tags:&nbsp;</label><label style="color: orangered;" wicket:id="projetoCommits"></label><br>
+                    <label>Project name:&nbsp;</label><label style="color: #fc0000;" wicket:id="projetoName"></label><br>
+                    <label>Number of commits/tags:&nbsp;</label><label style="color: orangered;" wicket:id="projetoCommits"></label><br>
                     <br>
-                    <a wicket:id="executarLnk" class="btn btn-success btn-sm">Executar</a><br>
+                    <a wicket:id="executarLnk" class="btn btn-success btn-sm">Run</a><br>
                 </div>
             </div>
 
-            <label>Processando:&nbsp;</label>
+            <label>Processing:&nbsp;</label>
             <label style="color: orangered;" wicket:id="commitsProcessados"></label><br>
             <label style="color: orangered;" wicket:id="csvLogGit"></label>
         </form>

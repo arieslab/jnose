@@ -1,20 +1,20 @@
 <wicket:extend xmlns:wicket="http://wicket.apache.org">
     <div class="container">
         <input wicket:id="acbCobertura" type="checkbox">
-        <label style="color: #e71616;">Cobertura: </label> Ativar o fluxo de cobertura.
+        <label style="color: #e71616;">Coverage: </label> Enable coverage flow.
         <br>
         <form wicket:id="form">
-            Pastas com os projetos: <input class="form-control" wicket:id="tfPastaPath" type="text"/>
-            <input wicket:id="btEnviar" type="submit" value="Selecionar Diretório" class="btn btn-success btn-sm"/>
+            Folders with projects: <input class="form-control" wicket:id="tfPastaPath" type="text"/>
+            <input wicket:id="btEnviar" type="submit" value="Select Directory" class="btn btn-success btn-sm"/>
         </form>
         <br>
         <div style="overflow: auto; width: 100%; height:250px;background-color: #c1c1c1;">
             <table class="table table-sm">
                 <tr style="color: #000000;">
                     <th style="text-align: center;"></th>
-                    <th style="text-align: center;">Nome</th>
+                    <th style="text-align: center;">Name</th>
                     <th style="text-align: center;">Path</th>
-                    <th style="text-align: center;">Concluído</th>
+                    <th style="text-align: center;">Concluded</th>
                     <th style="width: 100px;text-align: center;">%</th>
                     <th></th>
                 </tr>
@@ -45,7 +45,7 @@
                     <td style="text-align: center;">
                         <button wicket:id="btModel" type="button" class="btn btn-warning btn-sm" data-toggle="modal"
                                 data-target="#model1">
-                            Detalhes
+                            Details
                         </button>
                     </td>
 
@@ -69,7 +69,7 @@
                                     <br>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>
@@ -80,11 +80,11 @@
         </div>
 
         <div style="width:100%;background-color: black;color:white;">
-            <a wicket:id="processarTodos" class="btn btn-success btn-sm">Processar</a>
+            <a wicket:id="processarTodos" class="btn btn-success btn-sm">Process</a>
             <div wicket:id="loadImg" class="spinner-border text-warning" role="status" style="width:20px;height:20px;">
                 <span class="sr-only">Loading...</span>
             </div>
-            <span wicket:id="lbProjetosSize"></span> projetos encontrados na pasta: <span
+            <span wicket:id="lbProjetosSize"></span> projects found in the folder: <span
                 wicket:id="lbPastaSelecionada"></span>
         </div>
         <div wicket:id="progress" style="width:100%;"></div>
@@ -107,7 +107,7 @@
 
     <div style="width:100%;text-align: center;">
         <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#exampleModalCenter">
-            Resultados
+            Results
         </button>
     </div>
 
@@ -128,7 +128,7 @@
                     <br>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
