@@ -4,7 +4,7 @@
         <form wicket:id="form">
         Pastas com os projetos: <input wicket:id="tfPastaPath" type="text" class="form-control"/>
             <br>
-            <div class="card" style="background-color: #5a6268;">
+            <div class="card" style="background-color: #dcdcdc;">
                 <div class="card-body">
                     Tipo de Busca:<br>
                     <div class="custom-control custom-radio">
@@ -14,7 +14,7 @@
                 </div>
             </div>
             <br>
-            <div class="card" style="background-color: #5a6268;">
+            <div class="card" style="background-color: #d4d4d4;">
                 <div class="card-body">
                     <label>Nome do projeto:&nbsp;</label><label style="color: lawngreen;" wicket:id="projetoName"></label><br>
                     <label>Número de commits/tags:&nbsp;</label><label style="color: orangered;" wicket:id="projetoCommits"></label><br>
@@ -29,32 +29,7 @@
         </form>
 
         <a href="./reports/revolution/" target="_blank" class="btn btn-primary btn-sm">Reports</a>
-        <br>
-
-        <br>
-        <table class="table table-hover table-sm">
-            <tr class="table">
-                <th style="text-align: center;">Projeto</th>
-                <th style="text-align: center;">Commit</th>
-                <th style="text-align: center;">Name</th>
-                <th style="text-align: center;">TestSmells</th>
-            </tr>
-            <tr class="table-secondary">
-                <td style="text-align: center;">
-                    <span></span>
-                </td>
-                <td style="text-align: center;">
-                    <span></span>
-                </td>
-                <td style="text-align: center;">
-                    <span></span>
-                </td>
-                <td style="text-align: center;">
-                    <span></span>
-                </td>
-            </tr>
-        </table>
-
+        <br><br>
         <div style="width:100%;height:240px;background-color: black;color:white;overflow: auto;font-size: 12px;">
             <span wicket:id="taLogInfo" style="width:100%;height:100%;background-color: black;color:white;">000</span>
         </div>
