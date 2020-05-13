@@ -261,7 +261,7 @@ public class ByTestSmellsPage extends BasePage {
     private void processarProjetos(List<Projeto> lista, String folderTime) {
 
         boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
-        if (!success) System.out.println("Pasta Criada...");
+        if (!success) System.out.println("Created Folder...");
 
         totalProcessado = 0;
 
@@ -313,7 +313,7 @@ public class ByTestSmellsPage extends BasePage {
                     String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
                     lista.add(new Projeto(nameProjeto, pathProjeto));
                 } else {
-                    String msg = "Não é um projeto MAVEN: " + dir.getAbsolutePath();
+                    String msg = "It is not a project MAVEN: " + dir.getAbsolutePath();
                     out.println(msg);
                 }
             }

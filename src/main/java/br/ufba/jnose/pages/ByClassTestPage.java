@@ -84,8 +84,8 @@ public class ByClassTestPage extends BasePage {
             @Override
             protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
                 WicketApplication.COBERTURA_ON = processarCobertura;
-                out.println("COBERTURA_ON: " + processarCobertura);
-                logRetornoInfo = "COBERTURA_ON: " + processarCobertura + " <br>" + logRetornoInfo;
+                out.println("COVERAGE_ON: " + processarCobertura);
+                logRetornoInfo = "COVERAGE_ON: " + processarCobertura + " <br>" + logRetornoInfo;
             }
         };
         add(acbCobertura);
@@ -347,7 +347,7 @@ public class ByClassTestPage extends BasePage {
     private void processarProjetos(List<Projeto> lista, String folderTime) {
 
         boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
-        if (!success) System.out.println("Pasta Criada...");
+        if (!success) System.out.println("Created Folder...");
 
         totalProcessado = 0;
 
@@ -410,7 +410,7 @@ public class ByClassTestPage extends BasePage {
     }
 
     private void processarCobertura(Projeto projeto, String folderTime) {
-        logRetorno = dateNow() + projeto.getName() + " - <font style='color:blue'>Cobertura</font> <br>" + logRetorno;
+        logRetorno = dateNow() + projeto.getName() + " - <font style='color:blue'>Coverage</font> <br>" + logRetorno;
         try {
             execCommand("mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Drat.skip=true", projeto.getPath());
             ReportGenerator reportGenerator = new ReportGenerator(new File(projeto.getPath()), new File(pastaPathReport + folderTime + File.separatorChar));
@@ -434,7 +434,7 @@ public class ByClassTestPage extends BasePage {
                     String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
                     lista.add(new Projeto(nameProjeto, pathProjeto));
                 } else {
-                    String msg = "Não é um projeto MAVEN: " + dir.getAbsolutePath();
+                    String msg = "It is not a project MAVEN: " + dir.getAbsolutePath();
                     out.println(msg);
                     logRetornoInfo = msg + " <br>" + logRetornoInfo;
                 }
@@ -534,7 +534,7 @@ public class ByClassTestPage extends BasePage {
 
     private void mesclarGeral(List<Projeto> listaProjetos, String reportPath) {
 
-        logRetorno = dateNow() + "<font style='color:orange'>Mesclando resultados</font> <br>" + logRetorno;
+        logRetorno = dateNow() + "<font style='color:orange'>Merging results</font> <br>" + logRetorno;
 
         try {
             ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(reportPath + "all" + "_testsmesll.csv");

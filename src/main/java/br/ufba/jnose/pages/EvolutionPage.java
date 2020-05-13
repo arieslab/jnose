@@ -167,7 +167,7 @@ public class EvolutionPage extends BasePage {
         String reportPathFinal = pathReport + File.separatorChar + dateNow() + File.separatorChar;
 
         boolean success = (new File(reportPathFinal)).mkdirs();
-        if (!success) System.out.println("Pasta Criada...");
+        if (!success) System.out.println("Created Folder...");
 
         String csvTestSmells = reportPathFinal + projeto.getName() + "_testsmesll.csv";
         ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(csvTestSmells);
