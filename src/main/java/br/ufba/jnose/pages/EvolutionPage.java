@@ -6,7 +6,9 @@ import br.ufba.jnose.dto.Projeto;
 import br.ufba.jnose.dto.TestClass;
 import br.ufba.jnose.pages.base.BasePage;
 import br.ufba.jnose.util.ResultsWriter;
+import com.github.javaparser.utils.StringEscapeUtils;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
+import com.sun.tools.javac.util.StringUtils;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -172,6 +174,9 @@ public class EvolutionPage extends BasePage {
         String csvTestSmells = reportPathFinal + projeto.getName() + "_testsmesll.csv";
         ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(csvTestSmells);
 
+        String csvTestSmells2 = reportPathFinal + projeto.getName() + "_testsmesll-evolution_total.csv";
+        ResultsWriter resultsWriter2 = ResultsWriter.createResultsWriter(csvTestSmells2);
+
 
         boolean vizualizarCabecalho = true;
 
@@ -182,12 +187,28 @@ public class EvolutionPage extends BasePage {
             target.add(commitsProcessados);
             execCommand("git checkout " + commit.id, projetoPath);
 
+            int total = 0;
             //criando a lista de testsmells
             List<String[]> listaTestSmells = processarTestSmells(projetoPath, commit, vizualizarCabecalho);
             for (String[] linhaArray : listaTestSmells) {
                 List<String> list = Arrays.asList(linhaArray);
+                    for (int i = 10; i <= 30; i++) {
+                        boolean isNumeric = list.get(i).chars().allMatch( Character::isDigit );
+                        if(isNumeric) {
+                            total += Integer.parseInt(list.get(i));
+                        }
+                    }
                 resultsWriter.writeLine(list);
             }
+
+            List<String> lista2 = new ArrayList<>();
+            lista2.add(commit.id);
+            lista2.add(commit.date+"");
+            lista2.add(total+"");
+
+            resultsWriter2.writeLine(lista2);
+
+
             csvLogGit.setDefaultModelObject(resultsWriter.getOutputFile());
             target.add(csvLogGit);
 
