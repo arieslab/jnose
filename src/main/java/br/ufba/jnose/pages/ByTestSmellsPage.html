@@ -3,10 +3,10 @@
         <br>
         <form wicket:id="form">
             Folders with projects: <input wicket:id="tfPastaPath" type="text" class="form-control" style="width:70%"/>
-            <input wicket:id="btEnviar" type="submit" value="Select" class="btn btn-danger btn-sm"/>
+            <input wicket:id="btEnviar" type="submit" value="Select" class="btn btn-success btn-sm"/>
         </form>
         <br>
-        <div style="overflow: auto; width: 100%; height:250px;background-color: #e0e0e0;">
+        <div style="overflow: auto; width: 100%; height:200px;background-color: #e0e0e0;">
             <table class="table table-sm">
                 <tr style="color: #404040;">
                     <th style="text-align: center;"></th>
@@ -44,7 +44,7 @@
         </div>
 
         <div style="width:100%;background-color: black;color:white;">
-            <a wicket:id="processarTodos" class="btn btn-danger btn-sm">Process</a>
+            <a wicket:id="processarTodos" class="btn btn-success btn-sm">Process</a>
             <span wicket:id="lbProjetosSize"></span> projects found in the folder: <span
                 wicket:id="lbPastaSelecionada"></span>
         </div>
@@ -55,7 +55,7 @@
     <br>
 
     <div style="width:100%;text-align: center;">
-        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModalCenter">
+        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#exampleModalCenter">
             Results
         </button>
     </div>
