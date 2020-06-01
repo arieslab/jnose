@@ -201,6 +201,7 @@ public class EvolutionPage extends BasePage {
 
             List<String> lista2 = new ArrayList<>();
             lista2.add(commit.id);
+            lista2.add(commit.tag);
             lista2.add(commit.date+"");
             lista2.add(total+"");
 

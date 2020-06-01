@@ -28,7 +28,7 @@ import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.time.Duration;
 
-import javax.servlet.http.Cookie;
+//import javax.servlet.http.Cookie;
 import java.io.*;
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -62,12 +62,12 @@ public class ByTestSmellsPage extends BasePage {
 
     public ByTestSmellsPage() {
 
-        Cookie pastaPathCookie = ((WebRequest) getRequest()).getCookie("pastaPath");
-        if (pastaPathCookie != null) {
-            pastaPath = pastaPathCookie.getValue();
-        } else {
-            pastaPath = "";
-        }
+//        Cookie pastaPathCookie = ((WebRequest) getRequest()).getCookie("pastaPath");
+//        if (pastaPathCookie != null) {
+//            pastaPath = pastaPathCookie.getValue();
+//        } else {
+//            pastaPath = "";
+//        }
 
         lbProjetosSize = new Label("lbProjetosSize", Model.of("0"));
         lbProjetosSize.setOutputMarkupPlaceholderTag(true);
@@ -226,8 +226,8 @@ public class ByTestSmellsPage extends BasePage {
                 processarTodos.setEnabled(true);
                 lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
 
-                Cookie pastaPathCookie = new Cookie("pastaPath", "\"" + pastaPath + "\"");
-                ((WebResponse) getResponse()).addCookie(pastaPathCookie);
+//                Cookie pastaPathCookie = new Cookie("pastaPath", "\"" + pastaPath + "\"");
+//                ((WebResponse) getResponse()).addCookie(pastaPathCookie);
             }
         };
         form.add(btEnviar);

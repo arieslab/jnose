@@ -27,11 +27,12 @@ public class JNoseUtils {
 
     private final static Logger LOGGER = Logger.getLogger(JNoseUtils.class.getName());
 
-    private static String directoryPath = "/home/tassio/Desenvolvimento/projetos";
+    private static String directoryPath = "/home/tassio/Desenvolvimento/projetos4/";
 
     public static void main(String[] args) throws IOException {
         System.out.println("JNoseUtils");
         List<TestClass> list = getFilesTest(directoryPath);
+        System.out.println("qtd lista: " + list.size());
         list.parallelStream().forEach(f -> System.out.println(f.toString()));
     }
 

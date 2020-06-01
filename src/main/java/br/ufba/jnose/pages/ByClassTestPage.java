@@ -33,7 +33,7 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import javax.servlet.http.Cookie;
+//import javax.servlet.http.Cookie;
 
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.time.Duration;
@@ -71,12 +71,12 @@ public class ByClassTestPage extends BasePage {
 
     public ByClassTestPage() {
 
-        Cookie pastaPathCookie = ((WebRequest) getRequest()).getCookie("pastaPath");
-        if (pastaPathCookie != null) {
-            pastaPath = pastaPathCookie.getValue();
-        } else {
-            pastaPath = "";
-        }
+//        Cookie pastaPathCookie = ((WebRequest) getRequest()).getCookie("pastaPath");
+//        if (pastaPathCookie != null) {
+//            pastaPath = pastaPathCookie.getValue();
+//        } else {
+//            pastaPath = "";
+//        }
 
         logRetornoInfo = "pastaPathCookie: " + pastaPath + " <br>" + logRetornoInfo;
 
@@ -312,8 +312,8 @@ public class ByClassTestPage extends BasePage {
                 processarTodos.setEnabled(true);
                 lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
 
-                Cookie pastaPathCookie = new Cookie("pastaPath", "\"" + pastaPath + "\"");
-                ((WebResponse) getResponse()).addCookie(pastaPathCookie);
+//                Cookie pastaPathCookie = new Cookie("pastaPath", "\"" + pastaPath + "\"");
+//                ((WebResponse) getResponse()).addCookie(pastaPathCookie);
             }
         };
         form.add(btEnviar);
