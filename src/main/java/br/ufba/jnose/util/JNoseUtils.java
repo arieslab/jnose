@@ -13,6 +13,7 @@ import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
 
 import java.io.*;
@@ -27,7 +28,7 @@ public class JNoseUtils {
 
     private final static Logger LOGGER = Logger.getLogger(JNoseUtils.class.getName());
 
-    private static String directoryPath = "/home/tassio/Desenvolvimento/projetos4/";
+    private static String directoryPath = "/home/tassio/Desenvolvimento/peojetos7/commons-csv";
 
     public static void main(String[] args) throws IOException {
         System.out.println("JNoseUtils");
@@ -219,8 +220,8 @@ public class JNoseUtils {
                 isTestClass = flowClass(nodeList_members, testClass);
             } else if (node instanceof MethodDeclaration) {
                 isTestClass = flowClass(((MethodDeclaration) node).getAnnotations(), testClass);
-            } else if (node instanceof MarkerAnnotationExpr) {
-                return ((MarkerAnnotationExpr) node).getNameAsString().toLowerCase().equals("test");
+            } else if (node instanceof AnnotationExpr) {
+                return ((AnnotationExpr) node).getNameAsString().toLowerCase().contains("test");
             }
         }
         return isTestClass;
