@@ -306,6 +306,11 @@ public class EvolutionPage extends BasePage {
         List<String[]> listTestSmells = null;
         try {
             List<TestClass> listTestFile = JNoseUtils.getFilesTest(pathProjeto);
+
+            if(pathProjeto.lastIndexOf(File.separator) + 1 == pathProjeto.length()){
+                pathProjeto = pathProjeto.substring(0,pathProjeto.lastIndexOf(File.separator)-1);
+            }
+
             String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separator) + 1, pathProjeto.length());
             List<String[]> listaResultado = JNoseUtils.testfilemapping(listTestFile, commit, pathProjeto, nameProjeto);
             listTestSmells = br.ufba.jnose.core.testsmelldetector.Main.start(listaResultado, cabecalho);
