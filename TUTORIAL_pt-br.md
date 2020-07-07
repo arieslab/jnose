@@ -40,25 +40,5 @@ Além disso, o projeto usa o Apache Maven para gerenciar todas as dependências 
   <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_05.png?raw=true" width="800">
 </p>
 
-Used to detect TestSmells and Coverage in the article:
-https://dl.acm.org/citation.cfm?doid=3350768.3350775
-
-<p align="center">
-  <img src="http://cbsoft2019.ufba.br/assets/images/logo.png" width="400">
-  <img src="https://github.com/tassiovirginio/jnose/blob/master/src/main/webapp/cbsoft.jpeg?raw=true" width="400">
-  <br>
-  Apresentação no CBSoft 2019 - Salvador - Bahia - Brazil<br>
-  http://cbsoft2019.ufba.br
-</p>
-
-Preinstallation Requirements:
-- JDK 1.8
-- Maven 3
-
-How to run:
-- git clone git@github.com:tassiovirginio/jnose.git
-- cd jnose
-- mvn jetty:run
-
-contact email:
+### Email para contato:
 - tassiovirginio@gmail.com

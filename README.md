@@ -8,29 +8,28 @@ JNose Test is a tool developed to automatically detect test smells in test code,
 ## Tutoriais
  - <a href="TUTORIAL_pt-br.md">Tutorial PT-BR</a>
 
-<p align="center">
-  <img src="https://github.com/tassiovirginio/jnose/blob/master/src/main/webapp/screenshot.png?raw=true" width="800">
-</p>
+## Papers
 
-Used to detect TestSmells and Coverage in the article:
+ - Used to detect TestSmells and Coverage in the article:
 https://dl.acm.org/citation.cfm?doid=3350768.3350775
 
-<p align="center">
-  <img src="http://cbsoft2019.ufba.br/assets/images/logo.png" width="400">
-  <img src="https://github.com/tassiovirginio/jnose/blob/master/src/main/webapp/cbsoft.jpeg?raw=true" width="400">
-  <br>
-  Apresentação no CBSoft 2019 - Salvador - Bahia - Brazil<br>
-  http://cbsoft2019.ufba.br
-</p>
+<table>
+<tr>
+<td>
+<img src="http://cbsoft2019.ufba.br/assets/images/logo.png" width="400">
+</td>
+<td>
+<img src="https://github.com/tassiovirginio/jnose/blob/master/src/main/webapp/cbsoft.jpeg?raw=true" width="400">
+</td>
+</tr>
+<tr>
+<td colspan="2">
+Apresentação no CBSoft 2019 - Salvador - Bahia - Brazil<br>
+  <a href="http://cbsoft2019.ufba.br">http://cbsoft2019.ufba.br</a>
+</td>
+</tr>
+</table>
 
-Preinstallation Requirements:
-- JDK 1.8
-- Maven 3
 
-How to run:
-- git clone git@github.com:tassiovirginio/jnose.git
-- cd jnose
-- mvn jetty:run
-
-contact email:
+### Contact email:
 - tassiovirginio@gmail.com
