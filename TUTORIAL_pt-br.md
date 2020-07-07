@@ -21,7 +21,23 @@ Além disso, o projeto usa o Apache Maven para gerenciar todas as dependências 
 
 ## Tela inicial
 <p align="center">
-  <img src="https://github.com/tassiovirginio/jnose/blob/master/src/main/webapp/screenshot.png?raw=true" width="800">
+  <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_01.png?raw=true" width="800">
+</p>
+
+<p align="center">
+  <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_02.png?raw=true" width="800">
+</p>
+
+<p align="center">
+  <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_03.png?raw=true" width="800">
+</p>
+
+<p align="center">
+  <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_04.png?raw=true" width="800">
+</p>
+
+<p align="center">
+  <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_05.png?raw=true" width="800">
 </p>
 
 Used to detect TestSmells and Coverage in the article:
