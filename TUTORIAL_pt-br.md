@@ -1,13 +1,25 @@
 <p align="center"><img src="https://github.com/tassiovirginio/jnose/blob/master/src/main/webapp/logo.png?raw=true" width="70"></p>
 
-# JNose
+# JNose - Tutorial
 Java TestSmells Detection
 
-JNose Test is a tool developed to automatically detect test smells in test code, and to collect coverage metrics. JNose test is an extension of the Test Smell Detector. Besides presenting the number of test smells detected by class, our tool shows the collection of code metrics and test coverage using the JaCoCo library; a unified result for all projects under analysis; and a graphical interface. In addition, the project uses the Apache Maven to manage all library dependencies and support the compilation and execution of the JNose Test tool.
+O JNose Test é uma ferramenta desenvolvida para detectar automaticamente test smells no código de teste e coletar métricas de cobertura. 
+O JNose Test foi baseado no tsDetect. Além de apresentar o número de test smells detectados por classe, nossa ferramenta mostra a coleção de métricas de código e cobertura de teste usando a biblioteca JaCoCo; 
+um resultado unificado para todos os projetos em análise; e uma interface gráfica. 
+Além disso, o projeto usa o Apache Maven para gerenciar todas as dependências da biblioteca e oferecer suporte à compilação e execução da ferramenta JNose Test.
 
-## Tutoriais
- - <a href="TUTORIAL_pt-br.md">Tutorial PT-BR</a>
+## Pré-requisitos
+ - JDK 1.8 
+ - Maven 3 
+ - GIT
 
+## Download e Executar
+ - git clone https://github.com/tassiovirginio/jnose.git
+ - cd jnose
+ - mvn jetty:run
+ - acessar: http://127.0.0.1:8080
+
+## Tela inicial
 <p align="center">
   <img src="https://github.com/tassiovirginio/jnose/blob/master/src/main/webapp/screenshot.png?raw=true" width="800">
 </p>
