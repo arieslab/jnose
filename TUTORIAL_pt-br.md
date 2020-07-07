@@ -34,7 +34,23 @@ Na tela inicial temos a descrição de cada opção de busca e a opção de conf
 <p align="center">
   <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_02.png?raw=true" width="800">
 </p>
-Aqui temos a opção de passar o endereço de uma pasta local e realizar uma pesquisa por cheiros de teste. Com o seguinte retorno: Nome do Projeto, Classe de Teste, Classe de Produção, LOC, Número de Métodos e a quantidade de cada um dos 21 test_smells encontrados por classe de teste.
+Inicialmente "colamos" o endereço da pasta onde se encontra os projetos "Folders with projects".
+
+Ex:
+ - Linux: /home/nome/projetos
+ - Windows: C:\users\name\projetos
+
+Depois de "colar" o endereço do projeto que se encontra na sua maquina, clicamos em "Select Directory". Na caixa que se encontra logo a baixo serão mostrados todos os projetos dentro da pasta selecionada.
+
+Poderemos selecionar todos os projetos que se encontram na lista, ou selecionar somente alguns deles, com a opção do checkbox que cada projeto tem na frente do seu nome.
+
+Depois mandaremos executar a busca por test smells clicando no botão "Process".
+
+A Busca será iniciada e poderemos acompanar atraves da barra de progresso em cada projeto e na barra de progresso geral.
+
+Ao Final será gerado um CSV com os resultados obtidos.
+
+Retorno(CSV): Nome do Projeto, Classe de Teste, Classe de Produção, LOC, Número de Métodos e a quantidade de cada um dos 21 test_smells encontrados por classe de teste.
 
 ## By TestSmells
 <p align="center">
