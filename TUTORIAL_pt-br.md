@@ -24,18 +24,31 @@ Além disso, o projeto usa o Apache Maven para gerenciar todas as dependências 
   <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_01.png?raw=true" width="800">
 </p>
 
+Na tela inicial temos a descrição de cada opção de busca e a opção de configuração:
+ - by ClassTest: Realiza a busca com base na classe de teste, retornando a quantidade de cada tipo de test smells encontrados em cada classe.
+ - by TestSmells: realiza a busca com base no test smell, dizendo em qual classe ele foi encontrado e a linha que foi encontrado.
+ - Evolution: Faz uma busca no repositório do projeto (git) em busca de test smells em cada commit/tag realizado.
+ - Configuration: Temos a opção de escolher quais os test smells que queremos realizar a busca, por padrão todos estão selecionados.
+ 
+## By ClassTest
 <p align="center">
   <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_02.png?raw=true" width="800">
 </p>
+Aqui temos a opção de passar o endereço de uma pasta local e realizar uma pesquisa por cheiros de teste. Com o seguinte retorno: Nome do Projeto, Classe de Teste, Classe de Produção, LOC, Número de Métodos e a quantidade de cada um dos 21 test_smells encontrados por classe de teste.
 
+## By TestSmells
 <p align="center">
   <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_03.png?raw=true" width="800">
 </p>
+Nesta opção, podemos passar no final da pasta "projeto", que será pesquisada por cheiros de teste. Com o seguinte retorno: Nome do Projeto, Classe de Teste, Classe de Produção, nome dos cheiros de teste, nome do método, linha de ocorrência, linha de ocorrência inicial, linha de ocorrência final.
 
+## Evolution
 <p align="center">
   <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_04.png?raw=true" width="800">
 </p>
+Usando o controle de versão GIT, podemos realizar uma pesquisa por odores de teste em cada confirmação executada ou tag existente no histórico do projeto. O retorno é o mesmo que o ByClassTest, com informações adicionais de confirmação: ID de confirmação, nome de quem confirmou, data de confirmação e mensagem de confirmação. Para funcionar, o projeto deve ser clonado: git clone https: //address.do.project
 
+## Configuration
 <p align="center">
   <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_05.png?raw=true" width="800">
 </p>
