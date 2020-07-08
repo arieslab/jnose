@@ -40,7 +40,7 @@ Ex:
  - Linux: /home/nome/projetos
  - Windows: C:\users\name\projetos
 
-Depois de "colar" o endereço do projeto que se encontra na sua maquina, clicamos em "Select Directory". Na caixa que se encontra logo a baixo serão mostrados todos os projetos dentro da pasta selecionada.
+Depois de "colar" o endereço da pasta dos projetos que se encontra na sua maquina, clicamos em "Select Directory". Na caixa que se encontra logo a baixo serão mostrados todos os projetos dentro da pasta selecionada.
 
 Poderemos selecionar todos os projetos que se encontram na lista, ou selecionar somente alguns deles, com a opção do checkbox que cada projeto tem na frente do seu nome.
 
