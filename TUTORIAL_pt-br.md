@@ -42,6 +42,10 @@ Ex:
 
 Depois de "colar" o endereço da pasta dos projetos que se encontra na sua maquina, clicamos em "Select Directory". Na caixa que se encontra logo a baixo serão mostrados todos os projetos dentro da pasta selecionada.
 
+<p align="center">
+  <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_02_01.png?raw=true" width="800">
+</p>
+
 Poderemos selecionar todos os projetos que se encontram na lista, ou selecionar somente alguns deles, com a opção do checkbox que cada projeto tem na frente do seu nome.
 
 Depois mandaremos executar a busca por test smells clicando no botão "Process".
