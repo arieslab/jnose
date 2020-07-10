@@ -98,12 +98,12 @@ public class ByTestSmellsPage extends BasePage {
 
                 for (Projeto projeto : listaProjetosProcessar) {
 
-                    WebMarkupContainer iconProcessado = projeto.iconProcessado;
-                    iconProcessado.setVisible(projeto.getProcessado());
-                    WebMarkupContainer iconNaoProcessado = projeto.iconNaoProcessado;
-                    iconNaoProcessado.setVisible(!projeto.getProcessado());
-                    target.add(iconProcessado);
-                    target.add(iconNaoProcessado);
+//                    WebMarkupContainer iconProcessado = projeto.iconProcessado;
+//                    iconProcessado.setVisible(projeto.getProcessado());
+//                    WebMarkupContainer iconNaoProcessado = projeto.iconNaoProcessado;
+//                    iconNaoProcessado.setVisible(!projeto.getProcessado());
+//                    target.add(iconProcessado);
+//                    target.add(iconNaoProcessado);
 
                     Label lbPorcentagem = projeto.lbPorcentagem;
                     lbPorcentagem.setDefaultModel(Model.of(projeto.getProcentagem()));
@@ -168,19 +168,19 @@ public class ByTestSmellsPage extends BasePage {
                 item.add(new Label("nomeProjeto", projeto.getName()));
                 item.add(new Label("projeto", projeto.getPath()));
 
-                WebMarkupContainer iconProcessado = new WebMarkupContainer("iconProcessado");
-                iconProcessado.setVisible(projeto.getProcessado());
-                iconProcessado.setOutputMarkupId(true);
-                iconProcessado.setOutputMarkupPlaceholderTag(true);
-                item.add(iconProcessado);
-                projeto.iconProcessado = iconProcessado;
+//                WebMarkupContainer iconProcessado = new WebMarkupContainer("iconProcessado");
+//                iconProcessado.setVisible(projeto.getProcessado());
+//                iconProcessado.setOutputMarkupId(true);
+//                iconProcessado.setOutputMarkupPlaceholderTag(true);
+//                item.add(iconProcessado);
+//                projeto.iconProcessado = iconProcessado;
 
-                WebMarkupContainer iconNaoProcessado = new WebMarkupContainer("iconNaoProcessado");
-                iconNaoProcessado.setVisible(!projeto.getProcessado());
-                iconNaoProcessado.setOutputMarkupId(true);
-                iconNaoProcessado.setOutputMarkupPlaceholderTag(true);
-                item.add(iconNaoProcessado);
-                projeto.iconNaoProcessado = iconNaoProcessado;
+//                WebMarkupContainer iconNaoProcessado = new WebMarkupContainer("iconNaoProcessado");
+//                iconNaoProcessado.setVisible(!projeto.getProcessado());
+//                iconNaoProcessado.setOutputMarkupId(true);
+//                iconNaoProcessado.setOutputMarkupPlaceholderTag(true);
+//                item.add(iconNaoProcessado);
+//                projeto.iconNaoProcessado = iconNaoProcessado;
 
                 WebMarkupContainer progressProject = new WebMarkupContainer("progressProject");
                 progressProject.setOutputMarkupPlaceholderTag(true);
