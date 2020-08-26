@@ -76,9 +76,9 @@ Usando o controle de versão GIT, podemos realizar uma pesquisa por odores de te
 </p>
 
 ## Video
-  <video align="center">
+  <div align="center" stile ="width=800">
     [![JNose Test](https://img.youtube.com/vi/BfYtwqQeqHc/0.jpg)](https://www.youtube.com/watch?v=BfYtwqQeqHc)
-  <video>
+  </div>
 
 ### Email para contato:
 - tassiovirginio@gmail.com
