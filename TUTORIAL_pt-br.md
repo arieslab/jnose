@@ -40,6 +40,8 @@ Ex:
  - Linux: /home/nome/projetos
  - Windows: C:\users\name\projetos
 
+<img src="docs/screenshot.png" width="400">
+
 Depois de "colar" o endereço da pasta dos projetos que se encontra na sua maquina, clicamos em "Select Directory". Na caixa que se encontra logo a baixo serão mostrados todos os projetos dentro da pasta selecionada.
 
 <p align="center">
@@ -74,8 +76,10 @@ Usando o controle de versão GIT, podemos realizar uma pesquisa por odores de te
 </p>
 
 ## Video
-[![JNose Test](https://img.youtube.com/vi/BfYtwqQeqHc/0.jpg)](https://www.youtube.com/watch?v=BfYtwqQeqHc)
-
+<p align="center">
+  [![JNose Test](https://img.youtube.com/vi/BfYtwqQeqHc/0.jpg)](https://www.youtube.com/watch?v=BfYtwqQeqHc)
+width="800">
+</p>
 
 ### Email para contato:
 - tassiovirginio@gmail.com
