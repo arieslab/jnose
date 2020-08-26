@@ -38,6 +38,14 @@ Apresentação no CBSoft 2019 - Salvador - Bahia - Brazil<br>
 
 Please, feel very welcome to create new issues on this project to request new features and report bugs. 
 
+## Contributing
+
+- Create an issue on this repository
+- Fork this repository
+- create a branch and link the name to the related issue
+- git commit -m 'description about what this commit does'
+- git push origin your-branch-name
+- Open a Pull Request
 
 ### Contact email:
 - tassiovirginio@gmail.com
