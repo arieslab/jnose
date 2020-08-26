@@ -5,9 +5,10 @@ Java TestSmells Detection
 
 JNose Test is a tool developed to automatically detect test smells in test code, and to collect coverage metrics. JNose test is an extension of the Test Smell Detector. Besides presenting the number of test smells detected by class, our tool shows the collection of code metrics and test coverage using the JaCoCo library; a unified result for all projects under analysis; and a graphical interface. In addition, the project uses the Apache Maven to manage all library dependencies and support the compilation and execution of the JNose Test tool.
 
+## Video
 [![JNose Test](https://img.youtube.com/vi/BfYtwqQeqHc/0.jpg)](https://www.youtube.com/watch?v=BfYtwqQeqHc)
 
-## Tutoriais
+## Tutorials
  - <a href="TUTORIAL_pt-br.md">Tutorial PT-BR</a>
 
 ## Papers
@@ -32,6 +33,19 @@ Apresentação no CBSoft 2019 - Salvador - Bahia - Brazil<br>
 </tr>
 </table>
 
+
+## Feature requests
+
+Please, feel very welcome to create new issues on this project to request new features and report bugs. 
+
+## Contributing
+
+- Create an issue on this repository
+- Fork this repository
+- create a branch and link the name to the related issue
+- git commit -m 'description about what this commit does'
+- git push origin your-branch-name
+- Open a Pull Request
 
 ### Contact email:
 - tassiovirginio@gmail.com

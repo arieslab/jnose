@@ -39,6 +39,9 @@ Inicialmente "colamos" o endereço da pasta onde se encontra os projetos "Folder
 Ex:
  - Linux: /home/nome/projetos
  - Windows: C:\users\name\projetos
+<p align="center">
+ <img src="docs/screenshot.png" width="800">
+</p>
 
 Depois de "colar" o endereço da pasta dos projetos que se encontra na sua maquina, clicamos em "Select Directory". Na caixa que se encontra logo a baixo serão mostrados todos os projetos dentro da pasta selecionada.
 
