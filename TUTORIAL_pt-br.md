@@ -39,8 +39,9 @@ Inicialmente "colamos" o endereço da pasta onde se encontra os projetos "Folder
 Ex:
  - Linux: /home/nome/projetos
  - Windows: C:\users\name\projetos
-
-<img src="docs/screenshot.png" width="800">
+<p align="center">
+ <img src="docs/screenshot.png" width="800">
+</p>
 
 Depois de "colar" o endereço da pasta dos projetos que se encontra na sua maquina, clicamos em "Select Directory". Na caixa que se encontra logo a baixo serão mostrados todos os projetos dentro da pasta selecionada.
 
@@ -74,10 +75,6 @@ Usando o controle de versão GIT, podemos realizar uma pesquisa por odores de te
 <p align="center">
   <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_05.png?raw=true" width="800">
 </p>
-
-## Video
-   [![JNose Test](https://img.youtube.com/vi/BfYtwqQeqHc/0.jpg)](https://www.youtube.com/watch?v=BfYtwqQeqHc)
-
 
 ### Email para contato:
 - tassiovirginio@gmail.com
