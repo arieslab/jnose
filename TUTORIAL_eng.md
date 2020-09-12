@@ -14,13 +14,13 @@ In addition, the project uses Apache Maven to manage all library dependencies an
  - Maven 3 
  - GIT
 
-## Download and Execute
+## Download and Run
  - git clone https://github.com/tassiovirginio/jnose.git
  - cd jnose
  - mvn jetty:run
  - acessar: http://127.0.0.1:8080
 
-## i
+## Home Screen
 <p align="center">
   <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_01.png?raw=true" width="800">
 </p>
@@ -65,7 +65,9 @@ Return(CSV): Project Name, Test Class, Production Class, LOC, Number of Methods 
 <p align="center">
   <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_03.png?raw=true" width="800">
 </p>
+
 In this option, we select "Folders with projects" the same way that we did before and the search by test smells will display the following return: Project Name, Test Class, Production Class, name of test smells, method name, occurrence line, initial occurrence line, final occurrence line.
+
 ## Evolution
 <p align="center">
   <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_04.png?raw=true" width="800">
