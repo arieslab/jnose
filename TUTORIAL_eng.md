@@ -74,7 +74,7 @@ In this option, we select "Folders with projects" the same way that we did befor
 </p>
 
 Using GIT version control, we can perform a search for test smell on each commit performed or tag existing in the project history. The return is the same as ByClassTest, with additional commit information: 
-- confirmation ID
+- commit ID
 - commit name
 - commit date
 - commit message
