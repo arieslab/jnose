@@ -10,6 +10,7 @@ JNose Test is a tool developed to automatically detect test smells in test code,
 
 ## Tutorials
  - <a href="TUTORIAL_pt-br.md">Tutorial PT-BR</a>
+ - <a href="TUTORIAL_eng.md">Tutorial English</a>
 
 ## Papers
 
