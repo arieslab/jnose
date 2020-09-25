@@ -1,9 +1,12 @@
 package br.ufba.jnose.core.cobertura;
 
-import br.ufba.jnose.core.ResultsWriter;
+import br.ufba.jnose.core.CSVCore;
+import br.ufba.jnose.core.JNoseCore;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Main {
 
@@ -19,20 +22,21 @@ public class Main {
 
         String[] lineItem;
 
-        ResultsWriter resultsWriter = ResultsWriter.createResultsWriter("ClassInfor.csv");
-        resultsWriter.writeLine(Arrays.asList("name","id","instructions","branches","lines","methods","complexity"));
+        List<List<String>> todasLinhas = new ArrayList<>();
+
+        todasLinhas.add(Arrays.asList("name","id","instructions","branches","lines","methods","complexity"));
 
         while ((str = in.readLine()) != null) {
             lineItem = str.split(",");
             ClassInfo classInfo = new ClassInfo(System.out);
             String file = lineItem[1].replace("/src/test/java/", "/target/test-classes/").replace(".java", ".class");
             String[] linha = classInfo.execute(file);
-            resultsWriter.writeLine(Arrays.asList(linha));
+            todasLinhas.add(Arrays.asList(linha));
 
-//            CoreTutorial coreTutorial = new CoreTutorial(System.out);
-//            coreTutorial.execute(lista[0]);
         }
         System.out.println("Completed!");
+
+        CSVCore.criarCoberturaCSV(todasLinhas, JNoseCore.dateNowFolder());
 
     }
 }

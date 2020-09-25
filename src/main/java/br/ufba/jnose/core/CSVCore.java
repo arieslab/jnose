@@ -27,8 +27,24 @@ public class CSVCore {
         return criarCSV(todasLinhas,pastaDataHora,nomeProjeto + "_testmappingdetector");
     }
 
+    public static String criarTestSmellsdetectorCSV(List<List<String>> todasLinhas, String pastaDataHora, String nomeProjeto){
+        return criarCSV(todasLinhas,pastaDataHora,nomeProjeto + "_testsmesll");
+    }
+
     public static String criarTodosProjetosCSV(List<List<String>> todasLinhas, String pastaDataHora){
         return criarCSV(todasLinhas,pastaDataHora,"todos_projetos_testsmesll");
+    }
+
+    public static String criarCoberturaCSV(List<List<String>> todasLinhas, String pastaDataHora){
+        return criarCSV(todasLinhas,pastaDataHora,"ClassInfor");
+    }
+
+    public static String criarEvolution1CSV(List<List<String>> todasLinhas, String pastaDataHora, String nomeProjeto){
+        return criarCSV(todasLinhas,pastaDataHora,nomeProjeto + "_testsmell_evolution1");
+    }
+
+    public static String criarEvolution2CSV(List<List<String>> todasLinhas, String pastaDataHora, String nomeProjeto){
+        return criarCSV(todasLinhas,pastaDataHora,nomeProjeto +"_testsmell_evolution2");
     }
 
     private static String criarCSV(List<List<String>> todasLinhas,String pastaDataHora, String nomeArquivo){

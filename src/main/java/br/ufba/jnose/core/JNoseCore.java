@@ -336,7 +336,7 @@ public class JNoseCore {
         logRetorno.append(dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>");
         String csvTestSmells = "";
         try {
-            csvTestSmells = br.ufba.jnose.core.testsmelldetector.Main.start(pathCSVMapping, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
+            csvTestSmells = br.ufba.jnose.core.testsmelldetector.Main.start(pathCSVMapping, nameProjeto, pastaPathReport + folderTime + File.separatorChar,folderTime);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -441,6 +441,7 @@ public class JNoseCore {
         projeto.setProcentagem(25);
 
         String csvFile = JNoseCore.processarTestFileDetector(projeto.getPath(), folderTime, logRetorno);
+        out.println(csvFile);
 
         List<TestClass> listaTestClass = JNoseCore.getFilesTest(projeto.getPath(),logRetorno);
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());

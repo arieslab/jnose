@@ -4,7 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-public class ResultsWriter {
+class ResultsWriter {
 
     public String getOutputFile() {
         return outputFile;

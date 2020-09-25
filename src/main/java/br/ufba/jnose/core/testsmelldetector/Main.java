@@ -1,7 +1,9 @@
 package br.ufba.jnose.core.testsmelldetector;
 
 import br.ufba.jnose.WicketApplication;
-import br.ufba.jnose.core.ResultsWriter;
+//import br.ufba.jnose.core.ResultsWriter;
+import br.ufba.jnose.core.CSVCore;
+import br.ufba.jnose.core.JNoseCore;
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestFile;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestSmellDetector;
@@ -110,7 +112,7 @@ public class Main {
         return listTestSmells;
     }
 
-    public static String start(String csvPath, String projectName, String reportPath) throws IOException {
+    public static String start(String csvPath, String projectName, String reportPath, String pastaDataHora) throws IOException {
 
         File selectedFile = new File(csvPath);
         TestSmellDetector testSmellDetector = TestSmellDetector.createTestSmellDetector();
@@ -120,7 +122,6 @@ public class Main {
         String str;
 
         String[] lineItem;
-
         TestFile testFile;
 
         List<TestFile> testFiles = new ArrayList<>();
@@ -136,9 +137,12 @@ public class Main {
             testFiles.add(testFile);
         }
 
-        String csvTestSmells = reportPath+projectName+"_testsmesll.csv";
+//        String csvTestSmells = reportPath+projectName+"_testsmesll.csv";
 
-        ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(csvTestSmells);
+//        ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(csvTestSmells);
+
+        List<List<String>> todasLinhas = new ArrayList<>();
+
         List<String> columnValues;
 
         //Coluna name testsmells
@@ -164,7 +168,8 @@ public class Main {
             columnNames.add("METHOD_MISSED");
             columnNames.add("METHOD_COVERED");
         }
-        resultsWriter.writeColumnName(columnNames);
+        todasLinhas.add(columnNames);
+//        resultsWriter.writeColumnName(columnNames);
 
         if(WicketApplication.COBERTURA_ON) {
             jacocoMap = jacocoProcess(projectName, reportPath);
@@ -210,7 +215,8 @@ public class Main {
                     jacocoEscreverArquivo(columnValues, file, targetFile);
                 }
 
-                resultsWriter.writeLine(columnValues);
+//                resultsWriter.writeLine(columnValues);
+                todasLinhas.add(columnValues);
             }catch (Error e){
                 e.printStackTrace();
                 System.out.println("Continuando a o processo!");
@@ -221,10 +227,12 @@ public class Main {
 
         }
 
-        in.close();
-        fileReader.close();
-        System.out.println("Completed!");
-        return csvTestSmells;
+        return CSVCore.criarTestSmellsdetectorCSV(todasLinhas,pastaDataHora,projectName);
+
+//        in.close();
+//        fileReader.close();
+//        System.out.println("Completed!");
+//        return csvTestSmells;
     }
 
     private static void jacocoEscreverArquivo(List<String> columnValues, TestFile file, String targetFile) {
