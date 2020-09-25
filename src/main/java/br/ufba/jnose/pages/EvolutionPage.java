@@ -133,14 +133,14 @@ public class EvolutionPage extends BasePage {
         String[] listas = preSplit.split("/");
         String nomeProjeto = listas[listas.length - 1];
         Projeto projeto = new Projeto(nomeProjeto, pathProjeto);
-        execCommand("git checkout master", projeto.getPath());
+        JNoseUtils.execCommand("git checkout master", projeto.getPath());
 
         ArrayList<Commit> lista = null;
         if (selected.trim().equals("Commits")) {
-            lista = gitLogOneLine(projeto.getPath());
+            lista = JNoseUtils.gitLogOneLine(projeto.getPath());
             projeto.setListaCommits(lista);
         } else {
-            lista = gitTags(projeto.getPath());
+            lista = JNoseUtils.gitTags(projeto.getPath());
             projeto.setListaCommits(lista);
         }
 
@@ -164,7 +164,7 @@ public class EvolutionPage extends BasePage {
             }
         });
 
-        String reportPathFinal = pathReport + File.separatorChar + dateNow() + File.separatorChar;
+        String reportPathFinal = pathReport + File.separatorChar + JNoseUtils.dateNow() + File.separatorChar;
 
         boolean success = (new File(reportPathFinal)).mkdirs();
         if (!success) System.out.println("Created Folder...");
@@ -183,11 +183,11 @@ public class EvolutionPage extends BasePage {
             cont++;
             commitsProcessados.setDefaultModel(Model.of(cont));
             target.add(commitsProcessados);
-            execCommand("git checkout " + commit.id, projetoPath);
+            JNoseUtils.execCommand("git checkout " + commit.id, projetoPath);
 
             int total = 0;
             //criando a lista de testsmells
-            List<String[]> listaTestSmells = processarTestSmells(projetoPath, commit, vizualizarCabecalho);
+            List<String[]> listaTestSmells = JNoseUtils.processarTestSmells(projetoPath, commit, vizualizarCabecalho);
             for (String[] linhaArray : listaTestSmells) {
                 List<String> list = Arrays.asList(linhaArray);
                     for (int i = 10; i <= 30; i++) {
@@ -207,118 +207,117 @@ public class EvolutionPage extends BasePage {
 
             resultsWriter2.writeLine(lista2);
 
-
             csvLogGit.setDefaultModelObject(resultsWriter.getOutputFile());
             target.add(csvLogGit);
 
             vizualizarCabecalho = false;
         }
-        execCommand("git checkout master", projetoPath);
+        JNoseUtils.execCommand("git checkout master", projetoPath);
     }
 
-    private void execCommand(final String commandLine, String pathExecute) {
-        int r = 0;
-        try {
-            Process p = Runtime.getRuntime().exec(commandLine, null, new File(pathExecute));
-            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String lineOut;
-            while ((lineOut = input.readLine()) != null) {
-                System.out.println(lineOut);
-            }
-            input.close();
-            r = p.waitFor();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    private void execCommand(final String commandLine, String pathExecute) {
+//        int r = 0;
+//        try {
+//            Process p = Runtime.getRuntime().exec(commandLine, null, new File(pathExecute));
+//            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//            String lineOut;
+//            while ((lineOut = input.readLine()) != null) {
+//                System.out.println(lineOut);
+//            }
+//            input.close();
+//            r = p.waitFor();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-    private ArrayList<Commit> gitLogOneLine(String pathExecute) {
-        ArrayList<Commit> lista = new ArrayList<>();
-        int r = 0;
-        try {
-            Process p = Runtime.getRuntime().exec("git log --pretty=format:%h,%an,%ad,%s --date=iso8601", null, new File(pathExecute));
-            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String lineOut;
-            while ((lineOut = input.readLine()) != null) {
-                String[] arrayCommit = lineOut.split(",");
-                String id = arrayCommit[0];
-                String name = arrayCommit[1];
-                Date date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(arrayCommit[2]);
-                String msg = arrayCommit[3];
-                lista.add(new Commit(id, name, date, msg));
-            }
-            input.close();
-            r = p.waitFor();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return lista;
-    }
+//    private ArrayList<Commit> gitLogOneLine(String pathExecute) {
+//        ArrayList<Commit> lista = new ArrayList<>();
+//        int r = 0;
+//        try {
+//            Process p = Runtime.getRuntime().exec("git log --pretty=format:%h,%an,%ad,%s --date=iso8601", null, new File(pathExecute));
+//            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//            String lineOut;
+//            while ((lineOut = input.readLine()) != null) {
+//                String[] arrayCommit = lineOut.split(",");
+//                String id = arrayCommit[0];
+//                String name = arrayCommit[1];
+//                Date date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(arrayCommit[2]);
+//                String msg = arrayCommit[3];
+//                lista.add(new Commit(id, name, date, msg));
+//            }
+//            input.close();
+//            r = p.waitFor();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return lista;
+//    }
 
-    private ArrayList<Commit> gitTags(String pathExecute) {
-        ArrayList<Commit> lista = new ArrayList<>();
-        int r = 0;
-        try {
-            Process p = Runtime.getRuntime().exec("git tag", null, new File(pathExecute));
-            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String lineOut;
+//    private ArrayList<Commit> gitTags(String pathExecute) {
+//        ArrayList<Commit> lista = new ArrayList<>();
+//        int r = 0;
+//        try {
+//            Process p = Runtime.getRuntime().exec("git tag", null, new File(pathExecute));
+//            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//            String lineOut;
+//
+//            while ((lineOut = input.readLine()) != null) {
+//                String tagName = lineOut.trim();
+//                Process detalhes = Runtime.getRuntime().exec("git show " + tagName, null, new File(pathExecute));
+//                BufferedReader input2 = new BufferedReader(new InputStreamReader(detalhes.getInputStream()));
+//                String commit = "";
+//                String lineOut2;
+//
+//                String id = "";
+//                String name = "";
+//                Date date = null;
+//                String msg = "";
+//
+//                while ((lineOut2 = input2.readLine()) != null) {
+//                    if (lineOut2.trim().contains("Tagger:")) {
+//                        name = lineOut2.trim().replace("Tagger:", "").trim();
+//                    }
+//                    if (lineOut2.trim().contains("Date:")) {
+//                        String dateString = lineOut2.trim().replace("Date:", "").trim();
+//                        SimpleDateFormat formatter5 = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy Z", Locale.US);
+//                        date = formatter5.parse(dateString);
+//                    }
+//                    if (lineOut2.trim().contains("commit ")) {
+//                        id = lineOut2.trim().replace("commit ", "").trim();
+//                    }
+//                }
+//                lista.add(new Commit(id, name, date, msg, tagName));
+//            }
+//            input.close();
+//            r = p.waitFor();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return lista;
+//    }
 
-            while ((lineOut = input.readLine()) != null) {
-                String tagName = lineOut.trim();
-                Process detalhes = Runtime.getRuntime().exec("git show " + tagName, null, new File(pathExecute));
-                BufferedReader input2 = new BufferedReader(new InputStreamReader(detalhes.getInputStream()));
-                String commit = "";
-                String lineOut2;
+//    private String dateNow() {
+//        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+//    }
 
-                String id = "";
-                String name = "";
-                Date date = null;
-                String msg = "";
-
-                while ((lineOut2 = input2.readLine()) != null) {
-                    if (lineOut2.trim().contains("Tagger:")) {
-                        name = lineOut2.trim().replace("Tagger:", "").trim();
-                    }
-                    if (lineOut2.trim().contains("Date:")) {
-                        String dateString = lineOut2.trim().replace("Date:", "").trim();
-                        SimpleDateFormat formatter5 = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy Z", Locale.US);
-                        date = formatter5.parse(dateString);
-                    }
-                    if (lineOut2.trim().contains("commit ")) {
-                        id = lineOut2.trim().replace("commit ", "").trim();
-                    }
-                }
-                lista.add(new Commit(id, name, date, msg, tagName));
-            }
-            input.close();
-            r = p.waitFor();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return lista;
-    }
-
-    private String dateNow() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-    }
-
-    private List<String[]> processarTestSmells(String pathProjeto, Commit commit, Boolean cabecalho) {
-        List<String[]> listTestSmells = null;
-        try {
-            List<TestClass> listTestFile = JNoseUtils.getFilesTest(pathProjeto);
-
-            if(pathProjeto.lastIndexOf(File.separator) + 1 == pathProjeto.length()){
-                pathProjeto = pathProjeto.substring(0,pathProjeto.lastIndexOf(File.separator)-1);
-            }
-
-            String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separator) + 1, pathProjeto.length());
-            List<String[]> listaResultado = JNoseUtils.testfilemapping(listTestFile, commit, pathProjeto, nameProjeto);
-            listTestSmells = br.ufba.jnose.core.testsmelldetector.Main.start(listaResultado, cabecalho);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return listTestSmells;
-    }
+//    private List<String[]> processarTestSmells(String pathProjeto, Commit commit, Boolean cabecalho) {
+//        List<String[]> listTestSmells = null;
+//        try {
+//            List<TestClass> listTestFile = JNoseUtils.getFilesTest(pathProjeto);
+//
+//            if(pathProjeto.lastIndexOf(File.separator) + 1 == pathProjeto.length()){
+//                pathProjeto = pathProjeto.substring(0,pathProjeto.lastIndexOf(File.separator)-1);
+//            }
+//
+//            String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separator) + 1, pathProjeto.length());
+//            List<String[]> listaResultado = JNoseUtils.testfilemapping(listTestFile, commit, pathProjeto, nameProjeto);
+//            listTestSmells = br.ufba.jnose.core.testsmelldetector.Main.start(listaResultado, cabecalho);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return listTestSmells;
+//    }
 
 
 }
