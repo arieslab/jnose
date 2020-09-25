@@ -35,25 +35,32 @@ import java.util.Map;
 public class ByTestSmellsPage extends BasePage {
     private static final long serialVersionUID = 1L;
 
-    private String pastaPath = "";
-    private String pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
-    private String pastaPathReport = pathAppToWebapp + File.separatorChar + "reports" + File.separatorChar;
+    private String pastaPath;
+    private String pathAppToWebapp;
+    private String pastaPathReport;
     private Label lbPastaSelecionada;
     private ProgressBar progressBar;
     private List<Projeto> listaProjetos;
-    private AjaxIndicatorAppender indicator = new AjaxIndicatorAppender();
+    private AjaxIndicatorAppender indicator;
     private ListView<Projeto> lvProjetos;
     private TotalProcessado totalProcessado;
     private Map<Integer, Integer> totalProgressBar;
-    private Boolean processando = false;
+    private Boolean processando;
     private IndicatingAjaxLink processarTodos;
     private Label lbProjetosSize;
     private String dataProcessamentoAtual;
     private ExternalLink linkCSVFinal;
-    private String newReport = "";
+    private String newReport;
 
     public ByTestSmellsPage() {
 
+        //carregar variáveis
+        newReport = "";
+        processando = false;
+        indicator = new AjaxIndicatorAppender();
+        pastaPath = "";
+        pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
+        pastaPathReport = pathAppToWebapp + File.separatorChar + "reports" + File.separatorChar;
         totalProcessado = new TotalProcessado();
         totalProgressBar = new HashMap<>();
         listaProjetos = new ArrayList<>();

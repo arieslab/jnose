@@ -23,12 +23,9 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
-
+import org.apache.wicket.util.time.Duration;
 import java.io.*;
 import java.util.*;
-
-import org.apache.wicket.util.time.Duration;
-
 import java.util.List;
 
 import static java.lang.System.out;
@@ -36,31 +33,40 @@ import static java.lang.System.out;
 public class ByClassTestPage extends BasePage {
     private static final long serialVersionUID = 1L;
 
-    private String pastaPath = "";
-    private String pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
-    private String pastaPathReport = pathAppToWebapp + File.separatorChar + "reports" + File.separatorChar;
+    private String pastaPath;
+    private String pathAppToWebapp;
+    private String pastaPathReport;
     private Label lbPastaSelecionada;
     private ProgressBar progressBar;
     private List<Projeto> listaProjetos;
-    private AjaxIndicatorAppender indicator = new AjaxIndicatorAppender();
+    private AjaxIndicatorAppender indicator;
     private ListView<Projeto> lvProjetos;
     private Label taLog;
     private Label taLogInfo;
     private TotalProcessado totalProcessado;
     private Map<Integer, Integer> totalProgressBar;
-    private Boolean processando = false;
+    private Boolean processando;
     private WebMarkupContainer loadImg;
     private IndicatingAjaxLink processarTodos;
     private Label lbProjetosSize;
-    private StringBuffer logRetorno = new StringBuffer();
-    static public StringBuffer logRetornoInfo = new StringBuffer();
+    private StringBuffer logRetorno;
+    private StringBuffer logRetornoInfo;
     private String dataProcessamentoAtual;
-    private boolean mesclado = false;
+    private boolean mesclado;
     private ExternalLink linkCSVFinal;
     private boolean processarCobertura;
 
     public ByClassTestPage() {
 
+        //Carregando variáveis
+        indicator = new AjaxIndicatorAppender();
+        pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
+        pastaPathReport = pathAppToWebapp + File.separatorChar + "reports" + File.separatorChar;
+        pastaPath = "";
+        mesclado = false;
+        logRetornoInfo = new StringBuffer();
+        logRetorno = new StringBuffer();
+        processando = false;
         processarCobertura = false;
         totalProcessado = new TotalProcessado();
         logRetornoInfo.append("pastaPath: " + pastaPath + " <br>");
