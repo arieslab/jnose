@@ -5,7 +5,6 @@ import br.ufba.jnose.core.JNoseCore;
 import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.dto.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
-//import br.ufba.jnose.core.ResultsWriter;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -159,21 +158,8 @@ public class EvolutionPage extends BasePage {
             }
         });
 
-//        String reportPathFinal = pathReport + File.separatorChar + JNoseCore.dateNow() + File.separatorChar;
-
         String pastaDateHora = JNoseCore.dateNowFolder();
-
-//        boolean success = (new File(reportPathFinal)).mkdirs();
-//        if (!success) System.out.println("Created Folder...");
-
-//        String csvTestSmells = reportPathFinal + projeto.getName() + "_testsmesll.csv";
-//        ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(csvTestSmells);
-
-//        String csvTestSmells2 = reportPathFinal + projeto.getName() + "_testsmesll-evolution_total.csv";
-//        ResultsWriter resultsWriter2 = ResultsWriter.createResultsWriter(csvTestSmells2);
-
         List<List<String>> todasLinhas1 = new ArrayList<>();
-
         List<List<String>> todasLinhas2 = new ArrayList<>();
 
         boolean vizualizarCabecalho = true;
@@ -196,7 +182,6 @@ public class EvolutionPage extends BasePage {
                             total += Integer.parseInt(list.get(i));
                         }
                     }
-//                resultsWriter.writeLine(list);
                 todasLinhas1.add(list);
             }
 
@@ -205,10 +190,7 @@ public class EvolutionPage extends BasePage {
             lista2.add(commit.tag);
             lista2.add(commit.date+"");
             lista2.add(total+"");
-
-//            resultsWriter2.writeLine(lista2);
             todasLinhas2.add(lista2);
-
 
             String arquivoPath = CSVCore.criarEvolution1CSV(todasLinhas1,pastaDateHora,projeto.getName());
             CSVCore.criarEvolution2CSV(todasLinhas2,pastaDateHora,projeto.getName());
