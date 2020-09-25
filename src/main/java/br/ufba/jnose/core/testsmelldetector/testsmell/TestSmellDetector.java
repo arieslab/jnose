@@ -31,9 +31,9 @@ public class TestSmellDetector {
     public static Boolean sensitiveEquality = true;
     public static Boolean verboseTest = true;
     public static Boolean sleepyTest = true;
-    public static Boolean lazyTest = false;
+    public static Boolean lazyTest = true;
     public static Boolean unknownTest = true;
-    public static Boolean ignoredTest = false;
+    public static Boolean ignoredTest = true;
     public static Boolean resourceOptimism = true;
     public static Boolean magicNumberTest = true;
 
