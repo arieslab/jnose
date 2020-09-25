@@ -2,7 +2,7 @@ package br.ufba.jnose.pages;
 
 import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.dto.TotalProcessado;
-import br.ufba.jnose.util.JNoseUtils;
+import br.ufba.jnose.core.JNoseCore;
 import br.ufba.jnose.dto.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
@@ -119,7 +119,7 @@ public class ByClassTestPage extends BasePage {
                         listaParaProcessar.add(projeto);
                     }
                 }
-                JNoseUtils.processarProjetos(listaParaProcessar, dataProcessamentoAtual, totalProcessado, pastaPathReport, logRetorno);
+                JNoseCore.processarProjetos(listaParaProcessar, dataProcessamentoAtual, totalProcessado, pastaPathReport, logRetorno);
             }
         };
         processarTodos.setEnabled(false);
@@ -150,14 +150,14 @@ public class ByClassTestPage extends BasePage {
             @Override
             public void onSubmit() {
                 mesclado = false;
-                dataProcessamentoAtual = JNoseUtils.dateNowFolder();
+                dataProcessamentoAtual = JNoseCore.dateNowFolder();
                 logRetorno = new StringBuffer();
                 logRetornoInfo = new StringBuffer();
                 totalProcessado.setValor(0);
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
 
                 File file = new File(pastaPath);
-                listaProjetos = JNoseUtils.listaProjetos(file.toURI(),logRetorno);
+                listaProjetos = JNoseCore.listaProjetos(file.toURI(),logRetorno);
                 lvProjetos.setList(listaProjetos);
 
                 processarTodos.setEnabled(true);
@@ -313,7 +313,7 @@ public class ByClassTestPage extends BasePage {
                 }
 
                 if (processado && mesclado == false && !listaProjetosProcessar.isEmpty()) {
-                    JNoseUtils.mesclarGeral(listaProjetosProcessar, pastaPathReport + dataProcessamentoAtual + File.separatorChar, logRetorno);
+                    JNoseCore.mesclarGeral(listaProjetosProcessar, pastaPathReport + dataProcessamentoAtual + File.separatorChar, logRetorno);
                     mesclado = true;
                 }
 

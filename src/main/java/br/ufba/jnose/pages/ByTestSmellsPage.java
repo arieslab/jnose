@@ -3,7 +3,7 @@ package br.ufba.jnose.pages;
 import br.ufba.jnose.dto.Projeto;
 import br.ufba.jnose.dto.TotalProcessado;
 import br.ufba.jnose.pages.base.BasePage;
-import br.ufba.jnose.util.JNoseUtils;
+import br.ufba.jnose.core.JNoseCore;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
 import com.googlecode.wicket.jquery.ui.widget.progressbar.ProgressBar;
 import org.apache.wicket.AttributeModifier;
@@ -96,7 +96,7 @@ public class ByTestSmellsPage extends BasePage {
                         listaParaProcessar.add(projeto);
                     }
                 }
-                newReport = JNoseUtils.processarProjetos(listaParaProcessar, dataProcessamentoAtual, pastaPathReport, totalProcessado, newReport);
+                newReport = JNoseCore.processarProjetos(listaParaProcessar, dataProcessamentoAtual, pastaPathReport, totalProcessado, newReport);
             }
         };
         processarTodos.setEnabled(false);
@@ -161,12 +161,12 @@ public class ByTestSmellsPage extends BasePage {
         Button btEnviar = new Button("btEnviar") {
             @Override
             public void onSubmit() {
-                dataProcessamentoAtual = JNoseUtils.dateNowFolder();
+                dataProcessamentoAtual = JNoseCore.dateNowFolder();
                 totalProcessado.setValor(0);
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
 
                 File file = new File(pastaPath);
-                listaProjetos = JNoseUtils.listaProjetos(file.toURI());
+                listaProjetos = JNoseCore.listaProjetos(file.toURI());
                 lvProjetos.setList(listaProjetos);
 
                 processarTodos.setEnabled(true);

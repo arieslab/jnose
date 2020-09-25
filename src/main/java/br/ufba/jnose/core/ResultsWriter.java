@@ -1,4 +1,4 @@
-package br.ufba.jnose.util;
+package br.ufba.jnose.core;
 
 import java.io.FileWriter;
 import java.io.IOException;

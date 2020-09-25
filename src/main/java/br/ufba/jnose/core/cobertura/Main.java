@@ -1,6 +1,6 @@
 package br.ufba.jnose.core.cobertura;
 
-import br.ufba.jnose.util.ResultsWriter;
+import br.ufba.jnose.core.ResultsWriter;
 
 import java.io.*;
 import java.util.Arrays;

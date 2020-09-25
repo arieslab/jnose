@@ -1,10 +1,10 @@
 package br.ufba.jnose.pages;
 
-import br.ufba.jnose.util.JNoseUtils;
+import br.ufba.jnose.core.JNoseCore;
 import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.dto.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
-import br.ufba.jnose.util.ResultsWriter;
+import br.ufba.jnose.core.ResultsWriter;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -127,14 +127,14 @@ public class EvolutionPage extends BasePage {
         String[] listas = preSplit.split("/");
         String nomeProjeto = listas[listas.length - 1];
         Projeto projeto = new Projeto(nomeProjeto, pathProjeto);
-        JNoseUtils.execCommand("git checkout master", projeto.getPath());
+        JNoseCore.execCommand("git checkout master", projeto.getPath());
 
         ArrayList<Commit> lista = null;
         if (selected.trim().equals("Commits")) {
-            lista = JNoseUtils.gitLogOneLine(projeto.getPath());
+            lista = JNoseCore.gitLogOneLine(projeto.getPath());
             projeto.setListaCommits(lista);
         } else {
-            lista = JNoseUtils.gitTags(projeto.getPath());
+            lista = JNoseCore.gitTags(projeto.getPath());
             projeto.setListaCommits(lista);
         }
 
@@ -158,7 +158,7 @@ public class EvolutionPage extends BasePage {
             }
         });
 
-        String reportPathFinal = pathReport + File.separatorChar + JNoseUtils.dateNow() + File.separatorChar;
+        String reportPathFinal = pathReport + File.separatorChar + JNoseCore.dateNow() + File.separatorChar;
 
         boolean success = (new File(reportPathFinal)).mkdirs();
         if (!success) System.out.println("Created Folder...");
@@ -177,11 +177,11 @@ public class EvolutionPage extends BasePage {
             cont++;
             commitsProcessados.setDefaultModel(Model.of(cont));
             target.add(commitsProcessados);
-            JNoseUtils.execCommand("git checkout " + commit.id, projetoPath);
+            JNoseCore.execCommand("git checkout " + commit.id, projetoPath);
 
             int total = 0;
             //criando a lista de testsmells
-            List<String[]> listaTestSmells = JNoseUtils.processarTestSmells(projetoPath, commit, vizualizarCabecalho);
+            List<String[]> listaTestSmells = JNoseCore.processarTestSmells(projetoPath, commit, vizualizarCabecalho);
             for (String[] linhaArray : listaTestSmells) {
                 List<String> list = Arrays.asList(linhaArray);
                     for (int i = 10; i <= (list.size() - 1); i++) {
@@ -206,7 +206,7 @@ public class EvolutionPage extends BasePage {
 
             vizualizarCabecalho = false;
         }
-        JNoseUtils.execCommand("git checkout master", projetoPath);
+        JNoseCore.execCommand("git checkout master", projetoPath);
     }
 
 }

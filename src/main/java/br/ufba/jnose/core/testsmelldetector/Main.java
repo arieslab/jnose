@@ -1,7 +1,7 @@
 package br.ufba.jnose.core.testsmelldetector;
 
 import br.ufba.jnose.WicketApplication;
-import br.ufba.jnose.util.ResultsWriter;
+import br.ufba.jnose.core.ResultsWriter;
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestFile;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestSmellDetector;
