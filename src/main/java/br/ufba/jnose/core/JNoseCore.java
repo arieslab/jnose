@@ -36,29 +36,29 @@ public class JNoseCore {
 
     private final static Logger LOGGER = Logger.getLogger(JNoseCore.class.getName());
 
-    public static String testfiledetector(String projectPath, String projectName, String reportPath) throws IOException {
-
-        LOGGER.info("projectPath: " + projectPath + " - projectName: " + projectName + " - reportPath: " + reportPath);
+    public static String testfiledetector(String projectPath,String pastaDataHora, String projectName) throws IOException {
 
         List<TestClass> files = JNoseCore.getFilesTest(projectPath);
-        String outFile = reportPath + projectName + "_testfiledetection" + ".csv";
-        ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(outFile);
 
+        List<List<String>> todasLinhas = new ArrayList<>();
         for (TestClass testClass : files) {
             try {
-                List<String> list = new ArrayList<String>();
-                list.add(testClass.pathFile + "," + testClass.numberLine + "," + testClass.numberMethods + "");
-                resultsWriter.writeLine(list);
+                List<String> linha = new ArrayList<String>();
+                linha.add(testClass.pathFile + "," + testClass.numberLine + "," + testClass.numberMethods + "");
+                todasLinhas.add(linha);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return resultsWriter.getOutputFile();
+
+        return CSVCore.criarTestfiledetectionCSV(todasLinhas,pastaDataHora,projectName);
     }
 
     public static List<String[]> testfilemapping(List<TestClass> listTestClass, Commit commit, String projectPath, String projectName) throws IOException {
         System.out.println("Saving results. Total lines:" + listTestClass.size());
+
         List<String[]> listRetorno = new ArrayList<>();
+
         for (TestClass testClass : listTestClass) {
             String[] linha = {
                     commit.id,
@@ -77,28 +77,23 @@ public class JNoseCore {
         return listRetorno;
     }
 
-    public static String testfilemapping(List<TestClass> listTestClass, String pathFileCSV, String projectPath, String projectName, String reportPath) throws IOException {
-        LOGGER.info("pathFileCSV: " + pathFileCSV + " - projectPath: " + projectPath + " - projectName: " + projectName + " - reportPath: " + reportPath);
-        File selectedFile = new File(pathFileCSV);
-        FileReader fileReader = new FileReader(selectedFile);
-        BufferedReader in = new BufferedReader(fileReader);
+    public static String testfilemapping(List<TestClass> listTestClass, String pastaDataHora, String projectName) {
         System.out.println("Saving results. Total lines:" + listTestClass.size());
-        String outFile = reportPath + projectName + "_testmappingdetector" + ".csv";
-        ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(outFile);
-        List<String> columnValues = null;
+
+        List<List<String>> todasLinhas = new ArrayList<>();
+
         for (TestClass testClass : listTestClass) {
-            columnValues = new ArrayList<>();
+            List<String> columnValues = new ArrayList<>();
             columnValues.add(0, projectName);
             columnValues.add(1, testClass.pathFile.toString());
             columnValues.add(2, testClass.productionFile);
             columnValues.add(3, testClass.numberLine + "");
             columnValues.add(4, testClass.numberMethods + "");
-            resultsWriter.writeLine(columnValues);
+            todasLinhas.add(columnValues);
         }
         System.out.println("Completed!");
-        in.close();
-        fileReader.close();
-        return resultsWriter.getOutputFile();
+
+        return CSVCore.criarTestmappingdetectorCSV(todasLinhas,pastaDataHora,projectName);
     }
 
     public static String newReport(List<TestClass> listTestClass, String reportPath) throws IOException {
@@ -344,13 +339,7 @@ public class JNoseCore {
     public static String processarTestFileMapping(List<TestClass> listTestClass, String pathFileCSV, String pathProjeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
         logRetorno.append(dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>");
-        String pathCSVMapping = "";
-        try {
-            pathCSVMapping = JNoseCore.testfilemapping(listTestClass, pathFileCSV, pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return pathCSVMapping;
+        return JNoseCore.testfilemapping(listTestClass, folderTime, nameProjeto);
     }
 
     public static String processarTestFileDetector(String pathProjeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
