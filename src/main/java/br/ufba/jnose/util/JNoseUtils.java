@@ -1,14 +1,12 @@
 package br.ufba.jnose.util;
 
+import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.core.cobertura.ReportGenerator;
-import br.ufba.jnose.dto.Commit;
+import br.ufba.jnose.dto.*;
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
 import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestFile;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestSmellDetector;
-import br.ufba.jnose.dto.Projeto;
-import br.ufba.jnose.dto.TestClass;
-import br.ufba.jnose.dto.TestSmell;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
@@ -408,6 +406,37 @@ public class JNoseUtils {
         }
     }
 
+    public static String processarProjeto(Projeto projeto, float valorProcProject, String folderTime, TotalProcessado totalProcessado, String pastaPathReport, StringBuffer logRetorno) throws IOException {
+        logRetorno.append(JNoseUtils.dateNow() + projeto.getName() + " - started <br>");
+        Float valorSoma = valorProcProject / 4;
 
+        totalProcessado.setValor(5);
+        projeto.setProcentagem(totalProcessado.getValor());
+
+        if (WicketApplication.COBERTURA_ON) {
+            JNoseUtils.processarCobertura(projeto, folderTime, pastaPathReport, logRetorno);
+        }
+
+        projeto.setProcessado2(true);
+        totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
+        projeto.setProcentagem(25);
+
+        String csvFile = JNoseUtils.processarTestFileDetector(projeto.getPath(), folderTime,pastaPathReport, logRetorno);
+        totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
+        projeto.setProcentagem(50);
+
+        List<TestClass> listaTestClass = JNoseUtils.getFilesTest(projeto.getPath());
+        String csvMapping = JNoseUtils.processarTestFileMapping(listaTestClass, csvFile, projeto.getPath(), folderTime, pastaPathReport, logRetorno);
+        totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
+        projeto.setProcentagem(75);
+
+        String csvTestSmells =  JNoseUtils.processarTestSmellDetector(csvMapping, projeto.getPath(), folderTime, pastaPathReport, logRetorno);
+        totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
+        projeto.setProcentagem(100);
+
+        projeto.setProcessado(true);
+        return csvTestSmells;
+    }
 
 }
+
