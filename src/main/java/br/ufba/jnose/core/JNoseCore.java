@@ -267,37 +267,40 @@ public class JNoseCore {
     }
 
 
-    public static void mesclarGeral(List<Projeto> listaProjetos, String reportPath, StringBuffer logRetorno) {
+    public static void mesclarGeral(List<Projeto> listaProjetos, String reportPath, StringBuffer logRetorno, String pastaDataHora) {
 
         logRetorno.append(dateNow() + "<font style='color:orange'>Merging results</font> <br>");
 
+        List<List<String>> linhasTotalProjetos = new ArrayList<>();
+
         try {
-            ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(reportPath + "all" + "_testsmesll.csv");
-            resultsWriter.writeColumnName(br.ufba.jnose.core.testsmelldetector.Main.columnNames);
+            linhasTotalProjetos.add(br.ufba.jnose.core.testsmelldetector.Main.columnNames);
 
             if (listaProjetos.size() != 0) {
                 for (Projeto projeto : listaProjetos) {
 
-                    File jacocoFile = new File(reportPath + projeto.getName() + "_testsmesll.csv");
-                    FileReader jacocoFileReader = new FileReader(jacocoFile);
-                    BufferedReader jacocoIn = new BufferedReader(jacocoFileReader);
+                    File file = new File(reportPath + projeto.getName() + "_testsmesll.csv");
+                    FileReader fileReader = new FileReader(file);
+                    BufferedReader in = new BufferedReader(fileReader);
 
                     boolean pularLinha = false;
                     String str;
-                    while ((str = jacocoIn.readLine()) != null) {
+                    while ((str = in.readLine()) != null) {
                         if (pularLinha) {
-                            resultsWriter.writeLine(newArrayList(str.split(",")));
+                            linhasTotalProjetos.add(newArrayList(str.split(",")));
                         } else {
                             pularLinha = true;
                         }
                     }
-                    jacocoIn.close();
-                    jacocoFileReader.close();
+                    in.close();
+                    fileReader.close();
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        CSVCore.criarTodosProjetosCSV(linhasTotalProjetos,pastaDataHora);
     }
 
     public static String dateNow() {
@@ -343,12 +346,12 @@ public class JNoseCore {
         return JNoseCore.testfilemapping(listTestClass, folderTime, nameProjeto);
     }
 
-    public static String processarTestFileDetector(String pathProjeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
+    public static String processarTestFileDetector(String pathProjeto, String folderTime, StringBuffer logRetorno) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
         logRetorno.append(dateNow() + nameProjeto + " - <font style='color:red'>TestFileDetector</font> <br>");
         String pathCSV = "";
         try {
-            pathCSV = JNoseCore.testfiledetector(pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
+            pathCSV = JNoseCore.testfiledetector(pathProjeto, folderTime, nameProjeto);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -433,12 +436,12 @@ public class JNoseCore {
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
         projeto.setProcentagem(25);
 
-        String csvFile = JNoseCore.processarTestFileDetector(projeto.getPath(), folderTime,pastaPathReport, logRetorno);
+        String csvFile = JNoseCore.processarTestFileDetector(projeto.getPath(), folderTime, logRetorno);
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
         projeto.setProcentagem(50);
 
         List<TestClass> listaTestClass = JNoseCore.getFilesTest(projeto.getPath());
-        String csvMapping = JNoseCore.processarTestFileMapping(listaTestClass, csvFile, folderTime, logRetorno);
+        String csvMapping = JNoseCore.processarTestFileMapping(listaTestClass, projeto.getPath(), folderTime, logRetorno);
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
         projeto.setProcentagem(75);
 

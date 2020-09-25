@@ -27,7 +27,11 @@ public class CSVCore {
         return criarCSV(todasLinhas,pastaDataHora,nomeProjeto + "_testmappingdetector");
     }
 
-    public static String criarCSV(List<List<String>> todasLinhas,String pastaDataHora, String nomeArquivo){
+    public static String criarTodosProjetosCSV(List<List<String>> todasLinhas, String pastaDataHora){
+        return criarCSV(todasLinhas,pastaDataHora,"todos_projetos_testsmesll");
+    }
+
+    private static String criarCSV(List<List<String>> todasLinhas,String pastaDataHora, String nomeArquivo){
         String outFile = reportPath + pastaDataHora + File.separatorChar + nomeArquivo + ".csv";
         ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(outFile);
 

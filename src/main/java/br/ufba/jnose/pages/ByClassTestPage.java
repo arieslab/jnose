@@ -319,11 +319,21 @@ public class ByClassTestPage extends BasePage {
                 }
 
                 if (processado && mesclado == false && !listaProjetosProcessar.isEmpty()) {
-                    JNoseCore.mesclarGeral(listaProjetosProcessar, pastaPathReport + dataProcessamentoAtual + File.separatorChar, logRetorno);
+                    JNoseCore.mesclarGeral(listaProjetosProcessar, pastaPathReport + dataProcessamentoAtual + File.separatorChar, logRetorno,dataProcessamentoAtual);
                     mesclado = true;
                 }
 
-                if (!loadImg.isVisible()) target.add(loadImg.setVisible(processando));
+                if(processando){
+                    if (!loadImg.isVisible()) {
+                        loadImg.setVisible(true);
+                        target.add(loadImg);
+                    }
+                }else{
+                    if (loadImg.isVisible()) {
+                        loadImg.setVisible(false);
+                        target.add(loadImg);
+                    }
+                }
 
                 if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
                     linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv"));
