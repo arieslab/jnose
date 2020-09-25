@@ -3,7 +3,6 @@ package br.ufba.jnose.pages;
 import br.ufba.jnose.util.JNoseUtils;
 import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.dto.Projeto;
-import br.ufba.jnose.dto.TestClass;
 import br.ufba.jnose.pages.base.BasePage;
 import br.ufba.jnose.util.ResultsWriter;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
@@ -15,26 +14,16 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.time.Duration;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class EvolutionPage extends BasePage {
     private static final long serialVersionUID = 1L;
-
-    private String pathReport = "";
-    private String pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
-    private Integer cont = 0;
 
     private Label taLogInfo;
     private Label projetoName;
@@ -48,22 +37,25 @@ public class EvolutionPage extends BasePage {
     private String projetoPath;
     private String pathCSV;
     private String selected;
-
-    private static final List<String> TYPES = Arrays.asList(new String[]{"Commits", "Tags"});
+    private String pathReport;
+    private String pathAppToWebapp;
+    private Integer cont;
 
     public EvolutionPage() {
         logRetornoInfo = new StringBuffer();
         projetoPath = "";
         pathCSV = "";
         selected = "Commits";
+        pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
+        pathReport = "";
+        cont = 0;
+
         pathReport = pathAppToWebapp + File.separator + "reports" + File.separator + "revolution";
 
         add(new JQueryFeedbackPanel("feedback").setOutputMarkupId(true));
 
         criarForm();
-
         criarLogInfo();
-
         criarTimer();
     }
 
@@ -96,7 +88,7 @@ public class EvolutionPage extends BasePage {
         });
 
         RadioChoice<String> radioCommitsTags = new RadioChoice<String>(
-                "radioCommitsTags", new PropertyModel<String>(this, "selected"), TYPES);
+                "radioCommitsTags", new PropertyModel<String>(this, "selected"), Arrays.asList(new String[]{"Commits", "Tags"}));
         radioCommitsTags.setPrefix(" ");
         radioCommitsTags.setSuffix("<br>");
         form.add(radioCommitsTags);
