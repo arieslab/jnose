@@ -190,7 +190,7 @@ public class EvolutionPage extends BasePage {
             List<String[]> listaTestSmells = JNoseUtils.processarTestSmells(projetoPath, commit, vizualizarCabecalho);
             for (String[] linhaArray : listaTestSmells) {
                 List<String> list = Arrays.asList(linhaArray);
-                    for (int i = 10; i <= 30; i++) {
+                    for (int i = 10; i <= (list.size() - 1); i++) {
                         boolean isNumeric = list.get(i).chars().allMatch( Character::isDigit );
                         if(isNumeric) {
                             total += Integer.parseInt(list.get(i));
