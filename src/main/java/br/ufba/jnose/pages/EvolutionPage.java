@@ -1,6 +1,7 @@
 package br.ufba.jnose.pages;
 
 import br.ufba.jnose.core.CSVCore;
+import br.ufba.jnose.core.GitCore;
 import br.ufba.jnose.core.JNoseCore;
 import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.dto.Projeto;
@@ -131,10 +132,10 @@ public class EvolutionPage extends BasePage {
 
         ArrayList<Commit> lista = null;
         if (selected.trim().equals("Commits")) {
-            lista = JNoseCore.gitLogOneLine(projeto.getPath());
+            lista = GitCore.gitLogOneLine(projeto.getPath());
             projeto.setListaCommits(lista);
         } else {
-            lista = JNoseCore.gitTags(projeto.getPath());
+            lista = GitCore.gitTags(projeto.getPath());
             projeto.setListaCommits(lista);
         }
 
