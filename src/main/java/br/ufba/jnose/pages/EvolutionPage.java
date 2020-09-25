@@ -36,85 +36,44 @@ public class EvolutionPage extends BasePage {
     private String pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
     private Integer cont = 0;
 
-    final private Label taLogInfo;
-    final private Label projetoName;
-    final private Label projetoCommits;
-    final private Label commitsProcessados;
-    final private Label csvLogGit;
-    final private TextField tfPastaPath;
+    private Label taLogInfo;
+    private Label projetoName;
+    private Label projetoCommits;
+    private Label commitsProcessados;
+    private Label csvLogGit;
+    private TextField tfPastaPath;
 
     private Projeto projetoSelecionado;
-    private String logRetornoInfo = "";
-
-    private String projetoPath; //used
-    private String pathCSV; //used
+    private StringBuffer logRetornoInfo;
+    private String projetoPath;
+    private String pathCSV;
+    private String selected;
 
     private static final List<String> TYPES = Arrays.asList(new String[]{"Commits", "Tags"});
 
-    private String selected = "Commits";
-
     public EvolutionPage() {
+        logRetornoInfo = new StringBuffer();
+        projetoPath = "";
+        pathCSV = "";
+        selected = "Commits";
         pathReport = pathAppToWebapp + File.separator + "reports" + File.separator + "revolution";
-        Form form = new Form("form");
 
-        form.add(new AjaxSubmitLink("carregarProjetoLnk") {
-            @Override
-            protected void onSubmit(AjaxRequestTarget target) {
-                projetoSelecionado = carregarProjeto(projetoPath, target);
-            }
-        });
+        add(new JQueryFeedbackPanel("feedback").setOutputMarkupId(true));
 
-        FeedbackPanel feedback = new JQueryFeedbackPanel("feedback");
-        add(feedback.setOutputMarkupId(true));
+        criarForm();
 
-        RadioChoice<String> radioCommitsTags = new RadioChoice<String>(
-                "radioCommitsTags", new PropertyModel<String>(this, "selected"), TYPES);
-        radioCommitsTags.setPrefix(" ");
-        radioCommitsTags.setSuffix("<br>");
-        form.add(radioCommitsTags);
+        criarLogInfo();
 
-        projetoName = new Label("projetoName", "");
-        projetoName.setOutputMarkupId(true);
-        form.add(projetoName);
+        criarTimer();
+    }
 
-        projetoCommits = new Label("projetoCommits", "");
-        projetoCommits.setOutputMarkupId(true);
-        form.add(projetoCommits);
-
+    private void criarLogInfo(){
         taLogInfo = new Label("taLogInfo");
-        taLogInfo.setEscapeModelStrings(false);
-        taLogInfo.setOutputMarkupId(true);
-        taLogInfo.setOutputMarkupPlaceholderTag(true);
+        taLogInfo.setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
         add(taLogInfo);
+    }
 
-        commitsProcessados = new Label("commitsProcessados", PropertyModel.of(this, "cont"));
-        commitsProcessados.setEscapeModelStrings(false);
-        commitsProcessados.setOutputMarkupId(true);
-        commitsProcessados.setOutputMarkupPlaceholderTag(true);
-        form.add(commitsProcessados);
-
-        csvLogGit = new Label("csvLogGit", PropertyModel.of(this, "pathCSV"));
-        csvLogGit.setEscapeModelStrings(false);
-        csvLogGit.setOutputMarkupId(true);
-        csvLogGit.setOutputMarkupPlaceholderTag(true);
-        form.add(csvLogGit);
-
-        tfPastaPath = new TextField("tfPastaPath", new PropertyModel(this, "projetoPath"));
-        tfPastaPath.setRequired(true);
-        tfPastaPath.setEscapeModelStrings(false);
-        tfPastaPath.setOutputMarkupId(true);
-        tfPastaPath.setOutputMarkupPlaceholderTag(true);
-        form.add(tfPastaPath);
-
-        IndicatingAjaxLink executarLnk = new IndicatingAjaxLink<String>("executarLnk") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                processar(projetoSelecionado, target);
-            }
-        };
-        form.add(executarLnk);
-        add(form);
-
+    private void criarTimer(){
         AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
             @Override
             protected void onTimer(AjaxRequestTarget target) {
@@ -125,6 +84,49 @@ public class EvolutionPage extends BasePage {
             }
         };
         add(timer);
+    }
+
+    private void criarForm(){
+        Form form = new Form("form");
+        form.add(new AjaxSubmitLink("carregarProjetoLnk") {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target) {
+                projetoSelecionado = carregarProjeto(projetoPath, target);
+            }
+        });
+
+        RadioChoice<String> radioCommitsTags = new RadioChoice<String>(
+                "radioCommitsTags", new PropertyModel<String>(this, "selected"), TYPES);
+        radioCommitsTags.setPrefix(" ");
+        radioCommitsTags.setSuffix("<br>");
+        form.add(radioCommitsTags);
+
+        projetoName = new Label("projetoName", "");
+        form.add(projetoName.setOutputMarkupId(true));
+
+        projetoCommits = new Label("projetoCommits", "");
+        form.add(projetoCommits.setOutputMarkupId(true));
+
+        commitsProcessados = new Label("commitsProcessados", PropertyModel.of(this, "cont"));
+        commitsProcessados.setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
+        form.add(commitsProcessados);
+
+        csvLogGit = new Label("csvLogGit", PropertyModel.of(this, "pathCSV"));
+        csvLogGit.setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
+        form.add(csvLogGit);
+
+        tfPastaPath = new TextField("tfPastaPath", new PropertyModel(this, "projetoPath"));
+        tfPastaPath.setRequired(true).setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
+        form.add(tfPastaPath);
+
+        IndicatingAjaxLink executarLnk = new IndicatingAjaxLink<String>("executarLnk") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                processar(projetoSelecionado, target);
+            }
+        };
+        form.add(executarLnk);
+        add(form);
     }
 
     private Projeto carregarProjeto(String pathProjeto, AjaxRequestTarget target) {
@@ -214,110 +216,5 @@ public class EvolutionPage extends BasePage {
         }
         JNoseUtils.execCommand("git checkout master", projetoPath);
     }
-
-//    private void execCommand(final String commandLine, String pathExecute) {
-//        int r = 0;
-//        try {
-//            Process p = Runtime.getRuntime().exec(commandLine, null, new File(pathExecute));
-//            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//            String lineOut;
-//            while ((lineOut = input.readLine()) != null) {
-//                System.out.println(lineOut);
-//            }
-//            input.close();
-//            r = p.waitFor();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-//    private ArrayList<Commit> gitLogOneLine(String pathExecute) {
-//        ArrayList<Commit> lista = new ArrayList<>();
-//        int r = 0;
-//        try {
-//            Process p = Runtime.getRuntime().exec("git log --pretty=format:%h,%an,%ad,%s --date=iso8601", null, new File(pathExecute));
-//            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//            String lineOut;
-//            while ((lineOut = input.readLine()) != null) {
-//                String[] arrayCommit = lineOut.split(",");
-//                String id = arrayCommit[0];
-//                String name = arrayCommit[1];
-//                Date date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(arrayCommit[2]);
-//                String msg = arrayCommit[3];
-//                lista.add(new Commit(id, name, date, msg));
-//            }
-//            input.close();
-//            r = p.waitFor();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return lista;
-//    }
-
-//    private ArrayList<Commit> gitTags(String pathExecute) {
-//        ArrayList<Commit> lista = new ArrayList<>();
-//        int r = 0;
-//        try {
-//            Process p = Runtime.getRuntime().exec("git tag", null, new File(pathExecute));
-//            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//            String lineOut;
-//
-//            while ((lineOut = input.readLine()) != null) {
-//                String tagName = lineOut.trim();
-//                Process detalhes = Runtime.getRuntime().exec("git show " + tagName, null, new File(pathExecute));
-//                BufferedReader input2 = new BufferedReader(new InputStreamReader(detalhes.getInputStream()));
-//                String commit = "";
-//                String lineOut2;
-//
-//                String id = "";
-//                String name = "";
-//                Date date = null;
-//                String msg = "";
-//
-//                while ((lineOut2 = input2.readLine()) != null) {
-//                    if (lineOut2.trim().contains("Tagger:")) {
-//                        name = lineOut2.trim().replace("Tagger:", "").trim();
-//                    }
-//                    if (lineOut2.trim().contains("Date:")) {
-//                        String dateString = lineOut2.trim().replace("Date:", "").trim();
-//                        SimpleDateFormat formatter5 = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy Z", Locale.US);
-//                        date = formatter5.parse(dateString);
-//                    }
-//                    if (lineOut2.trim().contains("commit ")) {
-//                        id = lineOut2.trim().replace("commit ", "").trim();
-//                    }
-//                }
-//                lista.add(new Commit(id, name, date, msg, tagName));
-//            }
-//            input.close();
-//            r = p.waitFor();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return lista;
-//    }
-
-//    private String dateNow() {
-//        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-//    }
-
-//    private List<String[]> processarTestSmells(String pathProjeto, Commit commit, Boolean cabecalho) {
-//        List<String[]> listTestSmells = null;
-//        try {
-//            List<TestClass> listTestFile = JNoseUtils.getFilesTest(pathProjeto);
-//
-//            if(pathProjeto.lastIndexOf(File.separator) + 1 == pathProjeto.length()){
-//                pathProjeto = pathProjeto.substring(0,pathProjeto.lastIndexOf(File.separator)-1);
-//            }
-//
-//            String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separator) + 1, pathProjeto.length());
-//            List<String[]> listaResultado = JNoseUtils.testfilemapping(listTestFile, commit, pathProjeto, nameProjeto);
-//            listTestSmells = br.ufba.jnose.core.testsmelldetector.Main.start(listaResultado, cabecalho);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return listTestSmells;
-//    }
-
 
 }
