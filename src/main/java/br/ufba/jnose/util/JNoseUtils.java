@@ -1,10 +1,12 @@
 package br.ufba.jnose.util;
 
+import br.ufba.jnose.core.cobertura.ReportGenerator;
 import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
 import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestFile;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestSmellDetector;
+import br.ufba.jnose.dto.Projeto;
 import br.ufba.jnose.dto.TestClass;
 import br.ufba.jnose.dto.TestSmell;
 import com.github.javaparser.JavaParser;
@@ -17,12 +19,18 @@ import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
 
 import java.io.*;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static java.lang.System.out;
 
 public class JNoseUtils {
 
@@ -270,5 +278,136 @@ public class JNoseUtils {
             e.printStackTrace();
         }
     }
+
+
+    public static void mesclarGeral(List<Projeto> listaProjetos, String reportPath, StringBuffer logRetorno) {
+
+        logRetorno.append(dateNow() + "<font style='color:orange'>Merging results</font> <br>");
+
+        try {
+            ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(reportPath + "all" + "_testsmesll.csv");
+            resultsWriter.writeColumnName(br.ufba.jnose.core.testsmelldetector.Main.columnNames);
+
+            if (listaProjetos.size() != 0) {
+                for (Projeto projeto : listaProjetos) {
+
+                    File jacocoFile = new File(reportPath + projeto.getName() + "_testsmesll.csv");
+                    FileReader jacocoFileReader = new FileReader(jacocoFile);
+                    BufferedReader jacocoIn = new BufferedReader(jacocoFileReader);
+
+                    boolean pularLinha = false;
+                    String str;
+                    while ((str = jacocoIn.readLine()) != null) {
+                        if (pularLinha) {
+                            resultsWriter.writeLine(newArrayList(str.split(",")));
+                        } else {
+                            pularLinha = true;
+                        }
+                    }
+                    jacocoIn.close();
+                    jacocoFileReader.close();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String dateNow() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm:ss")) + " - ";
+    }
+
+    public static String dateNowFolder() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+    }
+
+    public static void execCommand(final String commandLine, String pathExecute, StringBuffer logRetornoInfo) {
+        int r = 0;
+        try {
+            Process p = Runtime.getRuntime().exec(commandLine, null, new File(pathExecute));
+            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String lineOut;
+            while ((lineOut = input.readLine()) != null) {
+                System.out.println(lineOut);
+                logRetornoInfo.append(lineOut + " <br>" + logRetornoInfo);
+            }
+            input.close();
+            r = p.waitFor();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String processarTestSmellDetector(String pathCSVMapping, String pathProjeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
+        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
+        logRetorno.append(dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>");
+        String csvTestSmells = "";
+        try {
+            csvTestSmells = br.ufba.jnose.core.testsmelldetector.Main.start(pathCSVMapping, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return csvTestSmells;
+    }
+
+    public static String processarTestFileMapping(List<TestClass> listTestClass, String pathFileCSV, String pathProjeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
+        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
+        logRetorno.append(dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>");
+        String pathCSVMapping = "";
+        try {
+            pathCSVMapping = JNoseUtils.testfilemapping(listTestClass, pathFileCSV, pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return pathCSVMapping;
+    }
+
+    public static String processarTestFileDetector(String pathProjeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
+        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
+        logRetorno.append(dateNow() + nameProjeto + " - <font style='color:red'>TestFileDetector</font> <br>");
+        String pathCSV = "";
+        try {
+            pathCSV = JNoseUtils.testfiledetector(pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return pathCSV;
+    }
+
+    public static List<Projeto> listaProjetos(URI path, StringBuffer logRetornoInfo) {
+        java.io.File[] directories = new File(path).listFiles(java.io.File::isDirectory);
+        List<Projeto> lista = new ArrayList<Projeto>();
+
+        if (directories != null) {
+            for (java.io.File dir : directories) {
+                String pathPom = dir.getAbsolutePath() + File.separatorChar + "pom.xml";
+
+                if (new File(pathPom).exists()) {
+                    String pathProjeto = dir.getAbsolutePath().trim();
+                    String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
+                    lista.add(new Projeto(nameProjeto, pathProjeto));
+                } else {
+                    String msg = "It is not a project MAVEN: " + dir.getAbsolutePath();
+                    out.println(msg);
+                    logRetornoInfo.append(" <br>");
+                }
+            }
+        }
+
+        return lista;
+    }
+
+    public static void processarCobertura(Projeto projeto, String folderTime,String pastaPathReport, StringBuffer logRetorno) {
+        logRetorno.append(dateNow() + projeto.getName() + " - <font style='color:blue'>Coverage</font> <br>");
+        try {
+            execCommand("mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Drat.skip=true", projeto.getPath(),logRetorno);
+            ReportGenerator reportGenerator = new ReportGenerator(new File(projeto.getPath()), new File(pastaPathReport + folderTime + File.separatorChar));
+            reportGenerator.create();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 }

@@ -62,7 +62,7 @@ public class ByClassTestPage extends BasePage {
     private WebMarkupContainer loadImg;
     private IndicatingAjaxLink processarTodos;
     private Label lbProjetosSize;
-    private String logRetorno = "";
+    private StringBuffer logRetorno = new StringBuffer();
     static public String logRetornoInfo = "";
     private String dataProcessamentoAtual;
     private boolean mesclado = false;
@@ -70,13 +70,6 @@ public class ByClassTestPage extends BasePage {
     private boolean processarCobertura;
 
     public ByClassTestPage() {
-
-//        Cookie pastaPathCookie = ((WebRequest) getRequest()).getCookie("pastaPath");
-//        if (pastaPathCookie != null) {
-//            pastaPath = pastaPathCookie.getValue();
-//        } else {
-//            pastaPath = "";
-//        }
 
         logRetornoInfo = "pastaPathCookie: " + pastaPath + " <br>" + logRetornoInfo;
 
@@ -166,7 +159,7 @@ public class ByClassTestPage extends BasePage {
                 }
 
                 if (processado && mesclado == false && !listaProjetosProcessar.isEmpty()) {
-                    mesclarGeral(listaProjetosProcessar, pastaPathReport + dataProcessamentoAtual + File.separatorChar);
+                    JNoseUtils.mesclarGeral(listaProjetosProcessar, pastaPathReport + dataProcessamentoAtual + File.separatorChar, logRetorno);
                     mesclado = true;
                 }
 
@@ -299,21 +292,19 @@ public class ByClassTestPage extends BasePage {
             @Override
             public void onSubmit() {
                 mesclado = false;
-                dataProcessamentoAtual = dateNowFolder();
-                logRetorno = "";
+                dataProcessamentoAtual = JNoseUtils.dateNowFolder();
+                logRetorno = new StringBuffer();
                 logRetornoInfo = "";
                 totalProcessado = 0;
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
 
                 File file = new File(pastaPath);
-                listaProjetos = listaProjetos(file.toURI());
+                listaProjetos = JNoseUtils.listaProjetos(file.toURI(),logRetorno);
                 lvProjetos.setList(listaProjetos);
 
                 processarTodos.setEnabled(true);
                 lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
 
-//                Cookie pastaPathCookie = new Cookie("pastaPath", "\"" + pastaPath + "\"");
-//                ((WebResponse) getResponse()).addCookie(pastaPathCookie);
             }
         };
         form.add(btEnviar);
@@ -377,31 +368,30 @@ public class ByClassTestPage extends BasePage {
 
 
     private String processarProjeto(Projeto projeto, float valorProcProject, String folderTime) throws IOException {
-        logRetorno = dateNow() + projeto.getName() + " - started <br>" + logRetorno;
+        logRetorno.append(JNoseUtils.dateNow() + projeto.getName() + " - started <br>");
         Float valorSoma = valorProcProject / 4;
 
         totalProcessado = 5;
         projeto.setProcentagem(totalProcessado);
 
         if (WicketApplication.COBERTURA_ON) {
-            processarCobertura(projeto, folderTime);
+            JNoseUtils.processarCobertura(projeto, folderTime, pastaPathReport, logRetorno);
         }
-
 
         projeto.setProcessado2(true);
         totalProcessado = totalProcessado + valorSoma.intValue();
         projeto.setProcentagem(25);
 
-        String csvFile = processarTestFileDetector(projeto.getPath(), folderTime);
+        String csvFile = JNoseUtils.processarTestFileDetector(projeto.getPath(), folderTime,pastaPathReport, logRetorno);
         totalProcessado = totalProcessado + valorSoma.intValue();
         projeto.setProcentagem(50);
 
         List<TestClass> listaTestClass = JNoseUtils.getFilesTest(projeto.getPath());
-        String csvMapping = processarTestFileMapping(listaTestClass, csvFile, projeto.getPath(), folderTime);
+        String csvMapping = JNoseUtils.processarTestFileMapping(listaTestClass, csvFile, projeto.getPath(), folderTime, pastaPathReport, logRetorno);
         totalProcessado = totalProcessado + valorSoma.intValue();
         projeto.setProcentagem(75);
 
-        String csvTestSmells = processarTestSmellDetector(csvMapping, projeto.getPath(), folderTime);
+        String csvTestSmells =  JNoseUtils.processarTestSmellDetector(csvMapping, projeto.getPath(), folderTime, pastaPathReport, logRetorno);
         totalProcessado = totalProcessado + valorSoma.intValue();
         projeto.setProcentagem(100);
 
@@ -409,159 +399,128 @@ public class ByClassTestPage extends BasePage {
         return csvTestSmells;
     }
 
-    private void processarCobertura(Projeto projeto, String folderTime) {
-        logRetorno = dateNow() + projeto.getName() + " - <font style='color:blue'>Coverage</font> <br>" + logRetorno;
-        try {
-            execCommand("mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Drat.skip=true", projeto.getPath());
-            ReportGenerator reportGenerator = new ReportGenerator(new File(projeto.getPath()), new File(pastaPathReport + folderTime + File.separatorChar));
-            reportGenerator.create();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    private void processarCobertura(Projeto projeto, String folderTime) {
+//        logRetorno = dateNow() + projeto.getName() + " - <font style='color:blue'>Coverage</font> <br>" + logRetorno;
+//        try {
+//            execCommand("mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Drat.skip=true", projeto.getPath());
+//            ReportGenerator reportGenerator = new ReportGenerator(new File(projeto.getPath()), new File(pastaPathReport + folderTime + File.separatorChar));
+//            reportGenerator.create();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
-    private List<Projeto> listaProjetos(URI path) {
-        java.io.File[] directories = new File(path).listFiles(java.io.File::isDirectory);
-        List<Projeto> lista = new ArrayList<Projeto>();
+//    private List<Projeto> listaProjetos(URI path) {
+//        java.io.File[] directories = new File(path).listFiles(java.io.File::isDirectory);
+//        List<Projeto> lista = new ArrayList<Projeto>();
+//
+//        if (directories != null) {
+//            for (java.io.File dir : directories) {
+//                String pathPom = dir.getAbsolutePath() + File.separatorChar + "pom.xml";
+//
+//                if (new File(pathPom).exists()) {
+//                    String pathProjeto = dir.getAbsolutePath().trim();
+//                    String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
+//                    lista.add(new Projeto(nameProjeto, pathProjeto));
+//                } else {
+//                    String msg = "It is not a project MAVEN: " + dir.getAbsolutePath();
+//                    out.println(msg);
+//                    logRetornoInfo = msg + " <br>" + logRetornoInfo;
+//                }
+//            }
+//        }
+//
+//        return lista;
+//    }
 
-        if (directories != null) {
-            for (java.io.File dir : directories) {
-                String pathPom = dir.getAbsolutePath() + File.separatorChar + "pom.xml";
+//    private String processarTestFileDetector(String pathProjeto, String folderTime) {
+//        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
+//        logRetorno = dateNow() + nameProjeto + " - <font style='color:red'>TestFileDetector</font> <br>" + logRetorno;
+//        String pathCSV = "";
+//        try {
+//            pathCSV = JNoseUtils.testfiledetector(pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return pathCSV;
+//    }
 
-                if (new File(pathPom).exists()) {
-                    String pathProjeto = dir.getAbsolutePath().trim();
-                    String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-                    lista.add(new Projeto(nameProjeto, pathProjeto));
-                } else {
-                    String msg = "It is not a project MAVEN: " + dir.getAbsolutePath();
-                    out.println(msg);
-                    logRetornoInfo = msg + " <br>" + logRetornoInfo;
-                }
-            }
-        }
-
-        return lista;
-    }
-
-    private String processarTestFileDetector(String pathProjeto, String folderTime) {
-        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-        logRetorno = dateNow() + nameProjeto + " - <font style='color:red'>TestFileDetector</font> <br>" + logRetorno;
-        String pathCSV = "";
-        try {
-            pathCSV = JNoseUtils.testfiledetector(pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return pathCSV;
-    }
-
-    private String processarTestFileMapping(List<TestClass> listTestClass, String pathFileCSV, String pathProjeto, String folderTime) {
-        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-        logRetorno = dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>" + logRetorno;
-        String pathCSVMapping = "";
-        try {
-            pathCSVMapping = JNoseUtils.testfilemapping(listTestClass, pathFileCSV, pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return pathCSVMapping;
-    }
-
-
-    private String processarTestSmellDetector(String pathCSVMapping, String pathProjeto, String folderTime) {
-        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-        logRetorno = dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>" + logRetorno;
-        String csvTestSmells = "";
-        try {
-            csvTestSmells = br.ufba.jnose.core.testsmelldetector.Main.start(pathCSVMapping, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return csvTestSmells;
-    }
-
-    private String dateNow() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm:ss")) + " - ";
-    }
-
-    private String dateNowFolder() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-    }
-
-    private static void execCommand(final String commandLine, String pathExecute) {
-        int r = 0;
-        try {
-            Process p = Runtime.getRuntime().exec(commandLine, null, new File(pathExecute));
-            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String lineOut;
-            while ((lineOut = input.readLine()) != null) {
-                System.out.println(lineOut);
-                logRetornoInfo = lineOut + " <br>" + logRetornoInfo;
-            }
-            input.close();
-            r = p.waitFor();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static List<String> columnNames;
-
-    private static void gerarDadosGeral() {
-        List<String> columnValues;
-        TestSmellDetector testSmellDetector = TestSmellDetector.createTestSmellDetector();
-        columnNames = testSmellDetector.getTestSmellNames();
-        columnNames.add(0, "App");
-        columnNames.add(1, "TestFileName");
-        columnNames.add(2, "ProductionFileName");
-        columnNames.add("LOC");
-        //jacoco
-        if (WicketApplication.COBERTURA_ON) {
-            columnNames.add("INSTRUCTION_MISSED");
-            columnNames.add("INSTRUCTION_COVERED");
-            columnNames.add("BRANCH_MISSED");
-            columnNames.add("BRANCH_COVERED");
-            columnNames.add("LINE_MISSED");
-            columnNames.add("LINE_COVERED");
-            columnNames.add("COMPLEXITY_MISSED");
-            columnNames.add("COMPLEXITY_COVERED");
-            columnNames.add("METHOD_MISSED");
-            columnNames.add("METHOD_COVERED");
-        }
-    }
+//    private String processarTestFileMapping(List<TestClass> listTestClass, String pathFileCSV, String pathProjeto, String folderTime) {
+//        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
+//        logRetorno = dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>" + logRetorno;
+//        String pathCSVMapping = "";
+//        try {
+//            pathCSVMapping = JNoseUtils.testfilemapping(listTestClass, pathFileCSV, pathProjeto, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return pathCSVMapping;
+//    }
 
 
-    private void mesclarGeral(List<Projeto> listaProjetos, String reportPath) {
+//    private String processarTestSmellDetector(String pathCSVMapping, String pathProjeto, String folderTime) {
+//        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
+//        logRetorno = dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>" + logRetorno;
+//        String csvTestSmells = "";
+//        try {
+//            csvTestSmells = br.ufba.jnose.core.testsmelldetector.Main.start(pathCSVMapping, nameProjeto, pastaPathReport + folderTime + File.separatorChar);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return csvTestSmells;
+//    }
 
-        logRetorno = dateNow() + "<font style='color:orange'>Merging results</font> <br>" + logRetorno;
+//    private String dateNow() {
+//        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm:ss")) + " - ";
+//    }
+//
+//    private String dateNowFolder() {
+//        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+//    }
+//
+//    private static void execCommand(final String commandLine, String pathExecute) {
+//        int r = 0;
+//        try {
+//            Process p = Runtime.getRuntime().exec(commandLine, null, new File(pathExecute));
+//            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//            String lineOut;
+//            while ((lineOut = input.readLine()) != null) {
+//                System.out.println(lineOut);
+//                logRetornoInfo = lineOut + " <br>" + logRetornoInfo;
+//            }
+//            input.close();
+//            r = p.waitFor();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-        try {
-            ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(reportPath + "all" + "_testsmesll.csv");
-            resultsWriter.writeColumnName(br.ufba.jnose.core.testsmelldetector.Main.columnNames);
+//    public static List<String> columnNames;
+//
+//    private static void gerarDadosGeral() {
+//        List<String> columnValues;
+//        TestSmellDetector testSmellDetector = TestSmellDetector.createTestSmellDetector();
+//        columnNames = testSmellDetector.getTestSmellNames();
+//        columnNames.add(0, "App");
+//        columnNames.add(1, "TestFileName");
+//        columnNames.add(2, "ProductionFileName");
+//        columnNames.add("LOC");
+//        //jacoco
+//        if (WicketApplication.COBERTURA_ON) {
+//            columnNames.add("INSTRUCTION_MISSED");
+//            columnNames.add("INSTRUCTION_COVERED");
+//            columnNames.add("BRANCH_MISSED");
+//            columnNames.add("BRANCH_COVERED");
+//            columnNames.add("LINE_MISSED");
+//            columnNames.add("LINE_COVERED");
+//            columnNames.add("COMPLEXITY_MISSED");
+//            columnNames.add("COMPLEXITY_COVERED");
+//            columnNames.add("METHOD_MISSED");
+//            columnNames.add("METHOD_COVERED");
+//        }
+//    }
 
-            if (listaProjetos.size() != 0) {
-                for (Projeto projeto : listaProjetos) {
 
-                    File jacocoFile = new File(reportPath + projeto.getName() + "_testsmesll.csv");
-                    FileReader jacocoFileReader = new FileReader(jacocoFile);
-                    BufferedReader jacocoIn = new BufferedReader(jacocoFileReader);
 
-                    boolean pularLinha = false;
-                    String str;
-                    while ((str = jacocoIn.readLine()) != null) {
-                        if (pularLinha) {
-                            resultsWriter.writeLine(newArrayList(str.split(",")));
-                        } else {
-                            pularLinha = true;
-                        }
-                    }
-                    jacocoIn.close();
-                    jacocoFileReader.close();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
