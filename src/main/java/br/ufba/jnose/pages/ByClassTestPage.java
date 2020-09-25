@@ -3,12 +3,8 @@ package br.ufba.jnose.pages;
 import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.dto.TotalProcessado;
 import br.ufba.jnose.util.JNoseUtils;
-import br.ufba.jnose.core.cobertura.ReportGenerator;
 import br.ufba.jnose.dto.Projeto;
-import br.ufba.jnose.dto.TestClass;
 import br.ufba.jnose.pages.base.BasePage;
-import br.ufba.jnose.core.testsmelldetector.testsmell.TestSmellDetector;
-import br.ufba.jnose.util.ResultsWriter;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
 import com.googlecode.wicket.jquery.ui.widget.progressbar.ProgressBar;
 import org.apache.wicket.AttributeModifier;
@@ -24,24 +20,17 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
 
 import java.io.*;
-import java.net.URI;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-//import javax.servlet.http.Cookie;
 
-import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.time.Duration;
 
 import java.util.List;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.System.out;
 
 public class ByClassTestPage extends BasePage {
@@ -323,7 +312,7 @@ public class ByClassTestPage extends BasePage {
                         listaParaProcessar.add(projeto);
                     }
                 }
-                processarProjetos(listaParaProcessar, dataProcessamentoAtual);
+                JNoseUtils.processarProjetos(listaParaProcessar, dataProcessamentoAtual, totalProcessado, pastaPathReport, logRetorno);
             }
         };
         processarTodos.setEnabled(false);
@@ -336,70 +325,5 @@ public class ByClassTestPage extends BasePage {
         add(this.progressBar);
         add(form);
     }
-
-
-    private void processarProjetos(List<Projeto> lista, String folderTime) {
-
-        boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
-        if (!success) System.out.println("Created Folder...");
-
-        totalProcessado.setValor(0);
-
-        Integer totalLista = lista.size();
-        Integer valorSoma;
-        if (totalLista > 0) {
-            valorSoma = 100 / totalLista;
-        } else {
-            valorSoma = 0;
-        }
-
-        for (Projeto projeto : lista) {
-            new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        JNoseUtils.processarProjeto(projeto, valorSoma, folderTime, totalProcessado, pastaPathReport, logRetorno);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        projeto.bugs = projeto.bugs + "\n" + e.getMessage();
-                    }
-                }
-            }.start();
-        }
-
-    }
-
-
-//    private String processarProjeto(Projeto projeto, float valorProcProject, String folderTime) throws IOException {
-//        logRetorno.append(JNoseUtils.dateNow() + projeto.getName() + " - started <br>");
-//        Float valorSoma = valorProcProject / 4;
-//
-//        totalProcessado = 5;
-//        projeto.setProcentagem(totalProcessado);
-//
-//        if (WicketApplication.COBERTURA_ON) {
-//            JNoseUtils.processarCobertura(projeto, folderTime, pastaPathReport, logRetorno);
-//        }
-//
-//        projeto.setProcessado2(true);
-//        totalProcessado = totalProcessado + valorSoma.intValue();
-//        projeto.setProcentagem(25);
-//
-//        String csvFile = JNoseUtils.processarTestFileDetector(projeto.getPath(), folderTime,pastaPathReport, logRetorno);
-//        totalProcessado = totalProcessado + valorSoma.intValue();
-//        projeto.setProcentagem(50);
-//
-//        List<TestClass> listaTestClass = JNoseUtils.getFilesTest(projeto.getPath());
-//        String csvMapping = JNoseUtils.processarTestFileMapping(listaTestClass, csvFile, projeto.getPath(), folderTime, pastaPathReport, logRetorno);
-//        totalProcessado = totalProcessado + valorSoma.intValue();
-//        projeto.setProcentagem(75);
-//
-//        String csvTestSmells =  JNoseUtils.processarTestSmellDetector(csvMapping, projeto.getPath(), folderTime, pastaPathReport, logRetorno);
-//        totalProcessado = totalProcessado + valorSoma.intValue();
-//        projeto.setProcentagem(100);
-//
-//        projeto.setProcessado(true);
-//        return csvTestSmells;
-//    }
 
 }

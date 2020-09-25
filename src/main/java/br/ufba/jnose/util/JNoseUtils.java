@@ -438,5 +438,36 @@ public class JNoseUtils {
         return csvTestSmells;
     }
 
+    public static void processarProjetos(List<Projeto> lista, String folderTime, TotalProcessado totalProcessado, String pastaPathReport, StringBuffer logRetorno) {
+
+        boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
+        if (!success) System.out.println("Created Folder...");
+
+        totalProcessado.setValor(0);
+
+        Integer totalLista = lista.size();
+        Integer valorSoma;
+        if (totalLista > 0) {
+            valorSoma = 100 / totalLista;
+        } else {
+            valorSoma = 0;
+        }
+
+        for (Projeto projeto : lista) {
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        JNoseUtils.processarProjeto(projeto, valorSoma, folderTime, totalProcessado, pastaPathReport, logRetorno);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        projeto.bugs = projeto.bugs + "\n" + e.getMessage();
+                    }
+                }
+            }.start();
+        }
+
+    }
+
 }
 

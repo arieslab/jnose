@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class TotalProcessado implements Serializable {
     private static final long serialVersionUID = 1L;
-    
+
     private int valor;
 
     public TotalProcessado() {
