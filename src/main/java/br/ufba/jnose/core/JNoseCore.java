@@ -36,15 +36,6 @@ public class JNoseCore {
 
     private final static Logger LOGGER = Logger.getLogger(JNoseCore.class.getName());
 
-    private static String directoryPath = "/home/tassio/Desenvolvimento/peojetos7/commons-csv";
-
-    public static void main(String[] args) throws IOException {
-        System.out.println("JNoseUtils");
-        List<TestClass> list = getFilesTest(directoryPath);
-        System.out.println("qtd lista: " + list.size());
-        list.parallelStream().forEach(f -> System.out.println(f.toString()));
-    }
-
     public static String testfiledetector(String projectPath, String projectName, String reportPath) throws IOException {
 
         LOGGER.info("projectPath: " + projectPath + " - projectName: " + projectName + " - reportPath: " + reportPath);
