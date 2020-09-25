@@ -1,7 +1,7 @@
 package br.ufba.jnose.pages;
 
 import br.ufba.jnose.dto.Projeto;
-import br.ufba.jnose.dto.TestClass;
+import br.ufba.jnose.dto.TotalProcessado;
 import br.ufba.jnose.pages.base.BasePage;
 import br.ufba.jnose.util.JNoseUtils;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
@@ -24,21 +24,13 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.http.WebRequest;
-import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.time.Duration;
 
-//import javax.servlet.http.Cookie;
 import java.io.*;
-import java.net.URI;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static java.lang.System.out;
 
 public class ByTestSmellsPage extends BasePage {
     private static final long serialVersionUID = 1L;
@@ -51,7 +43,7 @@ public class ByTestSmellsPage extends BasePage {
     private List<Projeto> listaProjetos;
     private AjaxIndicatorAppender indicator = new AjaxIndicatorAppender();
     private ListView<Projeto> lvProjetos;
-    private Integer totalProcessado;
+    private TotalProcessado totalProcessado;
     private Map<Integer, Integer> totalProgressBar;
     private Boolean processando = false;
     private IndicatingAjaxLink processarTodos;
@@ -62,12 +54,7 @@ public class ByTestSmellsPage extends BasePage {
 
     public ByTestSmellsPage() {
 
-//        Cookie pastaPathCookie = ((WebRequest) getRequest()).getCookie("pastaPath");
-//        if (pastaPathCookie != null) {
-//            pastaPath = pastaPathCookie.getValue();
-//        } else {
-//            pastaPath = "";
-//        }
+        totalProcessado = new TotalProcessado();
 
         lbProjetosSize = new Label("lbProjetosSize", Model.of("0"));
         lbProjetosSize.setOutputMarkupPlaceholderTag(true);
@@ -76,14 +63,14 @@ public class ByTestSmellsPage extends BasePage {
 
         totalProgressBar = new HashMap<>();
 
-        totalProcessado = 0;
+        totalProcessado.setValor(0);
 
         AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
             int cont = 0;
 
             @Override
             protected void onTimer(AjaxRequestTarget target) {
-                progressBar.setModel(Model.of(totalProcessado));
+                progressBar.setModel(Model.of(totalProcessado.getValor()));
                 target.add(progressBar);
 
                 Boolean todosProjetosProcessados = true;
@@ -98,13 +85,6 @@ public class ByTestSmellsPage extends BasePage {
 
                 for (Projeto projeto : listaProjetosProcessar) {
 
-//                    WebMarkupContainer iconProcessado = projeto.iconProcessado;
-//                    iconProcessado.setVisible(projeto.getProcessado());
-//                    WebMarkupContainer iconNaoProcessado = projeto.iconNaoProcessado;
-//                    iconNaoProcessado.setVisible(!projeto.getProcessado());
-//                    target.add(iconProcessado);
-//                    target.add(iconNaoProcessado);
-
                     Label lbPorcentagem = projeto.lbPorcentagem;
                     lbPorcentagem.setDefaultModel(Model.of(projeto.getProcentagem()));
                     target.add(lbPorcentagem);
@@ -117,7 +97,7 @@ public class ByTestSmellsPage extends BasePage {
                 }
 
                 if (todosProjetosProcessados) {
-                    totalProcessado = (100 - totalProcessado) + totalProcessado;
+                    totalProcessado.setValor( (100 - totalProcessado.getValor()) + totalProcessado.getValor());
                     processando = false;
                 }
 
@@ -168,20 +148,6 @@ public class ByTestSmellsPage extends BasePage {
                 item.add(new Label("nomeProjeto", projeto.getName()));
                 item.add(new Label("projeto", projeto.getPath()));
 
-//                WebMarkupContainer iconProcessado = new WebMarkupContainer("iconProcessado");
-//                iconProcessado.setVisible(projeto.getProcessado());
-//                iconProcessado.setOutputMarkupId(true);
-//                iconProcessado.setOutputMarkupPlaceholderTag(true);
-//                item.add(iconProcessado);
-//                projeto.iconProcessado = iconProcessado;
-
-//                WebMarkupContainer iconNaoProcessado = new WebMarkupContainer("iconNaoProcessado");
-//                iconNaoProcessado.setVisible(!projeto.getProcessado());
-//                iconNaoProcessado.setOutputMarkupId(true);
-//                iconNaoProcessado.setOutputMarkupPlaceholderTag(true);
-//                item.add(iconNaoProcessado);
-//                projeto.iconNaoProcessado = iconNaoProcessado;
-
                 WebMarkupContainer progressProject = new WebMarkupContainer("progressProject");
                 progressProject.setOutputMarkupPlaceholderTag(true);
                 progressProject.setOutputMarkupId(true);//style="width: 25%"
@@ -215,19 +181,17 @@ public class ByTestSmellsPage extends BasePage {
         Button btEnviar = new Button("btEnviar") {
             @Override
             public void onSubmit() {
-                dataProcessamentoAtual = dateNowFolder();
-                totalProcessado = 0;
+                dataProcessamentoAtual = JNoseUtils.dateNowFolder();
+                totalProcessado.setValor(0);
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
 
                 File file = new File(pastaPath);
-                listaProjetos = listaProjetos(file.toURI());
+                listaProjetos = JNoseUtils.listaProjetos(file.toURI());
                 lvProjetos.setList(listaProjetos);
 
                 processarTodos.setEnabled(true);
                 lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
 
-//                Cookie pastaPathCookie = new Cookie("pastaPath", "\"" + pastaPath + "\"");
-//                ((WebResponse) getResponse()).addCookie(pastaPathCookie);
             }
         };
         form.add(btEnviar);
@@ -243,7 +207,7 @@ public class ByTestSmellsPage extends BasePage {
                         listaParaProcessar.add(projeto);
                     }
                 }
-                processarProjetos(listaParaProcessar, dataProcessamentoAtual);
+                newReport = JNoseUtils.processarProjetos(listaParaProcessar, dataProcessamentoAtual, pastaPathReport, totalProcessado, newReport);
             }
         };
         processarTodos.setEnabled(false);
@@ -258,70 +222,70 @@ public class ByTestSmellsPage extends BasePage {
     }
 
 
-    private void processarProjetos(List<Projeto> lista, String folderTime) {
-
-        boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
-        if (!success) System.out.println("Created Folder...");
-
-        totalProcessado = 0;
-
-        Integer totalLista = lista.size();
-        Integer valorSoma;
-        if (totalLista > 0) {
-            valorSoma = 100 / totalLista;
-        } else {
-            valorSoma = 0;
-        }
-
-        List<TestClass> listaTestClass = new ArrayList<>();
-
-        for (Projeto projeto : lista) {
-            try {
-                listaTestClass.addAll(processarProjeto(projeto, valorSoma, folderTime));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        try {
-            newReport = JNoseUtils.newReport(listaTestClass, pastaPathReport + File.separator + folderTime);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private List<TestClass> processarProjeto(Projeto projeto, float valorProcProject, String folderTime) throws IOException {
-        projeto.setProcentagem(25);
-        List<TestClass> listaTestClass = JNoseUtils.getFilesTest(projeto.getPath());
-        projeto.setProcentagem(100);
-        projeto.setProcessado(true);
-        return listaTestClass;
-    }
+//    private void processarProjetos(List<Projeto> lista, String folderTime) {
+//
+//        boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
+//        if (!success) System.out.println("Created Folder...");
+//
+//        totalProcessado = 0;
+//
+//        Integer totalLista = lista.size();
+//        Integer valorSoma;
+//        if (totalLista > 0) {
+//            valorSoma = 100 / totalLista;
+//        } else {
+//            valorSoma = 0;
+//        }
+//
+//        List<TestClass> listaTestClass = new ArrayList<>();
+//
+//        for (Projeto projeto : lista) {
+//            try {
+//                listaTestClass.addAll(JNoseUtils.processarProjeto(projeto, valorSoma, folderTime));
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        try {
+//            newReport = JNoseUtils.newReport(listaTestClass, pastaPathReport + File.separator + folderTime);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
-    private List<Projeto> listaProjetos(URI path) {
-        File[] directories = new File(path).listFiles(File::isDirectory);
-        List<Projeto> lista = new ArrayList<Projeto>();
+//    private List<TestClass> processarProjeto(Projeto projeto, float valorProcProject, String folderTime) throws IOException {
+//        projeto.setProcentagem(25);
+//        List<TestClass> listaTestClass = JNoseUtils.getFilesTest(projeto.getPath());
+//        projeto.setProcentagem(100);
+//        projeto.setProcessado(true);
+//        return listaTestClass;
+//    }
 
-        if (directories != null) {
-            for (File dir : directories) {
-                String pathPom = dir.getAbsolutePath() + File.separatorChar + "pom.xml";
 
-                if (new File(pathPom).exists()) {
-                    String pathProjeto = dir.getAbsolutePath().trim();
-                    String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-                    lista.add(new Projeto(nameProjeto, pathProjeto));
-                } else {
-                    String msg = "It is not a project MAVEN: " + dir.getAbsolutePath();
-                    out.println(msg);
-                }
-            }
-        }
-        return lista;
-    }
+//    private List<Projeto> listaProjetos(URI path) {
+//        File[] directories = new File(path).listFiles(File::isDirectory);
+//        List<Projeto> lista = new ArrayList<Projeto>();
+//
+//        if (directories != null) {
+//            for (File dir : directories) {
+//                String pathPom = dir.getAbsolutePath() + File.separatorChar + "pom.xml";
+//
+//                if (new File(pathPom).exists()) {
+//                    String pathProjeto = dir.getAbsolutePath().trim();
+//                    String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
+//                    lista.add(new Projeto(nameProjeto, pathProjeto));
+//                } else {
+//                    String msg = "It is not a project MAVEN: " + dir.getAbsolutePath();
+//                    out.println(msg);
+//                }
+//            }
+//        }
+//        return lista;
+//    }
 
-    private String dateNowFolder() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-    }
+//    private String dateNowFolder() {
+//        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+//    }
 }

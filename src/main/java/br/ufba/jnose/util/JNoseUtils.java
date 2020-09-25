@@ -372,6 +372,27 @@ public class JNoseUtils {
         return pathCSV;
     }
 
+    public static List<Projeto> listaProjetos(URI path) {
+        File[] directories = new File(path).listFiles(File::isDirectory);
+        List<Projeto> lista = new ArrayList<Projeto>();
+
+        if (directories != null) {
+            for (File dir : directories) {
+                String pathPom = dir.getAbsolutePath() + File.separatorChar + "pom.xml";
+
+                if (new File(pathPom).exists()) {
+                    String pathProjeto = dir.getAbsolutePath().trim();
+                    String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
+                    lista.add(new Projeto(nameProjeto, pathProjeto));
+                } else {
+                    String msg = "It is not a project MAVEN: " + dir.getAbsolutePath();
+                    out.println(msg);
+                }
+            }
+        }
+        return lista;
+    }
+
     public static List<Projeto> listaProjetos(URI path, StringBuffer logRetornoInfo) {
         java.io.File[] directories = new File(path).listFiles(java.io.File::isDirectory);
         List<Projeto> lista = new ArrayList<Projeto>();
@@ -404,6 +425,14 @@ public class JNoseUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static List<TestClass> processarProjeto(Projeto projeto, float valorProcProject, String folderTime) throws IOException {
+        projeto.setProcentagem(25);
+        List<TestClass> listaTestClass = JNoseUtils.getFilesTest(projeto.getPath());
+        projeto.setProcentagem(100);
+        projeto.setProcessado(true);
+        return listaTestClass;
     }
 
     public static String processarProjeto(Projeto projeto, float valorProcProject, String folderTime, TotalProcessado totalProcessado, String pastaPathReport, StringBuffer logRetorno) throws IOException {
@@ -467,6 +496,39 @@ public class JNoseUtils {
             }.start();
         }
 
+    }
+
+    public static String processarProjetos(List<Projeto> lista, String folderTime,String pastaPathReport, TotalProcessado totalProcessado, String newReport) {
+
+        boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
+        if (!success) System.out.println("Created Folder...");
+
+        totalProcessado.setValor(0);
+
+        Integer totalLista = lista.size();
+        Integer valorSoma;
+        if (totalLista > 0) {
+            valorSoma = 100 / totalLista;
+        } else {
+            valorSoma = 0;
+        }
+
+        List<TestClass> listaTestClass = new ArrayList<>();
+
+        for (Projeto projeto : lista) {
+            try {
+                listaTestClass.addAll(JNoseUtils.processarProjeto(projeto, valorSoma, folderTime));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            newReport = JNoseUtils.newReport(listaTestClass, pastaPathReport + File.separator + folderTime);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return newReport;
     }
 
 }
