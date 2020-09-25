@@ -15,12 +15,16 @@ public class CSVCore {
         reportPath = pathAppToWebapp + File.separatorChar + "reports" + File.separatorChar;
     }
 
+    public static String criarByTestSmellsCSV(List<List<String>> todasLinhas, String pastaDataHora, String nomeProjeto){
+        return criarCSV(todasLinhas,pastaDataHora,nomeProjeto + "_report_by_testsmells");
+    }
+
     public static String criarTestfiledetectionCSV(List<List<String>> todasLinhas, String pastaDataHora, String nomeProjeto){
-        return criarCSV(todasLinhas,pastaDataHora,nomeProjeto + "_testfiledetection" + ".csv");
+        return criarCSV(todasLinhas,pastaDataHora,nomeProjeto + "_testfiledetection");
     }
 
     public static String criarTestmappingdetectorCSV(List<List<String>> todasLinhas, String pastaDataHora, String nomeProjeto){
-        return criarCSV(todasLinhas,pastaDataHora,nomeProjeto + "_testmappingdetector" + ".csv");
+        return criarCSV(todasLinhas,pastaDataHora,nomeProjeto + "_testmappingdetector");
     }
 
     public static String criarCSV(List<List<String>> todasLinhas,String pastaDataHora, String nomeArquivo){

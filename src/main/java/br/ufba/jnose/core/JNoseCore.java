@@ -96,12 +96,12 @@ public class JNoseCore {
         return CSVCore.criarTestmappingdetectorCSV(todasLinhas,pastaDataHora,projectName);
     }
 
-    public static String newReport(List<TestClass> listTestClass, String reportPath) throws IOException {
+    public static String newReport(List<TestClass> listTestClass, String pastaDataHora){
         System.out.println("Saving results. Total lines:" + listTestClass.size());
-        String outFile = reportPath + File.separator + "all" + "_report_by_testsmells" + ".csv";
-        ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(outFile);
-        List<String> columnValues = null;
 
+        List<List<String>> todasLinhas = new ArrayList<>();
+
+        List<String> columnValues = null;
         columnValues = new ArrayList<>();
         columnValues.add(0, "projectName");
         columnValues.add(1, "name");
@@ -115,7 +115,8 @@ public class JNoseCore {
         columnValues.add(9, "testSmellLine");
         columnValues.add(10, "testSmellLineBegin");
         columnValues.add(11, "testSmellLineEnd");
-        resultsWriter.writeLine(columnValues);
+
+        todasLinhas.add(columnValues);
 
         for (TestClass testClass : listTestClass) {
             for (TestSmell testSmell : testClass.listTestSmell) {
@@ -132,11 +133,11 @@ public class JNoseCore {
                 columnValues.add(9, testSmell.lineNumber);
                 columnValues.add(10, testSmell.begin);
                 columnValues.add(11, testSmell.end);
-                resultsWriter.writeLine(columnValues);
+                todasLinhas.add(columnValues);
             }
         }
-        System.out.println("Completed!");
-        return resultsWriter.getOutputFile();
+
+        return CSVCore.criarByTestSmellsCSV(todasLinhas,pastaDataHora,"all");
     }
 
 
@@ -336,7 +337,7 @@ public class JNoseCore {
         return csvTestSmells;
     }
 
-    public static String processarTestFileMapping(List<TestClass> listTestClass, String pathFileCSV, String pathProjeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
+    public static String processarTestFileMapping(List<TestClass> listTestClass, String pathProjeto, String folderTime, StringBuffer logRetorno) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
         logRetorno.append(dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>");
         return JNoseCore.testfilemapping(listTestClass, folderTime, nameProjeto);
@@ -437,7 +438,7 @@ public class JNoseCore {
         projeto.setProcentagem(50);
 
         List<TestClass> listaTestClass = JNoseCore.getFilesTest(projeto.getPath());
-        String csvMapping = JNoseCore.processarTestFileMapping(listaTestClass, csvFile, projeto.getPath(), folderTime, pastaPathReport, logRetorno);
+        String csvMapping = JNoseCore.processarTestFileMapping(listaTestClass, csvFile, folderTime, logRetorno);
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
         projeto.setProcentagem(75);
 
@@ -505,12 +506,7 @@ public class JNoseCore {
             }
         }
 
-        try {
-            newReport = JNoseCore.newReport(listaTestClass, pastaPathReport + File.separator + folderTime);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return newReport;
+        return JNoseCore.newReport(listaTestClass, folderTime);
     }
 
 
