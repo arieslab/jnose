@@ -3,9 +3,14 @@ package br.ufba.jnose.core;
 import org.apache.wicket.protocol.http.WebApplication;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 public class CSVCore {
+
+    private static String outputFile;
+    private static FileWriter writer;
 
     private static String pathAppToWebapp;
     private static String reportPath;
@@ -49,13 +54,47 @@ public class CSVCore {
 
     private static String criarCSV(List<List<String>> todasLinhas,String pastaDataHora, String nomeArquivo){
         String outFile = reportPath + pastaDataHora + File.separatorChar + nomeArquivo + ".csv";
-        ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(outFile);
+
+        loadResultsWrite(outFile);
 
         for (List<String> linha : todasLinhas){
-            resultsWriter.writeLine(linha);
+            writeLine(linha);
         }
 
-        return resultsWriter.getOutputFile();
+        return getOutputFile();
+    }
+
+    private static void loadResultsWrite(String outputFile){
+        CSVCore.outputFile = outputFile;
+        try {
+            writer = new FileWriter(outputFile,false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static String getOutputFile() {
+        return outputFile;
+    }
+
+    private static void writeLine(List<String> dataValues) {
+        try {
+            writer = new FileWriter(outputFile, true);
+
+            for (int i = 0; i < dataValues.size(); i++) {
+                writer.append(String.valueOf(dataValues.get(i)));
+
+                if (i != dataValues.size() - 1)
+                    writer.append(",");
+                else
+                    writer.append(System.lineSeparator());
+
+            }
+            writer.flush();
+            writer.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 }
