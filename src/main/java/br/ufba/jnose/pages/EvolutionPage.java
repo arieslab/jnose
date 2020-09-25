@@ -33,7 +33,7 @@ public class EvolutionPage extends BasePage {
     private TextField tfPastaPath;
 
     private Projeto projetoSelecionado;
-    private StringBuffer logRetornoInfo;
+    private StringBuffer logRetorno;
     private String projetoPath;
     private String pathCSV;
     private String selected;
@@ -42,7 +42,7 @@ public class EvolutionPage extends BasePage {
     private Integer cont;
 
     public EvolutionPage() {
-        logRetornoInfo = new StringBuffer();
+        logRetorno = new StringBuffer();
         projetoPath = "";
         pathCSV = "";
         selected = "Commits";
@@ -69,7 +69,7 @@ public class EvolutionPage extends BasePage {
         AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
             @Override
             protected void onTimer(AjaxRequestTarget target) {
-                taLogInfo.setDefaultModel(Model.of(logRetornoInfo));
+                taLogInfo.setDefaultModel(Model.of(logRetorno));
                 target.add(taLogInfo);
                 commitsProcessados.setDefaultModelObject(cont);
                 target.add(commitsProcessados);
@@ -181,7 +181,7 @@ public class EvolutionPage extends BasePage {
 
             int total = 0;
             //criando a lista de testsmells
-            List<String[]> listaTestSmells = JNoseCore.processarTestSmells(projetoPath, commit, vizualizarCabecalho);
+            List<String[]> listaTestSmells = JNoseCore.processarTestSmells(projetoPath, commit, vizualizarCabecalho,logRetorno);
             for (String[] linhaArray : listaTestSmells) {
                 List<String> list = Arrays.asList(linhaArray);
                     for (int i = 10; i <= (list.size() - 1); i++) {

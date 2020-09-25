@@ -36,9 +36,9 @@ public class JNoseCore {
 
     private final static Logger LOGGER = Logger.getLogger(JNoseCore.class.getName());
 
-    public static String testfiledetector(String projectPath,String pastaDataHora, String projectName) throws IOException {
+    public static String testfiledetector(String projectPath,String pastaDataHora, String projectName, StringBuffer logRetorno) throws IOException {
 
-        List<TestClass> files = JNoseCore.getFilesTest(projectPath);
+        List<TestClass> files = JNoseCore.getFilesTest(projectPath, logRetorno);
 
         List<List<String>> todasLinhas = new ArrayList<>();
         for (TestClass testClass : files) {
@@ -141,8 +141,11 @@ public class JNoseCore {
     }
 
 
-    public static List<TestClass> getFilesTest(String directoryPath) throws IOException {
+    public static List<TestClass> getFilesTest(String directoryPath, StringBuffer logRetorno) throws IOException {
         String projectName = directoryPath.substring(directoryPath.lastIndexOf(File.separatorChar) + 1, directoryPath.length());
+
+        logRetorno.append(dateNow() + projectName + " - <font style='color:red'>TestFileDetector</font> <br>");
+
         List<TestClass> files = new ArrayList<>();
         Path startDir = Paths.get(directoryPath);
         Files.walk(startDir)
@@ -346,12 +349,13 @@ public class JNoseCore {
         return JNoseCore.testfilemapping(listTestClass, folderTime, nameProjeto);
     }
 
+    //Só existe para criar o arquivo com a lista de arquivos de teste
     public static String processarTestFileDetector(String pathProjeto, String folderTime, StringBuffer logRetorno) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
         logRetorno.append(dateNow() + nameProjeto + " - <font style='color:red'>TestFileDetector</font> <br>");
         String pathCSV = "";
         try {
-            pathCSV = JNoseCore.testfiledetector(pathProjeto, folderTime, nameProjeto);
+            pathCSV = JNoseCore.testfiledetector(pathProjeto, folderTime, nameProjeto, logRetorno);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -413,9 +417,9 @@ public class JNoseCore {
         }
     }
 
-    public static List<TestClass> processarProjeto(Projeto projeto, float valorProcProject, String folderTime) throws IOException {
+    public static List<TestClass> processarProjeto(Projeto projeto, float valorProcProject, String folderTime, StringBuffer logRetorno) throws IOException {
         projeto.setProcentagem(25);
-        List<TestClass> listaTestClass = JNoseCore.getFilesTest(projeto.getPath());
+        List<TestClass> listaTestClass = JNoseCore.getFilesTest(projeto.getPath(), logRetorno);
         projeto.setProcentagem(100);
         projeto.setProcessado(true);
         return listaTestClass;
@@ -437,10 +441,12 @@ public class JNoseCore {
         projeto.setProcentagem(25);
 
         String csvFile = JNoseCore.processarTestFileDetector(projeto.getPath(), folderTime, logRetorno);
+
+        List<TestClass> listaTestClass = JNoseCore.getFilesTest(projeto.getPath(),logRetorno);
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
         projeto.setProcentagem(50);
 
-        List<TestClass> listaTestClass = JNoseCore.getFilesTest(projeto.getPath());
+
         String csvMapping = JNoseCore.processarTestFileMapping(listaTestClass, projeto.getPath(), folderTime, logRetorno);
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
         projeto.setProcentagem(75);
@@ -484,7 +490,7 @@ public class JNoseCore {
 
     }
 
-    public static String processarProjetos(List<Projeto> lista, String folderTime,String pastaPathReport, TotalProcessado totalProcessado, String newReport) {
+    public static String processarProjetos(List<Projeto> lista, String folderTime,String pastaPathReport, TotalProcessado totalProcessado, String newReport, StringBuffer logRetorno) {
 
         boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
         if (!success) System.out.println("Created Folder...");
@@ -503,7 +509,7 @@ public class JNoseCore {
 
         for (Projeto projeto : lista) {
             try {
-                listaTestClass.addAll(JNoseCore.processarProjeto(projeto, valorSoma, folderTime));
+                listaTestClass.addAll(JNoseCore.processarProjeto(projeto, valorSoma, folderTime, logRetorno));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -513,10 +519,10 @@ public class JNoseCore {
     }
 
 
-    public static List<String[]> processarTestSmells(String pathProjeto, Commit commit, Boolean cabecalho) {
+    public static List<String[]> processarTestSmells(String pathProjeto, Commit commit, Boolean cabecalho, StringBuffer logRetorno) {
         List<String[]> listTestSmells = null;
         try {
-            List<TestClass> listTestFile = JNoseCore.getFilesTest(pathProjeto);
+            List<TestClass> listTestFile = JNoseCore.getFilesTest(pathProjeto,logRetorno);
 
             if(pathProjeto.lastIndexOf(File.separator) + 1 == pathProjeto.length()){
                 pathProjeto = pathProjeto.substring(0,pathProjeto.lastIndexOf(File.separator)-1);
