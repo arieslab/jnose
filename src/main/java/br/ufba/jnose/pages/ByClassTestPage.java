@@ -53,7 +53,7 @@ public class ByClassTestPage extends BasePage {
     private IndicatingAjaxLink processarTodos;
     private Label lbProjetosSize;
     private StringBuffer logRetorno = new StringBuffer();
-    static public String logRetornoInfo = "";
+    static public StringBuffer logRetornoInfo = new StringBuffer();
     private String dataProcessamentoAtual;
     private boolean mesclado = false;
     private ExternalLink linkCSVFinal;
@@ -65,13 +65,12 @@ public class ByClassTestPage extends BasePage {
 
         totalProcessado = new TotalProcessado();
 
-        logRetornoInfo = "pastaPath: " + pastaPath + " <br>" + logRetornoInfo;
+        logRetornoInfo.append("pastaPath: " + pastaPath + " <br>");
 
         criarCheckBoxCobertura();
 
         lbProjetosSize = new Label("lbProjetosSize", Model.of("0"));
-        lbProjetosSize.setOutputMarkupPlaceholderTag(true);
-        lbProjetosSize.setOutputMarkupId(true);
+        lbProjetosSize.setOutputMarkupPlaceholderTag(true).setOutputMarkupId(true);
         add(lbProjetosSize);
 
         totalProgressBar = new HashMap<>();
@@ -79,30 +78,23 @@ public class ByClassTestPage extends BasePage {
         totalProcessado.setValor(0);
 
         taLog = new Label("taLog");
-        taLog.setEscapeModelStrings(false);
-        taLog.setOutputMarkupId(true);
-        taLog.setOutputMarkupPlaceholderTag(true);
+        taLog.setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
         add(taLog);
 
         taLogInfo = new Label("taLogInfo");
-        taLogInfo.setEscapeModelStrings(false);
-        taLogInfo.setOutputMarkupId(true);
-        taLogInfo.setOutputMarkupPlaceholderTag(true);
+        taLogInfo.setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
         add(taLogInfo);
 
         criarTimer();
 
         loadImg = new WebMarkupContainer("loadImg");
-        loadImg.setOutputMarkupId(true);
-        loadImg.setVisible(false);
-        loadImg.setOutputMarkupPlaceholderTag(true);
+        loadImg.setOutputMarkupId(true).setVisible(false).setOutputMarkupPlaceholderTag(true);
         add(loadImg);
 
         criarListaProjetos();
 
         linkCSVFinal = new ExternalLink("linkCSVFinal", File.separatorChar + "reports" + File.separatorChar + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv");
-        linkCSVFinal.setOutputMarkupId(true);
-        linkCSVFinal.setOutputMarkupPlaceholderTag(true);
+        linkCSVFinal.setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
         add(linkCSVFinal);
 
         FeedbackPanel feedback = new JQueryFeedbackPanel("feedback");
@@ -144,7 +136,7 @@ public class ByClassTestPage extends BasePage {
             protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
                 WicketApplication.COBERTURA_ON = processarCobertura;
                 out.println("COVERAGE_ON: " + processarCobertura);
-                logRetornoInfo = "COVERAGE_ON: " + processarCobertura + " <br>" + logRetornoInfo;
+                logRetornoInfo.append("COVERAGE_ON: " + processarCobertura + " <br>");
             }
         };
         add(acbCobertura);
@@ -164,7 +156,7 @@ public class ByClassTestPage extends BasePage {
                 mesclado = false;
                 dataProcessamentoAtual = JNoseUtils.dateNowFolder();
                 logRetorno = new StringBuffer();
-                logRetornoInfo = "";
+                logRetornoInfo = new StringBuffer();
                 totalProcessado.setValor(0);
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
 
