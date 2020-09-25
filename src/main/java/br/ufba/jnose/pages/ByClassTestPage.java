@@ -61,19 +61,13 @@ public class ByClassTestPage extends BasePage {
 
     public ByClassTestPage() {
 
+        processarCobertura = false;
+
         totalProcessado = new TotalProcessado();
 
-        logRetornoInfo = "pastaPathCookie: " + pastaPath + " <br>" + logRetornoInfo;
+        logRetornoInfo = "pastaPath: " + pastaPath + " <br>" + logRetornoInfo;
 
-        AjaxCheckBox acbCobertura = new AjaxCheckBox("acbCobertura", new PropertyModel(this, "processarCobertura")) {
-            @Override
-            protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
-                WicketApplication.COBERTURA_ON = processarCobertura;
-                out.println("COVERAGE_ON: " + processarCobertura);
-                logRetornoInfo = "COVERAGE_ON: " + processarCobertura + " <br>" + logRetornoInfo;
-            }
-        };
-        add(acbCobertura);
+        criarCheckBoxCobertura();
 
         lbProjetosSize = new Label("lbProjetosSize", Model.of("0"));
         lbProjetosSize.setOutputMarkupPlaceholderTag(true);
@@ -96,85 +90,7 @@ public class ByClassTestPage extends BasePage {
         taLogInfo.setOutputMarkupPlaceholderTag(true);
         add(taLogInfo);
 
-        AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
-            int cont = 0;
-
-            @Override
-            protected void onTimer(AjaxRequestTarget target) {
-                progressBar.setModel(Model.of(totalProcessado.getValor()));
-                target.add(progressBar);
-
-                taLog.setDefaultModel(Model.of(logRetorno));
-                target.add(taLog);
-
-                taLogInfo.setDefaultModel(Model.of(logRetornoInfo));
-                target.add(taLogInfo);
-
-                Boolean todosProjetosProcessados = true;
-
-                List<Projeto> listaProjetosProcessar = new ArrayList<>();
-
-                for (Projeto projeto : listaProjetos) {
-                    if (projeto.getParaProcessar()) {
-                        listaProjetosProcessar.add(projeto);
-                    }
-                }
-
-                for (Projeto projeto : listaProjetosProcessar) {
-
-                    WebMarkupContainer iconProcessado = projeto.iconProcessado;
-                    iconProcessado.setVisible(projeto.getProcessado());
-                    WebMarkupContainer iconNaoProcessado = projeto.iconNaoProcessado;
-                    iconNaoProcessado.setVisible(!projeto.getProcessado());
-                    target.add(iconProcessado);
-                    target.add(iconNaoProcessado);
-
-                    Label lbPorcentagem = projeto.lbPorcentagem;
-                    lbPorcentagem.setDefaultModel(Model.of(projeto.getProcentagem()));
-                    target.add(lbPorcentagem);
-
-                    WebMarkupContainer progressProject = projeto.progressProject;
-                    progressProject.add(new AttributeModifier("style", "width: " + projeto.getProcentagem() + "%"));
-                    target.add(progressProject);
-
-                    todosProjetosProcessados = todosProjetosProcessados && projeto.getProcessado();
-                }
-
-                if (todosProjetosProcessados) {
-                    totalProcessado.setValor((100 - totalProcessado.getValor()) + totalProcessado.getValor());
-                    processando = false;
-                }
-
-                boolean processado = true;
-                for (Projeto p : listaProjetosProcessar) {
-                    processado = processado && p.getProcessado();
-                }
-
-                if (processado && mesclado == false && !listaProjetosProcessar.isEmpty()) {
-                    JNoseUtils.mesclarGeral(listaProjetosProcessar, pastaPathReport + dataProcessamentoAtual + File.separatorChar, logRetorno);
-                    mesclado = true;
-                }
-
-                if (processando) {
-                    if (!loadImg.isVisible()) {
-                        loadImg.setVisible(true);
-                        target.add(loadImg);
-                    }
-                } else {
-                    if (loadImg.isVisible()) {
-                        loadImg.setVisible(false);
-                        target.add(loadImg);
-                    }
-                }
-
-                if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
-                    linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv"));
-                    target.add(linkCSVFinal);
-                }
-
-            }
-        };
-        add(timer);
+        criarTimer();
 
         loadImg = new WebMarkupContainer("loadImg");
         loadImg.setOutputMarkupId(true);
@@ -182,9 +98,92 @@ public class ByClassTestPage extends BasePage {
         loadImg.setOutputMarkupPlaceholderTag(true);
         add(loadImg);
 
-        listaProjetos = new ArrayList<>();
+        criarListaProjetos();
 
+        linkCSVFinal = new ExternalLink("linkCSVFinal", File.separatorChar + "reports" + File.separatorChar + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv");
+        linkCSVFinal.setOutputMarkupId(true);
+        linkCSVFinal.setOutputMarkupPlaceholderTag(true);
+        add(linkCSVFinal);
+
+        FeedbackPanel feedback = new JQueryFeedbackPanel("feedback");
+        add(feedback.setOutputMarkupId(true));
+
+        criarForm();
+
+        criarBotaoProcessarTodos();
+
+        lbPastaSelecionada = new Label("lbPastaSelecionada", pastaPath);
+        add(lbPastaSelecionada);
+
+        progressBar = new ProgressBar("progress", Model.of(0));
+        add(this.progressBar);
+    }
+
+    private void criarBotaoProcessarTodos(){
+        processarTodos = new IndicatingAjaxLink<String>("processarTodos") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
+                processando = true;
+                List<Projeto> listaParaProcessar = new ArrayList<>();
+                for (Projeto projeto : listaProjetos) {
+                    if (projeto.getParaProcessar()) {
+                        listaParaProcessar.add(projeto);
+                    }
+                }
+                JNoseUtils.processarProjetos(listaParaProcessar, dataProcessamentoAtual, totalProcessado, pastaPathReport, logRetorno);
+            }
+        };
+        processarTodos.setEnabled(false);
+        add(processarTodos);
+    }
+
+    private void criarCheckBoxCobertura(){
+        AjaxCheckBox acbCobertura = new AjaxCheckBox("acbCobertura", new PropertyModel(this, "processarCobertura")) {
+            @Override
+            protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
+                WicketApplication.COBERTURA_ON = processarCobertura;
+                out.println("COVERAGE_ON: " + processarCobertura);
+                logRetornoInfo = "COVERAGE_ON: " + processarCobertura + " <br>" + logRetornoInfo;
+            }
+        };
+        add(acbCobertura);
+    }
+
+
+    private void criarForm(){
         Form form = new Form<>("form");
+
+        TextField tfPastaPath = new TextField("tfPastaPath", new PropertyModel(this, "pastaPath"));
+        tfPastaPath.setRequired(true);
+        form.add(tfPastaPath);
+
+        Button btEnviar = new Button("btEnviar") {
+            @Override
+            public void onSubmit() {
+                mesclado = false;
+                dataProcessamentoAtual = JNoseUtils.dateNowFolder();
+                logRetorno = new StringBuffer();
+                logRetornoInfo = "";
+                totalProcessado.setValor(0);
+                lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
+
+                File file = new File(pastaPath);
+                listaProjetos = JNoseUtils.listaProjetos(file.toURI(),logRetorno);
+                lvProjetos.setList(listaProjetos);
+
+                processarTodos.setEnabled(true);
+                lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
+
+            }
+        };
+        form.add(btEnviar);
+        add(form);
+    }
+
+
+    private void criarListaProjetos(){
+        listaProjetos = new ArrayList<>();
 
         lvProjetos = new ListView<Projeto>("lvProjetos", listaProjetos) {
             @Override
@@ -267,63 +266,88 @@ public class ByClassTestPage extends BasePage {
         lvProjetos.setOutputMarkupId(true);
         lvProjetos.setOutputMarkupPlaceholderTag(true);
         add(lvProjetos);
+    }
 
-        linkCSVFinal = new ExternalLink("linkCSVFinal", File.separatorChar + "reports" + File.separatorChar + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv");
-        linkCSVFinal.setOutputMarkupId(true);
-        linkCSVFinal.setOutputMarkupPlaceholderTag(true);
-        add(linkCSVFinal);
+    private void criarTimer(){
+        AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
+            int cont = 0;
 
-        FeedbackPanel feedback = new JQueryFeedbackPanel("feedback");
-        add(feedback.setOutputMarkupId(true));
-
-        TextField tfPastaPath = new TextField("tfPastaPath", new PropertyModel(this, "pastaPath"));
-        tfPastaPath.setRequired(true);
-        form.add(tfPastaPath);
-
-        Button btEnviar = new Button("btEnviar") {
             @Override
-            public void onSubmit() {
-                mesclado = false;
-                dataProcessamentoAtual = JNoseUtils.dateNowFolder();
-                logRetorno = new StringBuffer();
-                logRetornoInfo = "";
-                totalProcessado.setValor(0);
-                lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
+            protected void onTimer(AjaxRequestTarget target) {
+                progressBar.setModel(Model.of(totalProcessado.getValor()));
+                target.add(progressBar);
 
-                File file = new File(pastaPath);
-                listaProjetos = JNoseUtils.listaProjetos(file.toURI(),logRetorno);
-                lvProjetos.setList(listaProjetos);
+                taLog.setDefaultModel(Model.of(logRetorno));
+                target.add(taLog);
 
-                processarTodos.setEnabled(true);
-                lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
+                taLogInfo.setDefaultModel(Model.of(logRetornoInfo));
+                target.add(taLogInfo);
 
-            }
-        };
-        form.add(btEnviar);
+                Boolean todosProjetosProcessados = true;
 
-        processarTodos = new IndicatingAjaxLink<String>("processarTodos") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
-                processando = true;
-                List<Projeto> listaParaProcessar = new ArrayList<>();
+                List<Projeto> listaProjetosProcessar = new ArrayList<>();
+
                 for (Projeto projeto : listaProjetos) {
                     if (projeto.getParaProcessar()) {
-                        listaParaProcessar.add(projeto);
+                        listaProjetosProcessar.add(projeto);
                     }
                 }
-                JNoseUtils.processarProjetos(listaParaProcessar, dataProcessamentoAtual, totalProcessado, pastaPathReport, logRetorno);
+
+                for (Projeto projeto : listaProjetosProcessar) {
+
+                    WebMarkupContainer iconProcessado = projeto.iconProcessado;
+                    iconProcessado.setVisible(projeto.getProcessado());
+                    WebMarkupContainer iconNaoProcessado = projeto.iconNaoProcessado;
+                    iconNaoProcessado.setVisible(!projeto.getProcessado());
+                    target.add(iconProcessado);
+                    target.add(iconNaoProcessado);
+
+                    Label lbPorcentagem = projeto.lbPorcentagem;
+                    lbPorcentagem.setDefaultModel(Model.of(projeto.getProcentagem()));
+                    target.add(lbPorcentagem);
+
+                    WebMarkupContainer progressProject = projeto.progressProject;
+                    progressProject.add(new AttributeModifier("style", "width: " + projeto.getProcentagem() + "%"));
+                    target.add(progressProject);
+
+                    todosProjetosProcessados = todosProjetosProcessados && projeto.getProcessado();
+                }
+
+                if (todosProjetosProcessados) {
+                    totalProcessado.setValor((100 - totalProcessado.getValor()) + totalProcessado.getValor());
+                    processando = false;
+                }
+
+                boolean processado = true;
+                for (Projeto p : listaProjetosProcessar) {
+                    processado = processado && p.getProcessado();
+                }
+
+                if (processado && mesclado == false && !listaProjetosProcessar.isEmpty()) {
+                    JNoseUtils.mesclarGeral(listaProjetosProcessar, pastaPathReport + dataProcessamentoAtual + File.separatorChar, logRetorno);
+                    mesclado = true;
+                }
+
+                if (processando) {
+                    if (!loadImg.isVisible()) {
+                        loadImg.setVisible(true);
+                        target.add(loadImg);
+                    }
+                } else {
+                    if (loadImg.isVisible()) {
+                        loadImg.setVisible(false);
+                        target.add(loadImg);
+                    }
+                }
+
+                if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
+                    linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv"));
+                    target.add(linkCSVFinal);
+                }
+
             }
         };
-        processarTodos.setEnabled(false);
-        add(processarTodos);
-
-        lbPastaSelecionada = new Label("lbPastaSelecionada", pastaPath);
-        add(lbPastaSelecionada);
-
-        progressBar = new ProgressBar("progress", Model.of(0));
-        add(this.progressBar);
-        add(form);
+        add(timer);
     }
 
 }
