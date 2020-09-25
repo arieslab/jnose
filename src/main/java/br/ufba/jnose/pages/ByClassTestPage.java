@@ -62,20 +62,16 @@ public class ByClassTestPage extends BasePage {
     public ByClassTestPage() {
 
         processarCobertura = false;
-
         totalProcessado = new TotalProcessado();
-
         logRetornoInfo.append("pastaPath: " + pastaPath + " <br>");
+        totalProgressBar = new HashMap<>();
+        totalProcessado.setValor(0);
 
         criarCheckBoxCobertura();
 
         lbProjetosSize = new Label("lbProjetosSize", Model.of("0"));
         lbProjetosSize.setOutputMarkupPlaceholderTag(true).setOutputMarkupId(true);
         add(lbProjetosSize);
-
-        totalProgressBar = new HashMap<>();
-
-        totalProcessado.setValor(0);
 
         taLog = new Label("taLog");
         taLog.setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
@@ -289,9 +285,10 @@ public class ByClassTestPage extends BasePage {
 
                     WebMarkupContainer iconProcessado = projeto.iconProcessado;
                     iconProcessado.setVisible(projeto.getProcessado());
+                    target.add(iconProcessado);
+
                     WebMarkupContainer iconNaoProcessado = projeto.iconNaoProcessado;
                     iconNaoProcessado.setVisible(!projeto.getProcessado());
-                    target.add(iconProcessado);
                     target.add(iconNaoProcessado);
 
                     Label lbPorcentagem = projeto.lbPorcentagem;
@@ -320,17 +317,7 @@ public class ByClassTestPage extends BasePage {
                     mesclado = true;
                 }
 
-                if (processando) {
-                    if (!loadImg.isVisible()) {
-                        loadImg.setVisible(true);
-                        target.add(loadImg);
-                    }
-                } else {
-                    if (loadImg.isVisible()) {
-                        loadImg.setVisible(false);
-                        target.add(loadImg);
-                    }
-                }
+                if (!loadImg.isVisible()) target.add(loadImg.setVisible(processando));
 
                 if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
                     linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv"));
