@@ -625,7 +625,5 @@ public class JNoseCore {
         }
     }
 
-
-
 }
 
