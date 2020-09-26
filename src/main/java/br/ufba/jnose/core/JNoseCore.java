@@ -51,7 +51,7 @@ public class JNoseCore {
         return CSVCore.criarTestfiledetectionCSV(todasLinhas,pastaDataHora,projectName);
     }
 
-    public static List<String[]> testfilemapping(List<TestClass> listTestClass, Commit commit, String projectPath, String projectName) throws IOException {
+    public static List<String[]> testfilemapping(List<TestClass> listTestClass, Commit commit, String projectName) throws IOException {
         System.out.println("Saving results. Total lines:" + listTestClass.size());
 
         List<String[]> listRetorno = new ArrayList<>();
@@ -488,7 +488,7 @@ public class JNoseCore {
 
     }
 
-    public static String processarProjetos(List<Projeto> lista, String folderTime,String pastaPathReport, TotalProcessado totalProcessado, String newReport, StringBuffer logRetorno) {
+    public static String processarProjetos(List<Projeto> lista, String folderTime,String pastaPathReport, TotalProcessado totalProcessado, StringBuffer logRetorno) {
 
         boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
         if (!success) System.out.println("Created Folder...");
@@ -527,7 +527,7 @@ public class JNoseCore {
             }
 
             String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separator) + 1, pathProjeto.length());
-            List<String[]> listaResultado = JNoseCore.testfilemapping(listTestFile, commit, pathProjeto, nameProjeto);
+            List<String[]> listaResultado = JNoseCore.testfilemapping(listTestFile, commit, nameProjeto);
             listTestSmells = br.ufba.jnose.core.testsmelldetector.Main.start(listaResultado, cabecalho);
         } catch (Exception e) {
             e.printStackTrace();

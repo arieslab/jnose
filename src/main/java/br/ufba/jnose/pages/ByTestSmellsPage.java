@@ -50,14 +50,12 @@ public class ByTestSmellsPage extends BasePage {
     private Label lbProjetosSize;
     private String dataProcessamentoAtual;
     private ExternalLink linkCSVFinal;
-    private String newReport;
     private StringBuffer logRetorno;
 
     public ByTestSmellsPage() {
 
         //carregar variáveis
         logRetorno = new StringBuffer();
-        newReport = "";
         processando = false;
         indicator = new AjaxIndicatorAppender();
         pastaPath = "";
@@ -105,7 +103,7 @@ public class ByTestSmellsPage extends BasePage {
                         listaParaProcessar.add(projeto);
                     }
                 }
-                newReport = JNoseCore.processarProjetos(listaParaProcessar, dataProcessamentoAtual, pastaPathReport, totalProcessado, newReport, logRetorno);
+                JNoseCore.processarProjetos(listaParaProcessar, dataProcessamentoAtual, pastaPathReport, totalProcessado, logRetorno);
             }
         };
         processarTodos.setEnabled(false);
