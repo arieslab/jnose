@@ -16,6 +16,7 @@ import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -55,6 +56,7 @@ public class ByClassTestPage extends BasePage {
     private boolean mesclado;
     private ExternalLink linkCSVFinal;
     private boolean processarCobertura;
+    private List<List<String>> listaResultado;
 
     public ByClassTestPage() {
 
@@ -111,6 +113,14 @@ public class ByClassTestPage extends BasePage {
 
         progressBar = new ProgressBar("progress", Model.of(0));
         add(this.progressBar);
+
+        Link lkResultado = new Link<String>("lkResultado") {
+            @Override
+            public void onClick() {
+                setResponsePage(new ByClassTestResultPage(listaResultado));
+            }
+        };
+        add(lkResultado.setVisible(false));
     }
 
     private void criarBotaoProcessarTodos(){
@@ -125,7 +135,7 @@ public class ByClassTestPage extends BasePage {
                         listaParaProcessar.add(projeto);
                     }
                 }
-                JNoseCore.processarProjetos(listaParaProcessar, dataProcessamentoAtual, totalProcessado, pastaPathReport, logRetorno);
+                listaResultado = JNoseCore.processarProjetos2(listaParaProcessar, dataProcessamentoAtual, totalProcessado, pastaPathReport, logRetorno);
             }
         };
         processarTodos.setEnabled(false);
@@ -143,7 +153,6 @@ public class ByClassTestPage extends BasePage {
         };
         add(acbCobertura);
     }
-
 
     private void criarForm(){
         Form form = new Form<>("form");
@@ -174,7 +183,6 @@ public class ByClassTestPage extends BasePage {
         form.add(btEnviar);
         add(form);
     }
-
 
     private void criarListaProjetos(){
         listaProjetos = new ArrayList<>();

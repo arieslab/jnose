@@ -137,10 +137,6 @@ public class Main {
             testFiles.add(testFile);
         }
 
-//        String csvTestSmells = reportPath+projectName+"_testsmesll.csv";
-
-//        ResultsWriter resultsWriter = ResultsWriter.createResultsWriter(csvTestSmells);
-
         List<List<String>> todasLinhas = new ArrayList<>();
 
         List<String> columnValues;
@@ -169,7 +165,6 @@ public class Main {
             columnNames.add("METHOD_COVERED");
         }
         todasLinhas.add(columnNames);
-//        resultsWriter.writeColumnName(columnNames);
 
         if(WicketApplication.COBERTURA_ON) {
             jacocoMap = jacocoProcess(projectName, reportPath);
@@ -214,8 +209,6 @@ public class Main {
                 if(WicketApplication.COBERTURA_ON) {
                     jacocoEscreverArquivo(columnValues, file, targetFile);
                 }
-
-//                resultsWriter.writeLine(columnValues);
                 todasLinhas.add(columnValues);
             }catch (Error e){
                 e.printStackTrace();
@@ -228,11 +221,117 @@ public class Main {
         }
 
         return CSVCore.criarTestSmellsdetectorCSV(todasLinhas,pastaDataHora,projectName);
+    }
 
-//        in.close();
-//        fileReader.close();
-//        System.out.println("Completed!");
-//        return csvTestSmells;
+    public static List<List<String>> start2(String csvPath, String projectName, String reportPath, String pastaDataHora) throws IOException {
+
+        File selectedFile = new File(csvPath);
+        TestSmellDetector testSmellDetector = TestSmellDetector.createTestSmellDetector();
+
+        FileReader fileReader = new FileReader(selectedFile);
+        BufferedReader in = new BufferedReader(fileReader);
+        String str;
+
+        String[] lineItem;
+        TestFile testFile;
+
+        List<TestFile> testFiles = new ArrayList<>();
+        while ((str = in.readLine()) != null) {
+            System.out.println(str);
+            lineItem = str.split(",");
+            if(lineItem[2] == null){
+                testFile = new TestFile(lineItem[0], lineItem[1], "",0,0);
+            }
+            else{
+                testFile = new TestFile(lineItem[0], lineItem[1], lineItem[2], Integer.parseInt(lineItem[3]),Integer.parseInt(lineItem[4]));
+            }
+            testFiles.add(testFile);
+        }
+
+        List<List<String>> todasLinhas = new ArrayList<>();
+
+        List<String> columnValues;
+
+        //Coluna name testsmells
+        columnNames = testSmellDetector.getTestSmellNames();
+
+        //add colunas de descrição anterior a lista dos testsmells
+        columnNames.add(0, "App");
+        columnNames.add(1, "TestFileName");
+        columnNames.add(2, "ProductionFileName");
+        columnNames.add(3,"LOC");
+        columnNames.add(4,"numberMethods");
+
+        //jacoco - lista de dados de cobertura posterior
+        if(WicketApplication.COBERTURA_ON) {
+            columnNames.add("INSTRUCTION_MISSED");
+            columnNames.add("INSTRUCTION_COVERED");
+            columnNames.add("BRANCH_MISSED");
+            columnNames.add("BRANCH_COVERED");
+            columnNames.add("LINE_MISSED");
+            columnNames.add("LINE_COVERED");
+            columnNames.add("COMPLEXITY_MISSED");
+            columnNames.add("COMPLEXITY_COVERED");
+            columnNames.add("METHOD_MISSED");
+            columnNames.add("METHOD_COVERED");
+        }
+        todasLinhas.add(columnNames);
+
+        if(WicketApplication.COBERTURA_ON) {
+            jacocoMap = jacocoProcess(projectName, reportPath);
+        }
+
+        TestFile tempFile;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date;
+
+        for (TestFile file : testFiles) {
+            try {
+                date = new Date();
+                System.out.println(dateFormat.format(date) + " Processing: " + file.getTestFilePath());
+                System.out.println("Processing: " + file.getTestFilePath());
+
+                tempFile = testSmellDetector.detectSmells(file);
+
+                columnValues = new ArrayList<>();
+
+                //dados da classe
+                columnValues.add(file.getApp());
+                columnValues.add(file.getTestFileName().replace(".java", ""));
+                String targetFile = file.getProductionFileName().replace(".java", "");
+                columnValues.add(targetFile);
+
+                //LOC
+                columnValues.add(file.getLoc().toString());
+
+                //NUMBER METHODS
+                columnValues.add(file.getQtdMethods().toString());
+
+                //add test smells
+                for (AbstractSmell smell : tempFile.getTestSmells()) {
+                    smell.getSmellyElements();
+                    try {
+                        columnValues.add(String.valueOf(smell.getSmellyElements().stream().filter(x -> x.getHasSmell()).count()));
+                    } catch (NullPointerException e) {
+                        columnValues.add("");
+                    }
+                }
+
+                if(WicketApplication.COBERTURA_ON) {
+                    jacocoEscreverArquivo(columnValues, file, targetFile);
+                }
+                todasLinhas.add(columnValues);
+            }catch (Error e){
+                e.printStackTrace();
+                System.out.println("Continuando a o processo!");
+            }catch (Exception e){
+                e.printStackTrace();
+                System.out.println("Continuando a o processo!");
+            }
+
+        }
+
+        return todasLinhas;
     }
 
     private static void jacocoEscreverArquivo(List<String> columnValues, TestFile file, String targetFile) {

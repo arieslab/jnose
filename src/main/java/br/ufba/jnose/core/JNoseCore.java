@@ -340,6 +340,18 @@ public class JNoseCore {
         return csvTestSmells;
     }
 
+    public static List<List<String>> processarTestSmellDetector2(String pathCSVMapping, String pathProjeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
+        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
+        logRetorno.append(dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>");
+        List<List<String>> todasLinhas = new ArrayList<>();
+        try {
+            todasLinhas = br.ufba.jnose.core.testsmelldetector.Main.start2(pathCSVMapping, nameProjeto, pastaPathReport + folderTime + File.separatorChar,folderTime);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return todasLinhas;
+    }
+
     public static String processarTestFileMapping(List<TestClass> listTestClass, String pathProjeto, String folderTime, StringBuffer logRetorno) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
         logRetorno.append(dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>");
@@ -457,6 +469,41 @@ public class JNoseCore {
         return csvTestSmells;
     }
 
+    public static List<List<String>> processarProjeto2(Projeto projeto, float valorProcProject, String folderTime, TotalProcessado totalProcessado, String pastaPathReport, StringBuffer logRetorno) throws IOException {
+        logRetorno.append(dateNow() + projeto.getName() + " - started <br>");
+        Float valorSoma = valorProcProject / 4;
+
+        totalProcessado.setValor(5);
+        projeto.setProcentagem(totalProcessado.getValor());
+
+        if (WicketApplication.COBERTURA_ON) {
+            JNoseCore.processarCobertura(projeto, folderTime, pastaPathReport, logRetorno);
+        }
+
+        projeto.setProcessado2(true);
+        totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
+        projeto.setProcentagem(25);
+
+        String csvFile = JNoseCore.processarTestFileDetector(projeto.getPath(), folderTime, logRetorno);
+        out.println(csvFile);
+
+        List<TestClass> listaTestClass = JNoseCore.getFilesTest(projeto.getPath(),logRetorno);
+        totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
+        projeto.setProcentagem(50);
+
+
+        String csvMapping = JNoseCore.processarTestFileMapping(listaTestClass, projeto.getPath(), folderTime, logRetorno);
+        totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
+        projeto.setProcentagem(75);
+
+        List<List<String>> todasLinhas  =  JNoseCore.processarTestSmellDetector2(csvMapping, projeto.getPath(), folderTime, pastaPathReport, logRetorno);
+        totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
+        projeto.setProcentagem(100);
+
+        projeto.setProcessado(true);
+        return todasLinhas;
+    }
+
     public static void processarProjetos(List<Projeto> lista, String folderTime, TotalProcessado totalProcessado, String pastaPathReport, StringBuffer logRetorno) {
 
         boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
@@ -485,6 +532,42 @@ public class JNoseCore {
                 }
             }.start();
         }
+
+    }
+
+    public static List<List<String>> processarProjetos2(List<Projeto> lista, String folderTime, TotalProcessado totalProcessado, String pastaPathReport, StringBuffer logRetorno) {
+
+        boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
+        if (!success) System.out.println("Created Folder...");
+
+        totalProcessado.setValor(0);
+
+        Integer totalLista = lista.size();
+        Integer valorSoma;
+        if (totalLista > 0) {
+            valorSoma = 100 / totalLista;
+        } else {
+            valorSoma = 0;
+        }
+
+        List<List<String>> listaTodos = new ArrayList<>();
+
+        for (Projeto projeto : lista) {
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        List<List<String>> todasLinhas = JNoseCore.processarProjeto2(projeto, valorSoma, folderTime, totalProcessado, pastaPathReport, logRetorno);
+                        listaTodos.addAll(todasLinhas);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        projeto.bugs = projeto.bugs + "\n" + e.getMessage();
+                    }
+                }
+            }.start();
+        }
+
+        return listaTodos;
 
     }
 
