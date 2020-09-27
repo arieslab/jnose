@@ -2,6 +2,7 @@ package br.ufba.jnose.dto;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,6 +17,8 @@ public class Projeto implements Serializable {
     private Boolean processado2;
     private Integer procentagem;
 
+    private List<List<String>> resultado;
+
     private List<Commit> listaCommits;
 
     private Integer commits;
@@ -24,6 +27,8 @@ public class Projeto implements Serializable {
     public WebMarkupContainer iconNaoProcessado;
 
     public WebMarkupContainer progressProject;
+
+    public Link lkResultado;
 
     public Label lbPorcentagem;
     public String bugs;
@@ -48,6 +53,13 @@ public class Projeto implements Serializable {
         this.commits = 0;
     }
 
+    public List<List<String>> getResultado() {
+        return resultado;
+    }
+
+    public void setResultado(List<List<String>> resultado) {
+        this.resultado = resultado;
+    }
 
     public List<Commit> getListaCommits() {
         return listaCommits;

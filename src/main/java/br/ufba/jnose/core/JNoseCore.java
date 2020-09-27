@@ -558,6 +558,7 @@ public class JNoseCore {
                 public void run() {
                     try {
                         List<List<String>> todasLinhas = JNoseCore.processarProjeto2(projeto, valorSoma, folderTime, totalProcessado, pastaPathReport, logRetorno);
+                        projeto.setResultado(todasLinhas);
                         listaTodos.addAll(todasLinhas);
                     } catch (Exception e) {
                         e.printStackTrace();

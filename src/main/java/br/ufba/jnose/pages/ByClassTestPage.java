@@ -192,6 +192,20 @@ public class ByClassTestPage extends BasePage {
             protected void populateItem(ListItem<Projeto> item) {
                 Projeto projeto = item.getModelObject();
 
+
+
+                Link lkResultado = new Link<String>("lkResultado") {
+                    @Override
+                    public void onClick() {
+                        setResponsePage(new ResultPage(projeto.getResultado(),"Result By ClassTest: " + projeto.getName(), projeto.getName()+"_result_byclasstest_testsmells"));
+                    }
+                };
+                lkResultado.setEnabled(projeto.getProcessado());
+                lkResultado.setOutputMarkupId(true);
+                lkResultado.setOutputMarkupPlaceholderTag(true);
+                item.add(lkResultado);
+                projeto.lkResultado = lkResultado;
+
                 AjaxCheckBox paraProcessarACB = new AjaxCheckBox("paraProcessarACB", new PropertyModel(projeto, "paraProcessar")) {
                     @Override
                     protected void onUpdate(AjaxRequestTarget target) {
@@ -209,6 +223,7 @@ public class ByClassTestPage extends BasePage {
 
                         lbProjetosSize.setDefaultModel(Model.of(listaProjetosProcessar.size()));
                         target.add(lbProjetosSize);
+
                     }
                 };
                 item.add(paraProcessarACB);
@@ -245,7 +260,7 @@ public class ByClassTestPage extends BasePage {
 
                 WebMarkupContainer btMdel = new WebMarkupContainer("btModel");
                 btMdel.add(new AttributeModifier("data-target", "#modal" + projeto.getName()));
-                item.add(btMdel);
+                item.add(btMdel.setVisible(false));
 
                 WebMarkupContainer model = new WebMarkupContainer("model");
                 model.add(new AttributeModifier("id", "modal" + projeto.getName()));
@@ -296,6 +311,10 @@ public class ByClassTestPage extends BasePage {
                 }
 
                 for (Projeto projeto : listaProjetosProcessar) {
+
+                    WebMarkupContainer lkResultado = projeto.lkResultado;
+                    lkResultado.setEnabled(projeto.getProcessado());
+                    target.add(lkResultado);
 
                     WebMarkupContainer iconProcessado = projeto.iconProcessado;
                     iconProcessado.setVisible(projeto.getProcessado());
