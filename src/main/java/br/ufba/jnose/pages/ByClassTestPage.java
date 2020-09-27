@@ -345,10 +345,10 @@ public class ByClassTestPage extends BasePage {
                     processado = processado && p.getProcessado();
                 }
 
-                if (processado && mesclado == false && !listaProjetosProcessar.isEmpty()) {
-                    JNoseCore.mesclarGeral(listaProjetosProcessar, pastaPathReport + dataProcessamentoAtual + File.separatorChar, logRetorno,dataProcessamentoAtual);
-                    mesclado = true;
-                }
+//                if (processado && mesclado == false && !listaProjetosProcessar.isEmpty()) {
+//                    JNoseCore.mesclarGeral(listaProjetosProcessar, pastaPathReport + dataProcessamentoAtual + File.separatorChar, logRetorno,dataProcessamentoAtual);
+//                    mesclado = true;
+//                }
 
                 if(processando){
                     if (!loadImg.isVisible()) {
