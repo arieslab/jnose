@@ -19,6 +19,8 @@ public class Projeto implements Serializable {
 
     private List<List<String>> resultado;
 
+    private List<TestClass> resultadoByTestSmells;
+
     private List<Commit> listaCommits;
 
     private Integer commits;
@@ -59,6 +61,14 @@ public class Projeto implements Serializable {
 
     public void setResultado(List<List<String>> resultado) {
         this.resultado = resultado;
+    }
+
+    public List<TestClass> getResultadoByTestSmells() {
+        return resultadoByTestSmells;
+    }
+
+    public void setResultadoByTestSmells(List<TestClass> resultadoByTestSmells) {
+        this.resultadoByTestSmells = resultadoByTestSmells;
     }
 
     public List<Commit> getListaCommits() {

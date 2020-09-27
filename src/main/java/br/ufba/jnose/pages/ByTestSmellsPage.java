@@ -18,6 +18,7 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -26,14 +27,14 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.time.Duration;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.*;
 
 public class ByTestSmellsPage extends BasePage {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     private String pastaPath;
     private String pathAppToWebapp;
@@ -103,6 +104,7 @@ public class ByTestSmellsPage extends BasePage {
                         listaParaProcessar.add(projeto);
                     }
                 }
+
                 JNoseCore.processarProjetos(listaParaProcessar, dataProcessamentoAtual, pastaPathReport, totalProcessado, logRetorno);
             }
         };
@@ -115,6 +117,18 @@ public class ByTestSmellsPage extends BasePage {
             @Override
             protected void populateItem(ListItem<Projeto> item) {
                 Projeto projeto = item.getModelObject();
+
+                Link lkResultado = new Link<String>("lkResultado") {
+                    @Override
+                    public void onClick() {
+                        setResponsePage(new ResultPage(projeto.getResultado(),"Result By TestSmells: " + projeto.getName(), projeto.getName()+"_result_byclasstest_testsmells"));
+                    }
+                };
+                lkResultado.setEnabled(projeto.getProcessado());
+                lkResultado.setOutputMarkupId(true);
+                lkResultado.setOutputMarkupPlaceholderTag(true);
+                item.add(lkResultado);
+                projeto.lkResultado = lkResultado;
 
                 AjaxCheckBox paraProcessarACB = new AjaxCheckBox("paraProcessarACB", new PropertyModel(projeto, "paraProcessar")) {
                     @Override
@@ -173,7 +187,7 @@ public class ByTestSmellsPage extends BasePage {
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
 
                 File file = new File(pastaPath);
-                listaProjetos = JNoseCore.listaProjetos(file.toURI());
+                listaProjetos = JNoseCore.listaProjetos(file.toURI(),logRetorno);
                 lvProjetos.setList(listaProjetos);
 
                 processarTodos.setEnabled(true);
@@ -205,6 +219,66 @@ public class ByTestSmellsPage extends BasePage {
                 }
 
                 for (Projeto projeto : listaProjetosProcessar) {
+
+                    WebMarkupContainer lkResultado = projeto.lkResultado;
+                    lkResultado.setEnabled(projeto.getProcessado());
+                    target.add(lkResultado);
+
+                    Label lbPorcentagem = projeto.lbPorcentagem;
+                    lbPorcentagem.setDefaultModel(Model.of(projeto.getProcentagem()));
+                    target.add(lbPorcentagem);
+
+                    WebMarkupContainer progressProject = projeto.progressProject;
+                    progressProject.add(new AttributeModifier("style", "width: " + projeto.getProcentagem() + "%"));
+                    target.add(progressProject);
+
+                    todosProjetosProcessados = todosProjetosProcessados && projeto.getProcessado();
+                }
+
+                if (todosProjetosProcessados) {
+                    totalProcessado.setValor((100 - totalProcessado.getValor()) + totalProcessado.getValor());
+                    processando = false;
+                }
+
+                boolean processado = true;
+                for (Projeto p : listaProjetosProcessar) {
+                    processado = processado && p.getProcessado();
+                }
+
+                if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
+                    linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv"));
+                    target.add(linkCSVFinal);
+                }
+
+            }
+        };
+        add(timer);
+    }
+
+    private void criarTimer2(){
+        AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
+            int cont = 0;
+
+            @Override
+            protected void onTimer(AjaxRequestTarget target) {
+                progressBar.setModel(Model.of(totalProcessado.getValor()));
+                target.add(progressBar);
+
+                Boolean todosProjetosProcessados = true;
+
+                List<Projeto> listaProjetosProcessar = new ArrayList<>();
+
+                for (Projeto projeto : listaProjetos) {
+                    if (projeto.getParaProcessar()) {
+                        listaProjetosProcessar.add(projeto);
+                    }
+                }
+
+                for (Projeto projeto : listaProjetosProcessar) {
+
+                    WebMarkupContainer lkResultado = projeto.lkResultado;
+                    lkResultado.setEnabled(projeto.getProcessado());
+                    target.add(lkResultado);
 
                     Label lbPorcentagem = projeto.lbPorcentagem;
                     lbPorcentagem.setDefaultModel(Model.of(projeto.getProcentagem()));

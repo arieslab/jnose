@@ -12,7 +12,7 @@
                     <th style="text-align: center;"></th>
                     <th style="text-align: center;">Name</th>
                     <th style="text-align: center;">Path</th>
-<!--                    <th style="text-align: center;">Concluded</th>-->
+                    <th style="width: 100px;text-align: center;">%</th>
                     <th style="width: 100px;text-align: center;">%</th>
                 </tr>
                 <tr wicket:id="lvProjetos">
@@ -25,12 +25,6 @@
                     <td style="text-align: center;">
                         <span wicket:id="projeto"></span>
                     </td>
-<!--                    <td style="text-align: center;">-->
-<!--                    <span>-->
-<!--                        <i wicket:_id="iconProcessado" class="material-icons green" style="">check_circle</i>-->
-<!--                        <i wicket:_id="iconNaoProcessado" class="material-icons red" style="">cancel</i>-->
-<!--                    </span>-->
-<!--                    </td>-->
                     <td style="text-align: center;">
                         <div class="progress">
                             <div wicket:id="progressProject" class="progress-bar" role="progressbar" style="width: 25%"
@@ -38,6 +32,11 @@
                                 <span wicket:id="lbPorcentagem"></span>
                             </div>
                         </div>
+                    </td>
+                    <td>
+                        <a href="#" wicket:id="lkResultado" class="btn btn-success btn-sm">
+                            Result
+                        </a>
                     </td>
                 </tr>
             </table>

@@ -138,6 +138,50 @@ public class JNoseCore {
     }
 
 
+    public static List<List<String>> convert(List<TestClass> listTestClass){
+
+        List<List<String>> todasLinhas = new ArrayList<>();
+
+        List<String> columnValues = null;
+        columnValues = new ArrayList<>();
+        columnValues.add(0, "projectName");
+        columnValues.add(1, "name");
+        columnValues.add(2, "pathFile");
+        columnValues.add(3, "productionFile");
+        columnValues.add(4, "junitVersion");
+        columnValues.add(5, "loc");
+        columnValues.add(6, "qtdMethods");
+        columnValues.add(7, "testSmellName");
+        columnValues.add(8, "testSmellMethod");
+        columnValues.add(9, "testSmellLine");
+        columnValues.add(10, "testSmellLineBegin");
+        columnValues.add(11, "testSmellLineEnd");
+
+        todasLinhas.add(columnValues);
+
+        for (TestClass testClass : listTestClass) {
+            for (TestSmell testSmell : testClass.listTestSmell) {
+                columnValues = new ArrayList<>();
+                columnValues.add(0, testClass.projectName);
+                columnValues.add(1, testClass.name);
+                columnValues.add(2, testClass.pathFile.toString());
+                columnValues.add(3, testClass.productionFile);
+                columnValues.add(4, testClass.junitVersion.name());
+                columnValues.add(5, testClass.numberLine.toString());
+                columnValues.add(6, testClass.numberMethods.toString());
+                columnValues.add(7, testSmell.name);
+                columnValues.add(8, testSmell.method);
+                columnValues.add(9, testSmell.lineNumber);
+                columnValues.add(10, testSmell.begin);
+                columnValues.add(11, testSmell.end);
+                todasLinhas.add(columnValues);
+            }
+        }
+
+        return todasLinhas;
+    }
+
+
     public static List<TestClass> getFilesTest(String directoryPath, StringBuffer logRetorno) throws IOException {
         String projectName = directoryPath.substring(directoryPath.lastIndexOf(File.separatorChar) + 1, directoryPath.length());
 
@@ -153,7 +197,7 @@ public class JNoseCore {
                         if (filePath.toString().toLowerCase().endsWith(".java") && fileNameWithoutExtension.matches("^.*test\\d*$")) {
                             TestClass testClass = new TestClass();
                             testClass.projectName = projectName;
-                            testClass.pathFile = filePath;
+                            testClass.pathFile = filePath.toString();
                             if (isTestFile(testClass)) {
                                 System.out.println("TestClass Detect -> " + testClass.pathFile);
                                 String productionFileName = "";
@@ -178,7 +222,7 @@ public class JNoseCore {
         Boolean isTestFile = false;
         try {
             FileInputStream fileInputStream = null;
-            fileInputStream = new FileInputStream(testClass.pathFile.toFile());
+            fileInputStream = new FileInputStream(new File(testClass.pathFile));
             CompilationUnit compilationUnit = JavaParser.parse(fileInputStream);
             testClass.numberLine = compilationUnit.getRange().get().end.line;
             detectJUnitVersion(compilationUnit.getImports(), testClass);
@@ -372,7 +416,7 @@ public class JNoseCore {
     }
 
     public static List<Projeto> listaProjetos(URI path) {
-        File[] directories = new File(path).listFiles(File::isDirectory);
+        File[] directories = new File(path).listFiles(java.io.File::isDirectory);
         List<Projeto> lista = new ArrayList<Projeto>();
 
         if (directories != null) {
@@ -431,6 +475,7 @@ public class JNoseCore {
         List<TestClass> listaTestClass = JNoseCore.getFilesTest(projeto.getPath(), logRetorno);
         projeto.setProcentagem(100);
         projeto.setProcessado(true);
+        projeto.setProcessado2(true);
         return listaTestClass;
     }
 
@@ -572,7 +617,7 @@ public class JNoseCore {
 
     }
 
-    public static String processarProjetos(List<Projeto> lista, String folderTime,String pastaPathReport, TotalProcessado totalProcessado, StringBuffer logRetorno) {
+    public static void processarProjetos(List<Projeto> lista, String folderTime,String pastaPathReport, TotalProcessado totalProcessado, StringBuffer logRetorno) {
 
         boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
         if (!success) System.out.println("Created Folder...");
@@ -591,13 +636,14 @@ public class JNoseCore {
 
         for (Projeto projeto : lista) {
             try {
-                listaTestClass.addAll(JNoseCore.processarProjeto(projeto, valorSoma, folderTime, logRetorno));
+                List<TestClass> todasLinhas = JNoseCore.processarProjeto(projeto, valorSoma, folderTime, logRetorno);
+                projeto.setResultadoByTestSmells(todasLinhas);
+                projeto.setResultado(JNoseCore.convert(todasLinhas));
+                listaTestClass.addAll(todasLinhas);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
-        return JNoseCore.newReport(listaTestClass, folderTime);
     }
 
 

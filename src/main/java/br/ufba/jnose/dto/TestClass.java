@@ -9,7 +9,7 @@ public class TestClass implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public String projectName;
-    public Path pathFile;
+    public String pathFile;
     public String name;
     public Integer numberMethods;
     public Integer numberLine;
