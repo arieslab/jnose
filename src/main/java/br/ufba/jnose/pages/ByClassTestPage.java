@@ -117,10 +117,10 @@ public class ByClassTestPage extends BasePage {
         Link lkResultado = new Link<String>("lkResultado") {
             @Override
             public void onClick() {
-                setResponsePage(new ByClassTestResultPage(listaResultado));
+                setResponsePage(new ResultPage(listaResultado,"Result By ClassTest"));
             }
         };
-        add(lkResultado.setVisible(false));
+        add(lkResultado.setVisible(true));
     }
 
     private void criarBotaoProcessarTodos(){
