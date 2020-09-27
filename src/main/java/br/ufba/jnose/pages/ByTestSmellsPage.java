@@ -52,10 +52,12 @@ public class ByTestSmellsPage extends BasePage {
     private String dataProcessamentoAtual;
     private ExternalLink linkCSVFinal;
     private StringBuffer logRetorno;
+    private List<List<String>> listaResultado;
 
     public ByTestSmellsPage() {
 
         //carregar variáveis
+        listaResultado = new ArrayList<>();
         logRetorno = new StringBuffer();
         processando = false;
         indicator = new AjaxIndicatorAppender();
@@ -90,6 +92,14 @@ public class ByTestSmellsPage extends BasePage {
 
         progressBar = new ProgressBar("progress", Model.of(0));
         add(this.progressBar);
+
+        Link lkResultado = new Link<String>("lkResultado") {
+            @Override
+            public void onClick() {
+                setResponsePage(new ResultPage(listaResultado,"Result By TestSmells", "result_byclasstest_testsmells"));
+            }
+        };
+        add(lkResultado.setVisible(true));
     }
 
     private void criarBotaoProcessarTodos(){
@@ -106,6 +116,13 @@ public class ByTestSmellsPage extends BasePage {
                 }
 
                 JNoseCore.processarProjetos(listaParaProcessar, dataProcessamentoAtual, pastaPathReport, totalProcessado, logRetorno);
+
+                for (Projeto projeto : listaProjetos) {
+                    if (projeto.getResultado() != null) {
+                        listaResultado.addAll(projeto.getResultado());
+                    }
+                }
+
             }
         };
         processarTodos.setEnabled(false);
