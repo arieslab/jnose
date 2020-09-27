@@ -117,7 +117,7 @@ public class ByClassTestPage extends BasePage {
         Link lkResultado = new Link<String>("lkResultado") {
             @Override
             public void onClick() {
-                setResponsePage(new ResultPage(listaResultado,"Result By ClassTest"));
+                setResponsePage(new ResultPage(listaResultado,"Result By ClassTest", "result_byclasstest_testsmells"));
             }
         };
         add(lkResultado.setVisible(true));

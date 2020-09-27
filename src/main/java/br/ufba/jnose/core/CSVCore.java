@@ -52,8 +52,11 @@ public class CSVCore {
         return criarCSV(todasLinhas,pastaDataHora,nomeProjeto +"_testsmell_evolution2");
     }
 
-    private static String criarCSV(List<List<String>> todasLinhas,String pastaDataHora, String nomeArquivo){
+    public static String criarCSV(List<List<String>> todasLinhas,String pastaDataHora, String nomeArquivo){
+        String outFolder = reportPath + pastaDataHora;
         String outFile = reportPath + pastaDataHora + File.separatorChar + nomeArquivo + ".csv";
+
+        new File(outFolder).mkdirs();
 
         loadResultsWrite(outFile);
 
@@ -67,6 +70,7 @@ public class CSVCore {
     private static void loadResultsWrite(String outputFile){
         CSVCore.outputFile = outputFile;
         try {
+            new File(outputFile).createNewFile();
             writer = new FileWriter(outputFile,false);
         } catch (IOException e) {
             e.printStackTrace();
