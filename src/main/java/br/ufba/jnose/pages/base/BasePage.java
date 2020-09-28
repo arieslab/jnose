@@ -63,11 +63,16 @@ public class BasePage extends WebPage {
         add(linkByTestSmells);
 
         AbstractAjaxTimerBehavior timerHome = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
-            int cont = 0;
+            String signal = "";
             @Override
             protected void onTimer(AjaxRequestTarget target) {
-                footTime.setDefaultModel(Model.of(cont + ""));
-                cont++;
+                if(signal.isEmpty()){
+                    signal = "*";
+                    footTime.setDefaultModel(Model.of(signal));
+                }else{
+                    signal = "";
+                    footTime.setDefaultModel(Model.of(signal));
+                }
                 target.add(footTime);
             }
         };
