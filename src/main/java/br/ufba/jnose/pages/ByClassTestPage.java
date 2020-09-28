@@ -37,7 +37,7 @@ public class ByClassTestPage extends BasePage {
     private String pastaPath;
     private String pathAppToWebapp;
     private String pastaPathReport;
-    private Label lbPastaSelecionada;
+//    private Label lbPastaSelecionada;
     private ProgressBar progressBar;
     private List<Projeto> listaProjetos;
     private AjaxIndicatorAppender indicator;
@@ -49,7 +49,7 @@ public class ByClassTestPage extends BasePage {
     private Boolean processando;
     private WebMarkupContainer loadImg;
     private IndicatingAjaxLink processarTodos;
-    private Label lbProjetosSize;
+//    private Label lbProjetosSize;
     private StringBuffer logRetorno;
     private StringBuffer logRetornoInfo;
     private String dataProcessamentoAtual;
@@ -77,9 +77,9 @@ public class ByClassTestPage extends BasePage {
 
         criarCheckBoxCobertura();
 
-        lbProjetosSize = new Label("lbProjetosSize", Model.of("0"));
-        lbProjetosSize.setOutputMarkupPlaceholderTag(true).setOutputMarkupId(true);
-        add(lbProjetosSize);
+//        lbProjetosSize = new Label("lbProjetosSize", Model.of("0"));
+//        lbProjetosSize.setOutputMarkupPlaceholderTag(true).setOutputMarkupId(true);
+//        add(lbProjetosSize);
 
         taLog = new Label("taLog");
         taLog.setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
@@ -108,8 +108,8 @@ public class ByClassTestPage extends BasePage {
 
         criarBotaoProcessarTodos();
 
-        lbPastaSelecionada = new Label("lbPastaSelecionada", pastaPath);
-        add(lbPastaSelecionada);
+//        lbPastaSelecionada = new Label("lbPastaSelecionada", pastaPath);
+//        add(lbPastaSelecionada);
 
         progressBar = new ProgressBar("progress", Model.of(0));
         add(this.progressBar);
@@ -121,13 +121,15 @@ public class ByClassTestPage extends BasePage {
             }
         };
         add(lkResultado.setVisible(true));
+
+        loadProjetos();
     }
 
     private void criarBotaoProcessarTodos(){
         processarTodos = new IndicatingAjaxLink<String>("processarTodos") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
+//                lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
                 processando = true;
                 List<Projeto> listaParaProcessar = new ArrayList<>();
                 for (Projeto projeto : listaProjetos) {
@@ -155,33 +157,37 @@ public class ByClassTestPage extends BasePage {
     }
 
     private void criarForm(){
-        Form form = new Form<>("form");
+//        Form form = new Form<>("form");
+//
+//        TextField tfPastaPath = new TextField("tfPastaPath", new PropertyModel(this, "pastaPath"));
+//        tfPastaPath.setRequired(true);
+//        form.add(tfPastaPath);
+//
+//        Button btEnviar = new Button("btEnviar") {
+//            @Override
+//            public void onSubmit() {
+//
+//
+//            }
+//        };
+//        form.add(btEnviar);
+//        add(form);
+    }
 
-        TextField tfPastaPath = new TextField("tfPastaPath", new PropertyModel(this, "pastaPath"));
-        tfPastaPath.setRequired(true);
-        form.add(tfPastaPath);
+    private void loadProjetos(){
+        mesclado = false;
+        dataProcessamentoAtual = JNoseCore.dateNowFolder();
+        logRetorno = new StringBuffer();
+        logRetornoInfo = new StringBuffer();
+        totalProcessado.setValor(0);
+//        lbPastaSelecionada.setDefaultModel(Model.of("./projects"));
 
-        Button btEnviar = new Button("btEnviar") {
-            @Override
-            public void onSubmit() {
-                mesclado = false;
-                dataProcessamentoAtual = JNoseCore.dateNowFolder();
-                logRetorno = new StringBuffer();
-                logRetornoInfo = new StringBuffer();
-                totalProcessado.setValor(0);
-                lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
+        File file = new File("./projects");
+        listaProjetos = JNoseCore.listaProjetos(file.toURI(),logRetorno);
+        lvProjetos.setList(listaProjetos);
 
-                File file = new File(pastaPath);
-                listaProjetos = JNoseCore.listaProjetos(file.toURI(),logRetorno);
-                lvProjetos.setList(listaProjetos);
-
-                processarTodos.setEnabled(true);
-                lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
-
-            }
-        };
-        form.add(btEnviar);
-        add(form);
+        processarTodos.setEnabled(true);
+//        lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
     }
 
     private void criarListaProjetos(){
@@ -221,8 +227,8 @@ public class ByClassTestPage extends BasePage {
                         }
                         target.add(processarTodos);
 
-                        lbProjetosSize.setDefaultModel(Model.of(listaProjetosProcessar.size()));
-                        target.add(lbProjetosSize);
+//                        lbProjetosSize.setDefaultModel(Model.of(listaProjetosProcessar.size()));
+//                        target.add(lbProjetosSize);
 
                     }
                 };

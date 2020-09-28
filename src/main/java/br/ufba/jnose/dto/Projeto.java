@@ -35,6 +35,8 @@ public class Projeto implements Serializable {
     public Label lbPorcentagem;
     public String bugs;
 
+    private String repoGit;
+
     public Projeto(String name, String path) {
         this.name = name;
         this.path = path;
@@ -129,5 +131,13 @@ public class Projeto implements Serializable {
 
     public void setProcentagem(Integer procentagem) {
         this.procentagem = procentagem;
+    }
+
+    public String getRepoGit() {
+        return repoGit;
+    }
+
+    public void setRepoGit(String repoGit) {
+        this.repoGit = repoGit;
     }
 }

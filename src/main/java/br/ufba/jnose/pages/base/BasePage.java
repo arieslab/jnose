@@ -1,9 +1,6 @@
 package br.ufba.jnose.pages.base;
 
-import br.ufba.jnose.pages.ByTestSmellsPage;
-import br.ufba.jnose.pages.ConfigPage;
-import br.ufba.jnose.pages.EvolutionPage;
-import br.ufba.jnose.pages.ByClassTestPage;
+import br.ufba.jnose.pages.*;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebPage;
@@ -24,7 +21,14 @@ public class BasePage extends WebPage {
         footTime.setOutputMarkupPlaceholderTag(true);
         add(footTime);
 
-        Link linkHome = new Link<String>("linkHome") {
+        Link linkProjetos = new Link<String>("linkProjetos") {
+            @Override
+            public void onClick() {
+                setResponsePage(ProjetosPage.class);
+            }
+        };
+
+        Link linkByClassTest = new Link<String>("linkByClassTest") {
             @Override
             public void onClick() {
                 setResponsePage(ByClassTestPage.class);
@@ -52,7 +56,8 @@ public class BasePage extends WebPage {
             }
         };
 
-        add(linkHome);
+        add(linkProjetos);
+        add(linkByClassTest);
         add(linkEvolution);
         add(linkConfig);
         add(linkByTestSmells);

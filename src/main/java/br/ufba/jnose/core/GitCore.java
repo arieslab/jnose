@@ -1,6 +1,7 @@
 package br.ufba.jnose.core;
 
 import br.ufba.jnose.dto.Commit;
+import br.ufba.jnose.dto.Projeto;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,6 +12,29 @@ import java.util.Date;
 import java.util.Locale;
 
 public class GitCore {
+
+    public static Projeto gitClonee(String repoURL) {
+        Projeto projeto = new Projeto("","");
+        ArrayList<Commit> lista = new ArrayList<>();
+        int r = 0;
+        try {
+            File file = new File("./projects");
+            if(!file.exists()){
+                file.mkdirs();
+            }
+            Process p = Runtime.getRuntime().exec("git clone " + repoURL, null, file);
+            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String lineOut;
+            while ((lineOut = input.readLine()) != null) {
+                System.out.println(lineOut);
+            }
+            input.close();
+            r = p.waitFor();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return projeto;
+    }
 
     public static ArrayList<Commit> gitLogOneLine(String pathExecute) {
         ArrayList<Commit> lista = new ArrayList<>();

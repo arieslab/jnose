@@ -1,0 +1,41 @@
+<wicket:extend xmlns:wicket="http://wicket.apache.org">
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+
+                <form wicket:id="form">
+                    <div class="form-group">
+                        <label for="gitrepo">Git Repository</label>
+                        <input wicket:id="tfGitRepo" type="text" class="form-control" id="gitrepo" aria-describedby="gitrepohelp" placeholder="Enter git repository">
+                        <small id="gitrepohelp" class="form-text text-muted">Aqui pode ser utilizado o endereço do repositório do github..</small>
+                    </div>
+                    <button wicket:id="btClone" type="submit" class="btn btn-primary">Clone</button>
+                </form>
+
+            </div>
+        </div>
+        <br>
+        <div class="card">
+            <div class="card-body">
+                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>Project</th>
+                        <th>path</th>
+                        <th>last Update</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr wicket:id="lista">
+                        <td wicket:id="projetoNome"></td>
+                        <td wicket:id="path"></td>
+                        <td wicket:id="lastUpdate"></td>
+                        <td><a wicket:id="linkDelete" href="#">Delete</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</wicket:extend>
