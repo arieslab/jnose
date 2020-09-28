@@ -5,7 +5,10 @@ import br.ufba.jnose.dto.Projeto;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.NoHeadException;
+import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 import java.io.BufferedReader;
@@ -13,61 +16,74 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 public class GitCore {
 
     public static Projeto gitClone(String repoURL) {
-
-        String repoName = repoURL.substring(repoURL.lastIndexOf("/")+1,repoURL.lastIndexOf("."));
-
+        String repoName = repoURL.substring(repoURL.lastIndexOf("/") + 1, repoURL.lastIndexOf("."));
         try {
-
-            File file = new File("./projects/"+repoName);
-
-            if(file.exists()){
+            File file = new File("./projects/" + repoName);
+            if (file.exists()) {
                 FileUtils.deleteDirectory(file);
             }
-
             Git git = Git.cloneRepository()
                     .setURI(repoURL)
                     .setDirectory(file)
                     .call();
-
         } catch (GitAPIException | IOException e) {
             e.printStackTrace();
         }
-
-        Projeto projeto = new Projeto(repoName,"");
+        Projeto projeto = new Projeto(repoName, "");
         return projeto;
     }
 
     public static ArrayList<Commit> gitLogOneLine(String pathExecute) {
+
         ArrayList<Commit> lista = new ArrayList<>();
-        int r = 0;
         try {
-            Process p = Runtime.getRuntime().exec("git log --pretty=format:%h,%an,%ad,%s --date=iso8601", null, new File(pathExecute));
-            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String lineOut;
-            while ((lineOut = input.readLine()) != null) {
-                String[] arrayCommit = lineOut.split(",");
-                String id = arrayCommit[0];
-                String name = arrayCommit[1];
-                Date date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(arrayCommit[2]);
-                String msg = arrayCommit[3];
-                lista.add(new Commit(id, name, date, msg));
-            }
-            input.close();
-            r = p.waitFor();
+            Git git = Git.open(new File(pathExecute));
+            git.log().all().call().forEach(revCommit -> {
+                        PersonIdent authorIdent = revCommit.getAuthorIdent();
+                        Date authorDate = authorIdent.getWhen();
+                        TimeZone authorTimeZone = authorIdent.getTimeZone();
+
+                        lista.add(new Commit(
+                                revCommit.getId().getName(),
+                                authorIdent.getName(),
+                                authorDate,
+                                revCommit.getFullMessage()));
+                    }
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+//        ArrayList<Commit> lista = new ArrayList<>();
+//        int r = 0;
+//        try {
+//            Process p = Runtime.getRuntime().exec("git log --pretty=format:%h,%an,%ad,%s --date=iso8601", null, new File(pathExecute));
+//            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//            String lineOut;
+//            while ((lineOut = input.readLine()) != null) {
+//                String[] arrayCommit = lineOut.split(",");
+//                String id = arrayCommit[0];
+//                String name = arrayCommit[1];
+//                Date date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(arrayCommit[2]);
+//                String msg = arrayCommit[3];
+//                lista.add(new Commit(id, name, date, msg));
+//            }
+//            input.close();
+//            r = p.waitFor();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         return lista;
     }
 
     public static ArrayList<Commit> gitTags(String pathExecute) {
+
         ArrayList<Commit> lista = new ArrayList<>();
         int r = 0;
         try {
