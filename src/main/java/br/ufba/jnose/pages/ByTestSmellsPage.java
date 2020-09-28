@@ -55,6 +55,7 @@ public class ByTestSmellsPage extends BasePage {
     private List<List<String>> listaResultado;
 
     public ByTestSmellsPage() {
+        super("ByTestSmellsPage");
 
         //carregar variáveis
         listaResultado = new ArrayList<>();

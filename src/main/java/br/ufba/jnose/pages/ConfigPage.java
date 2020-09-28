@@ -33,6 +33,7 @@ public class ConfigPage extends BasePage {
     public Boolean mysteryGuest;
 
     public ConfigPage() {
+        super("ConfigPage");
 
         emptyTest = TestSmellDetector.emptyTest;
         exceptionCatchingThrowing = TestSmellDetector.exceptionCatchingThrowing;

@@ -1,8 +1,10 @@
 package br.ufba.jnose.pages.base;
 
 import br.ufba.jnose.pages.*;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -14,7 +16,7 @@ public class BasePage extends WebPage {
 
     private Label footTime;
 
-    public BasePage() {
+    public BasePage(String paginaAtual) {
 
         footTime = new Label("footTimeHome");
         footTime.setOutputMarkupId(true);
@@ -27,6 +29,9 @@ public class BasePage extends WebPage {
                 setResponsePage(ProjetosPage.class);
             }
         };
+        if(paginaAtual.equals("ProjetosPage")){
+            linkProjetos.add(new AttributeModifier("style", "color:red"));
+        }
 
         Link linkByClassTest = new Link<String>("linkByClassTest") {
             @Override
@@ -34,6 +39,9 @@ public class BasePage extends WebPage {
                 setResponsePage(ByClassTestPage.class);
             }
         };
+        if(paginaAtual.equals("ByClassTestPage")){
+            linkByClassTest.add(new AttributeModifier("style", "color:red"));
+        }
 
         Link linkByTestSmells = new Link<String>("linkByTestSmells") {
             @Override
@@ -41,6 +49,9 @@ public class BasePage extends WebPage {
                 setResponsePage(ByTestSmellsPage.class);
             }
         };
+        if(paginaAtual.equals("ByTestSmellsPage")){
+            linkByTestSmells.add(new AttributeModifier("style", "color:red"));
+        }
 
         Link linkEvolution = new Link<String>("linkEvolution") {
             @Override
@@ -48,6 +59,9 @@ public class BasePage extends WebPage {
                 setResponsePage(EvolutionPage.class);
             }
         };
+        if(paginaAtual.equals("EvolutionPage")){
+            linkEvolution.add(new AttributeModifier("style", "color:red"));
+        }
 
         Link linkConfig = new Link<String>("linkConfig") {
             @Override
@@ -55,6 +69,9 @@ public class BasePage extends WebPage {
                 setResponsePage(ConfigPage.class);
             }
         };
+        if(paginaAtual.equals("ConfigPage")){
+            linkConfig.add(new AttributeModifier("style", "color:red"));
+        }
 
         Link linkStorage = new Link<String>("linkStorage") {
             @Override
@@ -62,6 +79,9 @@ public class BasePage extends WebPage {
                 setResponsePage(StoragePage.class);
             }
         };
+        if(paginaAtual.equals("StoragePage")){
+            linkStorage.add(new AttributeModifier("style", "color:red"));
+        }
 
         add(linkProjetos);
         add(linkByClassTest);

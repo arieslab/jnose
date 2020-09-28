@@ -26,6 +26,7 @@ public class ProjetosPage extends BasePage {
     private String repoGit;
 
     public ProjetosPage() {
+        super("ProjetosPage");
         repoGit = "";
 
         Form form = new Form<>("form");

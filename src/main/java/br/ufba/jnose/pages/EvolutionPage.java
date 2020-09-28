@@ -56,6 +56,8 @@ public class EvolutionPage extends BasePage {
     }
 
     public EvolutionPage(Projeto projeto) {
+        super("EvolutionPage");
+
         projetoSelecionado = projeto;
         logRetorno = new StringBuffer();
         projetoPath = "";

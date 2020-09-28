@@ -59,6 +59,7 @@ public class ByClassTestPage extends BasePage {
     private List<List<String>> listaResultado;
 
     public ByClassTestPage() {
+        super("ByClassTestPage");
 
         //Carregando variáveis
         indicator = new AjaxIndicatorAppender();
