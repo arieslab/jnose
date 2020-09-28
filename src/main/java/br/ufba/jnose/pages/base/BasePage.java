@@ -56,11 +56,19 @@ public class BasePage extends WebPage {
             }
         };
 
+        Link linkStorage = new Link<String>("linkStorage") {
+            @Override
+            public void onClick() {
+                setResponsePage(StoragePage.class);
+            }
+        };
+
         add(linkProjetos);
         add(linkByClassTest);
         add(linkEvolution);
         add(linkConfig);
         add(linkByTestSmells);
+        add(linkStorage);
 
         AbstractAjaxTimerBehavior timerHome = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
             String signal = "";
