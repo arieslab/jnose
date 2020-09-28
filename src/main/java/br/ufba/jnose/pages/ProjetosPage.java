@@ -37,7 +37,7 @@ public class ProjetosPage extends BasePage {
         Button btEnviar = new Button("btClone") {
             @Override
             public void onSubmit() {
-                GitCore.gitClonee(repoGit);
+                GitCore.gitClone(repoGit);
                 setResponsePage(ProjetosPage.class);
             }
         };

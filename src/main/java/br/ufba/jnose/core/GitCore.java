@@ -2,6 +2,10 @@ package br.ufba.jnose.core;
 
 import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.dto.Projeto;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,26 +17,23 @@ import java.util.Locale;
 
 public class GitCore {
 
-    public static Projeto gitClonee(String repoURL) {
-        Projeto projeto = new Projeto("","");
-        ArrayList<Commit> lista = new ArrayList<>();
-        int r = 0;
+    public static Projeto gitClone(String repoURL) {
+
+        String repoName = repoURL.substring(repoURL.lastIndexOf("/")+1,repoURL.lastIndexOf("."));
+
         try {
-            File file = new File("./projects");
-            if(!file.exists()){
-                file.mkdirs();
-            }
-            Process p = Runtime.getRuntime().exec("git clone " + repoURL, null, file);
-            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String lineOut;
-            while ((lineOut = input.readLine()) != null) {
-                System.out.println(lineOut);
-            }
-            input.close();
-            r = p.waitFor();
-        } catch (Exception e) {
+
+            Git git = Git.cloneRepository()
+                    .setURI(repoURL)
+                    .setDirectory(new File("./projects/"+repoName))
+                    .call();
+
+        } catch (GitAPIException e) {
             e.printStackTrace();
         }
+
+
+        Projeto projeto = new Projeto(repoName,"");
         return projeto;
     }
 
