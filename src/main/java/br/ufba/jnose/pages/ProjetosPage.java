@@ -52,7 +52,6 @@ public class ProjetosPage extends BasePage {
                 Projeto projeto = item.getModelObject();
                 item.add(new Label("projetoNome",projeto.getName()));
                 item.add(new Label("path",projeto.getPath()));
-                item.add(new Label("lastUpdate","unknow"));
                 item.add(new Link<String>("linkDelete") {
                     @Override
                     public void onClick() {
