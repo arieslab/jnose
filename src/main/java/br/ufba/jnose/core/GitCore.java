@@ -2,6 +2,7 @@ package br.ufba.jnose.core;
 
 import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.dto.Projeto;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
@@ -9,6 +10,7 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,15 +25,20 @@ public class GitCore {
 
         try {
 
+            File file = new File("./projects/"+repoName);
+
+            if(file.exists()){
+                FileUtils.deleteDirectory(file);
+            }
+
             Git git = Git.cloneRepository()
                     .setURI(repoURL)
-                    .setDirectory(new File("./projects/"+repoName))
+                    .setDirectory(file)
                     .call();
 
-        } catch (GitAPIException e) {
+        } catch (GitAPIException | IOException e) {
             e.printStackTrace();
         }
-
 
         Projeto projeto = new Projeto(repoName,"");
         return projeto;
