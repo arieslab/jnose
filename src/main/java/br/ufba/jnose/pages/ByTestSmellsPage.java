@@ -83,7 +83,7 @@ public class ByTestSmellsPage extends BasePage {
         FeedbackPanel feedback = new JQueryFeedbackPanel("feedback");
         add(feedback.setOutputMarkupId(true));
 
-        criarForm();
+//        criarForm();
 
         criarBotaoProcessarTodos();
 
@@ -100,6 +100,8 @@ public class ByTestSmellsPage extends BasePage {
             }
         };
         add(lkResultado.setVisible(true));
+
+        loadProjetos();
     }
 
     private void criarBotaoProcessarTodos(){
@@ -190,30 +192,34 @@ public class ByTestSmellsPage extends BasePage {
         add(lvProjetos);
     }
 
-    private void criarForm(){
-        Form form = new Form<>("form");
-        TextField tfPastaPath = new TextField("tfPastaPath", new PropertyModel(this, "pastaPath"));
-        tfPastaPath.setRequired(true);
-        form.add(tfPastaPath);
+//    private void criarForm(){
+//        Form form = new Form<>("form");
+//        TextField tfPastaPath = new TextField("tfPastaPath", new PropertyModel(this, "pastaPath"));
+//        tfPastaPath.setRequired(true);
+//        form.add(tfPastaPath);
+//
+//        Button btEnviar = new Button("btEnviar") {
+//            @Override
+//            public void onSubmit() {
+//
+//
+//            }
+//        };
+//        form.add(btEnviar);
+//        add(form);
+//    }
 
-        Button btEnviar = new Button("btEnviar") {
-            @Override
-            public void onSubmit() {
-                dataProcessamentoAtual = JNoseCore.dateNowFolder();
-                totalProcessado.setValor(0);
-                lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
+    private void loadProjetos(){
+        dataProcessamentoAtual = JNoseCore.dateNowFolder();
+        totalProcessado.setValor(0);
+        lbPastaSelecionada.setDefaultModel(Model.of("./projects"));
 
-                File file = new File(pastaPath);
-                listaProjetos = JNoseCore.listaProjetos(file.toURI(),logRetorno);
-                lvProjetos.setList(listaProjetos);
+        File file = new File("./projects");
+        listaProjetos = JNoseCore.listaProjetos(file.toURI(),logRetorno);
+        lvProjetos.setList(listaProjetos);
 
-                processarTodos.setEnabled(true);
-                lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
-
-            }
-        };
-        form.add(btEnviar);
-        add(form);
+        processarTodos.setEnabled(true);
+        lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
     }
 
     private void criarTimer(){
