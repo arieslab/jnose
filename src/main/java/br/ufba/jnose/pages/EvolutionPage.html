@@ -1,6 +1,28 @@
 <wicket:extend xmlns:wicket="http://wicket.apache.org">
     <div class="container">
         <div wicket:id="feedback" style="width: 360px;"></div>
+
+        <table class="table table-sm">
+            <tbody>
+            <tr style="color: #404040;">
+                <th style="text-align: center;">Name</th>
+                <th style="text-align: center;">Path</th>
+                <th></th>
+            </tr>
+            <tr wicket:id="lvProjetos">
+                <td style="text-align: center;">
+                    <span wicket:id="nomeProjeto">commons-csv</span>
+                </td>
+                <td style="text-align: center;">
+                    <span wicket:id="path">/home/tassio/Desenvolvimento/repo.git/jnose/./projects/commons-csv</span>
+                </td>
+                <td>
+                    <a wicket:id="lkSelect" href="#">Select</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <br>
         <form wicket:id="form">
             Project Folder(Git): <input wicket:id="tfPastaPath" type="text" class="form-control"/>
             <br>
@@ -16,8 +38,10 @@
             <br>
             <div class="card" style="background-color: #d4d4d4;">
                 <div class="card-body">
-                    <label>Project name:&nbsp;</label><label style="color: #fc0000;" wicket:id="projetoName"></label><br>
-                    <label>Number of commits/tags:&nbsp;</label><label style="color: orangered;" wicket:id="projetoCommits"></label><br>
+                    <label>Project name:&nbsp;</label><label style="color: #fc0000;"
+                                                             wicket:id="projetoName"></label><br>
+                    <label>Number of commits/tags:&nbsp;</label><label style="color: orangered;"
+                                                                       wicket:id="projetoCommits"></label><br>
                     <br>
                     <a wicket:id="executarLnk" class="btn btn-success btn-sm">Run</a><br>
                 </div>

@@ -7,14 +7,21 @@ import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.dto.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -41,8 +48,15 @@ public class EvolutionPage extends BasePage {
     private String pathReport;
     private String pathAppToWebapp;
     private Integer cont;
+    private List<Projeto> listaProjetos;
+    private ListView<Projeto> lvProjetos;
 
     public EvolutionPage() {
+        this(null);
+    }
+
+    public EvolutionPage(Projeto projeto) {
+        projetoSelecionado = projeto;
         logRetorno = new StringBuffer();
         projetoPath = "";
         pathCSV = "";
@@ -55,9 +69,17 @@ public class EvolutionPage extends BasePage {
 
         add(new JQueryFeedbackPanel("feedback").setOutputMarkupId(true));
 
+        criarListaProjetos();
         criarForm();
         criarLogInfo();
         criarTimer();
+        loadProjetos();
+    }
+
+    private void loadProjetos(){
+        File file = new File("./projects");
+        listaProjetos = JNoseCore.listaProjetos(file.toURI(),logRetorno);
+        lvProjetos.setList(listaProjetos);
     }
 
     private void criarLogInfo(){
@@ -110,6 +132,7 @@ public class EvolutionPage extends BasePage {
 
         tfPastaPath = new TextField("tfPastaPath", new PropertyModel(this, "projetoPath"));
         tfPastaPath.setRequired(true).setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
+        tfPastaPath.setEnabled(false);
         form.add(tfPastaPath);
 
         IndicatingAjaxLink executarLnk = new IndicatingAjaxLink<String>("executarLnk") {
@@ -120,6 +143,32 @@ public class EvolutionPage extends BasePage {
         };
         form.add(executarLnk);
         add(form);
+    }
+
+    private void criarListaProjetos(){
+        lvProjetos = new ListView<Projeto>("lvProjetos", listaProjetos) {
+            @Override
+            protected void populateItem(ListItem<Projeto> item) {
+                Projeto projeto = item.getModelObject();
+                item.add(new Label("nomeProjeto", projeto.getName()));
+                item.add(new Label("path", projeto.getPath()));
+
+                AjaxLink lkSelect = new AjaxLink<Void>("lkSelect") {
+                    @Override
+                    public void onClick(AjaxRequestTarget ajaxRequestTarget) {
+//                        projetoPath = projeto.getPath();
+//                        projetoSelecionado = carregarProjeto(projetoPath, ajaxRequestTarget);
+                        tfPastaPath.setModelObject(projeto.getPath());
+                        ajaxRequestTarget.add(tfPastaPath);
+                    }
+                };
+
+                item.add(lkSelect);
+            }
+        };
+        lvProjetos.setOutputMarkupId(true);
+        lvProjetos.setOutputMarkupPlaceholderTag(true);
+        add(lvProjetos);
     }
 
     private Projeto carregarProjeto(String pathProjeto, AjaxRequestTarget target) {
