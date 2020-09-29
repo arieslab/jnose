@@ -179,7 +179,9 @@ public class EvolutionPage extends BasePage {
         String[] listas = preSplit.split("/");
         String nomeProjeto = listas[listas.length - 1];
         Projeto projeto = new Projeto(nomeProjeto, pathProjeto);
-        JNoseCore.execCommand("git checkout master", projeto.getPath());
+
+//        JNoseCore.execCommand("git checkout master", projeto.getPath());
+        GitCore.checkout("master", projeto.getPath());
 
         ArrayList<Commit> lista = null;
         if (selected.trim().equals("Commits")) {
@@ -221,7 +223,10 @@ public class EvolutionPage extends BasePage {
             cont++;
             commitsProcessados.setDefaultModel(Model.of(cont));
             target.add(commitsProcessados);
-            JNoseCore.execCommand("git checkout " + commit.id, projetoPath);
+
+//            JNoseCore.execCommand("git checkout " + commit.id, projetoPath);
+
+            GitCore.checkout(commit.id, projetoPath);
 
             int total = 0;
             //criando a lista de testsmells
@@ -252,7 +257,8 @@ public class EvolutionPage extends BasePage {
 
             vizualizarCabecalho = false;
         }
-        JNoseCore.execCommand("git checkout master", projetoPath);
+        GitCore.checkout("master", projetoPath);
+//        JNoseCore.execCommand("git checkout master", projetoPath);
     }
 
 }

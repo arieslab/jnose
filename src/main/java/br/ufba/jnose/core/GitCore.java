@@ -98,7 +98,7 @@ public class GitCore {
                 LogCommand log = git.log();
 
                 Ref peeledRef = git.getRepository().peel(ref);
-                if(peeledRef.getPeeledObjectId() != null) {
+                if (peeledRef.getPeeledObjectId() != null) {
                     log.add(peeledRef.getPeeledObjectId());
                 } else {
                     log.add(ref.getObjectId());
@@ -166,6 +166,18 @@ public class GitCore {
 //            e.printStackTrace();
 //        }
         return lista;
+    }
+
+    public static void checkout(String commitId, String projetoPath) {
+
+        try {
+            Git git = Git.open(new File(projetoPath));
+            git.checkout().setForced(true).setName(commitId).call();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        JNoseCore.execCommand("git checkout " + commitId, projetoPath);
     }
 
 }
