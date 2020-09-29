@@ -180,7 +180,6 @@ public class EvolutionPage extends BasePage {
         String nomeProjeto = listas[listas.length - 1];
         Projeto projeto = new Projeto(nomeProjeto, pathProjeto);
 
-//        JNoseCore.execCommand("git checkout master", projeto.getPath());
         GitCore.checkout("master", projeto.getPath());
 
         ArrayList<Commit> lista = null;
@@ -224,8 +223,6 @@ public class EvolutionPage extends BasePage {
             commitsProcessados.setDefaultModel(Model.of(cont));
             target.add(commitsProcessados);
 
-//            JNoseCore.execCommand("git checkout " + commit.id, projetoPath);
-
             GitCore.checkout(commit.id, projetoPath);
 
             int total = 0;
@@ -258,7 +255,6 @@ public class EvolutionPage extends BasePage {
             vizualizarCabecalho = false;
         }
         GitCore.checkout("master", projetoPath);
-//        JNoseCore.execCommand("git checkout master", projetoPath);
     }
 
 }
