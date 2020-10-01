@@ -2,17 +2,16 @@ package br.ufba.jnose.pages;
 
 import br.ufba.jnose.core.CSVCore;
 import br.ufba.jnose.core.JNoseCore;
-import br.ufba.jnose.pages.base.BasePage;
+import br.ufba.jnose.pages.base.ImprimirPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.DownloadLink;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 
 import java.io.File;
 import java.util.List;
 
-public class ResultPage extends BasePage {
+public class ResultPage extends ImprimirPage {
     private static final long serialVersionUID = 1L;
 
     public ResultPage(List<List<String>> todasLinhas, String title, String csvFileName) {
