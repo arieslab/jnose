@@ -210,7 +210,7 @@ public class ByClassTestPage extends BasePage {
                 Link lkCharts = new Link<String>("lkCharts") {
                     @Override
                     public void onClick() {
-                        setResponsePage(new ChartsPage(listaResultado,"Charts By ClassTes: " + projeto.getName()));
+                        setResponsePage(new ChartsPage(projeto.getResultado(),"Charts By ClassTest: " + projeto.getName()));
                     }
                 };
                 lkCharts.setEnabled(projeto.getProcessado());

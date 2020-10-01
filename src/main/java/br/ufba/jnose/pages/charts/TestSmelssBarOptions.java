@@ -15,9 +15,9 @@ public class TestSmelssBarOptions extends Options {
 
     public TestSmelssBarOptions(List<List<String>> todasLinhas) {
 
-        Map<String, String> mapaColunaValorTotal = new HashMap<>();
+        Map<String, String> mapaColunaValorTotal = new HashMap<String, String>();
 
-        Map<String, String> mapaCelulasValorTotal = new HashMap<>();
+        Map<String, String> mapaCelulasValorTotal = new HashMap<String, String>();
 
         int linhaAtual = 0;
         for (List<String> linha : todasLinhas) {
@@ -36,12 +36,12 @@ public class TestSmelssBarOptions extends Options {
                 int celulaID = 0;
                 for (String celulaValor : linha) {
                     if (linhaAtual > 1) {
-                        String valorAnterior = mapaCelulasValorTotal.get(linhaAtual - 1);
-                        if (Util.isInt(valorAnterior) && Util.isInt(celulaValor)) {
-                            int valorAnteriorInt = Integer.parseInt(valorAnterior);
-                            int valorAtualInt = Integer.parseInt(celulaValor);
-                            valorAtualInt = +valorAnteriorInt;
-                            celulaValor = (valorAtualInt + "");
+                        String valorAtualString = mapaCelulasValorTotal.get(celulaID+"");
+                        if (Util.isInt(valorAtualString) && Util.isInt(celulaValor)) {
+                            Integer valorAtualInt = Integer.parseInt(valorAtualString);
+                            Integer valor = Integer.parseInt(celulaValor);
+                            Integer soma = valorAtualInt + valor;
+                            celulaValor = soma.toString();
                         }
                         mapaCelulasValorTotal.put(celulaID + "", celulaValor);
                         celulaID++;
@@ -50,6 +50,7 @@ public class TestSmelssBarOptions extends Options {
                         celulaID++;
                     }
                 }
+                linhaAtual++;
             }
         }
 
