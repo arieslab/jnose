@@ -53,6 +53,13 @@ public class ProjetosPage extends BasePage {
                 Projeto projeto = item.getModelObject();
                 item.add(new Label("projetoNome",projeto.getName()));
                 item.add(new Label("path",projeto.getPath()));
+                item.add(new Link<String>("linkPull") {
+                    @Override
+                    public void onClick() {
+                        GitCore.pull(projeto.getPath());
+                        setResponsePage(ProjetosPage.class);
+                    }
+                });
                 item.add(new Link<String>("linkDelete") {
                     @Override
                     public void onClick() {

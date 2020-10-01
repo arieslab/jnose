@@ -17,7 +17,20 @@ import java.util.*;
 public class GitCore {
 
     public static Projeto gitClone(String repoURL) {
-        String repoName = repoURL.substring(repoURL.lastIndexOf("/") + 1, repoURL.lastIndexOf("."));
+        String repoName = "";
+        if(repoURL.contains(".git")) {
+            repoName = repoURL.substring(repoURL.lastIndexOf("/") + 1, repoURL.lastIndexOf("."));
+        }else{
+            int x = repoURL.lastIndexOf("/");
+            int size = repoURL.length();
+            if(x == size-1){
+                repoURL = repoURL.substring(0,repoURL.length()-2);
+                repoName = repoURL.substring(repoURL.lastIndexOf("/") + 1, repoURL.length());
+            }else{
+                repoName = repoURL.substring(repoURL.lastIndexOf("/") + 1, repoURL.length());
+            }
+
+        }
         try {
             File file = new File("./projects/" + repoName);
             if (file.exists()) {
@@ -106,6 +119,15 @@ public class GitCore {
         try {
             Git git = Git.open(new File(projetoPath));
             git.checkout().setForced(true).setName(commitId).call();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void pull(String projetoPath) {
+        try {
+            Git git = Git.open(new File(projetoPath));
+            git.pull();
         } catch (Exception e) {
             e.printStackTrace();
         }
