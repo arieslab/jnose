@@ -2,26 +2,28 @@
     <div class="container">
         <div wicket:id="feedback" style="width: 360px;"></div>
 
-        <table class="table table-sm">
-            <tbody>
-            <tr style="color: #404040;">
-                <th style="text-align: center;">Name</th>
-                <th style="text-align: center;">Path</th>
-                <th></th>
-            </tr>
-            <tr wicket:id="lvProjetos">
-                <td style="text-align: center;">
-                    <span wicket:id="nomeProjeto">commons-csv</span>
-                </td>
-                <td style="text-align: center;">
-                    <span wicket:id="path">/home/tassio/Desenvolvimento/repo.git/jnose/./projects/commons-csv</span>
-                </td>
-                <td>
-                    <a wicket:id="lkSelect" href="#">Select</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <div style="overflow: auto; width: 100%; height:300px;background-color: #f5f5f5;">
+            <table class="table table-sm">
+                <tbody>
+                <tr style="color: #404040;">
+                    <th style="text-align: center;">Name</th>
+                    <th style="text-align: center;">Path</th>
+                    <th></th>
+                </tr>
+                <tr wicket:id="lvProjetos">
+                    <td style="text-align: center;">
+                        <span wicket:id="nomeProjeto">commons-csv</span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span wicket:id="path">/home/tassio/Desenvolvimento/repo.git/jnose/./projects/commons-csv</span>
+                    </td>
+                    <td>
+                        <a wicket:id="lkSelect" href="#">Select</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
         <br>
         <form wicket:id="form">
             Project Folder(Git): <input wicket:id="tfPastaPath" type="text" class="form-control"/>

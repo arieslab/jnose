@@ -2,7 +2,7 @@ package br.ufba.jnose.pages;
 
 import br.ufba.jnose.pages.base.BasePage;
 import br.ufba.jnose.pages.charts.BasicBarOptions;
-import br.ufba.jnose.pages.charts.TestSmelssBarOptions;
+import br.ufba.jnose.pages.charts.TestSmellsBarOptions;
 import de.adesso.wickedcharts.highcharts.options.*;
 import de.adesso.wickedcharts.highcharts.options.series.SimpleSeries;
 import de.adesso.wickedcharts.wicket8.highcharts.Chart;
@@ -17,7 +17,7 @@ public class ChartsPage extends BasePage {
     public ChartsPage(List<List<String>> todasLinhas, String title) {
         super("ResultPage");
         add(new Label("title",title));
-        TestSmelssBarOptions options = new TestSmelssBarOptions(todasLinhas);
+        TestSmellsBarOptions options = new TestSmellsBarOptions(todasLinhas);
         add(new Chart("chart", options));
     }
 

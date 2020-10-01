@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TestSmelssBarOptions extends Options {
+public class TestSmellsBarOptions extends Options {
 
     private static final long serialVersionUID = 1L;
 
-    public TestSmelssBarOptions(List<List<String>> todasLinhas) {
+    public TestSmellsBarOptions(List<List<String>> todasLinhas) {
 
         Map<String, String> mapaColunaValorTotal = new HashMap<String, String>();
 
