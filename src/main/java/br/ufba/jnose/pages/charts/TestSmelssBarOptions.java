@@ -15,37 +15,37 @@ public class TestSmelssBarOptions extends Options {
 
     public TestSmelssBarOptions(List<List<String>> todasLinhas) {
 
-        Map<String,String> mapaColunaValorTotal = new HashMap<>();
+        Map<String, String> mapaColunaValorTotal = new HashMap<>();
 
-        Map<String,String> mapaCelulasValorTotal = new HashMap<>();
+        Map<String, String> mapaCelulasValorTotal = new HashMap<>();
 
         int linhaAtual = 0;
-        for(List<String> linha : todasLinhas){
-            if(linhaAtual == 0){
+        for (List<String> linha : todasLinhas) {
+            if (linhaAtual == 0) {
                 System.out.println("##############################################################");
                 System.out.println(linha);
                 int colunaID = 0;
-                for(String coluna:linha){
-                    mapaColunaValorTotal.put(coluna,colunaID+"");
+                for (String coluna : linha) {
+                    mapaColunaValorTotal.put(coluna, colunaID + "");
                     colunaID++;
                 }
                 System.out.println("##############################################################");
                 linhaAtual++;
-            }else{
+            } else {
                 System.out.println(linha);
                 int celulaID = 0;
-                for(String celulaValor:linha){
-                    if(linhaAtual > 1) {
-                        String valorAnterior = mapaCelulasValorTotal.get(linhaAtual-1);
-                        if(Util.isInt(valorAnterior) && Util.isInt(celulaValor)){
+                for (String celulaValor : linha) {
+                    if (linhaAtual > 1) {
+                        String valorAnterior = mapaCelulasValorTotal.get(linhaAtual - 1);
+                        if (Util.isInt(valorAnterior) && Util.isInt(celulaValor)) {
                             int valorAnteriorInt = Integer.parseInt(valorAnterior);
                             int valorAtualInt = Integer.parseInt(celulaValor);
-                            valorAtualInt =+ valorAnteriorInt;
+                            valorAtualInt = +valorAnteriorInt;
                             celulaValor = (valorAtualInt + "");
                         }
                         mapaCelulasValorTotal.put(celulaID + "", celulaValor);
                         celulaID++;
-                    }else{
+                    } else {
                         mapaCelulasValorTotal.put(celulaID + "", celulaValor);
                         celulaID++;
                     }
@@ -55,7 +55,8 @@ public class TestSmelssBarOptions extends Options {
 
 
         setChartOptions(new ChartOptions()
-                .setType(SeriesType.BAR));
+                .setType(SeriesType.BAR)
+                .setHeight(600));
 
         setGlobal(new Global()
                 .setUseUTC(Boolean.TRUE));
@@ -97,14 +98,16 @@ public class TestSmelssBarOptions extends Options {
         setCredits(new CreditOptions()
                 .setEnabled(Boolean.FALSE));
 
-        mapaColunaValorTotal.forEach( (colunaName, colunaKey) ->  {
-            String valorTotalString = mapaCelulasValorTotal.get(colunaKey);
+        mapaColunaValorTotal.forEach((colunaName, colunaKey) -> {
+            if (!colunaName.equals("numberMethods") && !colunaName.equals("LOC")) {
+                String valorTotalString = mapaCelulasValorTotal.get(colunaKey);
 
-            if(Util.isInt(valorTotalString)){
-                int valorTotal = Integer.parseInt(valorTotalString);
-                addSeries(new SimpleSeries()
-                        .setName(colunaName)
-                        .setData(valorTotal));
+                if (Util.isInt(valorTotalString)) {
+                    int valorTotal = Integer.parseInt(valorTotalString);
+                    addSeries(new SimpleSeries()
+                            .setName(colunaName)
+                            .setData(valorTotal));
+                }
             }
 
         });

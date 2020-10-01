@@ -129,7 +129,7 @@ public class ByClassTestPage extends BasePage {
                 setResponsePage(new ChartsPage(listaResultado,"Charts By ClassTest"));
             }
         };
-        add(lkCharts);
+        add(lkCharts.setVisible(false));
 
         loadProjetos();
     }
@@ -213,7 +213,11 @@ public class ByClassTestPage extends BasePage {
                         setResponsePage(new ChartsPage(listaResultado,"Charts By ClassTes: " + projeto.getName()));
                     }
                 };
+                lkCharts.setEnabled(projeto.getProcessado());
+                lkCharts.setOutputMarkupId(true);
+                lkCharts.setOutputMarkupPlaceholderTag(true);
                 item.add(lkCharts);
+                projeto.lkCharts = lkCharts;
 
                 Link lkResultado = new Link<String>("lkResultado") {
                     @Override
@@ -336,6 +340,10 @@ public class ByClassTestPage extends BasePage {
                     WebMarkupContainer lkResultado = projeto.lkResultado;
                     lkResultado.setEnabled(projeto.getProcessado());
                     target.add(lkResultado);
+
+                    WebMarkupContainer lkCharts = projeto.lkCharts;
+                    lkCharts.setEnabled(projeto.getProcessado());
+                    target.add(lkCharts);
 
                     WebMarkupContainer iconProcessado = projeto.iconProcessado;
                     iconProcessado.setVisible(projeto.getProcessado());

@@ -31,6 +31,7 @@ public class Projeto implements Serializable {
     public WebMarkupContainer progressProject;
 
     public Link lkResultado;
+    public Link lkCharts;
 
     public Label lbPorcentagem;
     public String bugs;
