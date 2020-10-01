@@ -43,7 +43,7 @@ public class ByClassTestPage extends BasePage {
     private AjaxIndicatorAppender indicator;
     private ListView<Projeto> lvProjetos;
     private Label taLog;
-    private Label taLogInfo;
+//    private Label taLogInfo;
     private TotalProcessado totalProcessado;
     private Map<Integer, Integer> totalProgressBar;
     private Boolean processando;
@@ -51,7 +51,7 @@ public class ByClassTestPage extends BasePage {
     private IndicatingAjaxLink processarTodos;
 //    private Label lbProjetosSize;
     private StringBuffer logRetorno;
-    private StringBuffer logRetornoInfo;
+//    private StringBuffer logRetornoInfo;
     private String dataProcessamentoAtual;
     private boolean mesclado;
     private ExternalLink linkCSVFinal;
@@ -67,12 +67,12 @@ public class ByClassTestPage extends BasePage {
         pastaPathReport = pathAppToWebapp + File.separatorChar + "reports" + File.separatorChar;
         pastaPath = "";
         mesclado = false;
-        logRetornoInfo = new StringBuffer();
+//        logRetornoInfo = new StringBuffer();
         logRetorno = new StringBuffer();
         processando = false;
         processarCobertura = false;
         totalProcessado = new TotalProcessado();
-        logRetornoInfo.append("pastaPath: " + pastaPath + " <br>");
+//        logRetornoInfo.append("pastaPath: " + pastaPath + " <br>");
         totalProgressBar = new HashMap<>();
         totalProcessado.setValor(0);
 
@@ -86,9 +86,9 @@ public class ByClassTestPage extends BasePage {
         taLog.setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
         add(taLog);
 
-        taLogInfo = new Label("taLogInfo");
-        taLogInfo.setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
-        add(taLogInfo);
+//        taLogInfo = new Label("taLogInfo");
+//        taLogInfo.setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
+//        add(taLogInfo);
 
         criarTimer();
 
@@ -159,7 +159,7 @@ public class ByClassTestPage extends BasePage {
             protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
                 WicketApplication.COBERTURA_ON = processarCobertura;
                 out.println("COVERAGE_ON: " + processarCobertura);
-                logRetornoInfo.append("COVERAGE_ON: " + processarCobertura + " <br>");
+                logRetorno.append("COVERAGE_ON: " + processarCobertura + " <br>");
             }
         };
         add(acbCobertura);
@@ -187,7 +187,7 @@ public class ByClassTestPage extends BasePage {
         mesclado = false;
         dataProcessamentoAtual = JNoseCore.dateNowFolder();
         logRetorno = new StringBuffer();
-        logRetornoInfo = new StringBuffer();
+//        logRetornoInfo = new StringBuffer();
         totalProcessado.setValor(0);
 //        lbPastaSelecionada.setDefaultModel(Model.of("./projects"));
 
@@ -322,8 +322,8 @@ public class ByClassTestPage extends BasePage {
                 taLog.setDefaultModel(Model.of(logRetorno));
                 target.add(taLog);
 
-                taLogInfo.setDefaultModel(Model.of(logRetornoInfo));
-                target.add(taLogInfo);
+//                taLogInfo.setDefaultModel(Model.of(logRetornoInfo));
+//                target.add(taLogInfo);
 
                 Boolean todosProjetosProcessados = true;
 

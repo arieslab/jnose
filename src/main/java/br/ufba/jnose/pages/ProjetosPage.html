@@ -2,7 +2,7 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
-                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                <table id="example" class="table table-striped table-bordered table-sm" style="width:100%">
                     <thead>
                     <tr>
                         <th>Project</th>
@@ -14,7 +14,7 @@
                     <tr wicket:id="lista">
                         <td wicket:id="projetoNome"></td>
                         <td wicket:id="path"></td>
-                        <td><a wicket:id="linkDelete" href="#">Delete</a></td>
+                        <td><a class="btn btn-danger btn-sm" wicket:id="linkDelete" href="#">Delete</a></td>
                     </tr>
                     </tbody>
                 </table>
@@ -30,7 +30,7 @@
                         <input wicket:id="tfGitRepo" type="text" class="form-control" id="gitrepo" aria-describedby="gitrepohelp" placeholder="Enter git repository">
                         <small id="gitrepohelp" class="form-text text-muted">Aqui pode ser utilizado o endereço do repositório do github..</small>
                     </div>
-                    <button wicket:id="btClone" type="submit" class="btn btn-primary">Clone</button>
+                    <button wicket:id="btClone" type="submit" class="btn btn-primary btn-sm">Clone</button>
                 </form>
 
             </div>
