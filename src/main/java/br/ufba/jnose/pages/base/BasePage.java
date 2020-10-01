@@ -2,9 +2,11 @@ package br.ufba.jnose.pages.base;
 
 import br.ufba.jnose.pages.*;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -14,11 +16,11 @@ import org.apache.wicket.util.time.Duration;
 public class BasePage extends WebPage {
     private static final long serialVersionUID = 1L;
 
-    private Label footTime;
+    private WebMarkupContainer footTime;
 
     public BasePage(String paginaAtual) {
 
-        footTime = new Label("footTimeHome");
+        footTime = new WebMarkupContainer("footTimeHome");
         footTime.setOutputMarkupId(true);
         footTime.setOutputMarkupPlaceholderTag(true);
         add(footTime);
@@ -94,12 +96,10 @@ public class BasePage extends WebPage {
             String signal = "";
             @Override
             protected void onTimer(AjaxRequestTarget target) {
-                if(signal.isEmpty()){
-                    signal = "*";
-                    footTime.setDefaultModel(Model.of(signal));
+                if(footTime.isVisible()){
+                    footTime.setVisible(false);
                 }else{
-                    signal = "";
-                    footTime.setDefaultModel(Model.of(signal));
+                    footTime.setVisible(true);
                 }
                 target.add(footTime);
             }
