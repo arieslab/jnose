@@ -28,6 +28,11 @@
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>de.adesso.wicked-charts</groupId>
+			<artifactId>wicked-charts-wicket8</artifactId>
+			<version>3.2.1</version>
+		</dependency>
+		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.6</version>
@@ -232,6 +237,14 @@
 			<releases>
 				<enabled>true</enabled>
 			</releases>
+		</repository>
+		<repository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>central</id>
+			<name>bintray</name>
+			<url>https://jcenter.bintray.com</url>
 		</repository>
 	</repositories>
 	</project>

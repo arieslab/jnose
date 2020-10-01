@@ -123,6 +123,14 @@ public class ByClassTestPage extends BasePage {
         };
         add(lkResultado.setVisible(true));
 
+        Link lkCharts = new Link<String>("lkCharts") {
+            @Override
+            public void onClick() {
+                setResponsePage(new ChartsPage(listaResultado,"Charts By ClassTest"));
+            }
+        };
+        add(lkCharts);
+
         loadProjetos();
     }
 
@@ -199,7 +207,13 @@ public class ByClassTestPage extends BasePage {
             protected void populateItem(ListItem<Projeto> item) {
                 Projeto projeto = item.getModelObject();
 
-
+                Link lkCharts = new Link<String>("lkCharts") {
+                    @Override
+                    public void onClick() {
+                        setResponsePage(new ChartsPage(listaResultado,"Charts By ClassTes: " + projeto.getName()));
+                    }
+                };
+                item.add(lkCharts);
 
                 Link lkResultado = new Link<String>("lkResultado") {
                     @Override
