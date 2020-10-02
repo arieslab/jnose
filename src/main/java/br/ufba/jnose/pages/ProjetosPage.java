@@ -2,6 +2,7 @@ package br.ufba.jnose.pages;
 
 import br.ufba.jnose.core.GitCore;
 import br.ufba.jnose.core.JNoseCore;
+import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.dto.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
 import org.apache.commons.io.FileUtils;
@@ -65,6 +66,9 @@ public class ProjetosPage extends BasePage {
                 Projeto projeto = item.getModelObject();
                 item.add(new Label("projetoNome",projeto.getName()));
                 item.add(new Label("path",projeto.getPath()));
+                item.add(new Label("junit",JNoseCore.getJUnitVersion(projeto.getPath())));
+                ArrayList<Commit> lista = GitCore.gitLogOneLine(projeto.getPath());
+                item.add(new Label("lastupdate",lista.get(0).date));
                 item.add(new Link<String>("linkPull") {
                     @Override
                     public void onClick() {

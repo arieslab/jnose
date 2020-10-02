@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -216,6 +217,36 @@ public class JNoseCore {
                     }
                 });
         return files;
+    }
+
+    public static TestClass.JunitVersion getJUnitVersion(String directoryPath) {
+        String projectName = directoryPath.substring(directoryPath.lastIndexOf(File.separatorChar) + 1, directoryPath.length());
+
+        final TestClass.JunitVersion[] jUnitVersion = new TestClass.JunitVersion[1];
+
+        List<TestClass> files = new ArrayList<>();
+        Path startDir = Paths.get(directoryPath);
+        try {
+            Files.walk(startDir)
+                    .filter(Files::isRegularFile)
+                    .forEach(filePath -> {
+                        if (filePath.getFileName().toString().lastIndexOf(".") != -1) {
+                            String fileNameWithoutExtension = filePath.getFileName().toString().substring(0, filePath.getFileName().toString().lastIndexOf(".")).toLowerCase();
+                            if (filePath.toString().toLowerCase().endsWith(".java") && fileNameWithoutExtension.matches("^.*test\\d*$")) {
+                                TestClass testClass = new TestClass();
+                                testClass.projectName = projectName;
+                                testClass.pathFile = filePath.toString();
+                                if (isTestFile(testClass)) {
+                                    jUnitVersion[0] = testClass.junitVersion;
+
+                                }
+                            }
+                        }
+                    });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return jUnitVersion[0];
     }
 
     private static boolean isTestFile(TestClass testClass) {
