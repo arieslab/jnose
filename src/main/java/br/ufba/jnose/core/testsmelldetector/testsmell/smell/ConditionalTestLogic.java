@@ -31,7 +31,7 @@ public class ConditionalTestLogic extends AbstractSmell {
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
         private MethodDeclaration currentMethod = null;
-        private int conditionCount, ifCount, switchCount, forCount, foreachCount, whileCount = 0;
+        private int conditionCount, ifCount, switchCount, forCount, foreachCount, whileCount, doCount = 0;
         TestMethod testMethod;
 
         // examine all methods in the test class
@@ -43,7 +43,7 @@ public class ConditionalTestLogic extends AbstractSmell {
                 testMethod.setHasSmell(false); //default value is false (i.e. no smell)
                 super.visit(n, arg);
 
-                testMethod.setHasSmell(conditionCount > 0 | ifCount > 0 | switchCount > 0 | foreachCount > 0 | forCount > 0 | whileCount > 0);
+                testMethod.setHasSmell(conditionCount > 0 | ifCount > 0 | switchCount > 0 | foreachCount > 0 | forCount > 0 | whileCount > 0 | doCount > 0);
 
                 testMethod.addDataItem("ConditionCount", String.valueOf(conditionCount));
                 testMethod.addDataItem("IfCount", String.valueOf(ifCount));
@@ -51,6 +51,7 @@ public class ConditionalTestLogic extends AbstractSmell {
                 testMethod.addDataItem("ForeachCount", String.valueOf(foreachCount));
                 testMethod.addDataItem("ForCount", String.valueOf(forCount));
                 testMethod.addDataItem("WhileCount", String.valueOf(whileCount));
+                testMethod.addDataItem("DoCount", String.valueOf(doCount));
 
                 testMethod.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
                 testMethod.addDataItem("end",String.valueOf(n.getRange().get().end.line));
@@ -65,6 +66,7 @@ public class ConditionalTestLogic extends AbstractSmell {
                 forCount = 0;
                 foreachCount = 0;
                 whileCount = 0;
+                doCount = 0;
             }
         }
 
@@ -117,6 +119,14 @@ public class ConditionalTestLogic extends AbstractSmell {
             super.visit(n, arg);
             if (currentMethod != null) {
                 whileCount++;
+            }
+        }
+
+        @Override
+        public void visit(DoStmt n, Void arg) {
+            super.visit(n, arg);
+            if (currentMethod != null) {
+                doCount++;
             }
         }
     }
