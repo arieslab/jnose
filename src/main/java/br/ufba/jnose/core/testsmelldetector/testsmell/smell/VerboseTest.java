@@ -17,6 +17,8 @@ If a test methods contains a statements that exceeds a certain threshold, the me
  */
 public class VerboseTest extends AbstractSmell {
 
+    public static int MAX_STATEMENTS = 123;
+
     public VerboseTest() {
         super("Verbose Test");
     }
@@ -31,7 +33,7 @@ public class VerboseTest extends AbstractSmell {
     }
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
-        final int MAX_STATEMENTS = 123;
+//        final int MAX_STATEMENTS = 123;
         private MethodDeclaration currentMethod = null;
         private int verboseCount = 0;
         TestMethod testMethod;
