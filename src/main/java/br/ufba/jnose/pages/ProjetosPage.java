@@ -26,14 +26,26 @@ public class ProjetosPage extends BasePage {
     private String repoGit;
 
     public ProjetosPage() {
+        this("");
+    }
+
+    public ProjetosPage(String repo) {
         super("ProjetosPage");
-        repoGit = "";
+        this.repoGit = repo;
 
         Form form = new Form<>("form");
 
         TextField tfGitRepo = new TextField("tfGitRepo", new PropertyModel(this, "repoGit"));
         tfGitRepo.setRequired(true);
         form.add(tfGitRepo);
+
+        form.add(new Link<String>("lkAddOracle") {
+            @Override
+            public void onClick() {
+                repoGit = "https://github.com/danielevalverde/jnose-tests.git";
+                setResponsePage(new ProjetosPage(repoGit));
+            }
+        });
 
         Button btEnviar = new Button("btClone") {
             @Override
