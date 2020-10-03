@@ -7,7 +7,10 @@
                     <div class="form-group">
                         <label for="gitrepo">Git Repository</label>
                         <input wicket:id="tfGitRepo" type="text" class="form-control" id="gitrepo" aria-describedby="gitrepohelp" placeholder="Enter git repository">
-                        <small id="gitrepohelp" class="form-text text-muted">Aqui pode ser utilizado o endereço do repositório do github..</small>
+                        <div style="position: absolute;bottom: 0;right: 0;width: 140px; font-size:12px;">
+                            <a wicket:id="lkAddOracle" href="">Copy Oracle JNose Tests</a>
+                        </div>
+                        <small id="gitrepohelp" class="form-text text-muted">Here the address of the github repository can be used.</small>
                     </div>
                     <button wicket:id="btClone" type="submit" class="btn btn-primary btn-sm">Clone</button>
                 </form>
@@ -22,6 +25,8 @@
                     <tr>
                         <th>Project</th>
                         <th>path</th>
+                        <th>JUnit</th>
+                        <th>Last Update</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -29,6 +34,8 @@
                     <tr wicket:id="lista">
                         <td wicket:id="projetoNome"></td>
                         <td wicket:id="path"></td>
+                        <td wicket:id="junit"></td>
+                        <td wicket:id="lastupdate"></td>
                         <td>
                             <a class="btn btn-warning btn-sm" wicket:id="linkPull" href="#">Pull</a>
                             <a class="btn btn-danger btn-sm" wicket:id="linkDelete" href="#">Delete</a>

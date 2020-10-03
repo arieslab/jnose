@@ -1,10 +1,12 @@
 package br.ufba.jnose.pages;
 
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestSmellDetector;
+import br.ufba.jnose.core.testsmelldetector.testsmell.smell.VerboseTest;
 import br.ufba.jnose.pages.base.BasePage;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.PropertyModel;
 
 public class ConfigPage extends BasePage {
@@ -32,8 +34,12 @@ public class ConfigPage extends BasePage {
     public Boolean generalFixture;
     public Boolean mysteryGuest;
 
+    public String verboseTestMaxStatements;
+
     public ConfigPage() {
         super("ConfigPage");
+
+        this.verboseTestMaxStatements = VerboseTest.MAX_STATEMENTS+"";
 
         emptyTest = TestSmellDetector.emptyTest;
         exceptionCatchingThrowing = TestSmellDetector.exceptionCatchingThrowing;
@@ -65,7 +71,6 @@ public class ConfigPage extends BasePage {
                 TestSmellDetector.generalFixture = generalFixture;
                 TestSmellDetector.mysteryGuest = mysteryGuest;
                 TestSmellDetector.sleepyTest = sleepyTest;
-                TestSmellDetector.verboseTest = verboseTest;
                 TestSmellDetector.sensitiveEquality = sensitiveEquality;
                 TestSmellDetector.redundantAssertion = redundantAssertion;
                 TestSmellDetector.printStatement = printStatement;
@@ -81,6 +86,9 @@ public class ConfigPage extends BasePage {
                 TestSmellDetector.dependentTest = dependentTest;
                 TestSmellDetector.duplicateAssert = duplicateAssert;
                 TestSmellDetector.eagerTest = eagerTest;
+
+                TestSmellDetector.verboseTest = verboseTest;
+                VerboseTest.MAX_STATEMENTS = Integer.parseInt(verboseTestMaxStatements);
             }
         };
 
@@ -198,7 +206,6 @@ public class ConfigPage extends BasePage {
         form.add(new CheckBox("cbGeneralFixture", new PropertyModel<>(this, "generalFixture")));
         form.add(new CheckBox("cbMysteryGuest", new PropertyModel<>(this, "mysteryGuest")));
         form.add(new CheckBox("cbSleepyTest", new PropertyModel<>(this, "sleepyTest")));
-        form.add(new CheckBox("cbVerboseTest", new PropertyModel<>(this, "verboseTest")));
         form.add(new CheckBox("cbSensitiveEquality", new PropertyModel<>(this, "sensitiveEquality")));
         form.add(new CheckBox("cbRedundantAssertion", new PropertyModel<>(this, "redundantAssertion")));
         form.add(new CheckBox("cbPrintStatement", new PropertyModel<>(this, "printStatement")));
@@ -207,6 +214,10 @@ public class ConfigPage extends BasePage {
         form.add(new CheckBox("cbIgnoredTest", new PropertyModel<>(this, "ignoredTest")));
         form.add(new CheckBox("cbUnknownTest", new PropertyModel<>(this, "unknownTest")));
         form.add(new CheckBox("cbLazyTest", new PropertyModel<>(this, "lazyTest")));
+
+        form.add(new CheckBox("cbVerboseTest", new PropertyModel<>(this, "verboseTest")));
+        form.add(new TextField<String>("verboseTestMaxStatements", new PropertyModel<>(this, "verboseTestMaxStatements")));
+
 
         add(form);
 
