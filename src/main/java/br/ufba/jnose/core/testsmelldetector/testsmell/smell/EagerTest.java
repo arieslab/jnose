@@ -172,8 +172,10 @@ public class EagerTest extends AbstractSmell {
             if (n.getScope().isPresent()) {
                 if ((n.getScope().get() instanceof MethodCallExpr)) {
                     getFinalScope((MethodCallExpr) n.getScope().get());
+                    System.out.println("onde    "+String.valueOf(n.getRange().get().begin.line));
                 } else if ((n.getScope().get() instanceof NameExpr)) {
                     tempNameExpr = ((NameExpr) n.getScope().get());
+                    System.out.println("onde2    "+String.valueOf(n.getRange().get().begin.line));
                 }
             }
         }

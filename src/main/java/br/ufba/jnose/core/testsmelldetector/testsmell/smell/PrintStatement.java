@@ -1,5 +1,6 @@
 package br.ufba.jnose.core.testsmelldetector.testsmell.smell;
 
+import br.ufba.jnose.core.testsmelldetector.testsmell.MethodUsage;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
@@ -7,7 +8,6 @@ import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
-import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestMethod;
 import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
 
@@ -21,8 +21,11 @@ This code checks the body of each test method if System.out. print(), println(),
  */
 public class PrintStatement extends AbstractSmell {
 
+    private List<MethodUsage> methodPrints;
+
     public PrintStatement() {
         super("Print Statement");
+        methodPrints = new ArrayList<>();
     }
 
     /**
@@ -32,11 +35,18 @@ public class PrintStatement extends AbstractSmell {
     public void runAnalysis(CompilationUnit testFileCompilationUnit, CompilationUnit productionFileCompilationUnit, String testFileName, String productionFileName) throws FileNotFoundException {
         classVisitor = new PrintStatement.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
+
+        for (MethodUsage method : methodPrints) {
+            TestMethod testClass = new TestMethod(method.getTestMethodName());
+            testClass.addDataItem("begin", method.getBegin());
+            testClass.addDataItem("end", method.getEnd());
+            testClass.setHasSmell(true);
+            smellyElementList.add(testClass);
+        }
     }
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
         private MethodDeclaration currentMethod = null;
-        private int printCount = 0;
         TestMethod testMethod;
 
         // examine all methods in the test class
@@ -48,17 +58,8 @@ public class PrintStatement extends AbstractSmell {
                 testMethod.setHasSmell(false); //default value is false (i.e. no smell)
                 super.visit(n, arg);
 
-                testMethod.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
-                testMethod.addDataItem("end",String.valueOf(n.getRange().get().end.line));
-
-                testMethod.setHasSmell(printCount >= 1);
-                testMethod.addDataItem("PrintCount", String.valueOf(printCount));
-
-                smellyElementList.add(testMethod);
-
                 //reset values for next method
                 currentMethod = null;
-                printCount = 0;
             }
         }
 
@@ -81,7 +82,8 @@ public class PrintStatement extends AbstractSmell {
                                 f1.getScope() instanceof NameExpr &&
                                 ((NameExpr) f1.getScope()).getNameAsString().equals("System"))) {
                             //a print statement exists in the method body
-                            printCount++;
+                            System.out.println("teste    "+String.valueOf(n.getRange().get().begin.line) +"    "+String.valueOf(n.getRange().get().end.line));
+                            methodPrints.add(new MethodUsage(n.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().begin.line)));
                         }
                     }
 
