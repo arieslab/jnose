@@ -127,7 +127,7 @@ public class GitCore {
     public static void pull(String projetoPath) {
         try {
             Git git = Git.open(new File(projetoPath));
-            git.pull();
+            git.pull().call();
         } catch (Exception e) {
             e.printStackTrace();
         }
