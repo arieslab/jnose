@@ -261,7 +261,7 @@ public class JNoseCore {
             for (NodeList node : nodeList) {
                 isTestFile = flowClass(node, testClass);
             }
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return isTestFile;
@@ -288,8 +288,14 @@ public class JNoseCore {
                 NodeList<?> nodeList_members = classAtual.getMembers();
                 testClass.numberMethods = classAtual.getMembers().size();
                 isTestClass = flowClass(nodeList_members, testClass);
+                if(isTestClass){
+                    return true;
+                }
             } else if (node instanceof MethodDeclaration) {
                 isTestClass = flowClass(((MethodDeclaration) node).getAnnotations(), testClass);
+                if(isTestClass){
+                    return true;
+                }
             } else if (node instanceof AnnotationExpr) {
                 return ((AnnotationExpr) node).getNameAsString().toLowerCase().contains("test");
             }
