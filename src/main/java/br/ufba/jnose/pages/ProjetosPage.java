@@ -18,6 +18,8 @@ import org.apache.wicket.model.PropertyModel;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +70,8 @@ public class ProjetosPage extends BasePage {
                 item.add(new Label("path",projeto.getPath()));
                 item.add(new Label("junit",JNoseCore.getJUnitVersion(projeto.getPath())));
                 ArrayList<Commit> lista = GitCore.gitLogOneLine(projeto.getPath());
-                item.add(new Label("lastupdate",lista.get(0).date));
+                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                item.add(new Label("lastupdate",df.format(lista.get(0).date)));
                 item.add(new Link<String>("linkPull") {
                     @Override
                     public void onClick() {
