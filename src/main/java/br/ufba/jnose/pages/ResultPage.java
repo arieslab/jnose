@@ -16,7 +16,7 @@ import java.util.List;
 public class ResultPage extends ImprimirPage {
     private static final long serialVersionUID = 1L;
 
-    public ResultPage(List<List<String>> todasLinhas, String title, String csvFileName) {
+    public ResultPage(List<List<String>> todasLinhas, String title, String csvFileName, boolean fontColorized) {
         super("ResultPage");
 
         add(new Label("title",title));
@@ -29,7 +29,7 @@ public class ResultPage extends ImprimirPage {
             protected void populateItem(ListItem<List<String>> item) {
                 List<String> linha = item.getModelObject();
                 for(int i = 0; i <= 26; i++){
-                    lb(i,linha,item);
+                    lb(i,linha,item, fontColorized);
                 }
             }
         };
@@ -42,16 +42,18 @@ public class ResultPage extends ImprimirPage {
         return new File(pathFile);
     }
 
-    private void lb(int numero, List<String> linha, ListItem<List<String>> item){
+    private void lb(int numero, List<String> linha, ListItem<List<String>> item, Boolean fontColorized){
         if(linha.size() > numero) {
 
             Label lb = new Label("lb" + numero, linha.get(numero));
             if(Util.isInt(linha.get(numero))){
                 Integer n = Integer.parseInt(linha.get(numero));
-                if(n != 0){
-                    lb.add(new AttributeModifier("style","background-color:#ffe6e6"));
-                }else{
-                    lb.add(new AttributeModifier("style","background-color:#e6ffee"));
+                if(fontColorized) {
+                    if (n != 0) {
+                        lb.add(new AttributeModifier("style", "color:red"));
+                    } else {
+                        lb.add(new AttributeModifier("style", "color:green"));
+                    }
                 }
             }
 
