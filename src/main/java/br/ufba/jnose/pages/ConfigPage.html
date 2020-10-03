@@ -2,13 +2,15 @@
     <div class="container">
 
         <form wicket:id="form">
+            <div style="position: fixed;left: 30px;width: 140px; font-size:12px;">
+                <input class="btn btn-danger btn-sm" style="width: 100%;" type="submit" value="Save"/><br><br>
+                <button class="btn btn-success btn-sm" style="width: 100%;" wicket:id="btAll">Select all</button><br><br>
+                <button class="btn btn-warning btn-sm" style="width: 100%;" wicket:id="btDAll">Deselect All</button>
+            </div>
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Test Smells</h5>
-                    <input class="btn btn-danger btn-sm" type="submit" value="Save"/>
-                    <button class="btn btn-success btn-sm" wicket:id="btAll">Select all</button>
-                    <button class="btn btn-warning btn-sm" wicket:id="btDAll">Deselect All</button>
-                    <br><br>
+                    <br>
                     <!-- Default unchecked -->
                     <div class="custom-control custom-checkbox">
                         <div class="card" style="background-color: #f5f5f5;">
