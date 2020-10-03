@@ -10,7 +10,6 @@ import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
-import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestMethod;
 import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
 
@@ -51,10 +50,13 @@ public class LazyTest extends AbstractSmell {
         for (MethodUsage method : calledProductionMethods) {
             List<MethodUsage> s = calledProductionMethods.stream().filter(x -> x.getProductionMethod().equals(method.getProductionMethod())).collect(Collectors.toList());
             if (s.size() > 1) {
-                if (s.stream().filter(y -> y.getTestMethod().equals(method.getTestMethod())).count() != s.size()) {
+                if (s.stream().filter(y -> y.getTestMethodName().equals(method.getTestMethodName())).count() != s.size()) {
                     // If counts don not match, this production method is used by multiple test methods. Hence, there is a Lazy Test smell.
                     // If the counts were equal it means that the production method is only used (called from) inside one test method
-                    TestMethod testClass = new TestMethod(method.getTestMethod());
+                    TestMethod testClass = new TestMethod(method.getTestMethodName());
+                    testClass.addDataItem("lineNumber", method.line);
+                    testClass.addDataItem("begin", method.begin);
+                    testClass.addDataItem("end", method.end);
                     testClass.setHasSmell(true);
                     smellyElementList.add(testClass);
                 }
@@ -63,19 +65,22 @@ public class LazyTest extends AbstractSmell {
     }
 
     private class MethodUsage {
-        private String testMethod, productionMethod;
+        private String testMethodName, productionMethod, line, begin, end;
 
-        public MethodUsage(String testMethod, String productionMethod) {
-            this.testMethod = testMethod;
+        public MethodUsage(String testMethod, String productionMethod, String line, String begin, String end) {
+            this.testMethodName = testMethod;
             this.productionMethod = productionMethod;
+            this.line = line;
+            this.end = end;
+            this.begin = begin;
         }
 
         public String getProductionMethod() {
             return productionMethod;
         }
 
-        public String getTestMethod() {
-            return testMethod;
+        public String getTestMethodName() {
+            return testMethodName;
         }
     }
 
@@ -86,7 +91,7 @@ public class LazyTest extends AbstractSmell {
         private MethodDeclaration currentMethod = null;
         TestMethod testMethod;
         private List<String> productionVariables = new ArrayList<>();
-        private String fileType;
+        private String fileType, begin, end;
 
         public ClassVisitor(String type) {
             fileType = type;
@@ -119,8 +124,8 @@ public class LazyTest extends AbstractSmell {
                     currentMethod = n;
                     testMethod = new TestMethod(currentMethod.getNameAsString());
                     testMethod.setHasSmell(false); //default value is false (i.e. no smell)
-                    testMethod.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
-                    testMethod.addDataItem("end",String.valueOf(n.getRange().get().end.line));
+                    begin = String.valueOf(n.getRange().get().begin.line);
+                    end = String.valueOf(n.getRange().get().end.line);
                     super.visit(n, arg);
 
                     //reset values for next method
@@ -133,7 +138,6 @@ public class LazyTest extends AbstractSmell {
                         productionMethods.add(n);
                     }
                 }
-
             }
         }
 
@@ -154,7 +158,7 @@ public class LazyTest extends AbstractSmell {
             if (currentMethod != null) {
                 if (productionMethods.stream().anyMatch(i -> i.getNameAsString().equals(n.getNameAsString()) &&
                         i.getParameters().size() == n.getArguments().size())) {
-                    calledProductionMethods.add(new MethodUsage(currentMethod.getNameAsString(), n.getNameAsString()));
+                    calledProductionMethods.add(new MethodUsage(currentMethod.getNameAsString(), n.getNameAsString(), String.valueOf(n.getRange().get().begin.line), begin, end));
                 } else {
                     if (n.getScope().isPresent()) {
                         if (n.getScope().get() instanceof NameExpr) {
@@ -163,7 +167,7 @@ public class LazyTest extends AbstractSmell {
                             ///if the scope matches a variable which, in turn, is of type of the production class
                             if (((NameExpr) n.getScope().get()).getNameAsString().equals(productionClassName) ||
                                     productionVariables.contains(((NameExpr) n.getScope().get()).getNameAsString())) {
-                                calledProductionMethods.add(new MethodUsage(currentMethod.getNameAsString(), n.getNameAsString()));
+                                calledProductionMethods.add(new MethodUsage(currentMethod.getNameAsString(), n.getNameAsString(), String.valueOf(n.getRange().get().begin.line), begin, end));
                             }
                         }
                     }

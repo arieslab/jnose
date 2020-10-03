@@ -299,7 +299,7 @@ public class JNoseCore {
                         testSmell.method = smellyElement.getElementName();
                         testSmell.begin = smellyElement.getData().get("begin");
                         testSmell.end = smellyElement.getData().get("end");
-                        testSmell.lineNumber = smellyElement.getData().get("begin");
+                        testSmell.lineNumber = smellyElement.getData().get("lineNumber");
 
                         testClass.listTestSmell.add(testSmell);
                     }
