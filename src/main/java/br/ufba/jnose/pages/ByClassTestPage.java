@@ -58,6 +58,8 @@ public class ByClassTestPage extends BasePage {
     private boolean processarCobertura;
     private List<List<String>> listaResultado;
 
+    private Link lkResultadoBotton;
+
     public ByClassTestPage() {
         super("ByClassTestPage");
 
@@ -98,9 +100,9 @@ public class ByClassTestPage extends BasePage {
 
         criarListaProjetos();
 
-        linkCSVFinal = new ExternalLink("linkCSVFinal", File.separatorChar + "reports" + File.separatorChar + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv");
-        linkCSVFinal.setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
-        add(linkCSVFinal);
+//        linkCSVFinal = new ExternalLink("linkCSVFinal", File.separatorChar + "reports" + File.separatorChar + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv");
+//        linkCSVFinal.setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
+//        add(linkCSVFinal);
 
         FeedbackPanel feedback = new JQueryFeedbackPanel("feedback");
         add(feedback.setOutputMarkupId(true));
@@ -115,13 +117,16 @@ public class ByClassTestPage extends BasePage {
         progressBar = new ProgressBar("progress", Model.of(0));
         add(this.progressBar);
 
-        Link lkResultado = new Link<String>("lkResultado") {
+        lkResultadoBotton = new Link<String>("lkResultado") {
             @Override
             public void onClick() {
                 setResponsePage(new ResultPage(listaResultado,"Result By ClassTest", "result_byclasstest_testsmells", true));
             }
         };
-        add(lkResultado.setVisible(true));
+        lkResultadoBotton.setEnabled(processando);
+        lkResultadoBotton.setOutputMarkupId(true);
+        lkResultadoBotton.setOutputMarkupPlaceholderTag(true);
+        add(lkResultadoBotton);
 
         Link lkCharts = new Link<String>("lkCharts") {
             @Override
@@ -337,6 +342,9 @@ public class ByClassTestPage extends BasePage {
 
                 for (Projeto projeto : listaProjetosProcessar) {
 
+                    lkResultadoBotton.setEnabled(projeto.getProcessado());
+                    target.add(lkResultadoBotton);
+
                     WebMarkupContainer lkResultado = projeto.lkResultado;
                     lkResultado.setEnabled(projeto.getProcessado());
                     target.add(lkResultado);
@@ -391,10 +399,10 @@ public class ByClassTestPage extends BasePage {
                     }
                 }
 
-                if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
-                    linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv"));
-                    target.add(linkCSVFinal);
-                }
+//                if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
+//                    linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv"));
+//                    target.add(linkCSVFinal);
+//                }
 
             }
         };

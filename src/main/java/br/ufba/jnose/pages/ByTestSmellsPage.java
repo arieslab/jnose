@@ -14,10 +14,6 @@ import org.apache.wicket.extensions.ajax.markup.html.AjaxIndicatorAppender;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -50,9 +46,10 @@ public class ByTestSmellsPage extends BasePage {
     private IndicatingAjaxLink processarTodos;
     private Label lbProjetosSize;
     private String dataProcessamentoAtual;
-    private ExternalLink linkCSVFinal;
+//    private ExternalLink linkCSVFinal;
     private StringBuffer logRetorno;
     private List<List<String>> listaResultado;
+    private Link lkResultadoBotton;
 
     public ByTestSmellsPage() {
         super("ByTestSmellsPage");
@@ -77,9 +74,9 @@ public class ByTestSmellsPage extends BasePage {
 
         criarListaProjetos();
 
-        linkCSVFinal = new ExternalLink("linkCSVFinal", File.separatorChar + "reports" + File.separatorChar + dataProcessamentoAtual + File.separatorChar + "all_report_by_testsmells.csv");
-        linkCSVFinal.setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
-        add(linkCSVFinal);
+//        linkCSVFinal = new ExternalLink("linkCSVFinal", File.separatorChar + "reports" + File.separatorChar + dataProcessamentoAtual + File.separatorChar + "all_report_by_testsmells.csv");
+//        linkCSVFinal.setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
+//        add(linkCSVFinal);
 
         FeedbackPanel feedback = new JQueryFeedbackPanel("feedback");
         add(feedback.setOutputMarkupId(true));
@@ -94,13 +91,16 @@ public class ByTestSmellsPage extends BasePage {
         progressBar = new ProgressBar("progress", Model.of(0));
         add(this.progressBar);
 
-        Link lkResultado = new Link<String>("lkResultado") {
+        lkResultadoBotton = new Link<String>("lkResultado") {
             @Override
             public void onClick() {
                 setResponsePage(new ResultPage(listaResultado,"Result By TestSmells", "result_byclasstest_testsmells",false));
             }
         };
-        add(lkResultado.setVisible(true));
+        lkResultadoBotton.setEnabled(processando);
+        lkResultadoBotton.setOutputMarkupId(true);
+        lkResultadoBotton.setOutputMarkupPlaceholderTag(true);
+        add(lkResultadoBotton);
 
         loadProjetos();
     }
@@ -244,6 +244,9 @@ public class ByTestSmellsPage extends BasePage {
 
                 for (Projeto projeto : listaProjetosProcessar) {
 
+                    lkResultadoBotton.setEnabled(projeto.getProcessado());
+                    target.add(lkResultadoBotton);
+
                     WebMarkupContainer lkResultado = projeto.lkResultado;
                     lkResultado.setEnabled(projeto.getProcessado());
                     target.add(lkResultado);
@@ -269,10 +272,10 @@ public class ByTestSmellsPage extends BasePage {
                     processado = processado && p.getProcessado();
                 }
 
-                if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
-                    linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv"));
-                    target.add(linkCSVFinal);
-                }
+//                if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
+//                    linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv"));
+//                    target.add(linkCSVFinal);
+//                }
 
             }
         };
@@ -325,10 +328,10 @@ public class ByTestSmellsPage extends BasePage {
                     processado = processado && p.getProcessado();
                 }
 
-                if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
-                    linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_report_by_testsmells.csv"));
-                    target.add(linkCSVFinal);
-                }
+//                if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
+//                    linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_report_by_testsmells.csv"));
+//                    target.add(linkCSVFinal);
+//                }
 
             }
         };
