@@ -41,8 +41,8 @@ public class IgnoredTest extends AbstractSmell {
             if (n.getAnnotationByName("Ignore").isPresent()) {
                 testClass = new TestClass(n.getNameAsString());
                 testClass.setHasSmell(true);
-                testMethod.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
-                testMethod.addDataItem("end",String.valueOf(n.getRange().get().end.line));
+//                testMethod.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
+//                testMethod.addDataItem("end",String.valueOf(n.getRange().get().end.line));
                 smellyElementList.add(testClass);
             }
             super.visit(n, arg);

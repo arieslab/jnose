@@ -1,14 +1,15 @@
 package br.ufba.jnose.core.testsmelldetector.testsmell.smell;
 
+import br.ufba.jnose.core.testsmelldetector.testsmell.*;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.expr.Name;
 import com.github.javaparser.ast.stmt.CatchClause;
 import com.github.javaparser.ast.stmt.ThrowStmt;
+import com.github.javaparser.ast.stmt.TryStmt;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
-import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
-import br.ufba.jnose.core.testsmelldetector.testsmell.TestMethod;
-import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
+import sun.tools.tree.FinallyStatement;
+import sun.tools.tree.ThrowStatement;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -20,8 +21,10 @@ If this code detects the existence of a catch block or a throw statement in the 
  */
 public class ExceptionCatchingThrowing extends AbstractSmell {
 
+    private List<MethodUsage> methodExceptions;
     public ExceptionCatchingThrowing() {
         super("Exception Catching Throwing");
+        methodExceptions = new ArrayList<>();
     }
 
     /**
@@ -31,11 +34,18 @@ public class ExceptionCatchingThrowing extends AbstractSmell {
     public void runAnalysis(CompilationUnit testFileCompilationUnit, CompilationUnit productionFileCompilationUnit, String testFileName, String productionFileName) throws FileNotFoundException {
         classVisitor = new ExceptionCatchingThrowing.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
+
+        for (MethodUsage method : methodExceptions) {
+            TestMethod testClass = new TestMethod(method.getTestMethodName());
+            testClass.addDataItem("begin", method.getBegin());
+            testClass.addDataItem("end", method.getEnd());
+            testClass.setHasSmell(true);
+            smellyElementList.add(testClass);
+        }
     }
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
         private MethodDeclaration currentMethod = null;
-        private int exceptionCount = 0;
         TestMethod testMethod;
 
 
@@ -47,42 +57,27 @@ public class ExceptionCatchingThrowing extends AbstractSmell {
                 testMethod = new TestMethod(n.getNameAsString());
                 testMethod.setHasSmell(false); //default value is false (i.e. no smell)
 
-                testMethod.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
-                testMethod.addDataItem("end",String.valueOf(n.getRange().get().end.line));
-
                 super.visit(n, arg);
-
-                if (n.getThrownExceptions().size() >= 1)
-                    exceptionCount++;
-
-                testMethod.setHasSmell(exceptionCount >= 1);
-                testMethod.addDataItem("ExceptionCount", String.valueOf(exceptionCount));
-
-                smellyElementList.add(testMethod);
 
                 //reset values for next method
                 currentMethod = null;
-                exceptionCount = 0;
             }
         }
 
 
+//        @Override
+//        public void visit(ThrowStmt n, Void arg) {
+//            super.visit(n, arg);
+//
+//            if (currentMethod != null) {
+//                methodExceptions.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().end.line)));
+//            }
+//        }
+
+
         @Override
-        public void visit(ThrowStmt n, Void arg) {
-            super.visit(n, arg);
-
-            if (currentMethod != null) {
-                exceptionCount++;
-            }
-        }
-
-        @Override
-        public void visit(CatchClause n, Void arg) {
-            super.visit(n, arg);
-
-            if (currentMethod != null) {
-                exceptionCount++;
-            }
+        public void visit(TryStmt n, Void arg) {
+            methodExceptions.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().end.line)));
         }
 
     }

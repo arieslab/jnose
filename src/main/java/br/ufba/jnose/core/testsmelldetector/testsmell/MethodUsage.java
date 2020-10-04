@@ -16,13 +16,5 @@ public class MethodUsage {
     public String getTestMethodName() {
         return testMethodName;
     }
-
-    public String getBegin() {
-        return begin;
-    }
-
-    public String getEnd() {
-        return end;
-    }
 }
 
