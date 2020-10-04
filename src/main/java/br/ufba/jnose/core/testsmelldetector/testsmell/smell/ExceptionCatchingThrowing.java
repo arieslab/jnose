@@ -3,13 +3,8 @@ package br.ufba.jnose.core.testsmelldetector.testsmell.smell;
 import br.ufba.jnose.core.testsmelldetector.testsmell.*;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.expr.Name;
-import com.github.javaparser.ast.stmt.CatchClause;
-import com.github.javaparser.ast.stmt.ThrowStmt;
 import com.github.javaparser.ast.stmt.TryStmt;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import sun.tools.tree.FinallyStatement;
-import sun.tools.tree.ThrowStatement;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;

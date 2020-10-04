@@ -16,5 +16,30 @@ public class MethodUsage {
     public String getTestMethodName() {
         return testMethodName;
     }
+
+
+    public void setTestMethodName(String testMethodName) {
+        this.testMethodName = testMethodName;
+    }
+
+    public void setProductionMethod(String productionMethod) {
+        this.productionMethod = productionMethod;
+    }
+
+    public String getBegin() {
+        return begin;
+    }
+
+    public void setBegin(String begin) {
+        this.begin = begin;
+    }
+
+    public String getEnd() {
+        return end;
+    }
+
+    public void setEnd(String end) {
+        this.end = end;
+    }
 }
 

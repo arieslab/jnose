@@ -7,7 +7,7 @@ public class TestSmell implements Serializable {
 
     public String name;
     public String method;
-    public String lineNumber;
+//    public String lineNumber;
     public String begin;
     public String end;
 
@@ -16,7 +16,7 @@ public class TestSmell implements Serializable {
         return "TestSmell{" +
                 "name='" + name + '\'' +
                 ", method='" + method + '\'' +
-                ", lineNumber=" + lineNumber +
+//                ", lineNumber=" + lineNumber +
                 ", range='[" + begin + "-" + end + "]" +'\'' +
                 '}';
     }

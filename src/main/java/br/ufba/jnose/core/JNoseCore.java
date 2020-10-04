@@ -154,9 +154,9 @@ public class JNoseCore {
         columnValues.add(6, "qtdMethods");
         columnValues.add(7, "testSmellName");
         columnValues.add(8, "testSmellMethod");
-        columnValues.add(9, "testSmellLine");
-        columnValues.add(10, "testSmellLineBegin");
-        columnValues.add(11, "testSmellLineEnd");
+//        columnValues.add(9, "testSmellLine");
+        columnValues.add(9, "testSmellLineBegin");
+        columnValues.add(10, "testSmellLineEnd");
 
         todasLinhas.add(columnValues);
 
@@ -172,9 +172,9 @@ public class JNoseCore {
                 columnValues.add(6, testClass.numberMethods.toString());
                 columnValues.add(7, testSmell.name);
                 columnValues.add(8, testSmell.method);
-                columnValues.add(9, testSmell.lineNumber);
-                columnValues.add(10, testSmell.begin);
-                columnValues.add(11, testSmell.end);
+//                columnValues.add(9, testSmell.lineNumber);
+                columnValues.add(9, testSmell.begin);
+                columnValues.add(10, testSmell.end);
                 todasLinhas.add(columnValues);
             }
         }
@@ -332,7 +332,7 @@ public class JNoseCore {
                         testSmell.method = smellyElement.getElementName();
                         testSmell.begin = smellyElement.getData().get("begin");
                         testSmell.end = smellyElement.getData().get("end");
-                        testSmell.lineNumber = smellyElement.getData().get("lineNumber");
+//                        testSmell.lineNumber = smellyElement.getData().get("lineNumber");
 
                         testClass.listTestSmell.add(testSmell);
                     }
