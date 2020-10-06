@@ -34,6 +34,7 @@ public class AssertionRoulette extends AbstractSmell {
         private MethodDeclaration currentMethod = null;
         private int assertNoMessageCount = 0;
         private int assertCount = 0;
+        String methodName = "";
         TestMethod testMethod;
 
         // examine all methods in the test class
@@ -41,24 +42,11 @@ public class AssertionRoulette extends AbstractSmell {
         public void visit(MethodDeclaration n, Void arg) {
             if (Util.isValidTestMethod(n)) {
                 currentMethod = n;
-                testMethod = new TestMethod(n.getNameAsString());
-
-                testMethod.getData().put("begin",n.getRange().get().begin.line+"");
-                testMethod.getData().put("end",n.getRange().get().end.line+"");
+                methodName = n.getNameAsString();
+                testMethod = new TestMethod(methodName);
 
                 testMethod.setHasSmell(false); //default value is false (i.e. no smell)
                 super.visit(n, arg);
-
-
-                // if there is only 1 assert statement in the method, then a explanation message is not needed
-                if (assertCount == 1)
-                    testMethod.setHasSmell(false);
-                else if (assertNoMessageCount >= 1) //if there is more than one assert statement, then all the asserts need to have an explanation message
-                    testMethod.setHasSmell(true);
-
-                testMethod.addDataItem("AssertCount", String.valueOf(assertNoMessageCount));
-
-                smellyElementList.add(testMethod);
 
                 //reset values for next method
                 currentMethod = null;
@@ -66,10 +54,23 @@ public class AssertionRoulette extends AbstractSmell {
                 assertNoMessageCount = 0;
             }
         }
+        public boolean explanationIsEmpty(String str) {
+            char[] ch = str.toCharArray();
+            String final_string = "";
+
+            //Removes all spaces
+            for(int i = 0; i < ch.length; i++ ){
+                if (ch[i] != ' ') {
+                    final_string += ch[i];
+                }
+            }
+            return final_string.equals("\"\"");
+        }
 
         // examine the methods being called within the test method
         @Override
         public void visit(MethodCallExpr n, Void arg) {
+            boolean hasMissingExplanation = false;
             super.visit(n, arg);
             if (currentMethod != null) {
                 // if the name of a method being called is an assertion and has 3 parameters
@@ -80,8 +81,9 @@ public class AssertionRoulette extends AbstractSmell {
                         n.getNameAsString().startsWith(("assertThat"))) {
                     assertCount++;
                     // assert methods that do not contain a message
-                    if (n.getArguments().size() < 3) {
+                    if (n.getArguments().size() < 3 || (explanationIsEmpty(n.getArgument(0).toString()))) {
                         assertNoMessageCount++;
+                        hasMissingExplanation = true;
                     }
                 }
                 // if the name of a method being called is an assertion and has 2 parameters
@@ -91,8 +93,9 @@ public class AssertionRoulette extends AbstractSmell {
                         n.getNameAsString().equals("assertTrue")) {
                     assertCount++;
                     // assert methods that do not contain a message
-                    if (n.getArguments().size() < 2) {
+                    if ((n.getArguments().size() < 2) || (explanationIsEmpty(n.getArgument(0).toString())) ) {
                         assertNoMessageCount++;
+                        hasMissingExplanation = true;
                     }
                 }
 
@@ -100,9 +103,19 @@ public class AssertionRoulette extends AbstractSmell {
                 else if (n.getNameAsString().equals("fail")) {
                     assertCount++;
                     // fail method does not contain a message
-                    if (n.getArguments().size() < 1) {
+                    if (n.getArguments().size() < 1 || (explanationIsEmpty(n.getArgument(0).toString()))) {
                         assertNoMessageCount++;
+                        hasMissingExplanation = true;
                     }
+                }
+                if (hasMissingExplanation) {
+                    testMethod = new TestMethod(methodName);
+                    testMethod.getData().put("begin",n.getRange().get().begin.line+"");
+                    testMethod.getData().put("end",n.getRange().get().end.line+"");
+
+                    testMethod.setHasSmell(true);
+                    testMethod.addDataItem("AssertCount", String.valueOf(assertNoMessageCount));
+                    smellyElementList.add(testMethod);
                 }
 
             }
