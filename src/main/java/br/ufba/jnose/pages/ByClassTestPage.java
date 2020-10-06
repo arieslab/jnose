@@ -196,7 +196,7 @@ public class ByClassTestPage extends BasePage {
         totalProcessado.setValor(0);
 //        lbPastaSelecionada.setDefaultModel(Model.of("./projects"));
 
-        File file = new File("./projects");
+        File file = new File(WicketApplication.JNOSE_PROJECTS_FOLDER);
         listaProjetos = JNoseCore.listaProjetos(file.toURI(),logRetorno);
         lvProjetos.setList(listaProjetos);
 

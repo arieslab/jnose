@@ -1,5 +1,6 @@
 package br.ufba.jnose.pages;
 
+import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.core.CSVCore;
 import br.ufba.jnose.core.GitCore;
 import br.ufba.jnose.core.JNoseCore;
@@ -75,7 +76,7 @@ public class EvolutionPage extends BasePage {
     }
 
     private void loadProjetos(){
-        File file = new File("./projects");
+        File file = new File(WicketApplication.JNOSE_PROJECTS_FOLDER);
         listaProjetos = JNoseCore.listaProjetos(file.toURI(),logRetorno);
         lvProjetos.setList(listaProjetos);
     }

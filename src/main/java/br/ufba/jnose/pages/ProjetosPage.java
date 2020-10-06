@@ -1,5 +1,6 @@
 package br.ufba.jnose.pages;
 
+import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.core.GitCore;
 import br.ufba.jnose.core.JNoseCore;
 import br.ufba.jnose.dto.Commit;
@@ -97,7 +98,7 @@ public class ProjetosPage extends BasePage {
     }
 
     private List<Projeto> loadProjetos(){
-        File file = new File("./projects");
+        File file = new File(WicketApplication.JNOSE_PROJECTS_FOLDER);
         return JNoseCore.listaProjetos(file.toURI(),new StringBuffer());
     }
 }

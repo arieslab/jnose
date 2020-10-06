@@ -1,5 +1,6 @@
 package br.ufba.jnose.core;
 
+import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.dto.Projeto;
 import org.apache.commons.io.FileUtils;
@@ -32,7 +33,7 @@ public class GitCore {
 
         }
         try {
-            File file = new File("./projects/" + repoName);
+            File file = new File(WicketApplication.JNOSE_PROJECTS_FOLDER + repoName);
             if (file.exists()) {
                 FileUtils.deleteDirectory(file);
             }
