@@ -18,6 +18,13 @@ public class WicketApplication extends WebApplication {
 
     @Override
     public void init() {
+
+        String property = "java.io.tmpdir";
+
+        String tempDir = System.getProperty(property);
+        System.out.println("OS current temporary directory is " + tempDir);
+
+
         super.init();
         this.getMarkupSettings().setStripWicketTags(true);
         this.getDebugSettings().setAjaxDebugModeEnabled(false);

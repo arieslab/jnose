@@ -28,7 +28,7 @@ public class ResultPage extends ImprimirPage {
             @Override
             protected void populateItem(ListItem<List<String>> item) {
                 List<String> linha = item.getModelObject();
-                for(int i = 0; i <= 26; i++){
+                for(int i = 0; i <= 35; i++){
                     lb(i,linha,item, fontColorized);
                 }
             }

@@ -495,7 +495,8 @@ public class JNoseCore {
     public static void processarCobertura(Projeto projeto, String folderTime,String pastaPathReport, StringBuffer logRetorno) {
         logRetorno.append(dateNow() + projeto.getName() + " - <font style='color:blue'>Coverage</font> <br>");
         try {
-            execCommand("mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Drat.skip=true", projeto.getPath(),logRetorno);
+//            execCommand("mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Drat.skip=true", projeto.getPath(),logRetorno);
+            execCommand("mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent test -Drat.skip=true", projeto.getPath(),logRetorno);
             ReportGenerator reportGenerator = new ReportGenerator(new File(projeto.getPath()), new File(pastaPathReport + folderTime + File.separatorChar));
             reportGenerator.create();
         } catch (Exception e) {
