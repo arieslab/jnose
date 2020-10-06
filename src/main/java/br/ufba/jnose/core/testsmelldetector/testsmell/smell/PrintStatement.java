@@ -48,6 +48,7 @@ public class PrintStatement extends AbstractSmell {
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
         private MethodDeclaration currentMethod = null;
         TestMethod testMethod;
+        int countPrint = 0;
 
         // examine all methods in the test class
         @Override
@@ -58,8 +59,11 @@ public class PrintStatement extends AbstractSmell {
                 testMethod.setHasSmell(false); //default value is false (i.e. no smell)
                 super.visit(n, arg);
 
+                testMethod.setHasSmell(countPrint>0);
+
                 //reset values for next method
                 currentMethod = null;
+                countPrint = 0;
             }
         }
 
@@ -82,14 +86,12 @@ public class PrintStatement extends AbstractSmell {
                                 f1.getScope() instanceof NameExpr &&
                                 ((NameExpr) f1.getScope()).getNameAsString().equals("System"))) {
                             //a print statement exists in the method body
-                            System.out.println("teste    "+String.valueOf(n.getRange().get().begin.line) +"    "+String.valueOf(n.getRange().get().end.line));
-                            methodPrints.add(new MethodUsage(n.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().begin.line)));
+                            countPrint++;
+                            methodPrints.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().begin.line)));
                         }
                     }
-
                 }
             }
         }
-
     }
 }
