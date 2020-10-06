@@ -396,7 +396,7 @@ public class JNoseCore {
             String lineOut;
             while ((lineOut = input.readLine()) != null) {
                 System.out.println(lineOut);
-                logRetornoInfo.append(lineOut + " <br>" + logRetornoInfo);
+//                logRetornoInfo.append(lineOut + " <br>" + logRetornoInfo);
             }
             input.close();
             r = p.waitFor();
