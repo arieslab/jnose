@@ -31,9 +31,12 @@ public class WicketApplication extends WebApplication {
         System.out.println("OS Name: " + System.getProperty("os.name"));
         System.out.println("OS Version: " + System.getProperty("os.version"));
         System.out.println("OS user home directory is " + USERHOME);
+        System.out.println("JDK Version: " + System.getProperty("java.version"));
+        System.out.println("JDK VM Version: " + System.getProperty("java.vm.version"));
+
 
         JNOSE_PROJECTS_FOLDER = USERHOME+ File.separator + ".jnose_projects" + File.separator;
-        System.out.println("OS JNose Projects folder: " + JNOSE_PROJECTS_FOLDER);
+        System.out.println("JNose Projects folder: " + JNOSE_PROJECTS_FOLDER);
 
         super.init();
         this.getMarkupSettings().setStripWicketTags(true);
