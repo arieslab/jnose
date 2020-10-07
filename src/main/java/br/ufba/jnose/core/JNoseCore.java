@@ -186,7 +186,7 @@ public class JNoseCore {
     public static List<TestClass> getFilesTest(String directoryPath, StringBuffer logRetorno) throws IOException {
         String projectName = directoryPath.substring(directoryPath.lastIndexOf(File.separatorChar) + 1, directoryPath.length());
 
-        logRetorno.append(dateNow() + projectName + " - <font style='color:red'>TestFileDetector</font> <br>");
+        logRetorno.append(Util.dateNow() + projectName + " - <font style='color:red'>TestFileDetector</font> <br>");
 
         List<TestClass> files = new ArrayList<>();
         Path startDir = Paths.get(directoryPath);
@@ -380,34 +380,11 @@ public class JNoseCore {
 //        CSVCore.criarTodosProjetosCSV(linhasTotalProjetos,pastaDataHora);
 //    }
 
-    private static String dateNow() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm:ss")) + " - ";
-    }
 
-    public static String dateNowFolder() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-    }
-
-    public static void execCommand(final String commandLine, String pathExecute, StringBuffer logRetornoInfo) {
-        int r = 0;
-        try {
-            Process p = Runtime.getRuntime().exec(commandLine, null, new File(pathExecute));
-            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String lineOut;
-            while ((lineOut = input.readLine()) != null) {
-                System.out.println(lineOut);
-//                logRetornoInfo.append(lineOut + " <br>" + logRetornoInfo);
-            }
-            input.close();
-            r = p.waitFor();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public static String processarTestSmellDetector(String pathCSVMapping, String pathProjeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-        logRetorno.append(dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>");
+        logRetorno.append(Util.dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>");
         String csvTestSmells = "";
         try {
             csvTestSmells = br.ufba.jnose.core.testsmelldetector.Main.start(pathCSVMapping, nameProjeto, pastaPathReport + folderTime + File.separatorChar,folderTime);
@@ -419,7 +396,7 @@ public class JNoseCore {
 
     public static List<List<String>> processarTestSmellDetector2(String pathCSVMapping, String pathProjeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-        logRetorno.append(dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>");
+        logRetorno.append(Util.dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>");
         List<List<String>> todasLinhas = new ArrayList<>();
         try {
             todasLinhas = br.ufba.jnose.core.testsmelldetector.Main.start2(pathCSVMapping, nameProjeto, pastaPathReport + folderTime + File.separatorChar,folderTime);
@@ -431,7 +408,7 @@ public class JNoseCore {
 
     public static String processarTestFileMapping(List<TestClass> listTestClass, String pathProjeto, String folderTime, StringBuffer logRetorno) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-        logRetorno.append(dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>");
+        logRetorno.append(Util.dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>");
         return JNoseCore.testfilemapping(listTestClass, folderTime, nameProjeto);
     }
 
@@ -492,17 +469,6 @@ public class JNoseCore {
         return lista;
     }
 
-    public static void processarCobertura(Projeto projeto, String folderTime,String pastaPathReport, StringBuffer logRetorno) {
-        logRetorno.append(dateNow() + projeto.getName() + " - <font style='color:blue'>Coverage</font> <br>");
-        try {
-//            execCommand("mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Drat.skip=true", projeto.getPath(),logRetorno);
-            execCommand("mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Drat.skip=true", projeto.getPath(),logRetorno);
-            ReportGenerator reportGenerator = new ReportGenerator(new File(projeto.getPath()), new File(pastaPathReport + folderTime + File.separatorChar));
-            reportGenerator.create();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public static List<TestClass> processarProjeto(Projeto projeto, StringBuffer logRetorno) throws IOException {
         projeto.setProcentagem(25);
@@ -549,14 +515,14 @@ public class JNoseCore {
 //    }
 
     public static List<List<String>> processarProjeto2(Projeto projeto, float valorProcProject, String folderTime, TotalProcessado totalProcessado, String pastaPathReport, StringBuffer logRetorno) throws IOException {
-        logRetorno.append(dateNow() + projeto.getName() + " - started <br>");
+        logRetorno.append(Util.dateNow() + projeto.getName() + " - started <br>");
         Float valorSoma = valorProcProject / 4;
 
         totalProcessado.setValor(5);
         projeto.setProcentagem(totalProcessado.getValor());
 
         if (WicketApplication.COBERTURA_ON) {
-            JNoseCore.processarCobertura(projeto, folderTime, pastaPathReport, logRetorno);
+            CoverageCore.processarCobertura(projeto, folderTime, pastaPathReport, logRetorno);
         }
 
         projeto.setProcessado2(true);
@@ -699,25 +665,6 @@ public class JNoseCore {
         return listTestSmells;
     }
 
-
-
-
-
-    public static void execCommand(final String commandLine, String pathExecute) {
-        int r = 0;
-        try {
-            Process p = Runtime.getRuntime().exec(commandLine, null, new File(pathExecute));
-            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String lineOut;
-            while ((lineOut = input.readLine()) != null) {
-                System.out.println(lineOut);
-            }
-            input.close();
-            r = p.waitFor();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 }
 
