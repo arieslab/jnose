@@ -7,7 +7,9 @@ import br.ufba.jnose.core.Util;
 import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.dto.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
+import br.ufba.jnose.pages.components.LinkResult;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -105,17 +107,18 @@ public class EvolutionPage extends BasePage {
 
                 Form form = new Form<String>("form");
 
-                final Link lkResult1 = new Link<String>("lkResult1") {
+                final LinkResult lkResult1 = new LinkResult("lkResult1") {
                     @Override
                     public void onClick() {
                         List<List<String>> todasLinhas1 = mapResults.get(1);
                         setResponsePage(new ResultPage(todasLinhas1, "Evolution Report 1 - TestSmells by Commit: " + projeto.getName(), "resultado_evolution1", false));
-
                     }
                 };
                 lkResult1.setOutputMarkupId(true);
                 lkResult1.setOutputMarkupPlaceholderTag(true);
                 lkResult1.setEnabled(false);
+                lkResult1.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
+
                 form.add(lkResult1);
 
                 Link lkResult2 = new Link<String>("lkResult2") {
@@ -129,6 +132,7 @@ public class EvolutionPage extends BasePage {
                 lkResult2.setOutputMarkupId(true);
                 lkResult2.setOutputMarkupPlaceholderTag(true);
                 lkResult2.setEnabled(false);
+                lkResult2.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
                 form.add(lkResult2);
 
 
@@ -136,17 +140,19 @@ public class EvolutionPage extends BasePage {
                     @Override
                     protected void onSubmit(AjaxRequestTarget target) {
                         super.onSubmit();
-                        System.out.println(projeto);
-                        Map<Integer, List<List<String>>> map = processar(projeto, target);
-                        mapResults.put(1, map.get(1));
-                        mapResults.put(2, map.get(2));
-                        System.out.println("Processamento do projeto: " + projeto.getName() + " - Concluído<br>");
-                        logRetorno.append("Processamento do projeto: " + projeto.getName() + " - Concluído<br>");
+                        System.out.println("Processamento do projeto: " + projeto.getName() + " - Concluído");
+                        logRetorno.append("Processamento do projeto: " + projeto.getName() + " - Concluído\n");
                         taLogInfo.setDefaultModelObject(logRetorno);
                         target.add(taLogInfo);
 
+                        Map<Integer, List<List<String>>> map = processar(projeto, target);
+                        mapResults.put(1, map.get(1));
+                        mapResults.put(2, map.get(2));
+
                         lkResult1.setEnabled(true);
                         lkResult2.setEnabled(true);
+                        lkResult1.add(AttributeModifier.remove("style"));
+                        lkResult2.add(AttributeModifier.remove("style"));
                         target.add(lkResult1);
                         target.add(lkResult2);
 
@@ -197,7 +203,6 @@ public class EvolutionPage extends BasePage {
             }
         });
 
-        String pastaDateHora = Util.dateNowFolder();
         List<List<String>> todasLinhas1 = new ArrayList<>();
         List<List<String>> todasLinhas2 = new ArrayList<>();
 
@@ -222,9 +227,6 @@ public class EvolutionPage extends BasePage {
                     if (isNumeric) {
                         total += Integer.parseInt(list.get(i));
                     }
-                    logRetorno.append("processando...    " + i + "<br>");
-                    taLogInfo.setDefaultModelObject(logRetorno);
-                    target.add(taLogInfo);
                 }
                 todasLinhas1.add(list);
             }
@@ -235,9 +237,6 @@ public class EvolutionPage extends BasePage {
             lista2.add(commit.date + "");
             lista2.add(total + "");
             todasLinhas2.add(lista2);
-
-//            String arquivoPath = CSVCore.criarEvolution1CSV(todasLinhas1, pastaDateHora, projeto.getName());
-//            CSVCore.criarEvolution2CSV(todasLinhas2, pastaDateHora, projeto.getName());
 
             vizualizarCabecalho = false;
         }
