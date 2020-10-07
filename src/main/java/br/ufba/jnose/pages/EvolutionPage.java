@@ -74,6 +74,7 @@ public class EvolutionPage extends BasePage {
 
     private void criarLogInfo() {
         taLogInfo = new Label("taLogInfo", Model.of(logRetorno));
+        taLogInfo.setEscapeModelStrings(false);
         taLogInfo.setOutputMarkupId(true);
         taLogInfo.setOutputMarkupPlaceholderTag(true);
         add(taLogInfo);
@@ -141,7 +142,7 @@ public class EvolutionPage extends BasePage {
                     protected void onSubmit(AjaxRequestTarget target) {
                         super.onSubmit();
                         System.out.println("Processamento do projeto: " + projeto.getName() + " - Concluído");
-                        logRetorno.append("Processamento do projeto: " + projeto.getName() + " - Concluído\n");
+                        logRetorno.append("Processamento do projeto: " + projeto.getName() + " - Concluído<br>");
                         taLogInfo.setDefaultModelObject(logRetorno);
                         target.add(taLogInfo);
 
