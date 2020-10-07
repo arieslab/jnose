@@ -4,6 +4,7 @@ import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.core.CSVCore;
 import br.ufba.jnose.core.GitCore;
 import br.ufba.jnose.core.JNoseCore;
+import br.ufba.jnose.core.Util;
 import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.dto.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
@@ -208,7 +209,7 @@ public class EvolutionPage extends BasePage {
             }
         });
 
-        String pastaDateHora = JNoseCore.dateNowFolder();
+        String pastaDateHora = Util.dateNowFolder();
         List<List<String>> todasLinhas1 = new ArrayList<>();
         List<List<String>> todasLinhas2 = new ArrayList<>();
 

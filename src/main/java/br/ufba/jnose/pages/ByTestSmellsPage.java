@@ -1,6 +1,7 @@
 package br.ufba.jnose.pages;
 
 import br.ufba.jnose.WicketApplication;
+import br.ufba.jnose.core.Util;
 import br.ufba.jnose.dto.Projeto;
 import br.ufba.jnose.dto.TotalProcessado;
 import br.ufba.jnose.pages.base.BasePage;
@@ -212,7 +213,7 @@ public class ByTestSmellsPage extends BasePage {
 //    }
 
     private void loadProjetos(){
-        dataProcessamentoAtual = JNoseCore.dateNowFolder();
+        dataProcessamentoAtual = Util.dateNowFolder();
         totalProcessado.setValor(0);
         lbPastaSelecionada.setDefaultModel(Model.of(WicketApplication.JNOSE_PROJECTS_FOLDER));
 

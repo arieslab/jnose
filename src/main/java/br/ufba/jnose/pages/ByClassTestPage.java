@@ -1,6 +1,7 @@
 package br.ufba.jnose.pages;
 
 import br.ufba.jnose.WicketApplication;
+import br.ufba.jnose.core.Util;
 import br.ufba.jnose.dto.TotalProcessado;
 import br.ufba.jnose.core.JNoseCore;
 import br.ufba.jnose.dto.Projeto;
@@ -190,7 +191,7 @@ public class ByClassTestPage extends BasePage {
 
     private void loadProjetos(){
         mesclado = false;
-        dataProcessamentoAtual = JNoseCore.dateNowFolder();
+        dataProcessamentoAtual = Util.dateNowFolder();
         logRetorno = new StringBuffer();
 //        logRetornoInfo = new StringBuffer();
         totalProcessado.setValor(0);

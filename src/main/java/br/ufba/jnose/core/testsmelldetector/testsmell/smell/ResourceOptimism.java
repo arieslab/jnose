@@ -7,7 +7,6 @@ import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
-import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestMethod;
 import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
 

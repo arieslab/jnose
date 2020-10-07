@@ -1,7 +1,7 @@
 package br.ufba.jnose.core.cobertura;
 
 import br.ufba.jnose.core.CSVCore;
-import br.ufba.jnose.core.JNoseCore;
+import br.ufba.jnose.core.Util;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class Main {
         }
         System.out.println("Completed!");
 
-        CSVCore.criarCoberturaCSV(todasLinhas, JNoseCore.dateNowFolder());
+        CSVCore.criarCoberturaCSV(todasLinhas, Util.dateNowFolder());
 
     }
 }

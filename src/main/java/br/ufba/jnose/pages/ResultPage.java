@@ -38,7 +38,7 @@ public class ResultPage extends ImprimirPage {
     }
 
     private File gerarCSV(List<List<String>> todasLinhas, String csvFileName){
-        String pathFile = CSVCore.criarCSV(todasLinhas, JNoseCore.dateNowFolder(),csvFileName);
+        String pathFile = CSVCore.criarCSV(todasLinhas, br.ufba.jnose.core.Util.dateNowFolder(),csvFileName);
         return new File(pathFile);
     }
 

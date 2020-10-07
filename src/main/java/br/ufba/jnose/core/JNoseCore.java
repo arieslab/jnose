@@ -1,7 +1,6 @@
 package br.ufba.jnose.core;
 
 import br.ufba.jnose.WicketApplication;
-import br.ufba.jnose.core.cobertura.ReportGenerator;
 import br.ufba.jnose.dto.*;
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
 import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
@@ -20,37 +19,15 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.System.out;
 
 public class JNoseCore {
 
     private final static Logger LOGGER = Logger.getLogger(JNoseCore.class.getName());
-
-//    public static String testfiledetector(String projectPath,String pastaDataHora, String projectName, StringBuffer logRetorno) throws IOException {
-//
-//        List<TestClass> files = JNoseCore.getFilesTest(projectPath, logRetorno);
-//
-//        List<List<String>> todasLinhas = new ArrayList<>();
-//        for (TestClass testClass : files) {
-//            try {
-//                List<String> linha = new ArrayList<String>();
-//                linha.add(testClass.pathFile + "," + testClass.numberLine + "," + testClass.numberMethods + "");
-//                todasLinhas.add(linha);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        return CSVCore.criarTestfiledetectionCSV(todasLinhas,pastaDataHora,projectName);
-//    }
 
     public static List<String[]> testfilemapping(List<TestClass> listTestClass, Commit commit, String projectName) {
         System.out.println("Saving results. Total lines:" + listTestClass.size());
@@ -94,49 +71,6 @@ public class JNoseCore {
         return CSVCore.criarTestmappingdetectorCSV(todasLinhas,pastaDataHora,projectName);
     }
 
-//    public static String newReport3(List<TestClass> listTestClass, String pastaDataHora){
-//        System.out.println("Saving results. Total lines:" + listTestClass.size());
-//
-//        List<List<String>> todasLinhas = new ArrayList<>();
-//
-//        List<String> columnValues = null;
-//        columnValues = new ArrayList<>();
-//        columnValues.add(0, "projectName");
-//        columnValues.add(1, "name");
-//        columnValues.add(2, "pathFile");
-//        columnValues.add(3, "productionFile");
-//        columnValues.add(4, "junitVersion");
-//        columnValues.add(5, "loc");
-//        columnValues.add(6, "qtdMethods");
-//        columnValues.add(7, "testSmellName");
-//        columnValues.add(8, "testSmellMethod");
-//        columnValues.add(9, "testSmellLine");
-//        columnValues.add(10, "testSmellLineBegin");
-//        columnValues.add(11, "testSmellLineEnd");
-//
-//        todasLinhas.add(columnValues);
-//
-//        for (TestClass testClass : listTestClass) {
-//            for (TestSmell testSmell : testClass.listTestSmell) {
-//                columnValues = new ArrayList<>();
-//                columnValues.add(0, testClass.projectName);
-//                columnValues.add(1, testClass.name);
-//                columnValues.add(2, testClass.pathFile.toString());
-//                columnValues.add(3, testClass.productionFile);
-//                columnValues.add(4, testClass.junitVersion.name());
-//                columnValues.add(5, testClass.numberLine.toString());
-//                columnValues.add(6, testClass.numberMethods.toString());
-//                columnValues.add(7, testSmell.name);
-//                columnValues.add(8, testSmell.method);
-//                columnValues.add(9, testSmell.lineNumber);
-//                columnValues.add(10, testSmell.begin);
-//                columnValues.add(11, testSmell.end);
-//                todasLinhas.add(columnValues);
-//            }
-//        }
-//
-//        return CSVCore.criarByTestSmellsCSV(todasLinhas,pastaDataHora,"all");
-//    }
 
 
     public static List<List<String>> convert(List<TestClass> listTestClass){
@@ -154,7 +88,6 @@ public class JNoseCore {
         columnValues.add(6, "qtdMethods");
         columnValues.add(7, "testSmellName");
         columnValues.add(8, "testSmellMethod");
-//        columnValues.add(9, "testSmellLine");
         columnValues.add(9, "testSmellLineBegin");
         columnValues.add(10, "testSmellLineEnd");
 
@@ -172,7 +105,6 @@ public class JNoseCore {
                 columnValues.add(6, testClass.numberMethods.toString());
                 columnValues.add(7, testSmell.name);
                 columnValues.add(8, testSmell.method);
-//                columnValues.add(9, testSmell.lineNumber);
                 columnValues.add(9, testSmell.begin);
                 columnValues.add(10, testSmell.end);
                 todasLinhas.add(columnValues);
@@ -344,44 +276,6 @@ public class JNoseCore {
     }
 
 
-//    public static void mesclarGeral(List<Projeto> listaProjetos, String reportPath, StringBuffer logRetorno, String pastaDataHora) {
-//
-//        logRetorno.append(dateNow() + "<font style='color:orange'>Merging results</font> <br>");
-//
-//        List<List<String>> linhasTotalProjetos = new ArrayList<>();
-//
-//        try {
-//            linhasTotalProjetos.add(br.ufba.jnose.core.testsmelldetector.Main.columnNames);
-//
-//            if (listaProjetos.size() != 0) {
-//                for (Projeto projeto : listaProjetos) {
-//
-//                    File file = new File(reportPath + projeto.getName() + "_testsmesll.csv");
-//                    FileReader fileReader = new FileReader(file);
-//                    BufferedReader in = new BufferedReader(fileReader);
-//
-//                    boolean pularLinha = false;
-//                    String str;
-//                    while ((str = in.readLine()) != null) {
-//                        if (pularLinha) {
-//                            linhasTotalProjetos.add(newArrayList(str.split(",")));
-//                        } else {
-//                            pularLinha = true;
-//                        }
-//                    }
-//                    in.close();
-//                    fileReader.close();
-//                }
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        CSVCore.criarTodosProjetosCSV(linhasTotalProjetos,pastaDataHora);
-//    }
-
-
-
     public static String processarTestSmellDetector(String pathCSVMapping, String pathProjeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
         logRetorno.append(Util.dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>");
@@ -393,6 +287,7 @@ public class JNoseCore {
         }
         return csvTestSmells;
     }
+
 
     public static List<List<String>> processarTestSmellDetector2(String pathCSVMapping, String pathProjeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
@@ -412,39 +307,6 @@ public class JNoseCore {
         return JNoseCore.testfilemapping(listTestClass, folderTime, nameProjeto);
     }
 
-    //Só existe para criar o arquivo com a lista de arquivos de teste
-//    public static String processarTestFileDetector(String pathProjeto, String folderTime, StringBuffer logRetorno) {
-//        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-//        logRetorno.append(dateNow() + nameProjeto + " - <font style='color:red'>TestFileDetector</font> <br>");
-//        String pathCSV = "";
-//        try {
-//            pathCSV = JNoseCore.testfiledetector(pathProjeto, folderTime, nameProjeto, logRetorno);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return pathCSV;
-//    }
-
-//    public static List<Projeto> listaProjetos(URI path) {
-//        File[] directories = new File(path).listFiles(java.io.File::isDirectory);
-//        List<Projeto> lista = new ArrayList<Projeto>();
-//
-//        if (directories != null) {
-//            for (File dir : directories) {
-//                String pathPom = dir.getAbsolutePath() + File.separatorChar + "pom.xml";
-//
-//                if (new File(pathPom).exists()) {
-//                    String pathProjeto = dir.getAbsolutePath().trim();
-//                    String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-//                    lista.add(new Projeto(nameProjeto, pathProjeto));
-//                } else {
-//                    String msg = "It is not a project MAVEN: " + dir.getAbsolutePath();
-//                    out.println(msg);
-//                }
-//            }
-//        }
-//        return lista;
-//    }
 
     public static List<Projeto> listaProjetos(URI path, StringBuffer logRetornoInfo) {
         java.io.File[] directories = new File(path).listFiles(java.io.File::isDirectory);
@@ -479,40 +341,6 @@ public class JNoseCore {
         return listaTestClass;
     }
 
-//    public static String processarProjeto(Projeto projeto, float valorProcProject, String folderTime, TotalProcessado totalProcessado, String pastaPathReport, StringBuffer logRetorno) throws IOException {
-//        logRetorno.append(dateNow() + projeto.getName() + " - started <br>");
-//        Float valorSoma = valorProcProject / 4;
-//
-//        totalProcessado.setValor(5);
-//        projeto.setProcentagem(totalProcessado.getValor());
-//
-//        if (WicketApplication.COBERTURA_ON) {
-//            JNoseCore.processarCobertura(projeto, folderTime, pastaPathReport, logRetorno);
-//        }
-//
-//        projeto.setProcessado2(true);
-//        totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
-//        projeto.setProcentagem(25);
-//
-////        String csvFile = JNoseCore.processarTestFileDetector(projeto.getPath(), folderTime, logRetorno);
-////        out.println(csvFile);
-//
-//        List<TestClass> listaTestClass = JNoseCore.getFilesTest(projeto.getPath(),logRetorno);
-//        totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
-//        projeto.setProcentagem(50);
-//
-//
-//        String csvMapping = JNoseCore.processarTestFileMapping(listaTestClass, projeto.getPath(), folderTime, logRetorno);
-//        totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
-//        projeto.setProcentagem(75);
-//
-//        String csvTestSmells =  JNoseCore.processarTestSmellDetector(csvMapping, projeto.getPath(), folderTime, pastaPathReport, logRetorno);
-//        totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
-//        projeto.setProcentagem(100);
-//
-//        projeto.setProcessado(true);
-//        return csvTestSmells;
-//    }
 
     public static List<List<String>> processarProjeto2(Projeto projeto, float valorProcProject, String folderTime, TotalProcessado totalProcessado, String pastaPathReport, StringBuffer logRetorno) throws IOException {
         logRetorno.append(Util.dateNow() + projeto.getName() + " - started <br>");
@@ -529,13 +357,9 @@ public class JNoseCore {
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
         projeto.setProcentagem(25);
 
-//        String csvFile = JNoseCore.processarTestFileDetector(projeto.getPath(), folderTime, logRetorno);
-//        out.println(csvFile);
-
         List<TestClass> listaTestClass = JNoseCore.getFilesTest(projeto.getPath(),logRetorno);
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
         projeto.setProcentagem(50);
-
 
         String csvMapping = JNoseCore.processarTestFileMapping(listaTestClass, projeto.getPath(), folderTime, logRetorno);
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
@@ -549,36 +373,6 @@ public class JNoseCore {
         return todasLinhas;
     }
 
-//    public static void processarProjetos(List<Projeto> lista, String folderTime, TotalProcessado totalProcessado, String pastaPathReport, StringBuffer logRetorno) {
-//
-//        boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
-//        if (!success) System.out.println("Created Folder...");
-//
-//        totalProcessado.setValor(0);
-//
-//        Integer totalLista = lista.size();
-//        Integer valorSoma;
-//        if (totalLista > 0) {
-//            valorSoma = 100 / totalLista;
-//        } else {
-//            valorSoma = 0;
-//        }
-//
-//        for (Projeto projeto : lista) {
-//            new Thread() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        JNoseCore.processarProjeto(projeto, valorSoma, folderTime, totalProcessado, pastaPathReport, logRetorno);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        projeto.bugs = projeto.bugs + "\n" + e.getMessage();
-//                    }
-//                }
-//            }.start();
-//        }
-//
-//    }
 
     public static List<List<String>> processarProjetos2(List<Projeto> lista, String folderTime, TotalProcessado totalProcessado, String pastaPathReport, StringBuffer logRetorno) {
 
@@ -598,7 +392,7 @@ public class JNoseCore {
         List<List<String>> listaTodos = new ArrayList<>();
 
         for (Projeto projeto : lista) {
-            new Thread() {
+            new Thread() { // IMPORTANTE: AQUI SE CRIA AS THREADS
                 @Override
                 public void run() {
                     try {
