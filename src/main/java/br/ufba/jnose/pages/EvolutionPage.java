@@ -9,6 +9,7 @@ import br.ufba.jnose.dto.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.basic.Label;
@@ -93,7 +94,7 @@ public class EvolutionPage extends BasePage {
             @Override
             protected void populateItem(ListItem<Projeto> item) {
 
-                Map<Integer,List<List<String>>> mapResults = new HashMap<>();
+                Map<Integer, List<List<String>>> mapResults = new HashMap<>();
 
                 Projeto projeto = item.getModelObject();
                 item.add(new Label("nomeProjeto", projeto.getName()));
@@ -108,7 +109,7 @@ public class EvolutionPage extends BasePage {
                     @Override
                     public void onClick() {
                         List<List<String>> todasLinhas1 = mapResults.get(1);
-                        setResponsePage(new ResultPage(todasLinhas1,"Evolution Report 1 - TestSmells by Commit: " + projeto.getName(), "resultado_evolution1",false));
+                        setResponsePage(new ResultPage(todasLinhas1, "Evolution Report 1 - TestSmells by Commit: " + projeto.getName(), "resultado_evolution1", false));
 
                     }
                 };
@@ -121,7 +122,7 @@ public class EvolutionPage extends BasePage {
                     @Override
                     public void onClick() {
                         List<List<String>> todasLinhas2 = mapResults.get(2);
-                        setResponsePage(new ResultPage(todasLinhas2,"Evolution Report 2 - Total Testsmells by Commit: " + projeto.getName(),"resultado_evolution2",false));
+                        setResponsePage(new ResultPage(todasLinhas2, "Evolution Report 2 - Total Testsmells by Commit: " + projeto.getName(), "resultado_evolution2", false));
 
                     }
                 };
@@ -130,14 +131,15 @@ public class EvolutionPage extends BasePage {
                 lkResult2.setEnabled(false);
                 form.add(lkResult2);
 
-                form.add(new AjaxSubmitLink("btSubmit") {
+
+                AjaxSubmitLink btSubmit = new AjaxSubmitLink("btSubmit") {
                     @Override
                     protected void onSubmit(AjaxRequestTarget target) {
                         super.onSubmit();
                         System.out.println(projeto);
-                        Map<Integer,List<List<String>>> map = processar(projeto, target);
-                        mapResults.put(1,map.get(1));
-                        mapResults.put(2,map.get(2));
+                        Map<Integer, List<List<String>>> map = processar(projeto, target);
+                        mapResults.put(1, map.get(1));
+                        mapResults.put(2, map.get(2));
                         System.out.println("Processamento do projeto: " + projeto.getName() + " - Concluído<br>");
                         logRetorno.append("Processamento do projeto: " + projeto.getName() + " - Concluído<br>");
                         taLogInfo.setDefaultModelObject(logRetorno);
@@ -149,13 +151,21 @@ public class EvolutionPage extends BasePage {
                         target.add(lkResult2);
 
                     }
-                });
+                };
+                btSubmit.setEnabled(false);
+                form.add(btSubmit);
 
                 RadioChoice<String> radioCommitsTags = new RadioChoice<String>(
                         "radioCommitsTags", new PropertyModel<String>(projeto, "optionSelected"),
                         Arrays.asList(new String[]{projeto.getListaCommits().size() + " / ", projeto.getListaTags().size() + ""})) {
 
                 };
+                radioCommitsTags.add(new AjaxEventBehavior("change") {
+                    protected void onEvent(AjaxRequestTarget target) {
+                        btSubmit.setEnabled(true);
+                        target.add(btSubmit);
+                    }
+                });
                 radioCommitsTags.setOutputMarkupId(true);
                 radioCommitsTags.setOutputMarkupPlaceholderTag(true);
                 form.add(radioCommitsTags);
@@ -168,15 +178,15 @@ public class EvolutionPage extends BasePage {
     }
 
 
-    private Map<Integer,List<List<String>>> processar(Projeto projeto, AjaxRequestTarget target) {
+    private Map<Integer, List<List<String>>> processar(Projeto projeto, AjaxRequestTarget target) {
 
         GitCore.checkout("master", projeto.getPath());
 
         List<Commit> lista;
 
-        if(projeto.getOptionSelected().contains("/")) {
+        if (projeto.getOptionSelected().contains("/")) {
             lista = projeto.getListaCommits();
-        }else{
+        } else {
             lista = projeto.getListaTags();
         }
 
@@ -192,8 +202,8 @@ public class EvolutionPage extends BasePage {
         List<List<String>> todasLinhas2 = new ArrayList<>();
 
         Map mapRetorn = new HashMap();
-        mapRetorn.put(1,todasLinhas1);
-        mapRetorn.put(2,todasLinhas2);
+        mapRetorn.put(1, todasLinhas1);
+        mapRetorn.put(2, todasLinhas2);
 
         boolean vizualizarCabecalho = true;
 
