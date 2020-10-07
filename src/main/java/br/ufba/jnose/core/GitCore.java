@@ -125,6 +125,17 @@ public class GitCore {
         }
     }
 
+    public static String branch(String projetoPath) {
+        String branchcurrent = "";
+        try {
+            Git git = Git.open(new File(projetoPath));
+            branchcurrent = git.getRepository().getBranch();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return branchcurrent;
+    }
+
     public static void pull(String projetoPath) {
         try {
             Git git = Git.open(new File(projetoPath));

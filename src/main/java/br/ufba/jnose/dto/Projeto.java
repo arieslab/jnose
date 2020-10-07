@@ -23,6 +23,8 @@ public class Projeto implements Serializable {
 
     private List<Commit> listaCommits;
 
+    private List<Commit> listaTags;
+
     private Integer commits;
 
     public WebMarkupContainer iconProcessado;
@@ -38,6 +40,8 @@ public class Projeto implements Serializable {
 
     private String repoGit;
 
+    private String optionSelected;
+
     public Projeto(String name, String path) {
         this.name = name;
         this.path = path;
@@ -46,6 +50,7 @@ public class Projeto implements Serializable {
         this.procentagem = 0;
         this.paraProcessar = true;
         this.commits = 0;
+        this.optionSelected = "";
     }
 
     public Projeto(String name, String path, Boolean processado, Boolean processado2, Integer procentagem) {
@@ -56,6 +61,15 @@ public class Projeto implements Serializable {
         this.procentagem = procentagem;
         this.paraProcessar = true;
         this.commits = 0;
+        this.optionSelected = "";
+    }
+
+    public String getOptionSelected() {
+        return optionSelected;
+    }
+
+    public void setOptionSelected(String optionSelected) {
+        this.optionSelected = optionSelected;
     }
 
     public List<List<String>> getResultado() {
@@ -140,5 +154,13 @@ public class Projeto implements Serializable {
 
     public void setRepoGit(String repoGit) {
         this.repoGit = repoGit;
+    }
+
+    public List<Commit> getListaTags() {
+        return listaTags;
+    }
+
+    public void setListaTags(List<Commit> listaTags) {
+        this.listaTags = listaTags;
     }
 }
