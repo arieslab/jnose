@@ -146,10 +146,8 @@ public class EvolutionPage extends BasePage {
                     public void onClick(AjaxRequestTarget target) {
                         System.out.println("Processamento do projeto: " + projeto.getName() + " - Concluído");
                         logRetorno.append("Processamento do projeto: " + projeto.getName() + " - Concluído<br>");
-                        taLogInfo.setDefaultModelObject(logRetorno);
-                        target.add(taLogInfo);
 
-                        Map<Integer, List<List<String>>> map = processar(projeto, target);
+                        Map<Integer, List<List<String>>> map = JNoseCore.processarEvolution(projeto, logRetorno);
                         mapResults.put(1, map.get(1));
                         mapResults.put(2, map.get(2));
 
@@ -185,68 +183,6 @@ public class EvolutionPage extends BasePage {
         lvProjetos.setOutputMarkupId(true);
         lvProjetos.setOutputMarkupPlaceholderTag(true);
         add(lvProjetos);
-    }
-
-
-    private Map<Integer, List<List<String>>> processar(Projeto projeto, AjaxRequestTarget target) {
-
-        GitCore.checkout("master", projeto.getPath());
-
-        List<Commit> lista;
-
-        if (projeto.getOptionSelected().contains("/")) {
-            lista = projeto.getListaCommits();
-        } else {
-            lista = projeto.getListaTags();
-        }
-
-        Collections.sort(lista, new Comparator<Commit>() {
-            public int compare(Commit o1, Commit o2) {
-                if (o1.date == null || o2.date == null) return 0;
-                return o2.date.compareTo(o1.date);
-            }
-        });
-
-        List<List<String>> todasLinhas1 = new ArrayList<>();
-        List<List<String>> todasLinhas2 = new ArrayList<>();
-
-        Map mapRetorn = new HashMap();
-        mapRetorn.put(1, todasLinhas1);
-        mapRetorn.put(2, todasLinhas2);
-
-        boolean vizualizarCabecalho = true;
-
-        //Para cada commit executa uma busca
-        for (Commit commit : lista) {
-
-            GitCore.checkout(commit.id, projeto.getPath());
-
-            int total = 0;
-            //criando a lista de testsmells
-            List<String[]> listaTestSmells = JNoseCore.processarTestSmells(projeto.getPath(), commit, vizualizarCabecalho, logRetorno);
-            for (String[] linhaArray : listaTestSmells) {
-                List<String> list = Arrays.asList(linhaArray);
-                for (int i = 10; i <= (list.size() - 1); i++) {
-                    boolean isNumeric = list.get(i).chars().allMatch(Character::isDigit);
-                    if (isNumeric) {
-                        total += Integer.parseInt(list.get(i));
-                    }
-                }
-                todasLinhas1.add(list);
-            }
-
-            List<String> lista2 = new ArrayList<>();
-            lista2.add(commit.id);
-            lista2.add(commit.tag);
-            lista2.add(commit.date + "");
-            lista2.add(total + "");
-            todasLinhas2.add(lista2);
-
-            vizualizarCabecalho = false;
-        }
-        GitCore.checkout("master", projeto.getPath());
-
-        return mapRetorn;
     }
 
 }

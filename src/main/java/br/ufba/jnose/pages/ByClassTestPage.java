@@ -15,7 +15,6 @@ import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxIndicatorAppender;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -38,24 +37,19 @@ public class ByClassTestPage extends BasePage {
     private String pastaPath;
     private String pathAppToWebapp;
     private String pastaPathReport;
-//    private Label lbPastaSelecionada;
     private ProgressBar progressBar;
     private List<Projeto> listaProjetos;
     private AjaxIndicatorAppender indicator;
     private ListView<Projeto> lvProjetos;
     private Label taLog;
-//    private Label taLogInfo;
     private TotalProcessado totalProcessado;
     private Map<Integer, Integer> totalProgressBar;
     private Boolean processando;
     private WebMarkupContainer loadImg;
     private IndicatingAjaxLink processarTodos;
-//    private Label lbProjetosSize;
     private StringBuffer logRetorno;
-//    private StringBuffer logRetornoInfo;
     private String dataProcessamentoAtual;
     private boolean mesclado;
-    private ExternalLink linkCSVFinal;
     private boolean processarCobertura;
     private List<List<String>> listaResultado;
 
@@ -70,28 +64,18 @@ public class ByClassTestPage extends BasePage {
         pastaPathReport = pathAppToWebapp + File.separatorChar + "reports" + File.separatorChar;
         pastaPath = "";
         mesclado = false;
-//        logRetornoInfo = new StringBuffer();
         logRetorno = new StringBuffer();
         processando = false;
         processarCobertura = false;
         totalProcessado = new TotalProcessado();
-//        logRetornoInfo.append("pastaPath: " + pastaPath + " <br>");
         totalProgressBar = new HashMap<>();
         totalProcessado.setValor(0);
 
         criarCheckBoxCobertura();
 
-//        lbProjetosSize = new Label("lbProjetosSize", Model.of("0"));
-//        lbProjetosSize.setOutputMarkupPlaceholderTag(true).setOutputMarkupId(true);
-//        add(lbProjetosSize);
-
         taLog = new Label("taLog");
         taLog.setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
         add(taLog);
-
-//        taLogInfo = new Label("taLogInfo");
-//        taLogInfo.setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
-//        add(taLogInfo);
 
         criarTimer();
 
@@ -101,19 +85,10 @@ public class ByClassTestPage extends BasePage {
 
         criarListaProjetos();
 
-//        linkCSVFinal = new ExternalLink("linkCSVFinal", File.separatorChar + "reports" + File.separatorChar + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv");
-//        linkCSVFinal.setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
-//        add(linkCSVFinal);
-
         FeedbackPanel feedback = new JQueryFeedbackPanel("feedback");
         add(feedback.setOutputMarkupId(true));
 
-        criarForm();
-
         criarBotaoProcessarTodos();
-
-//        lbPastaSelecionada = new Label("lbPastaSelecionada", pastaPath);
-//        add(lbPastaSelecionada);
 
         progressBar = new ProgressBar("progress", Model.of(0));
         add(this.progressBar);
@@ -144,7 +119,6 @@ public class ByClassTestPage extends BasePage {
         processarTodos = new IndicatingAjaxLink<String>("processarTodos") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-//                lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
                 processando = true;
                 List<Projeto> listaParaProcessar = new ArrayList<>();
                 for (Projeto projeto : listaProjetos) {
@@ -171,38 +145,16 @@ public class ByClassTestPage extends BasePage {
         add(acbCobertura);
     }
 
-    private void criarForm(){
-//        Form form = new Form<>("form");
-//
-//        TextField tfPastaPath = new TextField("tfPastaPath", new PropertyModel(this, "pastaPath"));
-//        tfPastaPath.setRequired(true);
-//        form.add(tfPastaPath);
-//
-//        Button btEnviar = new Button("btEnviar") {
-//            @Override
-//            public void onSubmit() {
-//
-//
-//            }
-//        };
-//        form.add(btEnviar);
-//        add(form);
-    }
 
     private void loadProjetos(){
         mesclado = false;
         dataProcessamentoAtual = Util.dateNowFolder();
         logRetorno = new StringBuffer();
-//        logRetornoInfo = new StringBuffer();
         totalProcessado.setValor(0);
-//        lbPastaSelecionada.setDefaultModel(Model.of("./projects"));
-
         File file = new File(WicketApplication.JNOSE_PROJECTS_FOLDER);
         listaProjetos = JNoseCore.listaProjetos(file.toURI(),logRetorno);
         lvProjetos.setList(listaProjetos);
-
         processarTodos.setEnabled(true);
-//        lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
     }
 
     private void criarListaProjetos(){
@@ -251,10 +203,6 @@ public class ByClassTestPage extends BasePage {
                             processarTodos.setEnabled(false);
                         }
                         target.add(processarTodos);
-
-//                        lbProjetosSize.setDefaultModel(Model.of(listaProjetosProcessar.size()));
-//                        target.add(lbProjetosSize);
-
                     }
                 };
                 item.add(paraProcessarACB);
@@ -328,9 +276,6 @@ public class ByClassTestPage extends BasePage {
                 taLog.setDefaultModel(Model.of(logRetorno));
                 target.add(taLog);
 
-//                taLogInfo.setDefaultModel(Model.of(logRetornoInfo));
-//                target.add(taLogInfo);
-
                 Boolean todosProjetosProcessados = true;
 
                 List<Projeto> listaProjetosProcessar = new ArrayList<>();
@@ -383,11 +328,6 @@ public class ByClassTestPage extends BasePage {
                     processado = processado && p.getProcessado();
                 }
 
-//                if (processado && mesclado == false && !listaProjetosProcessar.isEmpty()) {
-//                    JNoseCore.mesclarGeral(listaProjetosProcessar, pastaPathReport + dataProcessamentoAtual + File.separatorChar, logRetorno,dataProcessamentoAtual);
-//                    mesclado = true;
-//                }
-
                 if(processando){
                     if (!loadImg.isVisible()) {
                         loadImg.setVisible(true);
@@ -399,12 +339,6 @@ public class ByClassTestPage extends BasePage {
                         target.add(loadImg);
                     }
                 }
-
-//                if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
-//                    linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv"));
-//                    target.add(linkCSVFinal);
-//                }
-
             }
         };
         add(timer);
