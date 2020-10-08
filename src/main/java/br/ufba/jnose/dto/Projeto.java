@@ -39,6 +39,7 @@ public class Projeto implements Serializable {
     public Link lkCharts;
     public Link lkResult1;
     public Link lkResult2;
+    public Link lkChart2;
 
     public Label lbPorcentagem;
     public String bugs;
