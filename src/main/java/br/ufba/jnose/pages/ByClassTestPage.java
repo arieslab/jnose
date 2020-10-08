@@ -6,6 +6,7 @@ import br.ufba.jnose.dto.TotalProcessado;
 import br.ufba.jnose.core.JNoseCore;
 import br.ufba.jnose.dto.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
+import br.ufba.jnose.pages.charts.TestSmellsBarOptions;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
 import com.googlecode.wicket.jquery.ui.widget.progressbar.ProgressBar;
 import org.apache.wicket.AttributeModifier;
@@ -107,7 +108,7 @@ public class ByClassTestPage extends BasePage {
         Link lkCharts = new Link<String>("lkCharts") {
             @Override
             public void onClick() {
-                setResponsePage(new ChartsPage(listaResultado,"Charts By ClassTest"));
+                setResponsePage(new ChartsPage("Charts By ClassTest", new TestSmellsBarOptions(listaResultado)));
             }
         };
         add(lkCharts.setVisible(false));
@@ -168,7 +169,7 @@ public class ByClassTestPage extends BasePage {
                 Link lkCharts = new Link<String>("lkCharts") {
                     @Override
                     public void onClick() {
-                        setResponsePage(new ChartsPage(projeto.getResultado(),"Charts By ClassTest: " + projeto.getName()));
+                        setResponsePage(new ChartsPage("Charts By ClassTest: " + projeto.getName(),new TestSmellsBarOptions(projeto.getResultado())));
                     }
                 };
                 lkCharts.setEnabled(projeto.getProcessado());
