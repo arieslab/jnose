@@ -6,6 +6,7 @@ import org.apache.wicket.markup.html.link.Link;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 public class Projeto implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -27,6 +28,8 @@ public class Projeto implements Serializable {
 
     private Integer commits;
 
+    private Map<Integer, List<List<String>>> mapResults;
+
     public WebMarkupContainer iconProcessado;
     public WebMarkupContainer iconNaoProcessado;
 
@@ -34,6 +37,8 @@ public class Projeto implements Serializable {
 
     public Link lkResultado;
     public Link lkCharts;
+    public Link lkResult1;
+    public Link lkResult2;
 
     public Label lbPorcentagem;
     public String bugs;
@@ -162,5 +167,13 @@ public class Projeto implements Serializable {
 
     public void setListaTags(List<Commit> listaTags) {
         this.listaTags = listaTags;
+    }
+
+    public Map<Integer, List<List<String>>> getMapResults() {
+        return mapResults;
+    }
+
+    public void setMapResults(Map<Integer, List<List<String>>> mapResults) {
+        this.mapResults = mapResults;
     }
 }

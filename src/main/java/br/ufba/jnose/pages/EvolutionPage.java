@@ -3,18 +3,13 @@ package br.ufba.jnose.pages;
 import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.core.GitCore;
 import br.ufba.jnose.core.JNoseCore;
-import br.ufba.jnose.core.Util;
-import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.dto.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
-import br.ufba.jnose.pages.components.LinkResult;
-import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxPreventSubmitBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -24,7 +19,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.time.Duration;
 
 import java.io.File;
@@ -34,37 +28,16 @@ public class EvolutionPage extends BasePage {
     private static final long serialVersionUID = 1L;
 
     private Label taLogInfo;
-
-    private Projeto projetoSelecionado;
     private StringBuffer logRetorno;
-    private String pathCSV;
-    public String selected;
-    private String pathReport;
-    private String pathAppToWebapp;
     private List<Projeto> listaProjetos;
     private ListView<Projeto> lvProjetos;
 
     public EvolutionPage() {
-        this(null);
-    }
-
-    public EvolutionPage(Projeto projeto) {
         super("EvolutionPage");
-
-        projetoSelecionado = projeto;
         logRetorno = new StringBuffer();
-        pathCSV = "";
-        selected = "Commits";
-        pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
-        pathReport = "";
-
-        pathReport = pathAppToWebapp + File.separator + "reports" + File.separator + "revolution";
-
-        add(new JQueryFeedbackPanel("feedback").setOutputMarkupId(true));
-
+        criarTimer();
         criarListaProjetos();
         criarLogInfo();
-        criarTimer();
         loadProjetos();
     }
 
@@ -88,6 +61,28 @@ public class EvolutionPage extends BasePage {
             protected void onTimer(AjaxRequestTarget target) {
                 taLogInfo.setDefaultModelObject(logRetorno);
                 target.add(taLogInfo);
+
+                for(Projeto projeto:listaProjetos){
+                    if(projeto.getMapResults().containsKey(1)){
+                        projeto.lkResult1.setEnabled(true);
+                        projeto.lkResult1.add(AttributeModifier.remove("style"));
+                        target.add(projeto.lkResult1);
+                    }else{
+                        projeto.lkResult1.setEnabled(false);
+                        projeto.lkResult1.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
+                        target.add(projeto.lkResult1);
+                    }
+                    if(projeto.getMapResults().containsKey(2)){
+                        projeto.lkResult2.setEnabled(true);
+                        projeto.lkResult2.add(AttributeModifier.remove("style"));
+                        target.add(projeto.lkResult2);
+                    }else{
+                        projeto.lkResult2.setEnabled(false);
+                        projeto.lkResult2.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
+                        target.add(projeto.lkResult2);
+                    }
+                }
+
             }
         };
         add(timer);
@@ -99,9 +94,10 @@ public class EvolutionPage extends BasePage {
             @Override
             protected void populateItem(ListItem<Projeto> item) {
 
-                Map<Integer, List<List<String>>> mapResults = new HashMap<>();
-
                 Projeto projeto = item.getModelObject();
+
+                Map<Integer, List<List<String>>> mapResults = new HashMap<>();
+                projeto.setMapResults(mapResults);
                 item.add(new Label("nomeProjeto", projeto.getName()));
                 item.add(new Label("path", projeto.getPath()));
                 item.add(new Label("branch", GitCore.branch(projeto.getPath())));
@@ -112,7 +108,7 @@ public class EvolutionPage extends BasePage {
                 form.setOutputMarkupId(true);
                 form.add(new AjaxPreventSubmitBehavior());
 
-                final LinkResult lkResult1 = new LinkResult("lkResult1") {
+                Link lkResult1 = new Link<String>("lkResult1") {
                     @Override
                     public void onClick() {
                         List<List<String>> todasLinhas1 = mapResults.get(1);
@@ -123,7 +119,7 @@ public class EvolutionPage extends BasePage {
                 lkResult1.setOutputMarkupPlaceholderTag(true);
                 lkResult1.setEnabled(false);
                 lkResult1.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
-
+                projeto.lkResult1 = lkResult1;
                 form.add(lkResult1);
 
                 Link lkResult2 = new Link<String>("lkResult2") {
@@ -138,6 +134,7 @@ public class EvolutionPage extends BasePage {
                 lkResult2.setOutputMarkupPlaceholderTag(true);
                 lkResult2.setEnabled(false);
                 lkResult2.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
+                projeto.lkResult2 = lkResult2;
                 form.add(lkResult2);
 
 
@@ -147,16 +144,12 @@ public class EvolutionPage extends BasePage {
                         System.out.println("Processamento do projeto: " + projeto.getName() + " - Concluído");
                         logRetorno.append("Processamento do projeto: " + projeto.getName() + " - Concluído<br>");
 
-                        Map<Integer, List<List<String>>> map = JNoseCore.processarEvolution(projeto, logRetorno);
-                        mapResults.put(1, map.get(1));
-                        mapResults.put(2, map.get(2));
-
-                        lkResult1.setEnabled(true);
-                        lkResult2.setEnabled(true);
-                        lkResult1.add(AttributeModifier.remove("style"));
-                        lkResult2.add(AttributeModifier.remove("style"));
-                        target.add(lkResult1);
-                        target.add(lkResult2);
+                        new Thread() { // IMPORTANTE: AQUI SE CRIA AS THREADS
+                            @Override
+                            public void run() {
+                                JNoseCore.processarEvolution(projeto, logRetorno, projeto.getMapResults());
+                            }
+                        }.start();
 
                     }
                 };

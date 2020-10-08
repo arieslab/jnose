@@ -459,7 +459,7 @@ public class JNoseCore {
     }
 
 
-    public static Map<Integer, List<List<String>>> processarEvolution(Projeto projeto, StringBuffer logRetorno) {
+    public static void processarEvolution(Projeto projeto, StringBuffer logRetorno, Map<Integer, List<List<String>>> mapa) {
 
         GitCore.checkout("master", projeto.getPath());
 
@@ -480,10 +480,6 @@ public class JNoseCore {
 
         List<List<String>> todasLinhas1 = new ArrayList<>();
         List<List<String>> todasLinhas2 = new ArrayList<>();
-
-        Map mapRetorn = new HashMap();
-        mapRetorn.put(1, todasLinhas1);
-        mapRetorn.put(2, todasLinhas2);
 
         boolean vizualizarCabecalho = true;
 
@@ -514,10 +510,12 @@ public class JNoseCore {
             todasLinhas2.add(lista2);
 
             vizualizarCabecalho = false;
+
+            mapa.put(1, todasLinhas1);
+
+            mapa.put(2, todasLinhas2);
         }
         GitCore.checkout("master", projeto.getPath());
-
-        return mapRetorn;
     }
 
 
