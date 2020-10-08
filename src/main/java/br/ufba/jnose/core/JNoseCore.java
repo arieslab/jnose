@@ -117,7 +117,7 @@ public class JNoseCore {
     public static List<TestClass> getFilesTest(String directoryPath, StringBuffer logRetorno) throws IOException {
         String projectName = directoryPath.substring(directoryPath.lastIndexOf(File.separatorChar) + 1, directoryPath.length());
 
-        logRetorno.append(Util.dateNow() + projectName + " - <font style='color:red'>TestFileDetector</font> <br>");
+        logRetorno.insert(0,Util.dateNow() + projectName + " - <font style='color:red'>TestFileDetector</font> <br>");
 
         List<TestClass> files = new ArrayList<>();
         Path startDir = Paths.get(directoryPath);
@@ -277,7 +277,7 @@ public class JNoseCore {
 
     public static String processarTestSmellDetector(String pathCSVMapping, String pathProjeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-        logRetorno.append(Util.dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>");
+        logRetorno.insert(0,Util.dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>");
         String csvTestSmells = "";
         try {
             csvTestSmells = br.ufba.jnose.core.testsmelldetector.Main.start(pathCSVMapping, nameProjeto, pastaPathReport + folderTime + File.separatorChar,folderTime);
@@ -290,7 +290,7 @@ public class JNoseCore {
 
     public static List<List<String>> processarTestSmellDetector2(String pathCSVMapping, String pathProjeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-        logRetorno.append(Util.dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>");
+        logRetorno.insert(0,Util.dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>");
         List<List<String>> todasLinhas = new ArrayList<>();
         try {
             todasLinhas = br.ufba.jnose.core.testsmelldetector.Main.start2(pathCSVMapping, nameProjeto, pastaPathReport + folderTime + File.separatorChar,folderTime);
@@ -302,7 +302,7 @@ public class JNoseCore {
 
     public static String processarTestFileMapping(List<TestClass> listTestClass, String pathProjeto, String folderTime, StringBuffer logRetorno) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-        logRetorno.append(Util.dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>");
+        logRetorno.insert(0,Util.dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>");
         return JNoseCore.testfilemapping(listTestClass, folderTime, nameProjeto);
     }
 
@@ -322,7 +322,6 @@ public class JNoseCore {
                 } else {
                     String msg = "It is not a project MAVEN: " + dir.getAbsolutePath();
                     out.println(msg);
-                    logRetornoInfo.append(" <br>");
                 }
             }
         }
@@ -342,7 +341,7 @@ public class JNoseCore {
 
 
     public static List<List<String>> processarProjeto2(Projeto projeto, float valorProcProject, String folderTime, TotalProcessado totalProcessado, String pastaPathReport, StringBuffer logRetorno) throws IOException {
-        logRetorno.append(Util.dateNow() + projeto.getName() + " - started <br>");
+        logRetorno.insert(0,Util.dateNow() + projeto.getName() + " - started <br>");
         Float valorSoma = valorProcProject / 4;
 
         totalProcessado.setValor(5);
@@ -486,6 +485,8 @@ public class JNoseCore {
         //Para cada commit executa uma busca
         for (Commit commit : lista) {
 
+            logRetorno.insert(0,"Analyze commit: " + commit.id + "<br>");
+
             GitCore.checkout(commit.id, projeto.getPath());
 
             int total = 0;
@@ -508,13 +509,12 @@ public class JNoseCore {
             lista2.add(commit.date + "");
             lista2.add(total + "");
             todasLinhas2.add(lista2);
-
             vizualizarCabecalho = false;
-
-            mapa.put(1, todasLinhas1);
-
-            mapa.put(2, todasLinhas2);
         }
+
+        mapa.put(1, todasLinhas1);
+        mapa.put(2, todasLinhas2);
+        
         GitCore.checkout("master", projeto.getPath());
     }
 

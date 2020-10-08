@@ -139,7 +139,7 @@ public class ByClassTestPage extends BasePage {
             protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
                 WicketApplication.COBERTURA_ON = processarCobertura;
                 out.println("COVERAGE_ON: " + processarCobertura);
-                logRetorno.append("COVERAGE_ON: " + processarCobertura + " <br>");
+                logRetorno.insert(0,"COVERAGE_ON: " + processarCobertura + " <br>");
             }
         };
         add(acbCobertura);

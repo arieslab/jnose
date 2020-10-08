@@ -141,8 +141,8 @@ public class EvolutionPage extends BasePage {
                 IndicatingAjaxLink btSubmit = new IndicatingAjaxLink<String>("btSubmit") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        System.out.println("Processamento do projeto: " + projeto.getName() + " - Concluído");
-                        logRetorno.append("Processamento do projeto: " + projeto.getName() + " - Concluído<br>");
+                        System.out.println("Processamento do projeto: " + projeto.getName() + " - Start");
+                        logRetorno.insert(0,"Processamento do projeto: " + projeto.getName() + " - Start<br>");
 
                         new Thread() { // IMPORTANTE: AQUI SE CRIA AS THREADS
                             @Override
