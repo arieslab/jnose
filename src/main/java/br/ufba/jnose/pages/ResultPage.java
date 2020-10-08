@@ -17,7 +17,6 @@ public class ResultPage extends ImprimirPage {
     private static final long serialVersionUID = 1L;
 
     public ResultPage(List<List<String>> todasLinhas, String title, String csvFileName, boolean fontColorized) {
-        super("ResultPage");
 
         add(new Label("title",title));
 

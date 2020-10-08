@@ -24,7 +24,6 @@ public class SourcePage extends ImprimirPage {
     private static final long serialVersionUID = 1L;
 
     public SourcePage(AbstractSmell testSmell) {
-        super("SourcetPage");
 
         add(new Label("title", "Source: " + testSmell.getSmellName()));
 

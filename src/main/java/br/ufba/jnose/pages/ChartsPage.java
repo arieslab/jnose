@@ -11,7 +11,6 @@ public class ChartsPage extends ImprimirPage {
     private static final long serialVersionUID = 1L;
 
     public ChartsPage(List<List<String>> todasLinhas, String title) {
-        super("ResultPage");
         add(new Label("title",title));
         TestSmellsBarOptions options = new TestSmellsBarOptions(todasLinhas);
         add(new Chart("chart", options));
