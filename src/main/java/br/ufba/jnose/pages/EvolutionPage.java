@@ -12,8 +12,10 @@ import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxPreventSubmitBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RadioChoice;
@@ -107,6 +109,8 @@ public class EvolutionPage extends BasePage {
                 projeto.setListaTags(GitCore.gitTags(projeto.getPath()));
 
                 Form form = new Form<String>("form");
+                form.setOutputMarkupId(true);
+                form.add(new AjaxPreventSubmitBehavior());
 
                 final LinkResult lkResult1 = new LinkResult("lkResult1") {
                     @Override
@@ -137,10 +141,9 @@ public class EvolutionPage extends BasePage {
                 form.add(lkResult2);
 
 
-                AjaxSubmitLink btSubmit = new AjaxSubmitLink("btSubmit") {
+                IndicatingAjaxLink btSubmit = new IndicatingAjaxLink<String>("btSubmit") {
                     @Override
-                    protected void onSubmit(AjaxRequestTarget target) {
-                        super.onSubmit();
+                    public void onClick(AjaxRequestTarget target) {
                         System.out.println("Processamento do projeto: " + projeto.getName() + " - Concluído");
                         logRetorno.append("Processamento do projeto: " + projeto.getName() + " - Concluído<br>");
                         taLogInfo.setDefaultModelObject(logRetorno);
