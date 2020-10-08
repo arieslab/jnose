@@ -152,7 +152,7 @@ public class EvolutionPage extends BasePage {
                     @Override
                     public void onClick() {
                         List<List<String>> todasLinhas2 = mapResults.get(2);
-                        setResponsePage(new ChartsPage("Chart: Total by TestSMells",new BasicLineOptions(todasLinhas2)));
+                        setResponsePage(new ChartsPage("Chart Total by TestSMells: " + projeto.getName() ,new BasicLineOptions(todasLinhas2)));
                     }
                 };
                 lkChart2.setOutputMarkupId(true);
