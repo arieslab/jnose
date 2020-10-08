@@ -514,7 +514,7 @@ public class JNoseCore {
 
         mapa.put(1, todasLinhas1);
         mapa.put(2, todasLinhas2);
-        
+
         GitCore.checkout("master", projeto.getPath());
     }
 

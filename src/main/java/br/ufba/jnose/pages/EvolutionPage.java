@@ -10,7 +10,7 @@ import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxPreventSubmitBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RadioChoice;
@@ -138,7 +138,7 @@ public class EvolutionPage extends BasePage {
                 form.add(lkResult2);
 
 
-                IndicatingAjaxLink btSubmit = new IndicatingAjaxLink<String>("btSubmit") {
+                AjaxLink btSubmit = new AjaxLink<String>("btSubmit") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         System.out.println("Processamento do projeto: " + projeto.getName() + " - Start");
