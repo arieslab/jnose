@@ -15,6 +15,8 @@ public class WicketApplication extends WebApplication {
 
     public static String JNOSE_PROJECTS_FOLDER;
 
+    public static String JNOSE_PATH;
+
     @Override
     public Class<? extends WebPage> getHomePage() {
         return HomePage.class;
@@ -22,6 +24,11 @@ public class WicketApplication extends WebApplication {
 
     @Override
     public void init() {
+
+        File fileRoot = new File(".");
+
+        JNOSE_PATH = fileRoot.getAbsolutePath();
+        System.out.println("JNOSE Path: " + JNOSE_PATH);
 
         USERHOME = System.getProperty("user.home");
         System.out.println("OS current user home directory is " + USERHOME);
