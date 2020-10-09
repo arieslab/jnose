@@ -39,6 +39,12 @@ Apresentação no CBSoft 2019 - Salvador - Bahia - Brazil<br>
 
 Please, feel very welcome to create new issues on this project to request new features and report bugs. 
 
+## Contributors
+ - <a href="https://github.com/tassiovirginio">Tássio Virgínio</a>
+ - <a href="https://github.com/danielevalverde">Daniele Valverde</a>
+ - <a href="https://github.com/luana-martins">Luana Martins</a>
+ - <a href="https://github.com/Railana">Railana Santana</a>
+
 ## Contributing
 
 - Create an issue on this repository
