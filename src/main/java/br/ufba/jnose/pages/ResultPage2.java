@@ -41,7 +41,7 @@ public class ResultPage2 extends ImprimirPage {
                         @Override
                         public void onClick() {
                             setResponsePage(new CodePage(testsmellName,pathFileTest,inicio,fim));
-                            System.out.println(pathFileTest + " - " + inicio + " - " + fim);
+//                            System.out.println(pathFileTest + " - " + inicio + " - " + fim);
                         }
                     });
                 }else{
