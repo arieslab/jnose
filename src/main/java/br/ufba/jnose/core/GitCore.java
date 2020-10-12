@@ -4,30 +4,38 @@ import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.dto.Projeto;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.api.BlameCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.blame.BlameResult;
+import org.eclipse.jgit.diff.RawText;
+import org.eclipse.jgit.diff.RawTextComparator;
+import org.eclipse.jgit.internal.storage.file.FileRepository;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class GitCore {
 
     public static Projeto gitClone(String repoURL) {
         String repoName = "";
-        if(repoURL.contains(".git")) {
+        if (repoURL.contains(".git")) {
             repoName = repoURL.substring(repoURL.lastIndexOf("/") + 1, repoURL.lastIndexOf("."));
-        }else{
+        } else {
             int x = repoURL.lastIndexOf("/");
             int size = repoURL.length();
-            if(x == size-1){
-                repoURL = repoURL.substring(0,repoURL.length()-2);
+            if (x == size - 1) {
+                repoURL = repoURL.substring(0, repoURL.length() - 2);
                 repoName = repoURL.substring(repoURL.lastIndexOf("/") + 1, repoURL.length());
-            }else{
+            } else {
                 repoName = repoURL.substring(repoURL.lastIndexOf("/") + 1, repoURL.length());
             }
 
@@ -143,6 +151,65 @@ public class GitCore {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static Map<Integer,String> blame(String projetoPath, String filePathAbsolut) {
+
+        Map<Integer,String> retorno = new HashMap<>();
+
+        String filePathRepo = filePathAbsolut.replace(projetoPath+"/","");
+
+        Git git = null;
+        try {
+
+            final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("YYYY-MM-dd HH:mm");
+
+            git = Git.open(new File(projetoPath));
+            BlameCommand blameCommand = git.blame();
+            blameCommand.setStartCommit(git.getRepository().resolve("HEAD"));
+            blameCommand.setFilePath(filePathRepo);
+            BlameResult result = blameCommand.call();
+
+//            System.out.println("Blaming " + filePath);
+//            final BlameResult result = git.blame().setFilePath(filePath)
+//                    .setTextComparator(RawTextComparator.WS_IGNORE_ALL).call();
+            final RawText rawText = result.getResultContents();
+
+            for (int i = 0; i < rawText.size(); i++) {
+                final PersonIdent sourceAuthor = result.getSourceAuthor(i);
+                final RevCommit sourceCommit = result.getSourceCommit(i);
+                System.out.println(sourceAuthor.getName() +
+                        (sourceCommit != null ? " - " + DATE_FORMAT.format(((long) sourceCommit.getCommitTime()) * 1000) +
+                                " - " + sourceCommit.getName() : "") +
+                        ": " + rawText.getString(i));
+
+                retorno.put(i+1,sourceAuthor.getName());
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return retorno;
+    }
+
+    public static BlameResult getBlameResultForFile(String projetoPath, String filePath) {
+        BlameResult blame = null;
+        Git git = null;
+        try {
+            git = Git.open(new File(projetoPath));
+            Iterable<RevCommit> lista = git.log().all().call();
+            Repository jgitRepository = git.getRepository();
+            BlameCommand blamer = new BlameCommand(jgitRepository);
+            ObjectId commitID = jgitRepository.resolve("HEAD");
+            blamer.setStartCommit(commitID);
+            filePath = filePath.replace(projetoPath+"/","");
+            blamer.setFilePath(filePath);
+            blame = blamer.call();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return blame;
     }
 
 }

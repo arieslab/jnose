@@ -1,5 +1,7 @@
 package br.ufba.jnose.pages;
 
+import br.ufba.jnose.core.GitCore;
+import br.ufba.jnose.dto.Projeto;
 import br.ufba.jnose.pages.base.ImprimirPage;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -13,13 +15,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class CodePage extends ImprimirPage {
     private static final long serialVersionUID = 1L;
     private static int cont = 0;
 
-    public CodePage(String title, String pathFile, int inicio, int fim) {
+    public CodePage(Projeto projeto, String title, String pathFile, int inicio, int fim) {
         add(new Label("title", "Code Test Smell: " + title));
+
+        Map<Integer,String> mapaBlame = GitCore.blame(projeto.getPath(),pathFile);
 
         List<String> linhas = new ArrayList();
 
@@ -42,11 +47,12 @@ public class CodePage extends ImprimirPage {
             protected void populateItem(ListItem<String> item) {
                 String linha = item.getModelObject();
                 item.add(new Label("numero",cont));
+                item.add(new Label("blame", mapaBlame.get(cont)));
 
                 WebMarkupContainer container = new WebMarkupContainer("container");
 
                 if(cont >= inicio && cont <= fim){
-                    container.add(new AttributeAppender("style", "background-color: #ffe6ff;"));
+                    item.add(new AttributeAppender("style", "background-color: #ffe6ff;"));
                 }
 
                 container.add(new Label("codigo", linha));

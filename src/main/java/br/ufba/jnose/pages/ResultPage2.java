@@ -2,6 +2,7 @@ package br.ufba.jnose.pages;
 
 import br.ufba.jnose.core.CSVCore;
 import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
+import br.ufba.jnose.dto.Projeto;
 import br.ufba.jnose.pages.base.ImprimirPage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
@@ -17,7 +18,7 @@ import java.util.List;
 public class ResultPage2 extends ImprimirPage {
     private static final long serialVersionUID = 1L;
 
-    public ResultPage2(List<List<String>> todasLinhas, String title, String csvFileName, boolean fontColorized) {
+    public ResultPage2(Projeto projeto, List<List<String>> todasLinhas, String title, String csvFileName, boolean fontColorized) {
 
         add(new Label("title",title));
 
@@ -40,7 +41,7 @@ public class ResultPage2 extends ImprimirPage {
                     item.add(new Link<String>("codigo") {
                         @Override
                         public void onClick() {
-                            setResponsePage(new CodePage(testsmellName,pathFileTest,inicio,fim));
+                            setResponsePage(new CodePage(projeto,testsmellName,pathFileTest,inicio,fim));
 //                            System.out.println(pathFileTest + " - " + inicio + " - " + fim);
                         }
                     });
