@@ -13,6 +13,8 @@ import java.io.FileNotFoundException;
 
 public class IgnoredTest extends AbstractSmell {
 
+    private boolean flag = false;
+
     public IgnoredTest() {
         super("IgnoredTest");
     }
@@ -40,10 +42,7 @@ public class IgnoredTest extends AbstractSmell {
         public void visit(ClassOrInterfaceDeclaration n, Void arg) {
             if (n.getAnnotationByName("Ignore").isPresent()) {
                 testClass = new TestClass(n.getNameAsString());
-                testClass.setHasSmell(true);
-//                testMethod.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
-//                testMethod.addDataItem("end",String.valueOf(n.getRange().get().end.line));
-                smellyElementList.add(testClass);
+                flag = true;
             }
             super.visit(n, arg);
         }
@@ -57,9 +56,11 @@ public class IgnoredTest extends AbstractSmell {
             //JUnit 4
             //check if test method has Ignore annotation
             if (n.getAnnotationByName("Test").isPresent()) {
-                if (n.getAnnotationByName("Ignore").isPresent()) {
+                if (n.getAnnotationByName("Ignore").isPresent() || flag) {
                     testMethod = new TestMethod(n.getNameAsString());
                     testMethod.setHasSmell(true);
+                    testMethod.addDataItem("begin", String.valueOf(n.getRange().get().begin.line));
+                    testMethod.addDataItem("end", String.valueOf(n.getRange().get().end.line));
                     smellyElementList.add(testMethod);
                     return;
                 }
@@ -71,6 +72,8 @@ public class IgnoredTest extends AbstractSmell {
                 if (!n.getModifiers().contains(Modifier.PUBLIC)) {
                     testMethod = new TestMethod(n.getNameAsString());
                     testMethod.setHasSmell(true);
+                    testMethod.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
+                    testMethod.addDataItem("end",String.valueOf(n.getRange().get().end.line));
                     smellyElementList.add(testMethod);
                     return;
                 }
