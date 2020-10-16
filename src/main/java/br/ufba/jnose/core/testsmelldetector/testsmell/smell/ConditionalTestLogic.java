@@ -1,5 +1,6 @@
 package br.ufba.jnose.core.testsmelldetector.testsmell.smell;
 
+import br.ufba.jnose.core.testsmelldetector.testsmell.MethodUsage;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.ConditionalExpr;
@@ -10,14 +11,19 @@ import br.ufba.jnose.core.testsmelldetector.testsmell.TestMethod;
 import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
 This class check a test method for the existence of loops and conditional statements in the methods body
  */
 public class ConditionalTestLogic extends AbstractSmell {
 
+    private List<MethodUsage> methodConditional;
+
     public ConditionalTestLogic() {
         super("Conditional Test Logic");
+        methodConditional = new ArrayList<>();
     }
 
     /**
@@ -27,6 +33,14 @@ public class ConditionalTestLogic extends AbstractSmell {
     public void runAnalysis(CompilationUnit testFileCompilationUnit, CompilationUnit productionFileCompilationUnit, String testFileName, String productionFileName) throws FileNotFoundException {
         classVisitor = new ConditionalTestLogic.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
+
+        for (MethodUsage method : methodConditional) {
+            TestMethod testClass = new TestMethod(method.getTestMethodName());
+            testClass.addDataItem("begin", method.getBegin());
+            testClass.addDataItem("end", method.getEnd());
+            testClass.setHasSmell(true);
+            smellyElementList.add(testClass);
+        }
     }
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
@@ -43,7 +57,7 @@ public class ConditionalTestLogic extends AbstractSmell {
                 testMethod.setHasSmell(false); //default value is false (i.e. no smell)
                 super.visit(n, arg);
 
-                testMethod.setHasSmell(conditionCount > 0 | ifCount > 0 | switchCount > 0 | foreachCount > 0 | forCount > 0 | whileCount > 0 | doCount > 0);
+                testMethod.setHasSmell(true);
 
                 testMethod.addDataItem("ConditionCount", String.valueOf(conditionCount));
                 testMethod.addDataItem("IfCount", String.valueOf(ifCount));
@@ -52,11 +66,6 @@ public class ConditionalTestLogic extends AbstractSmell {
                 testMethod.addDataItem("ForCount", String.valueOf(forCount));
                 testMethod.addDataItem("WhileCount", String.valueOf(whileCount));
                 testMethod.addDataItem("DoCount", String.valueOf(doCount));
-
-                testMethod.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
-                testMethod.addDataItem("end",String.valueOf(n.getRange().get().end.line));
-
-                smellyElementList.add(testMethod);
 
                 //reset values for next method
                 currentMethod = null;
@@ -76,6 +85,7 @@ public class ConditionalTestLogic extends AbstractSmell {
             super.visit(n, arg);
             if (currentMethod != null) {
                 ifCount++;
+                methodConditional.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().end.line)));
             }
         }
 
@@ -85,6 +95,7 @@ public class ConditionalTestLogic extends AbstractSmell {
             super.visit(n, arg);
             if (currentMethod != null) {
                 switchCount++;
+                methodConditional.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().end.line)));
             }
         }
 
@@ -94,6 +105,7 @@ public class ConditionalTestLogic extends AbstractSmell {
             super.visit(n, arg);
             if (currentMethod != null) {
                 conditionCount++;
+                methodConditional.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().end.line)));
             }
         }
 
@@ -103,6 +115,7 @@ public class ConditionalTestLogic extends AbstractSmell {
             super.visit(n, arg);
             if (currentMethod != null) {
                 forCount++;
+                methodConditional.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().end.line)));
             }
         }
 
@@ -111,6 +124,7 @@ public class ConditionalTestLogic extends AbstractSmell {
             super.visit(n, arg);
             if (currentMethod != null) {
                 foreachCount++;
+                methodConditional.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().end.line)));
             }
         }
 
@@ -119,6 +133,7 @@ public class ConditionalTestLogic extends AbstractSmell {
             super.visit(n, arg);
             if (currentMethod != null) {
                 whileCount++;
+                methodConditional.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().end.line)));
             }
         }
 
@@ -127,8 +142,8 @@ public class ConditionalTestLogic extends AbstractSmell {
             super.visit(n, arg);
             if (currentMethod != null) {
                 doCount++;
+                methodConditional.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().end.line)));
             }
         }
     }
-
 }
