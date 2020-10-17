@@ -31,46 +31,51 @@ On the home screen we have the description of each search option and the configu
  - Evolution: Search in the project repository(git) looking for test smells in each commit/tag done.
  - Configuration: We have the option to choose which test smells we want to perform the research, by default all are selected.
  
-## By ClassTest
 <p align="center">
   <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_02.png?raw=true" width="800">
 </p>
 
-Initially we "paste" the folder address where the projects are located "Folders with projects".
+Initially we paste the repository link on the project screen
 
-E.g:
- - Linux: /home/nome/projetos
- - Windows: C:\users\name\projetos
+E.g: https://github.com/tassiovirginio/jnose
+
 <p align="center">
  <img src="docs/screenshot.png" width="800">
 </p>
 
-After "paste" the address of the projects folder that is on your machine, we click on "Select Directory".In the box below, all projects within the selected folder will be displayed.
+After paste the address of the repository, you can see that the project on the page and you can update this project for the latest version by using git pull function any time. In the box below, all projects will be displayed.
 
 <p align="center">
   <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_02_01.png?raw=true" width="800">
 </p>
 
-We can select all the projects that are in the list, or select only a few of them, with the checkbox option that each project has on the side of its name.
+Then you can choise display the tests smells by ClassTest or By TestSmells on the Menu bar
 
-Then we will have the search for test smells being executed by clicking on the "Process" button.
+## By ClassTest
+on ByClassTest screen we can select all the projects that are in the list, or select only a few of them, with the checkbox option that each project has on the side of its name.
+
+Then we will have the search for test smells being executed by clicking on the "Analyse" button.
 
 The Search will start and we will be able to follow through the progress bar in each project and in the general progress bar.
 
-At the end of the process, a CSV will be generated with the results obtained.
+At the end of the process, you can click on the "result" button to see the result on the page
+<p align="center">
+  <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_04.png?raw=true" width="800">
+</p>
 
-Return(CSV): Project Name, Test Class, Production Class, LOC, Number of Methods and the number of each of the 21 test_smells found per test class.
+You also can export the CSV file, by clicking on the button "export csv" on this screen 
+The result will display the following return: Project Name, Test Class, Production Class, LOC, Number of Methods and the number of each of the 21 test_smells found per test class.
 
 ## By TestSmells
 <p align="center">
-  <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_03.png?raw=true" width="800">
+  <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_05.png?raw=true" width="800">
 </p>
 
-In this option, we select "Folders with projects" the same way that we did before and the search by test smells will display the following return: Project Name, Test Class, Production Class, name of test smells, method name, occurrence line, initial occurrence line, final occurrence line.
+In this option, the search by test smells will display the following return: Project Name, Test Class, Production Class, name of test smells, method name, occurrence line, initial occurrence line, final occurrence line.
 
 ## Evolution
 <p align="center">
-  <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_04.png?raw=true" width="800">
+  <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_06.png?raw=true" width="800">
 </p>
 
 Using GIT version control, we can perform a search for test smell on each commit performed or tag existing in the project history. The return is the same as ByClassTest, with additional commit information: 
@@ -82,9 +87,11 @@ Using GIT version control, we can perform a search for test smell on each commit
 To use this option the project must be cloned: git clone https: //address.do.project
 
 ## Configuration
+On this screen we can select which tests you want to search in your project. 
 <p align="center">
-  <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_05.png?raw=true" width="800">
+  <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_07.png?raw=true" width="800">
 </p>
+
 
 ### Contact email:
 - tassiovirginio@gmail.com
