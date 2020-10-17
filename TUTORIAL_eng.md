@@ -31,17 +31,13 @@ On the home screen we have the description of each search option and the configu
  - Evolution: Search in the project repository(git) looking for test smells in each commit/tag done.
  - Configuration: We have the option to choose which test smells we want to perform the research, by default all are selected.
  
-<p align="center">
-  <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_02.png?raw=true" width="800">
-</p>
 
 Initially we paste the repository link on the project screen
-
 E.g: https://github.com/tassiovirginio/jnose
-
 <p align="center">
- <img src="docs/screenshot.png" width="800">
+  <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_02.png" width="600">
 </p>
+
 
 After paste the address of the repository, you can see that the project on the page and you can update this project for the latest version by using git pull function any time. In the box below, all projects will be displayed.
 
@@ -87,7 +83,7 @@ Using GIT version control, we can perform a search for test smell on each commit
 To use this option the project must be cloned: git clone https: //address.do.project
 
 ## Configuration
-On this screen we can select which tests you want to search in your project. 
+On this screen we can select which types of test smells you want to search in your project. 
 <p align="center">
   <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_07.png?raw=true" width="800">
 </p>
