@@ -49,6 +49,9 @@ Then you can choise display the tests smells by ClassTest or By TestSmells on th
 
 ## By ClassTest
 on ByClassTest screen we can select all the projects that are in the list, or select only a few of them, with the checkbox option that each project has on the side of its name.
+<p align="center">
+  <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_03.png?raw=true" width="800">
+</p>
 
 Then we will have the search for test smells being executed by clicking on the "Analyse" button.
 
