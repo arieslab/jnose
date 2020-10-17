@@ -35,7 +35,7 @@ On the home screen we have the description of each search option and the configu
 Initially we paste the repository link on the project screen
 E.g: https://github.com/tassiovirginio/jnose
 <p align="center">
-  <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_02.png" width="600">
+  <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/tela_02.png" width="800">
 </p>
 
 
