@@ -1,6 +1,7 @@
 package br.ufba.jnose;
 
 import br.ufba.jnose.core.CSVCore;
+import br.ufba.jnose.core.DBCore;
 import br.ufba.jnose.pages.HomePage;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -49,6 +50,8 @@ public class WicketApplication extends WebApplication {
         this.getMarkupSettings().setStripWicketTags(true);
         this.getDebugSettings().setAjaxDebugModeEnabled(false);
         CSVCore.load(this);
+
+        DBCore.load();
 
         File file = new File(JNOSE_PROJECTS_FOLDER);
         if(!file.exists()){
