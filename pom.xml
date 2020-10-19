@@ -78,6 +78,12 @@
 			<artifactId>hsqldb</artifactId>
 			<version>2.5.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.kohsuke</groupId>
+			<artifactId>github-api</artifactId>
+			<version>1.116</version>
+		</dependency>
+
 
 		<!--  JETTY DEPENDENCIES FOR TESTING  -->
 		<dependency>
@@ -242,7 +248,7 @@
 		</repository>
 		<repository>
 			<id>mvnrepository</id>
-			<url>http://repo1.maven.org/maven2</url>
+			<url>https://repo1.maven.org/maven2</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
