@@ -17,6 +17,8 @@ import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHub;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +26,48 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class GitCore {
+
+    public static void main(String[] args) {
+        GitCore.getStarts("hub4j/github-api");
+    }
+
+    /**
+     * Retorna a quantidade de estrelas do projeto
+     * @param repoLocal path do repo local
+     * @return
+     */
+    public static Integer getStarts(String repoLocal){
+
+        String url = getURL(repoLocal);
+        String repoName = getNameByGithub(url);
+
+        Integer stars = 0;
+        try {
+            GitHub github = GitHub.connectAnonymously();
+            GHRepository repo = github.getRepository(repoName);
+            stars = repo.getStargazersCount();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return stars;
+    }
+
+
+    private static String getNameByGithub(String path_) {
+        String owner_ = "";
+
+        path_ = path_.replace(".git","");
+
+        if(path_.endsWith("/")){
+            path_ = path_.substring(0,path_.length()-1);
+        }
+
+        String projeto_ = path_.substring(path_.lastIndexOf("/")+1,path_.length());
+        owner_ = path_.substring(0,path_.lastIndexOf("/"));
+        owner_ = owner_.substring(owner_.lastIndexOf("/")+1,owner_.length());
+
+        return owner_ + "/" + projeto_;
+    }
 
     public static Projeto gitClone(String repoURL) {
         String repoName = "";
@@ -131,6 +175,17 @@ public class GitCore {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static String getURL(String projetoPath) {
+        String url = "";
+        try {
+            Git git = Git.open(new File(projetoPath));
+            url = git.getRepository().getConfig().getString("remote", "origin", "url");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return url;
     }
 
     public static String branch(String projetoPath) {

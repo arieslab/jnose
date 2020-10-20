@@ -68,6 +68,7 @@ public class ProjetosPage extends BasePage {
                 item.add(new Label("projetoNome",projeto.getName()));
                 item.add(new Label("path",projeto.getPath()));
                 item.add(new Label("junit",JNoseCore.getJUnitVersion(projeto.getPath())));
+                item.add(new Label("stars",GitCore.getStarts(projeto.getPath())));
                 ArrayList<Commit> lista = GitCore.gitLogOneLine(projeto.getPath());
                 SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                 item.add(new Label("lastupdate",df.format(lista.get(0).date)));
