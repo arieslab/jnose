@@ -2,7 +2,7 @@ package br.ufba.jnose.pages;
 
 import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.core.Util;
-import br.ufba.jnose.dto.Projeto;
+import br.ufba.jnose.dto.ProjetoDTO;
 import br.ufba.jnose.dto.TotalProcessado;
 import br.ufba.jnose.pages.base.BasePage;
 import br.ufba.jnose.core.JNoseCore;
@@ -39,9 +39,9 @@ public class ByTestSmellsPage extends BasePage {
     private String pastaPathReport;
     private Label lbPastaSelecionada;
     private ProgressBar progressBar;
-    private List<Projeto> listaProjetos;
+    private List<ProjetoDTO> listaProjetos;
     private AjaxIndicatorAppender indicator;
-    private ListView<Projeto> lvProjetos;
+    private ListView<ProjetoDTO> lvProjetos;
     private TotalProcessado totalProcessado;
     private Map<Integer, Integer> totalProgressBar;
     private Boolean processando;
@@ -113,8 +113,8 @@ public class ByTestSmellsPage extends BasePage {
             public void onClick(AjaxRequestTarget target) {
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
                 processando = true;
-                List<Projeto> listaParaProcessar = new ArrayList<>();
-                for (Projeto projeto : listaProjetos) {
+                List<ProjetoDTO> listaParaProcessar = new ArrayList<>();
+                for (ProjetoDTO projeto : listaProjetos) {
                     if (projeto.getParaProcessar()) {
                         listaParaProcessar.add(projeto);
                     }
@@ -122,7 +122,7 @@ public class ByTestSmellsPage extends BasePage {
 
                 JNoseCore.processarProjetos(listaParaProcessar, dataProcessamentoAtual, pastaPathReport, totalProcessado, logRetorno);
 
-                for (Projeto projeto : listaProjetos) {
+                for (ProjetoDTO projeto : listaProjetos) {
                     if (projeto.getResultado() != null) {
                         listaResultado.addAll(projeto.getResultado());
                     }
@@ -135,10 +135,10 @@ public class ByTestSmellsPage extends BasePage {
     }
 
     private void criarListaProjetos(){
-        lvProjetos = new ListView<Projeto>("lvProjetos", listaProjetos) {
+        lvProjetos = new ListView<ProjetoDTO>("lvProjetos", listaProjetos) {
             @Override
-            protected void populateItem(ListItem<Projeto> item) {
-                Projeto projeto = item.getModelObject();
+            protected void populateItem(ListItem<ProjetoDTO> item) {
+                ProjetoDTO projeto = item.getModelObject();
 
                 Link lkResultado = new Link<String>("lkResultado") {
                     @Override
@@ -156,8 +156,8 @@ public class ByTestSmellsPage extends BasePage {
                     @Override
                     protected void onUpdate(AjaxRequestTarget target) {
 
-                        List<Projeto> listaProjetosProcessar = new ArrayList<>();
-                        for (Projeto projeto : listaProjetos)
+                        List<ProjetoDTO> listaProjetosProcessar = new ArrayList<>();
+                        for (ProjetoDTO projeto : listaProjetos)
                             if (projeto.getParaProcessar()) listaProjetosProcessar.add(projeto);
 
                         if (listaProjetosProcessar.size() > 0) {
@@ -236,15 +236,15 @@ public class ByTestSmellsPage extends BasePage {
 
                 Boolean todosProjetosProcessados = true;
 
-                List<Projeto> listaProjetosProcessar = new ArrayList<>();
+                List<ProjetoDTO> listaProjetosProcessar = new ArrayList<>();
 
-                for (Projeto projeto : listaProjetos) {
+                for (ProjetoDTO projeto : listaProjetos) {
                     if (projeto.getParaProcessar()) {
                         listaProjetosProcessar.add(projeto);
                     }
                 }
 
-                for (Projeto projeto : listaProjetosProcessar) {
+                for (ProjetoDTO projeto : listaProjetosProcessar) {
 
                     lkResultadoBotton.setEnabled(projeto.getProcessado());
                     target.add(lkResultadoBotton);
@@ -270,7 +270,7 @@ public class ByTestSmellsPage extends BasePage {
                 }
 
                 boolean processado = true;
-                for (Projeto p : listaProjetosProcessar) {
+                for (ProjetoDTO p : listaProjetosProcessar) {
                     processado = processado && p.getProcessado();
                 }
 
@@ -295,15 +295,15 @@ public class ByTestSmellsPage extends BasePage {
 
                 Boolean todosProjetosProcessados = true;
 
-                List<Projeto> listaProjetosProcessar = new ArrayList<>();
+                List<ProjetoDTO> listaProjetosProcessar = new ArrayList<>();
 
-                for (Projeto projeto : listaProjetos) {
+                for (ProjetoDTO projeto : listaProjetos) {
                     if (projeto.getParaProcessar()) {
                         listaProjetosProcessar.add(projeto);
                     }
                 }
 
-                for (Projeto projeto : listaProjetosProcessar) {
+                for (ProjetoDTO projeto : listaProjetosProcessar) {
 
                     WebMarkupContainer lkResultado = projeto.lkResultado;
                     lkResultado.setEnabled(projeto.getProcessado());
@@ -326,7 +326,7 @@ public class ByTestSmellsPage extends BasePage {
                 }
 
                 boolean processado = true;
-                for (Projeto p : listaProjetosProcessar) {
+                for (ProjetoDTO p : listaProjetosProcessar) {
                     processado = processado && p.getProcessado();
                 }
 

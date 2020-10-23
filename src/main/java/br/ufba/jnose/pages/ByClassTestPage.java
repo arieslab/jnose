@@ -5,7 +5,7 @@ import br.ufba.jnose.business.ProjetoBusiness;
 import br.ufba.jnose.core.Util;
 import br.ufba.jnose.dto.TotalProcessado;
 import br.ufba.jnose.core.JNoseCore;
-import br.ufba.jnose.dto.Projeto;
+import br.ufba.jnose.dto.ProjetoDTO;
 import br.ufba.jnose.pages.base.BasePage;
 import br.ufba.jnose.pages.charts.TestSmellsBarOptions;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
@@ -41,9 +41,9 @@ public class ByClassTestPage extends BasePage {
     private String pathAppToWebapp;
     private String pastaPathReport;
     private ProgressBar progressBar;
-    private List<Projeto> listaProjetos;
+    private List<ProjetoDTO> listaProjetos;
     private AjaxIndicatorAppender indicator;
-    private ListView<Projeto> lvProjetos;
+    private ListView<ProjetoDTO> lvProjetos;
     private ListView<br.ufba.jnose.entities.Projeto> lvProjetos2;
     private Label taLog;
     private TotalProcessado totalProcessado;
@@ -127,8 +127,8 @@ public class ByClassTestPage extends BasePage {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 processando = true;
-                List<Projeto> listaParaProcessar = new ArrayList<>();
-                for (Projeto projeto : listaProjetos) {
+                List<ProjetoDTO> listaParaProcessar = new ArrayList<>();
+                for (ProjetoDTO projeto : listaProjetos) {
                     if (projeto.getParaProcessar()) {
                         listaParaProcessar.add(projeto);
                     }
@@ -167,10 +167,10 @@ public class ByClassTestPage extends BasePage {
     private void criarListaProjetos(){
         listaProjetos = new ArrayList<>();
 
-        lvProjetos = new ListView<Projeto>("lvProjetos", listaProjetos) {
+        lvProjetos = new ListView<ProjetoDTO>("lvProjetos", listaProjetos) {
             @Override
-            protected void populateItem(ListItem<Projeto> item) {
-                Projeto projeto = item.getModelObject();
+            protected void populateItem(ListItem<ProjetoDTO> item) {
+                ProjetoDTO projeto = item.getModelObject();
 
                 Link lkCharts = new Link<String>("lkCharts") {
                     @Override
@@ -200,8 +200,8 @@ public class ByClassTestPage extends BasePage {
                     @Override
                     protected void onUpdate(AjaxRequestTarget target) {
 
-                        List<Projeto> listaProjetosProcessar = new ArrayList<>();
-                        for (Projeto projeto : listaProjetos)
+                        List<ProjetoDTO> listaProjetosProcessar = new ArrayList<>();
+                        for (ProjetoDTO projeto : listaProjetos)
                             if (projeto.getParaProcessar()) listaProjetosProcessar.add(projeto);
 
                         if (listaProjetosProcessar.size() > 0) {
@@ -286,15 +286,15 @@ public class ByClassTestPage extends BasePage {
 
                 Boolean todosProjetosProcessados = true;
 
-                List<Projeto> listaProjetosProcessar = new ArrayList<>();
+                List<ProjetoDTO> listaProjetosProcessar = new ArrayList<>();
 
-                for (Projeto projeto : listaProjetos) {
+                for (ProjetoDTO projeto : listaProjetos) {
                     if (projeto.getParaProcessar()) {
                         listaProjetosProcessar.add(projeto);
                     }
                 }
 
-                for (Projeto projeto : listaProjetosProcessar) {
+                for (ProjetoDTO projeto : listaProjetosProcessar) {
 
                     lkResultadoBotton.setEnabled(projeto.getProcessado());
                     target.add(lkResultadoBotton);
@@ -332,7 +332,7 @@ public class ByClassTestPage extends BasePage {
                 }
 
                 boolean processado = true;
-                for (Projeto p : listaProjetosProcessar) {
+                for (ProjetoDTO p : listaProjetosProcessar) {
                     processado = processado && p.getProcessado();
                 }
 

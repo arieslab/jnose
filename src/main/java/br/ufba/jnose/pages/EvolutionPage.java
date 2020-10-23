@@ -3,7 +3,7 @@ package br.ufba.jnose.pages;
 import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.core.GitCore;
 import br.ufba.jnose.core.JNoseCore;
-import br.ufba.jnose.dto.Projeto;
+import br.ufba.jnose.dto.ProjetoDTO;
 import br.ufba.jnose.pages.base.BasePage;
 import br.ufba.jnose.pages.charts.BasicBarOptions;
 import br.ufba.jnose.pages.charts.BasicLineOptions;
@@ -31,8 +31,8 @@ public class EvolutionPage extends BasePage {
 
     private Label taLogInfo;
     private StringBuffer logRetorno;
-    private List<Projeto> listaProjetos;
-    private ListView<Projeto> lvProjetos;
+    private List<ProjetoDTO> listaProjetos;
+    private ListView<ProjetoDTO> lvProjetos;
 
     public EvolutionPage() {
         super("EvolutionPage");
@@ -64,7 +64,7 @@ public class EvolutionPage extends BasePage {
                 taLogInfo.setDefaultModelObject(logRetorno);
                 target.add(taLogInfo);
 
-                for(Projeto projeto:listaProjetos){
+                for(ProjetoDTO projeto:listaProjetos){
                     if(projeto.getMapResults().containsKey(1)){
                         projeto.lkResult1.setEnabled(true);
                         projeto.lkResult1.add(AttributeModifier.remove("style"));
@@ -101,11 +101,11 @@ public class EvolutionPage extends BasePage {
 
 
     private void criarListaProjetos() {
-        lvProjetos = new ListView<Projeto>("lvProjetos", listaProjetos) {
+        lvProjetos = new ListView<ProjetoDTO>("lvProjetos", listaProjetos) {
             @Override
-            protected void populateItem(ListItem<Projeto> item) {
+            protected void populateItem(ListItem<ProjetoDTO> item) {
 
-                Projeto projeto = item.getModelObject();
+                ProjetoDTO projeto = item.getModelObject();
 
                 Map<Integer, List<List<String>>> mapResults = new HashMap<>();
                 projeto.setMapResults(mapResults);

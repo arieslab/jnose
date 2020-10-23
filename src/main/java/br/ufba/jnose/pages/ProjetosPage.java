@@ -5,7 +5,7 @@ import br.ufba.jnose.business.ProjetoBusiness;
 import br.ufba.jnose.core.GitCore;
 import br.ufba.jnose.core.JNoseCore;
 import br.ufba.jnose.dto.Commit;
-import br.ufba.jnose.dto.Projeto;
+import br.ufba.jnose.dto.ProjetoDTO;
 import br.ufba.jnose.pages.base.BasePage;
 import org.apache.commons.io.FileUtils;
 import org.apache.wicket.markup.html.basic.Label;
@@ -58,7 +58,7 @@ public class ProjetosPage extends BasePage {
         Button btEnviar = new Button("btClone") {
             @Override
             public void onSubmit() {
-                Projeto projeto = GitCore.gitClone(repoGit);
+                ProjetoDTO projeto = GitCore.gitClone(repoGit);
 
                 br.ufba.jnose.entities.Projeto projeto2 = new br.ufba.jnose.entities.Projeto();
                 projeto2.setName(projeto.getName());
@@ -156,7 +156,7 @@ public class ProjetosPage extends BasePage {
         add(lista2);
     }
 
-    private List<Projeto> loadProjetos(){
+    private List<ProjetoDTO> loadProjetos(){
         File file = new File(WicketApplication.JNOSE_PROJECTS_FOLDER);
         return JNoseCore.listaProjetos(file.toURI(),new StringBuffer());
     }

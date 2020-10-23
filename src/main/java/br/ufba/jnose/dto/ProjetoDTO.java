@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class Projeto implements Serializable {
+public class ProjetoDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Boolean paraProcessar;
@@ -48,11 +48,11 @@ public class Projeto implements Serializable {
 
     private br.ufba.jnose.entities.Projeto projeto;
 
-    public Projeto(){
+    public ProjetoDTO(){
         if(this.projeto == null)this.projeto = new br.ufba.jnose.entities.Projeto();
     }
 
-    public Projeto(br.ufba.jnose.entities.Projeto projeto) {
+    public ProjetoDTO(br.ufba.jnose.entities.Projeto projeto) {
         if(this.projeto == null)this.projeto = new br.ufba.jnose.entities.Projeto();
         this.projeto.setName(projeto.getName());
         this.projeto.setPath(projeto.getPath());
@@ -64,7 +64,7 @@ public class Projeto implements Serializable {
         this.optionSelected = "";
     }
 
-    public Projeto(br.ufba.jnose.entities.Projeto projeto, Boolean processado, Boolean processado2, Integer procentagem) {
+    public ProjetoDTO(br.ufba.jnose.entities.Projeto projeto, Boolean processado, Boolean processado2, Integer procentagem) {
         if(this.projeto == null)this.projeto = new br.ufba.jnose.entities.Projeto();
         this.projeto.setName(projeto.getName());
         this.projeto.setPath(projeto.getPath());
