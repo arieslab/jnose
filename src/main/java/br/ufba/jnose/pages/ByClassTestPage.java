@@ -46,6 +46,7 @@ public class ByClassTestPage extends BasePage {
     private List<ProjetoDTO> listaProjetos;
     private AjaxIndicatorAppender indicator;
     private ListView<ProjetoDTO> lvProjetos;
+    private ListView<br.ufba.jnose.entities.Projeto> lvProjetos2;
     private Label taLog;
     private TotalProcessado totalProcessado;
     private Map<Integer, Integer> totalProgressBar;
@@ -129,6 +130,7 @@ public class ByClassTestPage extends BasePage {
             public void onClick(AjaxRequestTarget target) {
                 processando = true;
                 List<ProjetoDTO> listaParaProcessar = new ArrayList<>();
+
                 for (ProjetoDTO projetoDTO : listaProjetos) {
                     if (projetoDTO.getParaProcessar()) {
                         listaParaProcessar.add(projetoDTO);
@@ -171,6 +173,7 @@ public class ByClassTestPage extends BasePage {
         lvProjetos = new ListView<ProjetoDTO>("lvProjetos", listaProjetos) {
             @Override
             protected void populateItem(ListItem<ProjetoDTO> item) {
+
                 ProjetoDTO projetoDTO = item.getModelObject();
 
                 Link lkCharts = new Link<String>("lkCharts") {
@@ -202,6 +205,7 @@ public class ByClassTestPage extends BasePage {
                     protected void onUpdate(AjaxRequestTarget target) {
 
                         List<ProjetoDTO> listaProjetosProcessar = new ArrayList<>();
+
                         for (ProjetoDTO projetoDTO : listaProjetos) {
                             if (projetoDTO.getParaProcessar()) {
                                 listaProjetosProcessar.add(projetoDTO);
