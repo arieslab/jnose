@@ -15,6 +15,13 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.resource.JQueryPluginResourceReference;
+import br.ufba.jnose.pages.HomePage;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.response.filter.AjaxServerAndClientTimeFilter;
+import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
+import org.apache.wicket.util.time.Duration;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 
@@ -88,7 +95,6 @@ public class WicketApplication extends WebApplication {
         if(!file.exists()){
             file.mkdirs();
         }
-
 
         this.mountPage("/projects", ProjetosPage.class);
         this.mountPage("/byclasstest", ByClassTestPage.class);

@@ -5,7 +5,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.io.Serializable;
+<<<<<<< HEAD
 import java.util.Date;
+=======
+>>>>>>> ecb35ee (primeiro commit da versão 2)
 import java.util.List;
 import java.util.Objects;
 
@@ -28,10 +31,15 @@ public class Projeto implements Serializable {
 
     private String junitVersion;
 
+<<<<<<< HEAD
     private Date dateUpdate;
 
     @OneToMany
     private List<TestSmell> testSmell;
+=======
+    @OneToMany
+    private List<Projeto> projetos;
+>>>>>>> ecb35ee (primeiro commit da versão 2)
 
     public Long getId() {
         return id;
@@ -81,6 +89,7 @@ public class Projeto implements Serializable {
         this.junitVersion = junitVersion;
     }
 
+<<<<<<< HEAD
     public List<TestSmell> getTestSmell() {
         return testSmell;
     }
@@ -95,6 +104,14 @@ public class Projeto implements Serializable {
 
     public void setDateUpdate(Date dateUpdate) {
         this.dateUpdate = dateUpdate;
+=======
+    public List<Projeto> getProjetos() {
+        return projetos;
+    }
+
+    public void setProjetos(List<Projeto> projetos) {
+        this.projetos = projetos;
+>>>>>>> ecb35ee (primeiro commit da versão 2)
     }
 
     @Override
