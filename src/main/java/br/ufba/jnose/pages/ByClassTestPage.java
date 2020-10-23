@@ -159,17 +159,8 @@ public class ByClassTestPage extends BasePage {
         dataProcessamentoAtual = Util.dateNowFolder();
         logRetorno = new StringBuffer();
         totalProcessado.setValor(0);
-        File file = new File(WicketApplication.JNOSE_PROJECTS_FOLDER);
-//        listaProjetos = JNoseCore.listaProjetos(file.toURI(),logRetorno);
-
         List<Projeto> listaProjetosBean = projetoBusiness.listAll();
-
-        for(Projeto projeto : listaProjetosBean){
-            ProjetoDTO projetoDTO = new ProjetoDTO(projeto);
-            listaProjetos.add(projetoDTO);
-        }
-
-//        listaProjetos = projetoBusiness.listAll();
+        for(Projeto projeto : listaProjetosBean)listaProjetos.add(new ProjetoDTO(projeto));
         lvProjetos.setList(listaProjetos);
         processarTodos.setEnabled(true);
     }
