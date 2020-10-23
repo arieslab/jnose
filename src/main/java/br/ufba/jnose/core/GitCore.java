@@ -84,8 +84,9 @@ public class GitCore {
             }
 
         }
+        File file = null;
         try {
-            File file = new File(WicketApplication.JNOSE_PROJECTS_FOLDER + repoName);
+            file = new File(WicketApplication.JNOSE_PROJECTS_FOLDER + repoName);
             if (file.exists()) {
                 FileUtils.deleteDirectory(file);
             }
@@ -96,7 +97,7 @@ public class GitCore {
         } catch (GitAPIException | IOException e) {
             e.printStackTrace();
         }
-        Projeto projeto = new Projeto(repoName, "");
+        Projeto projeto = new Projeto(repoName, file.getPath());
         return projeto;
     }
 

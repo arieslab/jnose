@@ -22,10 +22,14 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ProjetosPage extends BasePage {
     private static final long serialVersionUID = 1L;
+
+    @SpringBean
+    private ProjetoBusiness projetoBusiness;
 
     private String repoGit;
 
@@ -54,7 +58,16 @@ public class ProjetosPage extends BasePage {
         Button btEnviar = new Button("btClone") {
             @Override
             public void onSubmit() {
-                GitCore.gitClone(repoGit);
+                Projeto projeto = GitCore.gitClone(repoGit);
+
+                br.ufba.jnose.entities.Projeto projeto2 = new br.ufba.jnose.entities.Projeto();
+                projeto2.setName(projeto.getName());
+                projeto2.setJunitVersion(JNoseCore.getJUnitVersion(projeto.getPath()).toString());
+                projeto2.setStars(GitCore.getStarts(projeto.getPath()));
+                projeto2.setPath(projeto.getPath());
+                projeto2.setUrl(repoGit);
+                projetoBusiness.save(projeto2);
+
                 setResponsePage(ProjetosPage.class);
             }
         };
@@ -96,6 +109,50 @@ public class ProjetosPage extends BasePage {
             }
         };
         add(lista);
+
+        List<br.ufba.jnose.entities.Projeto> listaProjetos2 = projetoBusiness.listAll();
+
+        ListView<br.ufba.jnose.entities.Projeto> lista2 = new ListView<br.ufba.jnose.entities.Projeto>("lista2",listaProjetos2) {
+            @Override
+            protected void populateItem(ListItem<br.ufba.jnose.entities.Projeto> item) {
+                br.ufba.jnose.entities.Projeto projeto = item.getModelObject();
+                item.add(new Label("projetoNome",projeto.getName()));
+                item.add(new Label("path",projeto.getPath()));
+                item.add(new Label("junit",JNoseCore.getJUnitVersion(projeto.getPath())));
+                item.add(new Label("stars",GitCore.getStarts(projeto.getPath())));
+
+                ArrayList<Commit> lista = GitCore.gitLogOneLine(projeto.getPath());
+                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                item.add(new Label("lastupdate",df.format(lista.get(0).date)));
+
+                item.add(new Link<String>("linkPull") {
+                    @Override
+                    public void onClick() {
+                        GitCore.pull(projeto.getPath());
+                        ArrayList<Commit> lista = GitCore.gitLogOneLine(projeto.getPath());
+                        Date dateUpdate = lista.get(0).date;
+                        projeto.setDateUpdate(dateUpdate);
+                        projetoBusiness.save(projeto);
+                        setResponsePage(ProjetosPage.class);
+                    }
+                });
+                item.add(new Link<String>("linkDelete") {
+                    @Override
+                    public void onClick() {
+                        projetoBusiness.delete(projeto.getId());
+
+                        File file = new File(projeto.getPath());
+                        try {
+                            FileUtils.deleteDirectory(file);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        setResponsePage(ProjetosPage.class);
+                    }
+                });
+            }
+        };
+        add(lista2);
     }
 
     private List<Projeto> loadProjetos(){
