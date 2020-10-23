@@ -1,6 +1,7 @@
 package br.ufba.jnose.pages;
 
 import br.ufba.jnose.WicketApplication;
+import br.ufba.jnose.business.ProjetoBusiness;
 import br.ufba.jnose.core.Util;
 import br.ufba.jnose.dto.TotalProcessado;
 import br.ufba.jnose.core.JNoseCore;
@@ -25,6 +26,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.time.Duration;
 import java.io.*;
 import java.util.*;
@@ -42,6 +44,7 @@ public class ByClassTestPage extends BasePage {
     private List<Projeto> listaProjetos;
     private AjaxIndicatorAppender indicator;
     private ListView<Projeto> lvProjetos;
+    private ListView<br.ufba.jnose.entities.Projeto> lvProjetos2;
     private Label taLog;
     private TotalProcessado totalProcessado;
     private Map<Integer, Integer> totalProgressBar;
@@ -55,6 +58,9 @@ public class ByClassTestPage extends BasePage {
     private List<List<String>> listaResultado;
 
     private Link lkResultadoBotton;
+
+    @SpringBean
+    private ProjetoBusiness projetoBusiness;
 
     public ByClassTestPage() {
         super("ByClassTestPage");
@@ -263,6 +269,7 @@ public class ByClassTestPage extends BasePage {
         lvProjetos.setOutputMarkupId(true);
         lvProjetos.setOutputMarkupPlaceholderTag(true);
         add(lvProjetos);
+
     }
 
     private void criarTimer(){

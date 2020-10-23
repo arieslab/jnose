@@ -318,7 +318,10 @@ public class JNoseCore {
                 if (new File(pathPom).exists()) {
                     String pathProjeto = dir.getAbsolutePath().trim();
                     String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-                    lista.add(new Projeto(nameProjeto, pathProjeto));
+                    br.ufba.jnose.entities.Projeto projetoBean = new br.ufba.jnose.entities.Projeto();
+                    projetoBean.setName(nameProjeto);
+                    projetoBean.setPath(pathProjeto);
+                    lista.add(new Projeto(projetoBean));
                 } else {
                     String msg = "It is not a project MAVEN: " + dir.getAbsolutePath();
                     out.println(msg);

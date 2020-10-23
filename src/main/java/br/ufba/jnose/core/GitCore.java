@@ -97,7 +97,10 @@ public class GitCore {
         } catch (GitAPIException | IOException e) {
             e.printStackTrace();
         }
-        Projeto projeto = new Projeto(repoName, file.getPath());
+        br.ufba.jnose.entities.Projeto projetoBean = new br.ufba.jnose.entities.Projeto();
+        projetoBean.setName(repoName);
+        projetoBean.setPath(file.getPath());
+        Projeto projeto = new Projeto(projetoBean);
         return projeto;
     }
 
