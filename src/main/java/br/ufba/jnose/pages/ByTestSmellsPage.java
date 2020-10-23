@@ -72,9 +72,10 @@ public class ByTestSmellsPage extends BasePage {
         lbProjetosSize.setOutputMarkupPlaceholderTag(true).setOutputMarkupId(true);
         add(lbProjetosSize);
 
+        criarListaProjetos();
+
         criarTimer();
 
-        criarListaProjetos();
 
 //        linkCSVFinal = new ExternalLink("linkCSVFinal", File.separatorChar + "reports" + File.separatorChar + dataProcessamentoAtual + File.separatorChar + "all_report_by_testsmells.csv");
 //        linkCSVFinal.setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
@@ -150,7 +151,7 @@ public class ByTestSmellsPage extends BasePage {
                 lkResultado.setOutputMarkupId(true);
                 lkResultado.setOutputMarkupPlaceholderTag(true);
                 item.add(lkResultado);
-                projeto.lkResultado = lkResultado;
+                projeto.setLkResultado(lkResultado);
 
                 AjaxCheckBox paraProcessarACB = new AjaxCheckBox("paraProcessarACB", new PropertyModel(projeto, "paraProcessar")) {
                     @Override
@@ -249,7 +250,7 @@ public class ByTestSmellsPage extends BasePage {
                     lkResultadoBotton.setEnabled(projeto.getProcessado());
                     target.add(lkResultadoBotton);
 
-                    WebMarkupContainer lkResultado = projeto.lkResultado;
+                    WebMarkupContainer lkResultado = projeto.getLkResultado();
                     lkResultado.setEnabled(projeto.getProcessado());
                     target.add(lkResultado);
 
@@ -305,7 +306,7 @@ public class ByTestSmellsPage extends BasePage {
 
                 for (ProjetoDTO projeto : listaProjetosProcessar) {
 
-                    WebMarkupContainer lkResultado = projeto.lkResultado;
+                    WebMarkupContainer lkResultado = projeto.getLkResultado();
                     lkResultado.setEnabled(projeto.getProcessado());
                     target.add(lkResultado);
 

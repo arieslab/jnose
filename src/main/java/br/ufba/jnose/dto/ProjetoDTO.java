@@ -1,5 +1,6 @@
 package br.ufba.jnose.dto;
 
+import br.ufba.jnose.entities.Projeto;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -33,7 +34,7 @@ public class ProjetoDTO implements Serializable {
 
     public WebMarkupContainer progressProject;
 
-    public Link lkResultado;
+    private Link lkResultado;
     public Link lkCharts;
     public Link lkResult1;
     public Link lkResult2;
@@ -48,11 +49,7 @@ public class ProjetoDTO implements Serializable {
 
     private br.ufba.jnose.entities.Projeto projeto;
 
-    public ProjetoDTO(){
-        if(this.projeto == null)this.projeto = new br.ufba.jnose.entities.Projeto();
-    }
-
-    public ProjetoDTO(br.ufba.jnose.entities.Projeto projeto) {
+    public ProjetoDTO(Projeto projeto) {
         if(this.projeto == null)this.projeto = new br.ufba.jnose.entities.Projeto();
         this.projeto.setName(projeto.getName());
         this.projeto.setPath(projeto.getPath());
@@ -64,8 +61,8 @@ public class ProjetoDTO implements Serializable {
         this.optionSelected = "";
     }
 
-    public ProjetoDTO(br.ufba.jnose.entities.Projeto projeto, Boolean processado, Boolean processado2, Integer procentagem) {
-        if(this.projeto == null)this.projeto = new br.ufba.jnose.entities.Projeto();
+    public ProjetoDTO(Projeto projeto, Boolean processado, Boolean processado2, Integer procentagem) {
+        if(this.projeto == null)this.projeto = new Projeto();
         this.projeto.setName(projeto.getName());
         this.projeto.setPath(projeto.getPath());
         this.processado = processado;
@@ -190,5 +187,13 @@ public class ProjetoDTO implements Serializable {
 
     public void setProjeto(br.ufba.jnose.entities.Projeto projeto) {
         this.projeto = projeto;
+    }
+
+    public Link getLkResultado() {
+        return lkResultado;
+    }
+
+    public void setLkResultado(Link lkResultado) {
+        this.lkResultado = lkResultado;
     }
 }

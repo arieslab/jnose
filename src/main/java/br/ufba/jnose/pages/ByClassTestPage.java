@@ -6,6 +6,7 @@ import br.ufba.jnose.core.Util;
 import br.ufba.jnose.dto.TotalProcessado;
 import br.ufba.jnose.core.JNoseCore;
 import br.ufba.jnose.dto.ProjetoDTO;
+import br.ufba.jnose.entities.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
 import br.ufba.jnose.pages.charts.TestSmellsBarOptions;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
@@ -28,6 +29,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.time.Duration;
+
 import java.io.*;
 import java.util.*;
 import java.util.List;
@@ -44,7 +46,6 @@ public class ByClassTestPage extends BasePage {
     private List<ProjetoDTO> listaProjetos;
     private AjaxIndicatorAppender indicator;
     private ListView<ProjetoDTO> lvProjetos;
-    private ListView<br.ufba.jnose.entities.Projeto> lvProjetos2;
     private Label taLog;
     private TotalProcessado totalProcessado;
     private Map<Integer, Integer> totalProgressBar;
@@ -84,8 +85,6 @@ public class ByClassTestPage extends BasePage {
         taLog.setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
         add(taLog);
 
-        criarTimer();
-
         loadImg = new WebMarkupContainer("loadImg");
         loadImg.setOutputMarkupId(true).setVisible(false).setOutputMarkupPlaceholderTag(true);
         add(loadImg);
@@ -103,7 +102,7 @@ public class ByClassTestPage extends BasePage {
         lkResultadoBotton = new Link<String>("lkResultado") {
             @Override
             public void onClick() {
-                setResponsePage(new ResultPage(listaResultado,"Result By ClassTest", "result_byclasstest_testsmells", true));
+                setResponsePage(new ResultPage(listaResultado, "Result By ClassTest", "result_byclasstest_testsmells", true));
             }
         };
         lkResultadoBotton.setEnabled(processando);
@@ -120,17 +119,19 @@ public class ByClassTestPage extends BasePage {
         add(lkCharts.setVisible(false));
 
         loadProjetos();
+
+        criarTimer();
     }
 
-    private void criarBotaoProcessarTodos(){
+    private void criarBotaoProcessarTodos() {
         processarTodos = new IndicatingAjaxLink<String>("processarTodos") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 processando = true;
                 List<ProjetoDTO> listaParaProcessar = new ArrayList<>();
-                for (ProjetoDTO projeto : listaProjetos) {
-                    if (projeto.getParaProcessar()) {
-                        listaParaProcessar.add(projeto);
+                for (ProjetoDTO projetoDTO : listaProjetos) {
+                    if (projetoDTO.getParaProcessar()) {
+                        listaParaProcessar.add(projetoDTO);
                     }
                 }
                 listaResultado = JNoseCore.processarProjetos2(listaParaProcessar, dataProcessamentoAtual, totalProcessado, pastaPathReport, logRetorno);
@@ -140,69 +141,81 @@ public class ByClassTestPage extends BasePage {
         add(processarTodos);
     }
 
-    private void criarCheckBoxCobertura(){
+    private void criarCheckBoxCobertura() {
         AjaxCheckBox acbCobertura = new AjaxCheckBox("acbCobertura", new PropertyModel(this, "processarCobertura")) {
             @Override
             protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
                 WicketApplication.COBERTURA_ON = processarCobertura;
                 out.println("COVERAGE_ON: " + processarCobertura);
-                logRetorno.insert(0,"COVERAGE_ON: " + processarCobertura + " <br>");
+                logRetorno.insert(0, "COVERAGE_ON: " + processarCobertura + " <br>");
             }
         };
         add(acbCobertura);
     }
 
 
-    private void loadProjetos(){
+    private void loadProjetos() {
         mesclado = false;
         dataProcessamentoAtual = Util.dateNowFolder();
         logRetorno = new StringBuffer();
         totalProcessado.setValor(0);
         File file = new File(WicketApplication.JNOSE_PROJECTS_FOLDER);
-        listaProjetos = JNoseCore.listaProjetos(file.toURI(),logRetorno);
+//        listaProjetos = JNoseCore.listaProjetos(file.toURI(),logRetorno);
+
+        List<Projeto> listaProjetosBean = projetoBusiness.listAll();
+
+        for(Projeto projeto : listaProjetosBean){
+            ProjetoDTO projetoDTO = new ProjetoDTO(projeto);
+            listaProjetos.add(projetoDTO);
+        }
+
+//        listaProjetos = projetoBusiness.listAll();
         lvProjetos.setList(listaProjetos);
         processarTodos.setEnabled(true);
     }
 
-    private void criarListaProjetos(){
+    private void criarListaProjetos() {
         listaProjetos = new ArrayList<>();
 
         lvProjetos = new ListView<ProjetoDTO>("lvProjetos", listaProjetos) {
             @Override
             protected void populateItem(ListItem<ProjetoDTO> item) {
-                ProjetoDTO projeto = item.getModelObject();
+                ProjetoDTO projetoDTO = item.getModelObject();
 
                 Link lkCharts = new Link<String>("lkCharts") {
                     @Override
                     public void onClick() {
-                        setResponsePage(new ChartsPage("Charts By ClassTest: " + projeto.getName(),new TestSmellsBarOptions(projeto.getResultado())));
+                        setResponsePage(new ChartsPage("Charts By ClassTest: " + projetoDTO.getName(), new TestSmellsBarOptions(projetoDTO.getResultado())));
                     }
                 };
-                lkCharts.setEnabled(projeto.getProcessado());
+                lkCharts.setEnabled(projetoDTO.getProcessado());
                 lkCharts.setOutputMarkupId(true);
                 lkCharts.setOutputMarkupPlaceholderTag(true);
                 item.add(lkCharts);
-                projeto.lkCharts = lkCharts;
+                projetoDTO.lkCharts = lkCharts;
 
                 Link lkResultado = new Link<String>("lkResultado") {
                     @Override
                     public void onClick() {
-                        setResponsePage(new ResultPage(projeto.getResultado(),"Result By ClassTest: " + projeto.getName(), projeto.getName()+"_result_byclasstest_testsmells",true));
+                        setResponsePage(new ResultPage(projetoDTO.getResultado(), "Result By ClassTest: " + projetoDTO.getName(), projetoDTO.getName() + "_result_byclasstest_testsmells", true));
                     }
                 };
-                lkResultado.setEnabled(projeto.getProcessado());
+                lkResultado.setEnabled(projetoDTO.getProcessado());
                 lkResultado.setOutputMarkupId(true);
                 lkResultado.setOutputMarkupPlaceholderTag(true);
                 item.add(lkResultado);
-                projeto.lkResultado = lkResultado;
+                projetoDTO.setLkResultado(lkResultado);
 
-                AjaxCheckBox paraProcessarACB = new AjaxCheckBox("paraProcessarACB", new PropertyModel(projeto, "paraProcessar")) {
+                AjaxCheckBox paraProcessarACB = new AjaxCheckBox("paraProcessarACB", new PropertyModel(projetoDTO, "paraProcessar")) {
                     @Override
                     protected void onUpdate(AjaxRequestTarget target) {
 
                         List<ProjetoDTO> listaProjetosProcessar = new ArrayList<>();
-                        for (ProjetoDTO projeto : listaProjetos)
-                            if (projeto.getParaProcessar()) listaProjetosProcessar.add(projeto);
+                        for (ProjetoDTO projetoDTO : listaProjetos) {
+                            if (projetoDTO.getParaProcessar()) {
+                                listaProjetosProcessar.add(projetoDTO);
+                            } ;
+                        }
 
                         if (listaProjetosProcessar.size() > 0) {
                             processarTodos.setEnabled(true);
@@ -214,55 +227,55 @@ public class ByClassTestPage extends BasePage {
                 };
                 item.add(paraProcessarACB);
 
-                item.add(new Label("nomeProjeto", projeto.getName()));
-                item.add(new Label("projeto", projeto.getPath()));
+                item.add(new Label("nomeProjeto", projetoDTO.getName()));
+                item.add(new Label("projeto", projetoDTO.getPath()));
 
                 WebMarkupContainer iconProcessado = new WebMarkupContainer("iconProcessado");
-                iconProcessado.setVisible(projeto.getProcessado());
+                iconProcessado.setVisible(projetoDTO.getProcessado());
                 iconProcessado.setOutputMarkupId(true);
                 iconProcessado.setOutputMarkupPlaceholderTag(true);
                 item.add(iconProcessado);
-                projeto.iconProcessado = iconProcessado;
+                projetoDTO.iconProcessado = iconProcessado;
 
                 WebMarkupContainer iconNaoProcessado = new WebMarkupContainer("iconNaoProcessado");
-                iconNaoProcessado.setVisible(!projeto.getProcessado());
+                iconNaoProcessado.setVisible(!projetoDTO.getProcessado());
                 iconNaoProcessado.setOutputMarkupId(true);
                 iconNaoProcessado.setOutputMarkupPlaceholderTag(true);
                 item.add(iconNaoProcessado);
-                projeto.iconNaoProcessado = iconNaoProcessado;
+                projetoDTO.iconNaoProcessado = iconNaoProcessado;
 
                 WebMarkupContainer progressProject = new WebMarkupContainer("progressProject");
                 progressProject.setOutputMarkupPlaceholderTag(true);
                 progressProject.setOutputMarkupId(true);//style="width: 25%"
-                progressProject.add(new AttributeModifier("style", "width: " + projeto.getProcentagem() + "%"));
+                progressProject.add(new AttributeModifier("style", "width: " + projetoDTO.getProcentagem() + "%"));
                 item.add(progressProject);
-                projeto.progressProject = progressProject;
+                projetoDTO.progressProject = progressProject;
 
-                Label lbPorcetagem = new Label("lbPorcentagem", projeto.getProcentagem());
+                Label lbPorcetagem = new Label("lbPorcentagem", projetoDTO.getProcentagem());
                 lbPorcetagem.setOutputMarkupId(true);
                 lbPorcetagem.setOutputMarkupPlaceholderTag(true);
-                projeto.lbPorcentagem = lbPorcetagem;
+                projetoDTO.lbPorcentagem = lbPorcetagem;
                 progressProject.add(lbPorcetagem);
 
                 WebMarkupContainer btMdel = new WebMarkupContainer("btModel");
-                btMdel.add(new AttributeModifier("data-target", "#modal" + projeto.getName()));
+                btMdel.add(new AttributeModifier("data-target", "#modal" + projetoDTO.getName()));
                 item.add(btMdel.setVisible(false));
 
                 WebMarkupContainer model = new WebMarkupContainer("model");
-                model.add(new AttributeModifier("id", "modal" + projeto.getName()));
+                model.add(new AttributeModifier("id", "modal" + projetoDTO.getName()));
                 item.add(model);
 
-                ExternalLink linkCSV0 = new ExternalLink("linl0", File.separator + "reports" + File.separator + dataProcessamentoAtual + File.separatorChar + projeto.getName() + "_jacoco.csv");
-                ExternalLink linkCSV1 = new ExternalLink("linl1", File.separator + "reports" + File.separator + dataProcessamentoAtual + File.separatorChar + projeto.getName() + "_testfiledetection.csv");
-                ExternalLink linkCSV2 = new ExternalLink("linl2", File.separator + "reports" + File.separator + dataProcessamentoAtual + File.separatorChar + projeto.getName() + "_testmappingdetector.csv");
-                ExternalLink linkCSV3 = new ExternalLink("linl3", File.separator + "reports" + File.separator + dataProcessamentoAtual + File.separatorChar + projeto.getName() + "_testsmesll.csv");
+                ExternalLink linkCSV0 = new ExternalLink("linl0", File.separator + "reports" + File.separator + dataProcessamentoAtual + File.separatorChar + projetoDTO.getName() + "_jacoco.csv");
+                ExternalLink linkCSV1 = new ExternalLink("linl1", File.separator + "reports" + File.separator + dataProcessamentoAtual + File.separatorChar + projetoDTO.getName() + "_testfiledetection.csv");
+                ExternalLink linkCSV2 = new ExternalLink("linl2", File.separator + "reports" + File.separator + dataProcessamentoAtual + File.separatorChar + projetoDTO.getName() + "_testmappingdetector.csv");
+                ExternalLink linkCSV3 = new ExternalLink("linl3", File.separator + "reports" + File.separator + dataProcessamentoAtual + File.separatorChar + projetoDTO.getName() + "_testsmesll.csv");
 
                 model.add(linkCSV0);
                 model.add(linkCSV1);
                 model.add(linkCSV2);
                 model.add(linkCSV3);
 
-                model.add(new Label("nomeProjeto", projeto.getName()));
+                model.add(new Label("nomeProjeto", projetoDTO.getName()));
 
             }
         };
@@ -272,7 +285,7 @@ public class ByClassTestPage extends BasePage {
 
     }
 
-    private void criarTimer(){
+    private void criarTimer() {
         AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
             int cont = 0;
 
@@ -288,42 +301,43 @@ public class ByClassTestPage extends BasePage {
 
                 List<ProjetoDTO> listaProjetosProcessar = new ArrayList<>();
 
-                for (ProjetoDTO projeto : listaProjetos) {
-                    if (projeto.getParaProcessar()) {
-                        listaProjetosProcessar.add(projeto);
+                for (ProjetoDTO projetoDTO : listaProjetos) {
+
+                    if (projetoDTO.getParaProcessar()) {
+                        listaProjetosProcessar.add(projetoDTO);
                     }
                 }
 
-                for (ProjetoDTO projeto : listaProjetosProcessar) {
+                for (ProjetoDTO projetoDTO : listaProjetosProcessar) {
 
-                    lkResultadoBotton.setEnabled(projeto.getProcessado());
+                    lkResultadoBotton.setEnabled(projetoDTO.getProcessado());
                     target.add(lkResultadoBotton);
 
-                    WebMarkupContainer lkResultado = projeto.lkResultado;
-                    lkResultado.setEnabled(projeto.getProcessado());
+                    WebMarkupContainer lkResultado = projetoDTO.getLkResultado();
+                    lkResultado.setEnabled(projetoDTO.getProcessado());
                     target.add(lkResultado);
 
-                    WebMarkupContainer lkCharts = projeto.lkCharts;
-                    lkCharts.setEnabled(projeto.getProcessado());
+                    WebMarkupContainer lkCharts = projetoDTO.lkCharts;
+                    lkCharts.setEnabled(projetoDTO.getProcessado());
                     target.add(lkCharts);
 
-                    WebMarkupContainer iconProcessado = projeto.iconProcessado;
-                    iconProcessado.setVisible(projeto.getProcessado());
+                    WebMarkupContainer iconProcessado = projetoDTO.iconProcessado;
+                    iconProcessado.setVisible(projetoDTO.getProcessado());
                     target.add(iconProcessado);
 
-                    WebMarkupContainer iconNaoProcessado = projeto.iconNaoProcessado;
-                    iconNaoProcessado.setVisible(!projeto.getProcessado());
+                    WebMarkupContainer iconNaoProcessado = projetoDTO.iconNaoProcessado;
+                    iconNaoProcessado.setVisible(!projetoDTO.getProcessado());
                     target.add(iconNaoProcessado);
 
-                    Label lbPorcentagem = projeto.lbPorcentagem;
-                    lbPorcentagem.setDefaultModel(Model.of(projeto.getProcentagem()));
+                    Label lbPorcentagem = projetoDTO.lbPorcentagem;
+                    lbPorcentagem.setDefaultModel(Model.of(projetoDTO.getProcentagem()));
                     target.add(lbPorcentagem);
 
-                    WebMarkupContainer progressProject = projeto.progressProject;
-                    progressProject.add(new AttributeModifier("style", "width: " + projeto.getProcentagem() + "%"));
+                    WebMarkupContainer progressProject = projetoDTO.progressProject;
+                    progressProject.add(new AttributeModifier("style", "width: " + projetoDTO.getProcentagem() + "%"));
                     target.add(progressProject);
 
-                    todosProjetosProcessados = todosProjetosProcessados && projeto.getProcessado();
+                    todosProjetosProcessados = todosProjetosProcessados && projetoDTO.getProcessado();
                 }
 
                 if (todosProjetosProcessados) {
@@ -336,12 +350,12 @@ public class ByClassTestPage extends BasePage {
                     processado = processado && p.getProcessado();
                 }
 
-                if(processando){
+                if (processando) {
                     if (!loadImg.isVisible()) {
                         loadImg.setVisible(true);
                         target.add(loadImg);
                     }
-                }else{
+                } else {
                     if (loadImg.isVisible()) {
                         loadImg.setVisible(false);
                         target.add(loadImg);
