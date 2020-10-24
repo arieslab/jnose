@@ -7,7 +7,11 @@ import br.ufba.jnose.core.JNoseCore;
 import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.dto.ProjetoDTO;
 import br.ufba.jnose.pages.base.BasePage;
+import com.googlecode.wicket.jquery.ui.JQueryIcon;
 import org.apache.commons.io.FileUtils;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
@@ -55,9 +59,9 @@ public class ProjetosPage extends BasePage {
             }
         });
 
-        Button btEnviar = new Button("btClone") {
+        IndicatingAjaxButton btEnviar = new IndicatingAjaxButton("btClone") {
             @Override
-            public void onSubmit() {
+            public void onSubmit(AjaxRequestTarget target) {
                 ProjetoDTO projeto = GitCore.gitClone(repoGit);
 
                 br.ufba.jnose.entities.Projeto projeto2 = new br.ufba.jnose.entities.Projeto();

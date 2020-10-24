@@ -8,6 +8,13 @@ import org.apache.wicket.response.filter.AjaxServerAndClientTimeFilter;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.time.Duration;
 import org.springframework.stereotype.Component;
+import br.ufba.jnose.pages.*;
+import com.googlecode.wicket.jquery.core.resource.JQueryMigrateResourceReference;
+import com.googlecode.wicket.jquery.ui.settings.JQueryUILibrarySettings;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.resource.JQueryPluginResourceReference;
 
 import java.io.File;
 
@@ -65,13 +72,29 @@ public class WicketApplication extends WebApplication {
         System.out.println("JNose Projects folder: " + JNOSE_PROJECTS_FOLDER);
 
         super.init();
-        this.getMarkupSettings().setStripWicketTags(true);
-        this.getDebugSettings().setAjaxDebugModeEnabled(false);
+//        this.getMarkupSettings().setStripWicketTags(true);
+//        this.getDebugSettings().setAjaxDebugModeEnabled(false);
+
+
+//        this.getJavaScriptLibrarySettings().setJQueryReference(JQueryMigrateResourceReference.get());
+
+        JQueryUILibrarySettings settings = JQueryUILibrarySettings.get();
+        settings.setJavaScriptReference(JQueryMigrateResourceReference.get()); // if you want to change the js version
+        settings.setStyleSheetReference(new CssResourceReference(WicketApplication.class, "jquery-ui.custom.min.css"));
+
         CSVCore.load(this);
 
         File file = new File(JNOSE_PROJECTS_FOLDER);
         if(!file.exists()){
             file.mkdirs();
         }
+
+
+        this.mountPage("/projects", ProjetosPage.class);
+        this.mountPage("/byclasstest", ByClassTestPage.class);
+        this.mountPage("/bytestsmells", ByTestSmellsPage.class);
+        this.mountPage("/evolution", EvolutionPage.class);
+        this.mountPage("/config", ConfigPage.class);
+        this.mountPage("/research", ResearchPage.class);
     }
 }
