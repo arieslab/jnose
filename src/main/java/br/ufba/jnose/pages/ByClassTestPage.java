@@ -305,16 +305,23 @@ public class ByClassTestPage extends BasePage {
 
                 for (ProjetoDTO projetoDTO : listaProjetosProcessar) {
 
-                    lkResultadoBotton.setEnabled(projetoDTO.getProcessado());
-                    target.add(lkResultadoBotton);
+                    if(!lkResultadoBotton.isEnabled()) {
+                        lkResultadoBotton.setEnabled(projetoDTO.getProcessado());
+                        target.add(lkResultadoBotton);
+                    }
 
-                    WebMarkupContainer lkResultado = projetoDTO.getLkResultado();
-                    lkResultado.setEnabled(projetoDTO.getProcessado());
-                    target.add(lkResultado);
+
+                        WebMarkupContainer lkResultado = projetoDTO.getLkResultado();
+                    if(!lkResultado.isEnabled()) {
+                        lkResultado.setEnabled(projetoDTO.getProcessado());
+                        target.add(lkResultado);
+                    }
 
                     WebMarkupContainer lkCharts = projetoDTO.lkCharts;
-                    lkCharts.setEnabled(projetoDTO.getProcessado());
-                    target.add(lkCharts);
+                    if(!lkCharts.isEnabled()) {
+                        lkCharts.setEnabled(projetoDTO.getProcessado());
+                        target.add(lkCharts);
+                    }
 
                     WebMarkupContainer iconProcessado = projetoDTO.iconProcessado;
                     iconProcessado.setVisible(projetoDTO.getProcessado());

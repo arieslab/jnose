@@ -85,9 +85,9 @@ public class WicketApplication extends WebApplication {
 
 //        this.getJavaScriptLibrarySettings().setJQueryReference(JQueryMigrateResourceReference.get());
 
-        JQueryUILibrarySettings settings = JQueryUILibrarySettings.get();
-        settings.setJavaScriptReference(JQueryMigrateResourceReference.get()); // if you want to change the js version
-        settings.setStyleSheetReference(new CssResourceReference(WicketApplication.class, "jquery-ui.custom.min.css"));
+//        JQueryUILibrarySettings settings = JQueryUILibrarySettings.get();
+//        settings.setJavaScriptReference(JQueryMigrateResourceReference.get()); // if you want to change the js version
+//        settings.setStyleSheetReference(new CssResourceReference(WicketApplication.class, "jquery-ui.custom.min.css"));
 
         CSVCore.load(this);
 
