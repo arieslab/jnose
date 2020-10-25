@@ -8,8 +8,11 @@ import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.dto.ProjetoDTO;
 import br.ufba.jnose.pages.base.BasePage;
 import com.googlecode.wicket.jquery.ui.JQueryIcon;
+import com.googlecode.wicket.jquery.ui.form.button.ConfirmButton;
+import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal;
 import org.apache.commons.io.FileUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
@@ -116,19 +119,19 @@ public class ProjetosPage extends BasePage {
 
         List<br.ufba.jnose.entities.Projeto> listaProjetos2 = projetoBusiness.listAll();
 
-        ListView<br.ufba.jnose.entities.Projeto> lista2 = new ListView<br.ufba.jnose.entities.Projeto>("lista2",listaProjetos2) {
+        ListView<br.ufba.jnose.entities.Projeto> lista2 = new ListView<br.ufba.jnose.entities.Projeto>("lista2", listaProjetos2) {
             @Override
             protected void populateItem(ListItem<br.ufba.jnose.entities.Projeto> item) {
                 br.ufba.jnose.entities.Projeto projeto = item.getModelObject();
-                item.add(new Label("projetoNome",projeto.getName()));
-                item.add(new Label("path",projeto.getPath()));
-                item.add(new Label("url",projeto.getUrl()));
-                item.add(new Label("junit",projeto.getJunitVersion()));
-                item.add(new Label("stars",projeto.getStars()));
+                item.add(new Label("projetoNome", projeto.getName()));
+                item.add(new Label("path", projeto.getPath()));
+                item.add(new Label("url", projeto.getUrl()));
+                item.add(new Label("junit", projeto.getJunitVersion()));
+                item.add(new Label("stars", projeto.getStars()));
 
                 ArrayList<Commit> lista = GitCore.gitLogOneLine(projeto.getPath());
                 SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                item.add(new Label("lastupdate",df.format(lista.get(0).date)));
+                item.add(new Label("lastupdate", df.format(lista.get(0).date)));
 
                 item.add(new Link<String>("linkPull") {
                     @Override
@@ -155,13 +158,29 @@ public class ProjetosPage extends BasePage {
                         setResponsePage(ProjetosPage.class);
                     }
                 });
+
+                item.add(new AjaxLink<Void>("btModal") {
+                    @Override
+                    public void onClick(AjaxRequestTarget ajaxRequestTarget) {
+                        modal.show(true);
+                        modal.setVisible(true);
+                        ajaxRequestTarget.add(modal);
+                    }
+                });
+
             }
         };
         add(lista2);
+
+
+        modal = new Modal("modal");
+        add(modal);
     }
 
-    private List<ProjetoDTO> loadProjetos(){
+    private Modal modal;
+
+    private List<ProjetoDTO> loadProjetos() {
         File file = new File(WicketApplication.JNOSE_PROJECTS_FOLDER);
-        return JNoseCore.listaProjetos(file.toURI(),new StringBuffer());
+        return JNoseCore.listaProjetos(file.toURI(), new StringBuffer());
     }
 }

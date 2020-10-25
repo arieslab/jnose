@@ -259,6 +259,24 @@
             <version>${wicket.version}</version>
             <type>jar</type>
         </dependency>
+
+        <dependency>
+            <groupId>de.agilecoders.wicket</groupId>
+            <artifactId>wicket-bootstrap-core</artifactId>
+            <version>3.0.0-M17</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.agilecoders.wicket</groupId>
+            <artifactId>wicket-bootstrap-extensions</artifactId>
+            <version>3.0.0-M17</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.agilecoders.wicket</groupId>
+            <artifactId>wicket-bootstrap-themes</artifactId>
+            <version>3.0.0-M17</version>
+        </dependency>
     </dependencies>
     <build>
         <resources>

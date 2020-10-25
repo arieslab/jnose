@@ -2,6 +2,8 @@ package br.ufba.jnose;
 
 import br.ufba.jnose.core.CSVCore;
 import br.ufba.jnose.pages.HomePage;
+import de.agilecoders.wicket.core.Bootstrap;
+import de.agilecoders.wicket.core.settings.BootstrapSettings;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.response.filter.AjaxServerAndClientTimeFilter;
@@ -43,6 +45,7 @@ public class WicketApplication extends WebApplication {
 
     @Override
     public void init() {
+        Bootstrap.install(this);
 
         getResourceSettings().setResourcePollFrequency(Duration.ONE_MINUTE);
         getApplicationSettings().setUploadProgressUpdatesEnabled(true);
