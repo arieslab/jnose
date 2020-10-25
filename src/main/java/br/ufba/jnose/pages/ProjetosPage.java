@@ -7,6 +7,7 @@ import br.ufba.jnose.core.JNoseCore;
 import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.dto.ProjetoDTO;
 import br.ufba.jnose.pages.base.BasePage;
+import br.ufba.jnose.pages.modals.ModalDetalhes;
 import com.googlecode.wicket.jquery.ui.JQueryIcon;
 import com.googlecode.wicket.jquery.ui.form.button.ConfirmButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal;
@@ -22,6 +23,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -159,6 +161,9 @@ public class ProjetosPage extends BasePage {
                     }
                 });
 
+                final ModalDetalhes modal = new ModalDetalhes("modal", projeto);
+                item.add(modal);
+
                 item.add(new AjaxLink<Void>("btModal") {
                     @Override
                     public void onClick(AjaxRequestTarget ajaxRequestTarget) {
@@ -168,19 +173,23 @@ public class ProjetosPage extends BasePage {
                     }
                 });
 
+
+
             }
         };
         add(lista2);
 
 
-        modal = new Modal("modal");
-        add(modal);
+//        modal = new ModalDetalhes("modal", null);
+//        add(modal);
     }
 
-    private Modal modal;
+//    private ModalDetalhes modal;
 
     private List<ProjetoDTO> loadProjetos() {
         File file = new File(WicketApplication.JNOSE_PROJECTS_FOLDER);
         return JNoseCore.listaProjetos(file.toURI(), new StringBuffer());
     }
 }
+
+
