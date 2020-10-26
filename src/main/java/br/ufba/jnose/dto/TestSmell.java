@@ -7,7 +7,6 @@ public class TestSmell implements Serializable {
 
     public String name;
     public String method;
-//    public String lineNumber;
     public String begin;
     public String end;
 

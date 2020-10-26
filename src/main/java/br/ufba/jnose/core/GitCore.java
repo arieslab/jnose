@@ -2,7 +2,7 @@ package br.ufba.jnose.core;
 
 import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.dto.Commit;
-import br.ufba.jnose.dto.Projeto;
+import br.ufba.jnose.dto.ProjetoDTO;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.BlameCommand;
 import org.eclipse.jgit.api.Git;
@@ -69,7 +69,7 @@ public class GitCore {
         return owner_ + "/" + projeto_;
     }
 
-    public static Projeto gitClone(String repoURL) {
+    public static ProjetoDTO gitClone(String repoURL) {
         String repoName = "";
         if (repoURL.contains(".git")) {
             repoName = repoURL.substring(repoURL.lastIndexOf("/") + 1, repoURL.lastIndexOf("."));
@@ -84,8 +84,9 @@ public class GitCore {
             }
 
         }
+        File file = null;
         try {
-            File file = new File(WicketApplication.JNOSE_PROJECTS_FOLDER + repoName);
+            file = new File(WicketApplication.JNOSE_PROJECTS_FOLDER + repoName);
             if (file.exists()) {
                 FileUtils.deleteDirectory(file);
             }
@@ -96,7 +97,12 @@ public class GitCore {
         } catch (GitAPIException | IOException e) {
             e.printStackTrace();
         }
-        Projeto projeto = new Projeto(repoName, "");
+
+        br.ufba.jnose.entities.Projeto projetoBean = new br.ufba.jnose.entities.Projeto();
+        projetoBean.setName(repoName);
+        projetoBean.setPath(file.getPath());
+        ProjetoDTO projeto = new ProjetoDTO(projetoBean);
+
         return projeto;
     }
 

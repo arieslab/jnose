@@ -1,13 +1,13 @@
 package br.ufba.jnose.core;
 
 import br.ufba.jnose.core.cobertura.ReportGenerator;
-import br.ufba.jnose.dto.Projeto;
+import br.ufba.jnose.dto.ProjetoDTO;
 
 import java.io.File;
 
 public class CoverageCore {
 
-    public static void processarCobertura(Projeto projeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
+    public static void processarCobertura(ProjetoDTO projeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
         logRetorno.append(Util.dateNow() + projeto.getName() + " - <font style='color:blue'>Coverage</font> <br>");
         try {
             Util.execCommand("mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Drat.skip=true", projeto.getPath());

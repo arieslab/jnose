@@ -1,7 +1,7 @@
 package br.ufba.jnose.pages;
 
 import br.ufba.jnose.core.GitCore;
-import br.ufba.jnose.dto.Projeto;
+import br.ufba.jnose.dto.ProjetoDTO;
 import br.ufba.jnose.pages.base.ImprimirPage;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -21,7 +21,7 @@ public class CodePage extends ImprimirPage {
     private static final long serialVersionUID = 1L;
     private static int cont = 0;
 
-    public CodePage(Projeto projeto, String title, String pathFile, int inicio, int fim) {
+    public CodePage(ProjetoDTO projeto, String title, String pathFile, int inicio, int fim) {
         add(new Label("title", "Code Test Smell: " + title));
 
         Map<Integer,String> mapaBlame = GitCore.blame(projeto.getPath(),pathFile);

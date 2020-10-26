@@ -1,17 +1,19 @@
 package br.ufba.jnose;
 
 import br.ufba.jnose.core.CSVCore;
-import br.ufba.jnose.core.DBCore;
 import br.ufba.jnose.pages.*;
-import com.googlecode.wicket.jquery.core.resource.JQueryMigrateResourceReference;
-import com.googlecode.wicket.jquery.ui.settings.JQueryUILibrarySettings;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.resource.JQueryPluginResourceReference;
+import br.ufba.jnose.pages.HomePage;
+import de.agilecoders.wicket.core.Bootstrap;
+import org.apache.wicket.response.filter.AjaxServerAndClientTimeFilter;
+import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
+import org.apache.wicket.util.time.Duration;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 
+@Component
 public class WicketApplication extends WebApplication {
 
     public static boolean COBERTURA_ON = false;
@@ -29,6 +31,22 @@ public class WicketApplication extends WebApplication {
 
     @Override
     public void init() {
+        super.init();
+        Bootstrap.install(this);
+
+        getResourceSettings().setResourcePollFrequency(Duration.ONE_MINUTE);
+        getApplicationSettings().setUploadProgressUpdatesEnabled(true);
+        getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
+        getComponentInstantiationListeners().add(new SpringComponentInjector(this));
+        getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
+        getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
+        getDebugSettings().setAjaxDebugModeEnabled(false);
+        // don't throw exceptions for missing translations
+        getResourceSettings().setThrowExceptionOnMissingResource(false);
+        // enable ajax debug etc.
+        getDebugSettings().setDevelopmentUtilitiesEnabled(false);
+        // make markup friendly as in deployment-mode
+        getMarkupSettings().setStripWicketTags(false);
 
         File fileRoot = new File(".");
 
@@ -49,10 +67,6 @@ public class WicketApplication extends WebApplication {
 
         JNOSE_PROJECTS_FOLDER = USERHOME+ File.separator + ".jnose_projects" + File.separator;
         System.out.println("JNose Projects folder: " + JNOSE_PROJECTS_FOLDER);
-
-        super.init();
-        this.getMarkupSettings().setStripWicketTags(true);
-        this.getDebugSettings().setAjaxDebugModeEnabled(false);
 
         CSVCore.load(this);
 

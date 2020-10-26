@@ -307,9 +307,9 @@ public class JNoseCore {
     }
 
 
-    public static List<Projeto> listaProjetos(URI path, StringBuffer logRetornoInfo) {
+    public static List<ProjetoDTO> listaProjetos(URI path, StringBuffer logRetornoInfo) {
         java.io.File[] directories = new File(path).listFiles(java.io.File::isDirectory);
-        List<Projeto> lista = new ArrayList<Projeto>();
+        List<ProjetoDTO> lista = new ArrayList<ProjetoDTO>();
 
         if (directories != null) {
             for (java.io.File dir : directories) {
@@ -318,7 +318,10 @@ public class JNoseCore {
                 if (new File(pathPom).exists()) {
                     String pathProjeto = dir.getAbsolutePath().trim();
                     String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-                    lista.add(new Projeto(nameProjeto, pathProjeto));
+                    br.ufba.jnose.entities.Projeto projetoBean = new br.ufba.jnose.entities.Projeto();
+                    projetoBean.setName(nameProjeto);
+                    projetoBean.setPath(pathProjeto);
+                    lista.add(new ProjetoDTO(projetoBean));
                 } else {
                     String msg = "It is not a project MAVEN: " + dir.getAbsolutePath();
                     out.println(msg);
@@ -330,7 +333,7 @@ public class JNoseCore {
     }
 
 
-    public static List<TestClass> processarProjeto(Projeto projeto, StringBuffer logRetorno) throws IOException {
+    public static List<TestClass> processarProjeto(ProjetoDTO projeto, StringBuffer logRetorno) throws IOException {
         projeto.setProcentagem(25);
         List<TestClass> listaTestClass = JNoseCore.getFilesTest(projeto.getPath(), logRetorno);
         projeto.setProcentagem(100);
@@ -340,7 +343,7 @@ public class JNoseCore {
     }
 
 
-    public static List<List<String>> processarProjeto2(Projeto projeto, float valorProcProject, String folderTime, TotalProcessado totalProcessado, String pastaPathReport, StringBuffer logRetorno) throws IOException {
+    public static List<List<String>> processarProjeto2(ProjetoDTO projeto, float valorProcProject, String folderTime, TotalProcessado totalProcessado, String pastaPathReport, StringBuffer logRetorno) throws IOException {
         logRetorno.insert(0,Util.dateNow() + projeto.getName() + " - started <br>");
         Float valorSoma = valorProcProject / 4;
 
@@ -372,7 +375,7 @@ public class JNoseCore {
     }
 
 
-    public static List<List<String>> processarProjetos2(List<Projeto> lista, String folderTime, TotalProcessado totalProcessado, String pastaPathReport, StringBuffer logRetorno) {
+    public static List<List<String>> processarProjetos2(List<ProjetoDTO> lista, String folderTime, TotalProcessado totalProcessado, String pastaPathReport, StringBuffer logRetorno) {
 
         boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
         if (!success) System.out.println("Created Folder...");
@@ -389,7 +392,7 @@ public class JNoseCore {
 
         List<List<String>> listaTodos = new ArrayList<>();
 
-        for (Projeto projeto : lista) {
+        for (ProjetoDTO projeto : lista) {
             new Thread() { // IMPORTANTE: AQUI SE CRIA AS THREADS
                 @Override
                 public void run() {
@@ -409,7 +412,7 @@ public class JNoseCore {
 
     }
 
-    public static void processarProjetos(List<Projeto> lista, String folderTime,String pastaPathReport, TotalProcessado totalProcessado, StringBuffer logRetorno) {
+    public static void processarProjetos(List<ProjetoDTO> lista, String folderTime,String pastaPathReport, TotalProcessado totalProcessado, StringBuffer logRetorno) {
 
         boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
         if (!success) System.out.println("Created Folder...");
@@ -426,7 +429,7 @@ public class JNoseCore {
 
         List<TestClass> listaTestClass = new ArrayList<>();
 
-        for (Projeto projeto : lista) {
+        for (ProjetoDTO projeto : lista) {
             try {
                 List<TestClass> todasLinhas = JNoseCore.processarProjeto(projeto, logRetorno);
                 projeto.setResultadoByTestSmells(todasLinhas);
@@ -458,7 +461,7 @@ public class JNoseCore {
     }
 
 
-    public static void processarEvolution(Projeto projeto, StringBuffer logRetorno, Map<Integer, List<List<String>>> mapa) {
+    public static void processarEvolution(ProjetoDTO projeto, StringBuffer logRetorno, Map<Integer, List<List<String>>> mapa) {
 
         GitCore.checkout("master", projeto.getPath());
 
