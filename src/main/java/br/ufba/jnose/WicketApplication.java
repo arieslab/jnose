@@ -54,22 +54,12 @@ public class WicketApplication extends WebApplication {
         this.getMarkupSettings().setStripWicketTags(true);
         this.getDebugSettings().setAjaxDebugModeEnabled(false);
 
-
-//        this.getJavaScriptLibrarySettings().setJQueryReference(JQueryMigrateResourceReference.get());
-
-//        JQueryUILibrarySettings settings = JQueryUILibrarySettings.get();
-//        settings.setJavaScriptReference(JQueryMigrateResourceReference.get()); // if you want to change the js version
-//        settings.setStyleSheetReference(new CssResourceReference(WicketApplication.class, "jquery-ui.custom.min.css"));
-
         CSVCore.load(this);
-
-//        DBCore.load();
 
         File file = new File(JNOSE_PROJECTS_FOLDER);
         if(!file.exists()){
             file.mkdirs();
         }
-
 
         this.mountPage("/projects", ProjetosPage.class);
         this.mountPage("/byclasstest", ByClassTestPage.class);
