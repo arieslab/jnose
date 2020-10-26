@@ -45,6 +45,7 @@ public class WicketApplication extends WebApplication {
 
     @Override
     public void init() {
+        super.init();
         Bootstrap.install(this);
 
         getResourceSettings().setResourcePollFrequency(Duration.ONE_MINUTE);
@@ -80,17 +81,6 @@ public class WicketApplication extends WebApplication {
 
         JNOSE_PROJECTS_FOLDER = USERHOME+ File.separator + ".jnose_projects" + File.separator;
         System.out.println("JNose Projects folder: " + JNOSE_PROJECTS_FOLDER);
-
-        super.init();
-//        this.getMarkupSettings().setStripWicketTags(true);
-//        this.getDebugSettings().setAjaxDebugModeEnabled(false);
-
-
-//        this.getJavaScriptLibrarySettings().setJQueryReference(JQueryMigrateResourceReference.get());
-
-//        JQueryUILibrarySettings settings = JQueryUILibrarySettings.get();
-//        settings.setJavaScriptReference(JQueryMigrateResourceReference.get()); // if you want to change the js version
-//        settings.setStyleSheetReference(new CssResourceReference(WicketApplication.class, "jquery-ui.custom.min.css"));
 
         CSVCore.load(this);
 
