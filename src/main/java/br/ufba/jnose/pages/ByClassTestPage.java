@@ -15,10 +15,8 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
-import org.apache.wicket.extensions.ajax.markup.html.AjaxIndicatorAppender;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -44,18 +42,13 @@ public class ByClassTestPage extends BasePage {
     private String pastaPathReport;
     private ProgressBar progressBar;
     private List<ProjetoDTO> listaProjetos;
-    private AjaxIndicatorAppender indicator;
     private ListView<ProjetoDTO> lvProjetos;
-    private ListView<br.ufba.jnose.entities.Projeto> lvProjetos2;
     private Label taLog;
     private TotalProcessado totalProcessado;
-    private Map<Integer, Integer> totalProgressBar;
     private Boolean processando;
-    private WebMarkupContainer loadImg;
     private IndicatingAjaxLink processarTodos;
     private StringBuffer logRetorno;
     private String dataProcessamentoAtual;
-    private boolean mesclado;
     private boolean processarCobertura;
     private List<List<String>> listaResultado;
 
@@ -68,16 +61,13 @@ public class ByClassTestPage extends BasePage {
         super("ByClassTestPage");
 
         //Carregando variáveis
-        indicator = new AjaxIndicatorAppender();
         pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
         pastaPathReport = pathAppToWebapp + File.separatorChar + "reports" + File.separatorChar;
         pastaPath = "";
-        mesclado = false;
         logRetorno = new StringBuffer();
         processando = false;
         processarCobertura = false;
         totalProcessado = new TotalProcessado();
-        totalProgressBar = new HashMap<>();
         totalProcessado.setValor(0);
 
         criarCheckBoxCobertura();
@@ -86,19 +76,12 @@ public class ByClassTestPage extends BasePage {
         taLog.setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
         add(taLog);
 
-        loadImg = new WebMarkupContainer("loadImg");
-        loadImg.setOutputMarkupId(true).setVisible(false).setOutputMarkupPlaceholderTag(true);
-        add(loadImg);
-
         criarListaProjetos();
 
         FeedbackPanel feedback = new JQueryFeedbackPanel("feedback");
         add(feedback.setOutputMarkupId(true));
 
         criarBotaoProcessarTodos();
-
-        progressBar = new ProgressBar("progress", Model.of(0));
-        add(this.progressBar);
 
         lkResultadoBotton = new Link<String>("lkResultado") {
             @Override
@@ -157,7 +140,6 @@ public class ByClassTestPage extends BasePage {
 
 
     private void loadProjetos() {
-        mesclado = false;
         dataProcessamentoAtual = Util.dateNowFolder();
         logRetorno = new StringBuffer();
         totalProcessado.setValor(0);
@@ -252,26 +234,6 @@ public class ByClassTestPage extends BasePage {
                 projetoDTO.lbPorcentagem = lbPorcetagem;
                 progressProject.add(lbPorcetagem);
 
-                WebMarkupContainer btMdel = new WebMarkupContainer("btModel");
-                btMdel.add(new AttributeModifier("data-target", "#modal" + projetoDTO.getName()));
-                item.add(btMdel.setVisible(false));
-
-                WebMarkupContainer model = new WebMarkupContainer("model");
-                model.add(new AttributeModifier("id", "modal" + projetoDTO.getName()));
-                item.add(model);
-
-                ExternalLink linkCSV0 = new ExternalLink("linl0", File.separator + "reports" + File.separator + dataProcessamentoAtual + File.separatorChar + projetoDTO.getName() + "_jacoco.csv");
-                ExternalLink linkCSV1 = new ExternalLink("linl1", File.separator + "reports" + File.separator + dataProcessamentoAtual + File.separatorChar + projetoDTO.getName() + "_testfiledetection.csv");
-                ExternalLink linkCSV2 = new ExternalLink("linl2", File.separator + "reports" + File.separator + dataProcessamentoAtual + File.separatorChar + projetoDTO.getName() + "_testmappingdetector.csv");
-                ExternalLink linkCSV3 = new ExternalLink("linl3", File.separator + "reports" + File.separator + dataProcessamentoAtual + File.separatorChar + projetoDTO.getName() + "_testsmesll.csv");
-
-                model.add(linkCSV0);
-                model.add(linkCSV1);
-                model.add(linkCSV2);
-                model.add(linkCSV3);
-
-                model.add(new Label("nomeProjeto", projetoDTO.getName()));
-
             }
         };
         lvProjetos.setOutputMarkupId(true);
@@ -286,9 +248,6 @@ public class ByClassTestPage extends BasePage {
 
             @Override
             protected void onTimer(AjaxRequestTarget target) {
-                progressBar.setModel(Model.of(totalProcessado.getValor()));
-                target.add(progressBar);
-
                 taLog.setDefaultModel(Model.of(logRetorno));
                 target.add(taLog);
 
@@ -350,18 +309,6 @@ public class ByClassTestPage extends BasePage {
                 boolean processado = true;
                 for (ProjetoDTO p : listaProjetosProcessar) {
                     processado = processado && p.getProcessado();
-                }
-
-                if (processando) {
-                    if (!loadImg.isVisible()) {
-                        loadImg.setVisible(true);
-                        target.add(loadImg);
-                    }
-                } else {
-                    if (loadImg.isVisible()) {
-                        loadImg.setVisible(false);
-                        target.add(loadImg);
-                    }
                 }
             }
         };

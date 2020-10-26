@@ -1,6 +1,5 @@
 package br.ufba.jnose.pages;
 
-import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.business.ProjetoBusiness;
 import br.ufba.jnose.core.GitCore;
 import br.ufba.jnose.core.JNoseCore;
@@ -8,22 +7,16 @@ import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.dto.ProjetoDTO;
 import br.ufba.jnose.pages.base.BasePage;
 import br.ufba.jnose.pages.modals.ModalDetalhes;
-import com.googlecode.wicket.jquery.ui.JQueryIcon;
-import com.googlecode.wicket.jquery.ui.form.button.ConfirmButton;
-import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal;
 import org.apache.commons.io.FileUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
