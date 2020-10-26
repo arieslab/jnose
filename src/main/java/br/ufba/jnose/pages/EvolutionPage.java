@@ -1,11 +1,11 @@
 package br.ufba.jnose.pages;
 
-import br.ufba.jnose.WicketApplication;
+import br.ufba.jnose.business.ProjetoBusiness;
 import br.ufba.jnose.core.GitCore;
 import br.ufba.jnose.core.JNoseCore;
 import br.ufba.jnose.dto.ProjetoDTO;
+import br.ufba.jnose.entities.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
-import br.ufba.jnose.pages.charts.BasicBarOptions;
 import br.ufba.jnose.pages.charts.BasicLineOptions;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
@@ -21,9 +21,9 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.time.Duration;
 
-import java.io.File;
 import java.util.*;
 
 public class EvolutionPage extends BasePage {
@@ -34,8 +34,12 @@ public class EvolutionPage extends BasePage {
     private List<ProjetoDTO> listaProjetos;
     private ListView<ProjetoDTO> lvProjetos;
 
+    @SpringBean
+    private ProjetoBusiness projetoBusiness;
+
     public EvolutionPage() {
         super("EvolutionPage");
+        listaProjetos = new ArrayList<>();
         logRetorno = new StringBuffer();
         criarTimer();
         criarListaProjetos();
@@ -44,8 +48,10 @@ public class EvolutionPage extends BasePage {
     }
 
     private void loadProjetos() {
-        File file = new File(WicketApplication.JNOSE_PROJECTS_FOLDER);
-        listaProjetos = JNoseCore.listaProjetos(file.toURI(), logRetorno);
+        List<Projeto> listProjetoBean = projetoBusiness.listAll();
+        for(Projeto projeto : listProjetoBean){
+            listaProjetos.add(new ProjetoDTO(projeto));
+        }
         lvProjetos.setList(listaProjetos);
     }
 
