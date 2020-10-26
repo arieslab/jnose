@@ -42,7 +42,7 @@ public class ProjetosPage extends BasePage {
 
     private String repoGit;
 
-    public ProjetosPage() {
+    public ProjetosPage(){
         this("");
     }
 
@@ -75,6 +75,8 @@ public class ProjetosPage extends BasePage {
                 projeto2.setStars(GitCore.getStarts(projeto.getPath()));
                 projeto2.setPath(projeto.getPath());
                 projeto2.setUrl(repoGit);
+                ArrayList<Commit> lista = GitCore.gitLogOneLine(projeto.getPath());
+                projeto2.setDateUpdate(lista.get(0).date);
                 projetoBusiness.save(projeto2);
 
                 setResponsePage(ProjetosPage.class);
@@ -83,45 +85,9 @@ public class ProjetosPage extends BasePage {
         form.add(btEnviar);
         add(form);
 
-//        List<Projeto> listaProjetos = loadProjetos();
+        List<br.ufba.jnose.entities.Projeto> listaProjetos = projetoBusiness.listAll();
 
-//        ListView<Projeto> lista = new ListView<Projeto>("lista",listaProjetos) {
-//            @Override
-//            protected void populateItem(ListItem<Projeto> item) {
-//                Projeto projeto = item.getModelObject();
-//                item.add(new Label("projetoNome",projeto.getName()));
-//                item.add(new Label("path",projeto.getPath()));
-//                item.add(new Label("junit",JNoseCore.getJUnitVersion(projeto.getPath())));
-//                item.add(new Label("stars",GitCore.getStarts(projeto.getPath())));
-//                ArrayList<Commit> lista = GitCore.gitLogOneLine(projeto.getPath());
-//                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-//                item.add(new Label("lastupdate",df.format(lista.get(0).date)));
-//                item.add(new Link<String>("linkPull") {
-//                    @Override
-//                    public void onClick() {
-//                        GitCore.pull(projeto.getPath());
-//                        setResponsePage(ProjetosPage.class);
-//                    }
-//                });
-//                item.add(new Link<String>("linkDelete") {
-//                    @Override
-//                    public void onClick() {
-//                        File file = new File(projeto.getPath());
-//                        try {
-//                            FileUtils.deleteDirectory(file);
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                        setResponsePage(ProjetosPage.class);
-//                    }
-//                });
-//            }
-//        };
-//        add(lista);
-
-        List<br.ufba.jnose.entities.Projeto> listaProjetos2 = projetoBusiness.listAll();
-
-        ListView<br.ufba.jnose.entities.Projeto> lista2 = new ListView<br.ufba.jnose.entities.Projeto>("lista2", listaProjetos2) {
+        ListView<br.ufba.jnose.entities.Projeto> lista2 = new ListView<br.ufba.jnose.entities.Projeto>("lista", listaProjetos) {
             @Override
             protected void populateItem(ListItem<br.ufba.jnose.entities.Projeto> item) {
                 br.ufba.jnose.entities.Projeto projeto = item.getModelObject();
@@ -173,23 +139,12 @@ public class ProjetosPage extends BasePage {
                     }
                 });
 
-
-
             }
         };
         add(lista2);
 
-
-//        modal = new ModalDetalhes("modal", null);
-//        add(modal);
     }
 
-//    private ModalDetalhes modal;
-
-    private List<ProjetoDTO> loadProjetos() {
-        File file = new File(WicketApplication.JNOSE_PROJECTS_FOLDER);
-        return JNoseCore.listaProjetos(file.toURI(), new StringBuffer());
-    }
 }
 
 
