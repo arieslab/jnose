@@ -41,7 +41,6 @@ public class ByTestSmellsPage extends BasePage {
     private String pathAppToWebapp;
     private String pastaPathReport;
     private Label lbPastaSelecionada;
-    private ProgressBar progressBar;
     private List<ProjetoDTO> listaProjetos;
     private AjaxIndicatorAppender indicator;
     private ListView<ProjetoDTO> lvProjetos;
@@ -88,9 +87,6 @@ public class ByTestSmellsPage extends BasePage {
 
         lbPastaSelecionada = new Label("lbPastaSelecionada", pastaPath);
         add(lbPastaSelecionada);
-
-        progressBar = new ProgressBar("progress", Model.of(0));
-        add(this.progressBar);
 
         lkResultadoBotton = new Link<String>("lkResultado") {
             @Override
@@ -213,9 +209,6 @@ public class ByTestSmellsPage extends BasePage {
 
             @Override
             protected void onTimer(AjaxRequestTarget target) {
-                progressBar.setModel(Model.of(totalProcessado.getValor()));
-                target.add(progressBar);
-
                 Boolean todosProjetosProcessados = true;
 
                 List<ProjetoDTO> listaProjetosProcessar = new ArrayList<>();
