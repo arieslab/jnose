@@ -177,7 +177,7 @@ public class ByTestSmellsPage extends BasePage {
 
                 WebMarkupContainer progressProject = new WebMarkupContainer("progressProject");
                 progressProject.setOutputMarkupPlaceholderTag(true);
-                progressProject.setOutputMarkupId(true);//style="width: 25%"
+                progressProject.setOutputMarkupId(true);
                 progressProject.add(new AttributeModifier("style", "width: " + projeto.getProcentagem() + "%"));
                 item.add(progressProject);
                 projeto.progressProject = progressProject;
@@ -198,19 +198,11 @@ public class ByTestSmellsPage extends BasePage {
         dataProcessamentoAtual = Util.dateNowFolder();
         totalProcessado.setValor(0);
         lbPastaSelecionada.setDefaultModel(Model.of(WicketApplication.JNOSE_PROJECTS_FOLDER));
-
-//        File file = new File(WicketApplication.JNOSE_PROJECTS_FOLDER);
-
         List<Projeto> listProjectBean = projetoBusiness.listAll();
-
         for(Projeto projeto : listProjectBean){
             listaProjetos.add(new ProjetoDTO(projeto));
         }
-
-
-//        listaProjetos = JNoseCore.listaProjetos(file.toURI(),logRetorno);
         lvProjetos.setList(listaProjetos);
-
         processarTodos.setEnabled(true);
         lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
     }
