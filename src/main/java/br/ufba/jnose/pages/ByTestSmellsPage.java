@@ -1,9 +1,11 @@
 package br.ufba.jnose.pages;
 
 import br.ufba.jnose.WicketApplication;
+import br.ufba.jnose.business.ProjetoBusiness;
 import br.ufba.jnose.core.Util;
 import br.ufba.jnose.dto.ProjetoDTO;
 import br.ufba.jnose.dto.TotalProcessado;
+import br.ufba.jnose.entities.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
 import br.ufba.jnose.core.JNoseCore;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
@@ -23,6 +25,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.time.Duration;
 
 import java.util.ArrayList;
@@ -48,10 +51,12 @@ public class ByTestSmellsPage extends BasePage {
     private IndicatingAjaxLink processarTodos;
     private Label lbProjetosSize;
     private String dataProcessamentoAtual;
-//    private ExternalLink linkCSVFinal;
     private StringBuffer logRetorno;
     private List<List<String>> listaResultado;
     private Link lkResultadoBotton;
+
+    @SpringBean
+    private ProjetoBusiness projetoBusiness;
 
     public ByTestSmellsPage() {
         super("ByTestSmellsPage");
@@ -76,15 +81,8 @@ public class ByTestSmellsPage extends BasePage {
 
         criarTimer();
 
-
-//        linkCSVFinal = new ExternalLink("linkCSVFinal", File.separatorChar + "reports" + File.separatorChar + dataProcessamentoAtual + File.separatorChar + "all_report_by_testsmells.csv");
-//        linkCSVFinal.setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
-//        add(linkCSVFinal);
-
         FeedbackPanel feedback = new JQueryFeedbackPanel("feedback");
         add(feedback.setOutputMarkupId(true));
-
-//        criarForm();
 
         criarBotaoProcessarTodos();
 
@@ -196,30 +194,21 @@ public class ByTestSmellsPage extends BasePage {
         add(lvProjetos);
     }
 
-//    private void criarForm(){
-//        Form form = new Form<>("form");
-//        TextField tfPastaPath = new TextField("tfPastaPath", new PropertyModel(this, "pastaPath"));
-//        tfPastaPath.setRequired(true);
-//        form.add(tfPastaPath);
-//
-//        Button btEnviar = new Button("btEnviar") {
-//            @Override
-//            public void onSubmit() {
-//
-//
-//            }
-//        };
-//        form.add(btEnviar);
-//        add(form);
-//    }
-
     private void loadProjetos(){
         dataProcessamentoAtual = Util.dateNowFolder();
         totalProcessado.setValor(0);
         lbPastaSelecionada.setDefaultModel(Model.of(WicketApplication.JNOSE_PROJECTS_FOLDER));
 
-        File file = new File(WicketApplication.JNOSE_PROJECTS_FOLDER);
-        listaProjetos = JNoseCore.listaProjetos(file.toURI(),logRetorno);
+//        File file = new File(WicketApplication.JNOSE_PROJECTS_FOLDER);
+
+        List<Projeto> listProjectBean = projetoBusiness.listAll();
+
+        for(Projeto projeto : listProjectBean){
+            listaProjetos.add(new ProjetoDTO(projeto));
+        }
+
+
+//        listaProjetos = JNoseCore.listaProjetos(file.toURI(),logRetorno);
         lvProjetos.setList(listaProjetos);
 
         processarTodos.setEnabled(true);
@@ -274,67 +263,6 @@ public class ByTestSmellsPage extends BasePage {
                 for (ProjetoDTO p : listaProjetosProcessar) {
                     processado = processado && p.getProcessado();
                 }
-
-//                if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
-//                    linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv"));
-//                    target.add(linkCSVFinal);
-//                }
-
-            }
-        };
-        add(timer);
-    }
-
-    private void criarTimer2(){
-        AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
-            int cont = 0;
-
-            @Override
-            protected void onTimer(AjaxRequestTarget target) {
-                progressBar.setModel(Model.of(totalProcessado.getValor()));
-                target.add(progressBar);
-
-                Boolean todosProjetosProcessados = true;
-
-                List<ProjetoDTO> listaProjetosProcessar = new ArrayList<>();
-
-                for (ProjetoDTO projeto : listaProjetos) {
-                    if (projeto.getParaProcessar()) {
-                        listaProjetosProcessar.add(projeto);
-                    }
-                }
-
-                for (ProjetoDTO projeto : listaProjetosProcessar) {
-
-                    WebMarkupContainer lkResultado = projeto.getLkResultado();
-                    lkResultado.setEnabled(projeto.getProcessado());
-                    target.add(lkResultado);
-
-                    Label lbPorcentagem = projeto.lbPorcentagem;
-                    lbPorcentagem.setDefaultModel(Model.of(projeto.getProcentagem()));
-                    target.add(lbPorcentagem);
-
-                    WebMarkupContainer progressProject = projeto.progressProject;
-                    progressProject.add(new AttributeModifier("style", "width: " + projeto.getProcentagem() + "%"));
-                    target.add(progressProject);
-
-                    todosProjetosProcessados = todosProjetosProcessados && projeto.getProcessado();
-                }
-
-                if (todosProjetosProcessados) {
-                    totalProcessado.setValor( (100 - totalProcessado.getValor()) + totalProcessado.getValor());
-                    processando = false;
-                }
-
-                boolean processado = true;
-                for (ProjetoDTO p : listaProjetosProcessar) {
-                    processado = processado && p.getProcessado();
-                }
-
-//                if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
-//                    linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_report_by_testsmells.csv"));
-//                    target.add(linkCSVFinal);
-//                }
 
             }
         };
