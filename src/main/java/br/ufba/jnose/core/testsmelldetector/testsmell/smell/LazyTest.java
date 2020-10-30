@@ -49,7 +49,7 @@ public class LazyTest extends AbstractSmell {
         classVisitor.visit(testFileCompilationUnit, null);
 
         for (MethodUsage method : calledProductionMethods) {
-            List<MethodUsage> s = calledProductionMethods.stream().filter(x -> x.getProductionMethod().equals(method.getProductionMethod())).collect(Collectors.toList());
+            List<MethodUsage> s = calledProductionMethods.stream().filter(x -> x.getProductionMethodName().equals(method.getProductionMethodName())).collect(Collectors.toList());
             if (s.size() > 1) {
                 if (s.stream().filter(y -> y.getTestMethodName().equals(method.getTestMethodName())).count() != s.size()) {
                     // If counts don not match, this production method is used by multiple test methods. Hence, there is a Lazy Test smell.

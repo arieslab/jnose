@@ -1,5 +1,6 @@
 package br.ufba.jnose.core.testsmelldetector.testsmell.smell;
 
+import br.ufba.jnose.core.testsmelldetector.testsmell.*;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.BodyDeclaration;
@@ -11,10 +12,6 @@ import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
-import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
-import br.ufba.jnose.core.testsmelldetector.testsmell.TestMethod;
-import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
 
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -24,7 +21,8 @@ public class GeneralFixture extends AbstractSmell {
     List<MethodDeclaration> methodList;
     MethodDeclaration setupMethod;
     List<FieldDeclaration> fieldList;
-    List<String> setupFields;
+    List<MethodUsage> setupFields;
+    TestMethod testMethod;
 
     public GeneralFixture() {
         super("General Fixture");
@@ -40,6 +38,7 @@ public class GeneralFixture extends AbstractSmell {
 
         //Proceed with general fixture analysis if setup method exists
         if (setupMethod != null) {
+            testMethod = new TestMethod(setupMethod.getNameAsString());
             //Get all fields that are initialized in the setup method
             //The following code block will identify the class level variables (i.e. fields) that are initialized in the setup method
             // TODO: There has to be a better way to do this identification/check!
@@ -53,7 +52,11 @@ public class GeneralFixture extends AbstractSmell {
                             if (expressionStmt.getExpression() instanceof AssignExpr) {
                                 AssignExpr assignExpr = (AssignExpr) expressionStmt.getExpression();
                                 if (fieldList.get(j).getVariable(k).getNameAsString().equals(assignExpr.getTarget().toString())) {
-                                    setupFields.add(assignExpr.getTarget().toString());
+                                    setupFields.add(new MethodUsage(
+                                            assignExpr.getTarget().toString(), "",
+                                            String.valueOf(assignExpr.getRange().get().begin.line),
+                                            String.valueOf(assignExpr.getRange().get().end.line)));
+
                                 }
                             }
                         }
@@ -71,7 +74,6 @@ public class GeneralFixture extends AbstractSmell {
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
         private MethodDeclaration methodDeclaration = null;
         private MethodDeclaration currentMethod = null;
-        TestMethod testMethod;
         private Set<String> fixtureCount = new HashSet();
 
         @Override
@@ -111,14 +113,10 @@ public class GeneralFixture extends AbstractSmell {
                 //call visit(NameExpr) for current method
                 super.visit(n, arg);
 
-                testMethod = new TestMethod(n.getNameAsString());
-                testMethod.setHasSmell(fixtureCount.size() != setupFields.size());
-                testMethod.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
-                testMethod.addDataItem("end",String.valueOf(n.getRange().get().end.line));
 
-                smellyElementList.add(testMethod);
+              //  testMethod.setHasSmell(fixtureCount.size() != setupFields.size());
 
-                fixtureCount = new HashSet();;
+                fixtureCount = new HashSet();
                 currentMethod = null;
             }
         }
@@ -127,11 +125,19 @@ public class GeneralFixture extends AbstractSmell {
         public void visit(NameExpr n, Void arg) {
             if (currentMethod != null) {
                 //check if the variable contained in the current test method is also contained in the setup method
-                if (setupFields.contains(n.getNameAsString())) {
-                    if(!fixtureCount.contains(n.getNameAsString())){
-                        fixtureCount.add(n.getNameAsString());
-                    }
-                    //System.out.println(currentMethod.getNameAsString() + " : " + n.getName().toString());
+                for (int i = 0; i < setupFields.size(); i++) {
+                    if(setupFields.get(i).getTestMethodName().equals(n.getNameAsString())){
+                        if(!fixtureCount.contains(n.getNameAsString())){
+                                fixtureCount.add(n.getNameAsString());
+                                testMethod.addDataItem("begin", setupFields.get(i).getBegin());
+                                testMethod.addDataItem("end", setupFields.get(i).getEnd());
+                                testMethod.setHasSmell(true);
+                                if(!smellyElementList.contains(testMethod)){
+                                    smellyElementList.add(testMethod);
+                                }
+                            }
+                            //System.out.println(currentMethod.getNameAsString() + " : " + n.getName().toString());
+                        }
                 }
             }
 

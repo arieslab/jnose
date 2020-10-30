@@ -1,17 +1,17 @@
 package br.ufba.jnose.core.testsmelldetector.testsmell;
 
 public class MethodUsage {
-    private String testMethodName, productionMethod, begin, end;
+    private String testMethodName, productionMethodName, begin, end;
 
     public MethodUsage(String testMethod, String productionMethod, String begin, String end) {
         this.testMethodName = testMethod;
-        this.productionMethod = productionMethod;
+        this.productionMethodName = productionMethod;
         this.end = end;
         this.begin = begin;
     }
 
-    public String getProductionMethod() {
-        return productionMethod;
+    public String getProductionMethodName() {
+        return productionMethodName;
     }
     public String getTestMethodName() {
         return testMethodName;
@@ -22,8 +22,8 @@ public class MethodUsage {
         this.testMethodName = testMethodName;
     }
 
-    public void setProductionMethod(String productionMethod) {
-        this.productionMethod = productionMethod;
+    public void setProductionMethodName(String productionMethodName) {
+        this.productionMethodName = productionMethodName;
     }
 
     public String getBegin() {
