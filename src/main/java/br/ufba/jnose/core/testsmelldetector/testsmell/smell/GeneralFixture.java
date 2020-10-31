@@ -12,6 +12,7 @@ import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+import org.apache.commons.io.input.ObservableInputStream;
 
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -23,12 +24,14 @@ public class GeneralFixture extends AbstractSmell {
     List<FieldDeclaration> fieldList;
     List<MethodUsage> setupFields;
     TestMethod testMethod;
+    private List<MethodUsage> instaceGeneral;
 
     public GeneralFixture() {
         super("General Fixture");
         methodList = new ArrayList<>();
         fieldList = new ArrayList<>();
         setupFields = new ArrayList<>();
+        instaceGeneral = new ArrayList<>();
     }
 
     @Override
@@ -38,7 +41,6 @@ public class GeneralFixture extends AbstractSmell {
 
         //Proceed with general fixture analysis if setup method exists
         if (setupMethod != null) {
-            testMethod = new TestMethod(setupMethod.getNameAsString());
             //Get all fields that are initialized in the setup method
             //The following code block will identify the class level variables (i.e. fields) that are initialized in the setup method
             // TODO: There has to be a better way to do this identification/check!
@@ -52,11 +54,10 @@ public class GeneralFixture extends AbstractSmell {
                             if (expressionStmt.getExpression() instanceof AssignExpr) {
                                 AssignExpr assignExpr = (AssignExpr) expressionStmt.getExpression();
                                 if (fieldList.get(j).getVariable(k).getNameAsString().equals(assignExpr.getTarget().toString())) {
-                                    setupFields.add(new MethodUsage(
-                                            assignExpr.getTarget().toString(), "",
+                                    setupFields.add(new MethodUsage(setupMethod.getNameAsString(),
+                                            assignExpr.getTarget().toString(),
                                             String.valueOf(assignExpr.getRange().get().begin.line),
                                             String.valueOf(assignExpr.getRange().get().end.line)));
-
                                 }
                             }
                         }
@@ -69,12 +70,20 @@ public class GeneralFixture extends AbstractSmell {
             //This call will visit each test method to identify the list of variables the method contains [visit(MethodDeclaration n)]
             classVisitor.visit(method, null);
         }
+
+        for (MethodUsage method : instaceGeneral) {
+            TestMethod testClass = new TestMethod(method.getTestMethodName());
+            testClass.addDataItem("begin", method.getBegin());
+            testClass.addDataItem("end", method.getEnd());
+            testClass.setHasSmell(true);
+            smellyElementList.add(testClass);
+        }
     }
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
         private MethodDeclaration methodDeclaration = null;
         private MethodDeclaration currentMethod = null;
-        private Set<String> fixtureCount = new HashSet();
+        private Set<String> fixtureCount = new HashSet<>();
 
         @Override
         public void visit(ClassOrInterfaceDeclaration n, Void arg) {
@@ -113,9 +122,14 @@ public class GeneralFixture extends AbstractSmell {
                 //call visit(NameExpr) for current method
                 super.visit(n, arg);
 
-
-              //  testMethod.setHasSmell(fixtureCount.size() != setupFields.size());
-
+                // verify against the setup fields and set to the testmehtod
+                for (MethodUsage field : setupFields){
+                    if (!fixtureCount.contains(field.getProductionMethodName())) {
+                        if (!instaceGeneral.contains(field)) {
+                            instaceGeneral.add(field);
+                        }
+                    }
+                }
                 fixtureCount = new HashSet();
                 currentMethod = null;
             }
@@ -124,26 +138,15 @@ public class GeneralFixture extends AbstractSmell {
         @Override
         public void visit(NameExpr n, Void arg) {
             if (currentMethod != null) {
-                //check if the variable contained in the current test method is also contained in the setup method
-                for (int i = 0; i < setupFields.size(); i++) {
-                    if(setupFields.get(i).getTestMethodName().equals(n.getNameAsString())){
+               for (MethodUsage field : setupFields) {
+                    if (field.getProductionMethodName().equals(n.getNameAsString())) {
                         if(!fixtureCount.contains(n.getNameAsString())){
-                                fixtureCount.add(n.getNameAsString());
-                                testMethod.addDataItem("begin", setupFields.get(i).getBegin());
-                                testMethod.addDataItem("end", setupFields.get(i).getEnd());
-                                testMethod.setHasSmell(true);
-                                if(!smellyElementList.contains(testMethod)){
-                                    smellyElementList.add(testMethod);
-                                }
-                            }
-                            //System.out.println(currentMethod.getNameAsString() + " : " + n.getName().toString());
+                            fixtureCount.add(n.getNameAsString());
                         }
+                    }
                 }
             }
-
             super.visit(n, arg);
         }
-
-
     }
 }
