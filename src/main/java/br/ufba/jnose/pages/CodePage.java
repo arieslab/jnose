@@ -9,11 +9,14 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 
+import static br.ufba.jnose.core.testsmelldetector.testsmell.Util.*;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -21,8 +24,8 @@ public class CodePage extends ImprimirPage {
     private static final long serialVersionUID = 1L;
     private static int cont = 0;
 
-    public CodePage(ProjetoDTO projeto, String title, String pathFile, int inicio, int fim) {
-        add(new Label("title", "Code Test Smell: " + title));
+    public CodePage(ProjetoDTO projeto, String title, String pathFile, String range) {
+        add(new Label("title", "Code Test Smell: " + title + " ["+range+"]"));
 
         Map<Integer,String> mapaBlame = GitCore.blame(projeto.getPath(),pathFile);
 
@@ -51,9 +54,27 @@ public class CodePage extends ImprimirPage {
 
                 WebMarkupContainer container = new WebMarkupContainer("container");
 
-                if(cont >= inicio && cont <= fim){
-                    item.add(new AttributeAppender("style", "background-color: #ffe6ff;"));
+                if(range.contains("-")){
+                    String[] ranger2 = range.split("-");
+                    int inicio = Integer.parseInt(ranger2[0].trim());
+                    int fim = Integer.parseInt(ranger2[1].trim());
+                    if(cont >= inicio && cont <= fim){
+                        item.add(new AttributeAppender("style", "background-color: #ffe6ff;"));
+                    }
+                }else if(range.contains(",")){
+                    String[] ranger2 = range.replace(" ","").split(",");
+                    List<String> lista = Arrays.asList(ranger2);
+                    if(lista.contains(cont+"")){
+                        item.add(new AttributeAppender("style", "background-color: #ffe6ff;"));
+                    }
+                }else if(isInt(range.trim())){
+                    int range2 = Integer.parseInt(range.trim());
+                    if(range2 == cont){
+                        item.add(new AttributeAppender("style", "background-color: #ffe6ff;"));
+                    }
                 }
+
+
 
                 container.add(new Label("codigo", linha));
                 item.add(container);

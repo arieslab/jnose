@@ -33,16 +33,36 @@ public class ResultPage2 extends ImprimirPage {
                     lb(i,linha,item, fontColorized);
                 }
 
-                if(Util.isInt(linha.get(9))) {
+//                if(Util.isInt(linha.get(9))) {
+//                    String testsmellName = linha.get(7);
+//                    String pathFileTest = linha.get(2);
+//                    int inicio = Integer.parseInt(linha.get(9));
+//                    int fim = Integer.parseInt(linha.get(10));
+//                    item.add(new Link<String>("codigo") {
+//                        @Override
+//                        public void onClick() {
+//                            setResponsePage(new CodePage(projeto,testsmellName,pathFileTest,inicio,fim));
+////                            System.out.println(pathFileTest + " - " + inicio + " - " + fim);
+//                        }
+//                    });
+//                }else{
+//                    item.add(new Link<String>("codigo") {
+//                        @Override
+//                        public void onClick() {
+//                        }
+//                    }.setVisible(false));
+//                }
+
+                if(linha.get(9).contains("-") || linha.get(9).contains(",") || Util.isInt(linha.get(9))) {
                     String testsmellName = linha.get(7);
                     String pathFileTest = linha.get(2);
-                    int inicio = Integer.parseInt(linha.get(9));
-                    int fim = Integer.parseInt(linha.get(10));
+//                    int inicio = Integer.parseInt(linha.get(9));
+                    //int fim = Integer.parseInt(linha.get(10));
+                    String range = linha.get(9);
                     item.add(new Link<String>("codigo") {
                         @Override
                         public void onClick() {
-                            setResponsePage(new CodePage(projeto,testsmellName,pathFileTest,inicio,fim));
-//                            System.out.println(pathFileTest + " - " + inicio + " - " + fim);
+                            setResponsePage(new CodePage(projeto,testsmellName,pathFileTest,range));
                         }
                     });
                 }else{
