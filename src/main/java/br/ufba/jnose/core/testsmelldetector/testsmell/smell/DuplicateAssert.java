@@ -1,5 +1,6 @@
 package br.ufba.jnose.core.testsmelldetector.testsmell.smell;
 
+import br.ufba.jnose.core.testsmelldetector.testsmell.MethodUsage;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.MethodCallExpr;
@@ -13,8 +14,11 @@ import java.util.*;
 
 public class DuplicateAssert extends AbstractSmell {
 
+    private ArrayList<MethodUsage> instanceDuplicate;
+
     public DuplicateAssert() {
         super("Duplicate Assert");
+        instanceDuplicate = new ArrayList<> (  );
     }
     public class DuplicateAssertStructure {
 
@@ -61,72 +65,55 @@ public class DuplicateAssert extends AbstractSmell {
     public void runAnalysis(CompilationUnit testFileCompilationUnit, CompilationUnit productionFileCompilationUnit, String testFileName, String productionFileName) throws FileNotFoundException {
         classVisitor = new DuplicateAssert.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
+
+        for (MethodUsage method : instanceDuplicate) {
+            TestMethod testClass = new TestMethod(method.getTestMethodName());
+            testClass.addDataItem("begin", method.getRange ());
+            testClass.addDataItem("end", method.getRange ()); // [Remover]
+            testClass.setHasSmell(true);
+            smellyElementList.add(testClass);
+        }
     }
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
         private MethodDeclaration currentMethod = null;
-        TestMethod testMethod;
         List<String> assertMessage = new ArrayList<>();
         List<String> assertMethod = new ArrayList<>();
         List<DuplicateAssertStructure> assertMethodDA = new ArrayList<>();
+        ArrayList<String> rangeLines = new ArrayList<>();
 
         // examine all methods in the test class
         @Override
         public void visit(MethodDeclaration n, Void arg) {
             if (Util.isValidTestMethod(n)) {
                 currentMethod = n;
-                testMethod = new TestMethod(n.getNameAsString());
-                testMethod.setHasSmell(false); //default value is false (i.e. no smell)
-
-                testMethod.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
-                testMethod.addDataItem("end",String.valueOf(n.getRange().get().end.line));
-
                 super.visit(n, arg);
-
-                // if there are duplicate messages, then the smell exists
-                Set<String> set1 = new HashSet<String>(assertMessage);
-                if (set1.size() < assertMessage.size()) {
-                    testMethod.setHasSmell(true);
-                }
-
-                // if there are duplicate assert methods, then the smell exists
-                Set<String> set2 = new HashSet<String>(assertMethod);
-                if (set2.size() < assertMethod.size()) {
-                    testMethod.setHasSmell(true);
-                }
 
                 /* *
                  * Identification of all duplicate occurrences within the method
                  * */
-
                 List<DuplicateAssertStructure> teste = assertMethodDA;
 
                 for (int i = 0; i < teste.size() ; i++ ) {
                     if (!teste.get(i).isChecked()) {
-                        String lines = "";
                         boolean hasSmell = false;
                         for (int j = i + 1; j < teste.size() ; j++ ) {
                             //Só compara com outros asserts, caso o objeto ainda não tenha sido identificado como outro DA
                             if ((!teste.get(j).isChecked()) && (teste.get(i).text.equals(teste.get(j).text))) {
                                 if (!hasSmell) {
-                                    lines +=  teste.get(i).line;
+                                    rangeLines.add(String.valueOf(teste.get(i).line));
                                     teste.get(i).setChecked(true);
                                 }
-                                lines += ", " + teste.get(j).line;
+                                rangeLines.add(String.valueOf(teste.get(j).line));
                                 teste.get(j).setChecked(true);
                                 hasSmell = true;
                             }
                         }
                         if (hasSmell) {
-                            System.out.println("Duplicate Assert:" +  lines);
+                            instanceDuplicate.add (new MethodUsage(currentMethod.getNameAsString(), rangeLines));
                         }
                     }
                 }
-                /*
-                *
-                * */
-
-                smellyElementList.add(testMethod);
 
                 //reset values for next method
                 currentMethod = null;
@@ -177,10 +164,8 @@ public class DuplicateAssert extends AbstractSmell {
                         assertMessage.add(n.getArgument(0).toString());
                     }
                 }
-
             }
         }
-
     }
 }
 

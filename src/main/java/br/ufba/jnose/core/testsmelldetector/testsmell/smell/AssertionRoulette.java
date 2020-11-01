@@ -111,7 +111,7 @@ public class AssertionRoulette extends AbstractSmell {
                 if (hasMissingExplanation) {
                     testMethod = new TestMethod(methodName);
                     testMethod.getData().put("begin",n.getRange().get().begin.line+"");
-                    testMethod.getData().put("end",n.getRange().get().end.line+"");
+                    testMethod.getData().put("end",n.getRange().get().begin.line+""); // [Remover]
 
                     testMethod.setHasSmell(true);
                     testMethod.addDataItem("AssertCount", String.valueOf(assertNoMessageCount));
@@ -120,7 +120,6 @@ public class AssertionRoulette extends AbstractSmell {
 
             }
         }
-
     }
 }
 

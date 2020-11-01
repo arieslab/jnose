@@ -18,7 +18,13 @@ public class MethodUsage {
         this.testMethodName = testMethod;
     }
 
-    public String getLines() {
+    public MethodUsage (String testMethod, String productionMethod, ArrayList<String> lines) {
+        this.lines = lines;
+        this.testMethodName = testMethod;
+        this.productionMethodName = productionMethod;
+    }
+
+    public String getRange () {
         return String.join(", ", lines);
     }
 
@@ -38,15 +44,18 @@ public class MethodUsage {
         this.productionMethodName = productionMethodName;
     }
 
-    public String getBegin() {
+    public String getLine() {
         return begin;
+    }
+    public String getBlock() {
+        return begin.concat(" - ").concat(end);
     }
 
     public void setBegin(String begin) {
         this.begin = begin;
     }
 
-    public String getEnd() {
+    public String getREMOVEEEE() {
         return end;
     }
 

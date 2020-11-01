@@ -37,8 +37,8 @@ public class RedundantAssertion extends AbstractSmell {
         
         for (MethodUsage method : methodPrints) {
             TestMethod testClass = new TestMethod(method.getTestMethodName());
-            testClass.addDataItem("begin", method.getBegin());
-            testClass.addDataItem("end", method.getEnd());
+            testClass.addDataItem("begin", method.getLine());
+            testClass.addDataItem("end",method.getLine()); // [Remover]
             testClass.setHasSmell(true);
             smellyElementList.add(testClass);
         }
@@ -55,21 +55,13 @@ public class RedundantAssertion extends AbstractSmell {
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
         private MethodDeclaration currentMethod = null;
         private int redundantCount = 0;
-        TestMethod testMethod;
 
         // examine all methods in the test class
         @Override
         public void visit(MethodDeclaration n, Void arg) {
             if (Util.isValidTestMethod(n)) {
                 currentMethod = n;
-                testMethod = new TestMethod(n.getNameAsString());
-                testMethod.setHasSmell(false); //default value is false (i.e. no smell)
                 super.visit(n, arg);
-
-//                testMethod.setHasSmell(redundantCount >= 1);
-//                testMethod.addDataItem("RedundantCount", String.valueOf(redundantCount));
-//
-//                smellyElementList.add(testMethod);
 
                 //reset values for next method
                 currentMethod = null;
@@ -95,9 +87,10 @@ public class RedundantAssertion extends AbstractSmell {
 
                         if (argumentValue != null && (argumentValue.toLowerCase().equals("true") || argumentValue.toLowerCase().equals("false"))) {
                             redundantCount++;
-                            methodPrints.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().begin.line)));
+                            methodPrints.add(new MethodUsage(currentMethod.getNameAsString(), "",
+                                    String.valueOf(n.getRange().get().begin.line), ""));
                         }
-                        break;
+                    break;
 
                     case "assertNotNull":
                     case "assertNull":
@@ -109,29 +102,31 @@ public class RedundantAssertion extends AbstractSmell {
 
                         if (argumentValue != null && (argumentValue.toLowerCase().equals("null"))) {
                             redundantCount++;
-                            methodPrints.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().begin.line)));
+                            methodPrints.add(new MethodUsage(currentMethod.getNameAsString(), "",
+                                    String.valueOf(n.getRange().get().begin.line), ""));
                         }
-                        break;
+                    break;
 
                     default:
                         if (n.getNameAsString().startsWith("assert")) {
                             if (n.getArguments().size() == 2) { //e.g. assertArrayEquals(byte[] expecteds, byte[] actuals); assertEquals(long expected, long actual);
                                 if (n.getArgument(0).equals(n.getArgument(1))) {
                                     redundantCount++;
-                                    methodPrints.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().begin.line)));
+                                    methodPrints.add(new MethodUsage(currentMethod.getNameAsString(), "",
+                                            String.valueOf(n.getRange().get().begin.line), ""));
                                 }
                             }
                             if (n.getArguments().size() == 3) { //e.g. assertArrayEquals(java.lang.String message, byte[] expecteds, byte[] actuals); assertEquals(java.lang.String message, long expected, long actual)
                                 if (n.getArgument(1).equals(n.getArgument(2))) {
                                     redundantCount++;
-                                    methodPrints.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().begin.line)));
+                                    methodPrints.add(new MethodUsage(currentMethod.getNameAsString(), "",
+                                            String.valueOf(n.getRange().get().begin.line), ""));
                                 }
                             }
                         }
-                        break;
+                    break;
                 }
             }
         }
-
     }
 }

@@ -12,7 +12,6 @@ import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import org.apache.commons.io.input.ObservableInputStream;
 
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -57,7 +56,7 @@ public class GeneralFixture extends AbstractSmell {
                                     setupFields.add(new MethodUsage(setupMethod.getNameAsString(),
                                             assignExpr.getTarget().toString(),
                                             String.valueOf(assignExpr.getRange().get().begin.line),
-                                            String.valueOf(assignExpr.getRange().get().end.line)));
+                                            ""));
                                 }
                             }
                         }
@@ -73,8 +72,8 @@ public class GeneralFixture extends AbstractSmell {
 
         for (MethodUsage method : instaceGeneral) {
             TestMethod testClass = new TestMethod(method.getTestMethodName());
-            testClass.addDataItem("begin", method.getBegin());
-            testClass.addDataItem("end", method.getEnd());
+            testClass.addDataItem("begin", method.getLine());
+            testClass.addDataItem("end", method.getLine()); // [Remover]
             testClass.setHasSmell(true);
             smellyElementList.add(testClass);
         }

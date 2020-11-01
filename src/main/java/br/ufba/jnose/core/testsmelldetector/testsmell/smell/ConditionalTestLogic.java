@@ -36,8 +36,8 @@ public class ConditionalTestLogic extends AbstractSmell {
 
         for (MethodUsage method : methodConditional) {
             TestMethod testClass = new TestMethod(method.getTestMethodName());
-            testClass.addDataItem("begin", method.getBegin());
-            testClass.addDataItem("end", method.getEnd());
+            testClass.addDataItem("begin", method.getBlock());
+            testClass.addDataItem("end", method.getBlock()); // [Remover]
             testClass.setHasSmell(true);
             smellyElementList.add(testClass);
         }
@@ -85,27 +85,31 @@ public class ConditionalTestLogic extends AbstractSmell {
             super.visit(n, arg);
             if (currentMethod != null) {
                 ifCount++;
-                methodConditional.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().end.line)));
+                methodConditional.add(new MethodUsage(currentMethod.getNameAsString(), "",
+                        String.valueOf(n.getRange().get().begin.line),
+                        String.valueOf(n.getRange().get().end.line)));
             }
         }
 
         @Override
         public void visit(SwitchStmt n, Void arg) {
-
             super.visit(n, arg);
             if (currentMethod != null) {
                 switchCount++;
-                methodConditional.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().end.line)));
+                methodConditional.add(new MethodUsage(currentMethod.getNameAsString(), "",
+                        String.valueOf(n.getRange().get().begin.line),
+                        String.valueOf(n.getRange().get().end.line)));
             }
         }
 
         @Override
         public void visit(ConditionalExpr n, Void arg) {
-
             super.visit(n, arg);
             if (currentMethod != null) {
                 conditionCount++;
-                methodConditional.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().end.line)));
+                methodConditional.add(new MethodUsage(currentMethod.getNameAsString(), "",
+                        String.valueOf(n.getRange().get().begin.line),
+                        String.valueOf(n.getRange().get().end.line)));
             }
         }
 
@@ -124,7 +128,9 @@ public class ConditionalTestLogic extends AbstractSmell {
             super.visit(n, arg);
             if (currentMethod != null) {
                 foreachCount++;
-                methodConditional.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().end.line)));
+                methodConditional.add(new MethodUsage(currentMethod.getNameAsString(), "",
+                        String.valueOf(n.getRange().get().begin.line),
+                        String.valueOf(n.getRange().get().end.line)));
             }
         }
 
@@ -133,7 +139,9 @@ public class ConditionalTestLogic extends AbstractSmell {
             super.visit(n, arg);
             if (currentMethod != null) {
                 whileCount++;
-                methodConditional.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().end.line)));
+                methodConditional.add(new MethodUsage(currentMethod.getNameAsString(), "",
+                        String.valueOf(n.getRange().get().begin.line),
+                        String.valueOf(n.getRange().get().end.line)));
             }
         }
 
@@ -142,7 +150,9 @@ public class ConditionalTestLogic extends AbstractSmell {
             super.visit(n, arg);
             if (currentMethod != null) {
                 doCount++;
-                methodConditional.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().end.line)));
+                methodConditional.add(new MethodUsage(currentMethod.getNameAsString(), "",
+                        String.valueOf(n.getRange().get().begin.line),
+                        String.valueOf(n.getRange().get().end.line)));
             }
         }
     }

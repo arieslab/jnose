@@ -15,6 +15,7 @@ public class DependentTest extends AbstractSmell {
 
     private List<TestMethod> testMethods;
 
+
     public DependentTest() {
         super("Dependent Test");
         testMethods = new ArrayList<>();

@@ -12,7 +12,6 @@ import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class SensitiveEquality extends AbstractSmell {
 	ArrayList<MethodUsage> methodSensitiveEquality = null;
@@ -32,8 +31,8 @@ public class SensitiveEquality extends AbstractSmell {
         
         for (MethodUsage method : methodSensitiveEquality) {
             TestMethod testClass = new TestMethod(method.getTestMethodName());
-            testClass.addDataItem("begin", method.getBegin());
-            testClass.addDataItem("end", method.getEnd());
+            testClass.addDataItem("begin", method.getLine());
+            testClass.addDataItem("end",method.getLine()); // [Remover]
             testClass.setHasSmell(true);
             smellyElementList.add(testClass);
         }
@@ -42,16 +41,12 @@ public class SensitiveEquality extends AbstractSmell {
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
         private MethodDeclaration currentMethod = null;
         private int sensitiveCount = 0;
-        TestMethod testMethod;
 
         // examine all methods in the test class
         @Override
         public void visit(MethodDeclaration n, Void arg) {
             if (Util.isValidTestMethod(n)) {
                 currentMethod = n;
-                testMethod = new TestMethod(n.getNameAsString());
-                testMethod.setHasSmell(false); //default value is false (i.e. no smell)
-                
                 super.visit(n, arg);
 
                 //reset values for next method
@@ -71,7 +66,8 @@ public class SensitiveEquality extends AbstractSmell {
                     for (Expression argument : n.getArguments()) {
                         if (argument.toString().contains("toString")) {
                             sensitiveCount++;
-                            methodSensitiveEquality.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().begin.line)));
+                            methodSensitiveEquality.add(new MethodUsage(currentMethod.getNameAsString(), "",
+                                    String.valueOf(n.getRange().get().begin.line), ""));
                         }
                     }
                 }
@@ -81,7 +77,8 @@ public class SensitiveEquality extends AbstractSmell {
                     for (Expression argument : n.getArguments()) {
                         if (argument.toString().contains("toString")) {
                             sensitiveCount++;
-                            methodSensitiveEquality.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().begin.line)));
+                            methodSensitiveEquality.add(new MethodUsage(currentMethod.getNameAsString(), "",
+                                    String.valueOf(n.getRange().get().begin.line), ""));
                         }
                     }
                 }

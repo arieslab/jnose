@@ -7,10 +7,8 @@ import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.ObjectCreationExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import org.apache.commons.io.input.ObservableInputStream;
 
 import java.io.FileNotFoundException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,8 +31,8 @@ public class MagicNumberTest  extends AbstractSmell {
 
         for (MethodUsage method : instances) {
             TestMethod testClass = new TestMethod(method.getTestMethodName());
-            testClass.addDataItem("begin", method.getBegin());
-            testClass.addDataItem("end", method.getEnd());
+            testClass.addDataItem("begin", method.getLine());
+            testClass.addDataItem("end", method.getLine()); // [Remover]
             testClass.setHasSmell(true);
             smellyElementList.add(testClass);
         }
@@ -50,7 +48,6 @@ public class MagicNumberTest  extends AbstractSmell {
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
         private MethodDeclaration currentMethod = null;
-        TestMethod testMethod;
         private int magicCount = 0;
 
         // examine all methods in the test class
@@ -58,11 +55,7 @@ public class MagicNumberTest  extends AbstractSmell {
         public void visit(MethodDeclaration n, Void arg) {
             if (Util.isValidTestMethod(n)) {
                 currentMethod = n;
-                testMethod = new TestMethod(n.getNameAsString());
-                testMethod.setHasSmell(false); //default value is false (i.e. no smell)
                 super.visit(n, arg);
-
-                testMethod.setHasSmell(magicCount >= 1);
 
                 //reset values for next method
                 currentMethod = null;
@@ -112,7 +105,5 @@ public class MagicNumberTest  extends AbstractSmell {
                 }
             }
         }
-
     }
-
 }

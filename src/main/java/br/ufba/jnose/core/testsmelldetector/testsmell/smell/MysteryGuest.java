@@ -38,8 +38,8 @@ public class MysteryGuest extends AbstractSmell {
 
         for (MethodUsage method : mysteryInstance) {
             TestMethod testClass = new TestMethod(method.getTestMethodName());
-            testClass.addDataItem("begin", method.getBegin());
-            testClass.addDataItem("end", method.getEnd());
+            testClass.addDataItem("begin", method.getLine());
+            testClass.addDataItem("end", method.getLine()); // [Remover]
             testClass.setHasSmell(true);
             smellyElementList.add(testClass);
         }
@@ -88,18 +88,13 @@ public class MysteryGuest extends AbstractSmell {
         */
         private MethodDeclaration currentMethod = null;
         private int mysteryCount = 0;
-        TestMethod testMethod;
 
         // examine all methods in the test class
         @Override
         public void visit(MethodDeclaration n, Void arg) {
             if (Util.isValidTestMethod(n)) {
                 currentMethod = n;
-                testMethod = new TestMethod(n.getNameAsString());
-                testMethod.setHasSmell(false); //default value is false (i.e. no smell)
                 super.visit(n, arg);
-                testMethod.setHasSmell(mysteryCount > 0);
-                testMethod.addDataItem("MysteryCount", String.valueOf(mysteryCount));
 
                 //reset values for next method
                 currentMethod = null;
@@ -144,7 +139,8 @@ public class MysteryGuest extends AbstractSmell {
                         }
                         // variable is not mocked, hence it's a smell
                         mysteryCount++;
-                        mysteryInstance.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().begin.line)));
+                        mysteryInstance.add(new MethodUsage(currentMethod.getNameAsString(), "",
+                                String.valueOf(n.getRange().get().begin.line), ""));
                     }
                 }
             }

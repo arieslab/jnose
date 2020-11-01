@@ -1,5 +1,6 @@
 package br.ufba.jnose.core.testsmelldetector.testsmell.smell;
 
+import br.ufba.jnose.core.testsmelldetector.testsmell.*;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.MethodDeclaration;
@@ -7,10 +8,6 @@ import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.MemberValuePair;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
-import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
-import br.ufba.jnose.core.testsmelldetector.testsmell.TestMethod;
-import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -19,8 +16,11 @@ import java.util.Optional;
 
 public class UnknownTest extends AbstractSmell {
 
+    private ArrayList<MethodUsage> instanceUnkNown;
+
     public UnknownTest() {
         super("Unknown Test");
+        instanceUnkNown = new ArrayList<> ();
     }
 
     /**
@@ -30,11 +30,18 @@ public class UnknownTest extends AbstractSmell {
     public void runAnalysis(CompilationUnit testFileCompilationUnit, CompilationUnit productionFileCompilationUnit, String testFileName, String productionFileName) throws FileNotFoundException {
         classVisitor = new UnknownTest.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
+
+        for (MethodUsage method : instanceUnkNown) {
+            TestMethod testClass = new TestMethod(method.getTestMethodName());
+            testClass.addDataItem("begin", method.getBlock ());
+            testClass.addDataItem("end", method.getBlock ()); // [Remover]
+            testClass.setHasSmell(true);
+            smellyElementList.add(testClass);
+        }
     }
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
         private MethodDeclaration currentMethod = null;
-        TestMethod testMethod;
         List<String> assertMessage = new ArrayList<>();
         boolean hasAssert = false;
         boolean hasExceptionAnnotation = false;
@@ -57,17 +64,13 @@ public class UnknownTest extends AbstractSmell {
                     }
                 }
                 currentMethod = n;
-                testMethod = new TestMethod(n.getNameAsString());
-                testMethod.setHasSmell(false); //default value is false (i.e. no smell)
-                testMethod.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
-                testMethod.addDataItem("end",String.valueOf(n.getRange().get().end.line));
                 super.visit(n, arg);
 
                 // if there are duplicate messages, then the smell exists
                 if (!hasAssert && !hasExceptionAnnotation)
-                    testMethod.setHasSmell(true);
-
-                smellyElementList.add(testMethod);
+                    instanceUnkNown.add(new MethodUsage(n.getNameAsString(), "",
+                                    String.valueOf(n.getRange().get().begin.line),
+                                    String.valueOf(n.getRange().get().end.line)));
 
                 //reset values for next method
                 currentMethod = null;

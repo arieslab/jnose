@@ -50,8 +50,8 @@ public class EagerTest extends AbstractSmell {
 
         for (MethodUsage method : instanceEager) {
             TestMethod testClass = new TestMethod(method.getTestMethodName());
-            testClass.addDataItem("begin", method.getLines());
-            testClass.addDataItem("end", method.getLines());
+            testClass.addDataItem("begin", method.getRange ());
+            testClass.addDataItem("end", method.getRange ()); // [Remover]
             testClass.setHasSmell(true);
             smellyElementList.add(testClass);
         }
