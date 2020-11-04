@@ -87,13 +87,13 @@ public class DuplicateAssert extends AbstractSmell {
         public void visit(MethodDeclaration n, Void arg) {
             if (Util.isValidTestMethod(n)) {
                 currentMethod = n;
+                rangeLines = new ArrayList<>();
                 super.visit(n, arg);
 
                 /* *
                  * Identification of all duplicate occurrences within the method
                  * */
                 List<DuplicateAssertStructure> teste = assertMethodDA;
-
                 for (int i = 0; i < teste.size() ; i++ ) {
                     if (!teste.get(i).isChecked()) {
                         boolean hasSmell = false;
