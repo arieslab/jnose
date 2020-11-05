@@ -71,8 +71,9 @@ public class SensitiveEquality extends AbstractSmell {
                         }
                     }
                 }
-                // if the name of a method being called is 'fail'
-                else if (n.getNameAsString().equals("fail")) {
+                // if the name of a method being called is 'fail' \/ added validation to jUnit3 fail cases
+                else if (n.getNameAsString().equals("fail") || n.getNameAsString().equals("failNotEquals") ||
+                		 n.getNameAsString().equals("failSame") || n.getNameAsString().equals("failNotSame"))  {
                     // fail methods that contain toString
                     for (Expression argument : n.getArguments()) {
                         if (argument.toString().contains("toString")) {
