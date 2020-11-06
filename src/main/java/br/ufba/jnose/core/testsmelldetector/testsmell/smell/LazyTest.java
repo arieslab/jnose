@@ -53,13 +53,17 @@ public class LazyTest extends AbstractSmell {
 
         for (MethodUsage method : calledProductionMethods) {
             ArrayList<String> range = new ArrayList<> (  );
+            ArrayList<String> methodsList = new ArrayList<>();
             List<MethodUsage> s = calledProductionMethods.stream().filter(x -> x.getProductionMethodName().equals(method.getProductionMethodName())).collect(Collectors.toList());
             for(MethodUsage teste : s){
                 range.add (teste.getLine());
+                if(!methodsList.contains(teste.getTestMethodName())) {
+                    methodsList.add ( teste.getTestMethodName ( ) );
+                }
             }
             if(!productionChecked.contains(method.getProductionMethodName ())){
                 productionChecked.add (method.getProductionMethodName ());
-                instanceLazy.add (new MethodUsage(method.getProductionMethodName(), range));
+                instanceLazy.add (new MethodUsage(String.join(", ", methodsList), range));
             }
         }
 
