@@ -1,17 +1,17 @@
 package br.ufba.jnose.dto;
 
+import br.ufba.jnose.entities.Projeto;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
-public class Projeto implements Serializable {
+public class ProjetoDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private String name;
-    private String path;
     private Boolean paraProcessar;
     private Boolean processado;
     private Boolean processado2;
@@ -23,39 +23,62 @@ public class Projeto implements Serializable {
 
     private List<Commit> listaCommits;
 
+    private List<Commit> listaTags;
+
     private Integer commits;
+
+    private Map<Integer, List<List<String>>> mapResults;
 
     public WebMarkupContainer iconProcessado;
     public WebMarkupContainer iconNaoProcessado;
 
     public WebMarkupContainer progressProject;
 
-    public Link lkResultado;
+    private Link lkResultado;
     public Link lkCharts;
+    public Link lkResult1;
+    public Link lkResult2;
+    public Link lkChart2;
 
     public Label lbPorcentagem;
     public String bugs;
 
     private String repoGit;
 
-    public Projeto(String name, String path) {
-        this.name = name;
-        this.path = path;
+    private String optionSelected;
+
+    private br.ufba.jnose.entities.Projeto projeto;
+
+    public ProjetoDTO(Projeto projeto) {
+        if(this.projeto == null)this.projeto = new br.ufba.jnose.entities.Projeto();
+        this.projeto.setName(projeto.getName());
+        this.projeto.setPath(projeto.getPath());
         this.processado = false;
         this.processado2 = false;
         this.procentagem = 0;
         this.paraProcessar = true;
         this.commits = 0;
+        this.optionSelected = "";
     }
 
-    public Projeto(String name, String path, Boolean processado, Boolean processado2, Integer procentagem) {
-        this.name = name;
-        this.path = path;
+    public ProjetoDTO(Projeto projeto, Boolean processado, Boolean processado2, Integer procentagem) {
+        if(this.projeto == null)this.projeto = new Projeto();
+        this.projeto.setName(projeto.getName());
+        this.projeto.setPath(projeto.getPath());
         this.processado = processado;
         this.processado2 = processado2;
         this.procentagem = procentagem;
         this.paraProcessar = true;
         this.commits = 0;
+        this.optionSelected = "";
+    }
+
+    public String getOptionSelected() {
+        return optionSelected;
+    }
+
+    public void setOptionSelected(String optionSelected) {
+        this.optionSelected = optionSelected;
     }
 
     public List<List<String>> getResultado() {
@@ -99,19 +122,19 @@ public class Projeto implements Serializable {
     }
 
     public String getName() {
-        return name;
+        return projeto.getName();
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.projeto.setName(name);
     }
 
     public String getPath() {
-        return path;
+        return projeto.getPath();
     }
 
     public void setPath(String path) {
-        this.path = path;
+        this.projeto.setPath(path);
     }
 
     public Boolean getProcessado() {
@@ -140,5 +163,37 @@ public class Projeto implements Serializable {
 
     public void setRepoGit(String repoGit) {
         this.repoGit = repoGit;
+    }
+
+    public List<Commit> getListaTags() {
+        return listaTags;
+    }
+
+    public void setListaTags(List<Commit> listaTags) {
+        this.listaTags = listaTags;
+    }
+
+    public Map<Integer, List<List<String>>> getMapResults() {
+        return mapResults;
+    }
+
+    public void setMapResults(Map<Integer, List<List<String>>> mapResults) {
+        this.mapResults = mapResults;
+    }
+
+    public br.ufba.jnose.entities.Projeto getProjeto() {
+        return projeto;
+    }
+
+    public void setProjeto(br.ufba.jnose.entities.Projeto projeto) {
+        this.projeto = projeto;
+    }
+
+    public Link getLkResultado() {
+        return lkResultado;
+    }
+
+    public void setLkResultado(Link lkResultado) {
+        this.lkResultado = lkResultado;
     }
 }

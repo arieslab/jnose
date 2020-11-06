@@ -1,256 +1,212 @@
 package br.ufba.jnose.pages;
 
-import br.ufba.jnose.core.CSVCore;
+import br.ufba.jnose.business.ProjetoBusiness;
 import br.ufba.jnose.core.GitCore;
 import br.ufba.jnose.core.JNoseCore;
-import br.ufba.jnose.dto.Commit;
-import br.ufba.jnose.dto.Projeto;
+import br.ufba.jnose.dto.ProjetoDTO;
+import br.ufba.jnose.entities.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
-import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
+import br.ufba.jnose.pages.charts.BasicLineOptions;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxPreventSubmitBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RadioChoice;
-import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.time.Duration;
 
-import java.io.File;
 import java.util.*;
 
 public class EvolutionPage extends BasePage {
     private static final long serialVersionUID = 1L;
 
     private Label taLogInfo;
-    private Label projetoName;
-    private Label projetoCommits;
-    private Label commitsProcessados;
-    private Label csvLogGit;
-    private TextField tfPastaPath;
-
-    private Projeto projetoSelecionado;
     private StringBuffer logRetorno;
-    private String projetoPath;
-    private String pathCSV;
-    private String selected;
-    private String pathReport;
-    private String pathAppToWebapp;
-    private Integer cont;
-    private List<Projeto> listaProjetos;
-    private ListView<Projeto> lvProjetos;
+    private List<ProjetoDTO> listaProjetos;
+    private ListView<ProjetoDTO> lvProjetos;
+
+    @SpringBean
+    private ProjetoBusiness projetoBusiness;
 
     public EvolutionPage() {
-        this(null);
-    }
-
-    public EvolutionPage(Projeto projeto) {
         super("EvolutionPage");
-
-        projetoSelecionado = projeto;
+        listaProjetos = new ArrayList<>();
         logRetorno = new StringBuffer();
-        projetoPath = "";
-        pathCSV = "";
-        selected = "Commits";
-        pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
-        pathReport = "";
-        cont = 0;
-
-        pathReport = pathAppToWebapp + File.separator + "reports" + File.separator + "revolution";
-
-        add(new JQueryFeedbackPanel("feedback").setOutputMarkupId(true));
-
-        criarListaProjetos();
-        criarForm();
-        criarLogInfo();
         criarTimer();
+        criarListaProjetos();
+        criarLogInfo();
         loadProjetos();
     }
 
-    private void loadProjetos(){
-        File file = new File("./projects");
-        listaProjetos = JNoseCore.listaProjetos(file.toURI(),logRetorno);
+    private void loadProjetos() {
+        List<Projeto> listProjetoBean = projetoBusiness.listAll();
+        for(Projeto projeto : listProjetoBean){
+            listaProjetos.add(new ProjetoDTO(projeto));
+        }
         lvProjetos.setList(listaProjetos);
     }
 
-    private void criarLogInfo(){
-        taLogInfo = new Label("taLogInfo");
-        taLogInfo.setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
+    private void criarLogInfo() {
+        taLogInfo = new Label("taLogInfo", Model.of(logRetorno));
+        taLogInfo.setEscapeModelStrings(false);
+        taLogInfo.setOutputMarkupId(true);
+        taLogInfo.setOutputMarkupPlaceholderTag(true);
         add(taLogInfo);
     }
 
-    private void criarTimer(){
+    private void criarTimer() {
         AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
             @Override
             protected void onTimer(AjaxRequestTarget target) {
-                taLogInfo.setDefaultModel(Model.of(logRetorno));
+                taLogInfo.setDefaultModelObject(logRetorno);
                 target.add(taLogInfo);
-                commitsProcessados.setDefaultModelObject(cont);
-                target.add(commitsProcessados);
+
+                for(ProjetoDTO projeto:listaProjetos){
+                    if(projeto.getMapResults().containsKey(1)){
+                        projeto.lkResult1.setEnabled(true);
+                        projeto.lkResult1.add(AttributeModifier.remove("style"));
+                        target.add(projeto.lkResult1);
+                    }else{
+                        projeto.lkResult1.setEnabled(false);
+                        projeto.lkResult1.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
+                        target.add(projeto.lkResult1);
+                    }
+                    if(projeto.getMapResults().containsKey(2)){
+                        projeto.lkResult2.setEnabled(true);
+                        projeto.lkResult2.add(AttributeModifier.remove("style"));
+                        target.add(projeto.lkResult2);
+                    }else{
+                        projeto.lkResult2.setEnabled(false);
+                        projeto.lkResult2.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
+                        target.add(projeto.lkResult2);
+                    }
+                    if(projeto.getMapResults().containsKey(2)){
+                        projeto.lkChart2.setEnabled(true);
+                        projeto.lkChart2.add(AttributeModifier.remove("style"));
+                        target.add(projeto.lkChart2);
+                    }else{
+                        projeto.lkChart2.setEnabled(false);
+                        projeto.lkChart2.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
+                        target.add(projeto.lkChart2);
+                    }
+                }
+
             }
         };
         add(timer);
     }
 
-    private void criarForm(){
-        Form form = new Form("form");
-        form.add(new AjaxSubmitLink("carregarProjetoLnk") {
+
+    private void criarListaProjetos() {
+        lvProjetos = new ListView<ProjetoDTO>("lvProjetos", listaProjetos) {
             @Override
-            protected void onSubmit(AjaxRequestTarget target) {
-                projetoSelecionado = carregarProjeto(projetoPath, target);
-            }
-        });
+            protected void populateItem(ListItem<ProjetoDTO> item) {
 
-        RadioChoice<String> radioCommitsTags = new RadioChoice<String>(
-                "radioCommitsTags", new PropertyModel<String>(this, "selected"), Arrays.asList(new String[]{"Commits", "Tags"}));
-        radioCommitsTags.setPrefix(" ");
-        radioCommitsTags.setSuffix("<br>");
-        form.add(radioCommitsTags);
+                ProjetoDTO projeto = item.getModelObject();
 
-        projetoName = new Label("projetoName", "");
-        form.add(projetoName.setOutputMarkupId(true));
-
-        projetoCommits = new Label("projetoCommits", "");
-        form.add(projetoCommits.setOutputMarkupId(true));
-
-        commitsProcessados = new Label("commitsProcessados", PropertyModel.of(this, "cont"));
-        commitsProcessados.setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
-        form.add(commitsProcessados);
-
-        csvLogGit = new Label("csvLogGit", PropertyModel.of(this, "pathCSV"));
-        csvLogGit.setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
-        form.add(csvLogGit);
-
-        tfPastaPath = new TextField("tfPastaPath", new PropertyModel(this, "projetoPath"));
-        tfPastaPath.setRequired(true).setEscapeModelStrings(false).setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
-        tfPastaPath.setEnabled(false);
-        form.add(tfPastaPath);
-
-        IndicatingAjaxLink executarLnk = new IndicatingAjaxLink<String>("executarLnk") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                processar(projetoSelecionado, target);
-            }
-        };
-        form.add(executarLnk);
-        add(form);
-    }
-
-    private void criarListaProjetos(){
-        lvProjetos = new ListView<Projeto>("lvProjetos", listaProjetos) {
-            @Override
-            protected void populateItem(ListItem<Projeto> item) {
-                Projeto projeto = item.getModelObject();
+                Map<Integer, List<List<String>>> mapResults = new HashMap<>();
+                projeto.setMapResults(mapResults);
                 item.add(new Label("nomeProjeto", projeto.getName()));
                 item.add(new Label("path", projeto.getPath()));
+                item.add(new Label("branch", GitCore.branch(projeto.getPath())));
+                projeto.setListaCommits(GitCore.gitLogOneLine(projeto.getPath()));
+                projeto.setListaTags(GitCore.gitTags(projeto.getPath()));
 
-                AjaxLink lkSelect = new AjaxLink<Void>("lkSelect") {
+                Form form = new Form<String>("form");
+                form.setOutputMarkupId(true);
+                form.add(new AjaxPreventSubmitBehavior());
+
+                Link lkResult1 = new Link<String>("lkResult1") {
                     @Override
-                    public void onClick(AjaxRequestTarget ajaxRequestTarget) {
-//                        projetoPath = projeto.getPath();
-//                        projetoSelecionado = carregarProjeto(projetoPath, ajaxRequestTarget);
-                        tfPastaPath.setModelObject(projeto.getPath());
-                        ajaxRequestTarget.add(tfPastaPath);
+                    public void onClick() {
+                        List<List<String>> todasLinhas1 = mapResults.get(1);
+                        setResponsePage(new ResultPage(todasLinhas1, "Evolution Report 1 - TestSmells by Commit: " + projeto.getName(), "resultado_evolution1", false));
                     }
                 };
+                lkResult1.setOutputMarkupId(true);
+                lkResult1.setOutputMarkupPlaceholderTag(true);
+                lkResult1.setEnabled(false);
+                lkResult1.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
+                projeto.lkResult1 = lkResult1;
+                form.add(lkResult1);
 
-                item.add(lkSelect);
+                Link lkResult2 = new Link<String>("lkResult2") {
+                    @Override
+                    public void onClick() {
+                        List<List<String>> todasLinhas2 = mapResults.get(2);
+                        setResponsePage(new ResultPage(todasLinhas2, "Evolution Report 2 - Total Testsmells by Commit: " + projeto.getName(), "resultado_evolution2", false));
+
+                    }
+                };
+                lkResult2.setOutputMarkupId(true);
+                lkResult2.setOutputMarkupPlaceholderTag(true);
+                lkResult2.setEnabled(false);
+                lkResult2.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
+                projeto.lkResult2 = lkResult2;
+                form.add(lkResult2);
+
+                Link lkChart2 = new Link<String>("lkChart2") {
+                    @Override
+                    public void onClick() {
+                        List<List<String>> todasLinhas2 = mapResults.get(2);
+                        setResponsePage(new ChartsPage( projeto.getName() ,new BasicLineOptions(todasLinhas2)));
+                    }
+                };
+                lkChart2.setOutputMarkupId(true);
+                lkChart2.setOutputMarkupPlaceholderTag(true);
+                lkChart2.setEnabled(false);
+                lkChart2.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
+                projeto.lkChart2 = lkChart2;
+                form.add(lkChart2);
+
+
+                AjaxLink btSubmit = new AjaxLink<String>("btSubmit") {
+                    @Override
+                    public void onClick(AjaxRequestTarget target) {
+                        System.out.println("Processamento do projeto: " + projeto.getName() + " - Start");
+                        logRetorno.insert(0,"Processamento do projeto: " + projeto.getName() + " - Start<br>");
+
+                        new Thread() { // IMPORTANTE: AQUI SE CRIA AS THREADS
+                            @Override
+                            public void run() {
+                                JNoseCore.processarEvolution(projeto, logRetorno, projeto.getMapResults());
+                            }
+                        }.start();
+
+                    }
+                };
+                btSubmit.setEnabled(false);
+                form.add(btSubmit);
+
+                RadioChoice<String> radioCommitsTags = new RadioChoice<String>(
+                        "radioCommitsTags", new PropertyModel<String>(projeto, "optionSelected"),
+                        Arrays.asList(new String[]{projeto.getListaCommits().size() + " / ", projeto.getListaTags().size() + ""})) {
+
+                };
+                radioCommitsTags.add(new AjaxEventBehavior("change") {
+                    protected void onEvent(AjaxRequestTarget target) {
+                        btSubmit.setEnabled(true);
+                        target.add(btSubmit);
+                    }
+                });
+                radioCommitsTags.setOutputMarkupId(true);
+                radioCommitsTags.setOutputMarkupPlaceholderTag(true);
+                form.add(radioCommitsTags);
+                item.add(form);
             }
         };
         lvProjetos.setOutputMarkupId(true);
         lvProjetos.setOutputMarkupPlaceholderTag(true);
         add(lvProjetos);
-    }
-
-    private Projeto carregarProjeto(String pathProjeto, AjaxRequestTarget target) {
-
-        String preSplit = pathProjeto.replace(File.separator, "/");
-        String[] listas = preSplit.split("/");
-        String nomeProjeto = listas[listas.length - 1];
-        Projeto projeto = new Projeto(nomeProjeto, pathProjeto);
-
-        GitCore.checkout("master", projeto.getPath());
-
-        ArrayList<Commit> lista = null;
-        if (selected.trim().equals("Commits")) {
-            lista = GitCore.gitLogOneLine(projeto.getPath());
-            projeto.setListaCommits(lista);
-        } else {
-            lista = GitCore.gitTags(projeto.getPath());
-            projeto.setListaCommits(lista);
-        }
-
-        projeto.setName(projeto.getName());
-        projeto.setPath(projeto.getPath());
-        projeto.setCommits(lista.size());
-        projetoName.setDefaultModelObject(projeto.getName());
-        target.add(projetoName);
-        projetoCommits.setDefaultModelObject(projeto.getCommits());
-        target.add(projetoCommits);
-        return projeto;
-    }
-
-
-    private void processar(Projeto projeto, AjaxRequestTarget target) {
-        List<Commit> lista = projeto.getListaCommits();
-        Collections.sort(lista, new Comparator<Commit>() {
-            public int compare(Commit o1, Commit o2) {
-                if (o1.date == null || o2.date == null) return 0;
-                return o2.date.compareTo(o1.date);
-            }
-        });
-
-        String pastaDateHora = JNoseCore.dateNowFolder();
-        List<List<String>> todasLinhas1 = new ArrayList<>();
-        List<List<String>> todasLinhas2 = new ArrayList<>();
-
-        boolean vizualizarCabecalho = true;
-
-        //Para cada commit executa uma busca
-        for (Commit commit : projeto.getListaCommits()) {
-            cont++;
-            commitsProcessados.setDefaultModel(Model.of(cont));
-            target.add(commitsProcessados);
-
-            GitCore.checkout(commit.id, projetoPath);
-
-            int total = 0;
-            //criando a lista de testsmells
-            List<String[]> listaTestSmells = JNoseCore.processarTestSmells(projetoPath, commit, vizualizarCabecalho,logRetorno);
-            for (String[] linhaArray : listaTestSmells) {
-                List<String> list = Arrays.asList(linhaArray);
-                    for (int i = 10; i <= (list.size() - 1); i++) {
-                        boolean isNumeric = list.get(i).chars().allMatch( Character::isDigit );
-                        if(isNumeric) {
-                            total += Integer.parseInt(list.get(i));
-                        }
-                    }
-                todasLinhas1.add(list);
-            }
-
-            List<String> lista2 = new ArrayList<>();
-            lista2.add(commit.id);
-            lista2.add(commit.tag);
-            lista2.add(commit.date+"");
-            lista2.add(total+"");
-            todasLinhas2.add(lista2);
-
-            String arquivoPath = CSVCore.criarEvolution1CSV(todasLinhas1,pastaDateHora,projeto.getName());
-            CSVCore.criarEvolution2CSV(todasLinhas2,pastaDateHora,projeto.getName());
-
-            csvLogGit.setDefaultModelObject(arquivoPath);
-            target.add(csvLogGit);
-
-            vizualizarCabecalho = false;
-        }
-        GitCore.checkout("master", projetoPath);
     }
 
 }

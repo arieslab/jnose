@@ -120,7 +120,6 @@ public class AssertionRoulette extends AbstractSmell {
 
             }
         }
-
     }
 }
 

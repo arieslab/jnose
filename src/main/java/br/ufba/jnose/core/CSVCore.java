@@ -20,14 +20,6 @@ public class CSVCore {
         reportPath = pathAppToWebapp + File.separatorChar + "reports" + File.separatorChar;
     }
 
-//    public static String criarByTestSmellsCSV(List<List<String>> todasLinhas, String pastaDataHora, String nomeProjeto){
-//        return criarCSV(todasLinhas,pastaDataHora,nomeProjeto + "_report_by_testsmells");
-//    }
-
-//    public static String criarTestfiledetectionCSV(List<List<String>> todasLinhas, String pastaDataHora, String nomeProjeto){
-//        return criarCSV(todasLinhas,pastaDataHora,nomeProjeto + "_testfiledetection");
-//    }
-
     public static String criarTestmappingdetectorCSV(List<List<String>> todasLinhas, String pastaDataHora, String nomeProjeto){
         return criarCSV(todasLinhas,pastaDataHora,nomeProjeto + "_testmappingdetector");
     }
@@ -35,10 +27,6 @@ public class CSVCore {
     public static String criarTestSmellsdetectorCSV(List<List<String>> todasLinhas, String pastaDataHora, String nomeProjeto){
         return criarCSV(todasLinhas,pastaDataHora,nomeProjeto + "_testsmesll");
     }
-
-//    public static String criarTodosProjetosCSV(List<List<String>> todasLinhas, String pastaDataHora){
-//        return criarCSV(todasLinhas,pastaDataHora,"todos_projetos_testsmesll");
-//    }
 
     public static String criarCoberturaCSV(List<List<String>> todasLinhas, String pastaDataHora){
         return criarCSV(todasLinhas,pastaDataHora,"ClassInfor");

@@ -1,14 +1,11 @@
 package br.ufba.jnose.core.testsmelldetector.testsmell.smell;
 
+import br.ufba.jnose.core.testsmelldetector.testsmell.*;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
-import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
-import br.ufba.jnose.core.testsmelldetector.testsmell.TestMethod;
-import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -24,8 +21,11 @@ import java.util.List;
  */
 public class MysteryGuest extends AbstractSmell {
 
+    private ArrayList<MethodUsage> mysteryInstance;
+
     public MysteryGuest() {
         super("Mystery Guest");
+        mysteryInstance = new ArrayList<>();
     }
 
     /**
@@ -35,6 +35,14 @@ public class MysteryGuest extends AbstractSmell {
     public void runAnalysis(CompilationUnit testFileCompilationUnit, CompilationUnit productionFileCompilationUnit, String testFileName, String productionFileName) throws FileNotFoundException {
         classVisitor = new MysteryGuest.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
+
+        for (MethodUsage method : mysteryInstance) {
+            TestMethod testClass = new TestMethod(method.getTestMethodName());
+            testClass.addDataItem("begin", method.getLine());
+            testClass.addDataItem("end", method.getLine()); // [Remover]
+            testClass.setHasSmell(true);
+            smellyElementList.add(testClass);
+        }
     }
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
@@ -80,22 +88,13 @@ public class MysteryGuest extends AbstractSmell {
         */
         private MethodDeclaration currentMethod = null;
         private int mysteryCount = 0;
-        TestMethod testMethod;
 
         // examine all methods in the test class
         @Override
         public void visit(MethodDeclaration n, Void arg) {
             if (Util.isValidTestMethod(n)) {
                 currentMethod = n;
-                testMethod = new TestMethod(n.getNameAsString());
-                testMethod.setHasSmell(false); //default value is false (i.e. no smell)
                 super.visit(n, arg);
-                testMethod.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
-                testMethod.addDataItem("end",String.valueOf(n.getRange().get().end.line));
-                testMethod.setHasSmell(mysteryCount > 0);
-                testMethod.addDataItem("MysteryCount", String.valueOf(mysteryCount));
-
-                smellyElementList.add(testMethod);
 
                 //reset values for next method
                 currentMethod = null;
@@ -140,6 +139,8 @@ public class MysteryGuest extends AbstractSmell {
                         }
                         // variable is not mocked, hence it's a smell
                         mysteryCount++;
+                        mysteryInstance.add(new MethodUsage(currentMethod.getNameAsString(), "",
+                                String.valueOf(n.getRange().get().begin.line), ""));
                     }
                 }
             }

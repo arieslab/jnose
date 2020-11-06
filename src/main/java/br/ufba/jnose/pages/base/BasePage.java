@@ -1,20 +1,21 @@
 package br.ufba.jnose.pages.base;
 
+import br.ufba.jnose.business.ProjetoBusiness;
 import br.ufba.jnose.pages.*;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.time.Duration;
 
 public class BasePage extends WebPage {
     private static final long serialVersionUID = 1L;
+
+    @SpringBean
+    private ProjetoBusiness projetoBusiness;
 
     private WebMarkupContainer footTime;
 
@@ -75,10 +76,10 @@ public class BasePage extends WebPage {
             linkConfig.add(new AttributeModifier("style", "color:red"));
         }
 
-        Link linkStorage = new Link<String>("linkStorage") {
+        Link linkStorage = new Link<String>("linkResearch") {
             @Override
             public void onClick() {
-                setResponsePage(StoragePage.class);
+                setResponsePage(ResearchPage.class);
             }
         };
         if(paginaAtual.equals("StoragePage")){

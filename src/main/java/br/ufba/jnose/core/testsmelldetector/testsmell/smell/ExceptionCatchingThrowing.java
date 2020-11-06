@@ -32,8 +32,8 @@ public class ExceptionCatchingThrowing extends AbstractSmell {
 
         for (MethodUsage method : methodExceptions) {
             TestMethod testClass = new TestMethod(method.getTestMethodName());
-            testClass.addDataItem("begin", method.getBegin());
-            testClass.addDataItem("end", method.getEnd());
+            testClass.addDataItem("begin", method.getBlock());
+            testClass.addDataItem("end", method.getBlock()); // [Remover]
             testClass.setHasSmell(true);
             smellyElementList.add(testClass);
         }
@@ -41,17 +41,12 @@ public class ExceptionCatchingThrowing extends AbstractSmell {
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
         private MethodDeclaration currentMethod = null;
-        TestMethod testMethod;
-
 
         // examine all methods in the test class
         @Override
         public void visit(MethodDeclaration n, Void arg) {
             if (Util.isValidTestMethod(n)) {
                 currentMethod = n;
-                testMethod = new TestMethod(n.getNameAsString());
-                testMethod.setHasSmell(false); //default value is false (i.e. no smell)
-
                 super.visit(n, arg);
 
                 //reset values for next method
@@ -59,21 +54,11 @@ public class ExceptionCatchingThrowing extends AbstractSmell {
             }
         }
 
-
-//        @Override
-//        public void visit(ThrowStmt n, Void arg) {
-//            super.visit(n, arg);
-//
-//            if (currentMethod != null) {
-//                methodExceptions.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().end.line)));
-//            }
-//        }
-
-
         @Override
         public void visit(TryStmt n, Void arg) {
-            methodExceptions.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().end.line)));
+            methodExceptions.add(new MethodUsage(currentMethod.getNameAsString(), "",
+                    String.valueOf(n.getRange().get().begin.line),
+                    String.valueOf(n.getRange().get().end.line)));
         }
-
     }
 }

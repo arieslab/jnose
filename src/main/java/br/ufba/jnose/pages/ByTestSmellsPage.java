@@ -1,7 +1,11 @@
 package br.ufba.jnose.pages;
 
-import br.ufba.jnose.dto.Projeto;
+import br.ufba.jnose.WicketApplication;
+import br.ufba.jnose.business.ProjetoBusiness;
+import br.ufba.jnose.core.Util;
+import br.ufba.jnose.dto.ProjetoDTO;
 import br.ufba.jnose.dto.TotalProcessado;
+import br.ufba.jnose.entities.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
 import br.ufba.jnose.core.JNoseCore;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
@@ -21,6 +25,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.time.Duration;
 
 import java.util.ArrayList;
@@ -36,20 +41,21 @@ public class ByTestSmellsPage extends BasePage {
     private String pathAppToWebapp;
     private String pastaPathReport;
     private Label lbPastaSelecionada;
-    private ProgressBar progressBar;
-    private List<Projeto> listaProjetos;
+    private List<ProjetoDTO> listaProjetos;
     private AjaxIndicatorAppender indicator;
-    private ListView<Projeto> lvProjetos;
+    private ListView<ProjetoDTO> lvProjetos;
     private TotalProcessado totalProcessado;
     private Map<Integer, Integer> totalProgressBar;
     private Boolean processando;
     private IndicatingAjaxLink processarTodos;
     private Label lbProjetosSize;
     private String dataProcessamentoAtual;
-//    private ExternalLink linkCSVFinal;
     private StringBuffer logRetorno;
     private List<List<String>> listaResultado;
     private Link lkResultadoBotton;
+
+    @SpringBean
+    private ProjetoBusiness projetoBusiness;
 
     public ByTestSmellsPage() {
         super("ByTestSmellsPage");
@@ -70,26 +76,17 @@ public class ByTestSmellsPage extends BasePage {
         lbProjetosSize.setOutputMarkupPlaceholderTag(true).setOutputMarkupId(true);
         add(lbProjetosSize);
 
-        criarTimer();
-
         criarListaProjetos();
 
-//        linkCSVFinal = new ExternalLink("linkCSVFinal", File.separatorChar + "reports" + File.separatorChar + dataProcessamentoAtual + File.separatorChar + "all_report_by_testsmells.csv");
-//        linkCSVFinal.setOutputMarkupId(true).setOutputMarkupPlaceholderTag(true);
-//        add(linkCSVFinal);
+        criarTimer();
 
         FeedbackPanel feedback = new JQueryFeedbackPanel("feedback");
         add(feedback.setOutputMarkupId(true));
-
-//        criarForm();
 
         criarBotaoProcessarTodos();
 
         lbPastaSelecionada = new Label("lbPastaSelecionada", pastaPath);
         add(lbPastaSelecionada);
-
-        progressBar = new ProgressBar("progress", Model.of(0));
-        add(this.progressBar);
 
         lkResultadoBotton = new Link<String>("lkResultado") {
             @Override
@@ -111,8 +108,8 @@ public class ByTestSmellsPage extends BasePage {
             public void onClick(AjaxRequestTarget target) {
                 lbPastaSelecionada.setDefaultModel(Model.of(pastaPath));
                 processando = true;
-                List<Projeto> listaParaProcessar = new ArrayList<>();
-                for (Projeto projeto : listaProjetos) {
+                List<ProjetoDTO> listaParaProcessar = new ArrayList<>();
+                for (ProjetoDTO projeto : listaProjetos) {
                     if (projeto.getParaProcessar()) {
                         listaParaProcessar.add(projeto);
                     }
@@ -120,7 +117,7 @@ public class ByTestSmellsPage extends BasePage {
 
                 JNoseCore.processarProjetos(listaParaProcessar, dataProcessamentoAtual, pastaPathReport, totalProcessado, logRetorno);
 
-                for (Projeto projeto : listaProjetos) {
+                for (ProjetoDTO projeto : listaProjetos) {
                     if (projeto.getResultado() != null) {
                         listaResultado.addAll(projeto.getResultado());
                     }
@@ -133,29 +130,29 @@ public class ByTestSmellsPage extends BasePage {
     }
 
     private void criarListaProjetos(){
-        lvProjetos = new ListView<Projeto>("lvProjetos", listaProjetos) {
+        lvProjetos = new ListView<ProjetoDTO>("lvProjetos", listaProjetos) {
             @Override
-            protected void populateItem(ListItem<Projeto> item) {
-                Projeto projeto = item.getModelObject();
+            protected void populateItem(ListItem<ProjetoDTO> item) {
+                ProjetoDTO projeto = item.getModelObject();
 
                 Link lkResultado = new Link<String>("lkResultado") {
                     @Override
                     public void onClick() {
-                        setResponsePage(new ResultPage(projeto.getResultado(),"Result By TestSmells: " + projeto.getName(), projeto.getName()+"_result_byclasstest_testsmells",false));
+                        setResponsePage(new ResultPage2(projeto, projeto.getResultado(),"Result By TestSmells: " + projeto.getName(), projeto.getName()+"_result_byclasstest_testsmells",false));
                     }
                 };
                 lkResultado.setEnabled(projeto.getProcessado());
                 lkResultado.setOutputMarkupId(true);
                 lkResultado.setOutputMarkupPlaceholderTag(true);
                 item.add(lkResultado);
-                projeto.lkResultado = lkResultado;
+                projeto.setLkResultado(lkResultado);
 
                 AjaxCheckBox paraProcessarACB = new AjaxCheckBox("paraProcessarACB", new PropertyModel(projeto, "paraProcessar")) {
                     @Override
                     protected void onUpdate(AjaxRequestTarget target) {
 
-                        List<Projeto> listaProjetosProcessar = new ArrayList<>();
-                        for (Projeto projeto : listaProjetos)
+                        List<ProjetoDTO> listaProjetosProcessar = new ArrayList<>();
+                        for (ProjetoDTO projeto : listaProjetos)
                             if (projeto.getParaProcessar()) listaProjetosProcessar.add(projeto);
 
                         if (listaProjetosProcessar.size() > 0) {
@@ -176,7 +173,7 @@ public class ByTestSmellsPage extends BasePage {
 
                 WebMarkupContainer progressProject = new WebMarkupContainer("progressProject");
                 progressProject.setOutputMarkupPlaceholderTag(true);
-                progressProject.setOutputMarkupId(true);//style="width: 25%"
+                progressProject.setOutputMarkupId(true);
                 progressProject.add(new AttributeModifier("style", "width: " + projeto.getProcentagem() + "%"));
                 item.add(progressProject);
                 projeto.progressProject = progressProject;
@@ -193,32 +190,15 @@ public class ByTestSmellsPage extends BasePage {
         add(lvProjetos);
     }
 
-//    private void criarForm(){
-//        Form form = new Form<>("form");
-//        TextField tfPastaPath = new TextField("tfPastaPath", new PropertyModel(this, "pastaPath"));
-//        tfPastaPath.setRequired(true);
-//        form.add(tfPastaPath);
-//
-//        Button btEnviar = new Button("btEnviar") {
-//            @Override
-//            public void onSubmit() {
-//
-//
-//            }
-//        };
-//        form.add(btEnviar);
-//        add(form);
-//    }
-
     private void loadProjetos(){
-        dataProcessamentoAtual = JNoseCore.dateNowFolder();
+        dataProcessamentoAtual = Util.dateNowFolder();
         totalProcessado.setValor(0);
-        lbPastaSelecionada.setDefaultModel(Model.of("./projects"));
-
-        File file = new File("./projects");
-        listaProjetos = JNoseCore.listaProjetos(file.toURI(),logRetorno);
+        lbPastaSelecionada.setDefaultModel(Model.of(WicketApplication.JNOSE_PROJECTS_FOLDER));
+        List<Projeto> listProjectBean = projetoBusiness.listAll();
+        for(Projeto projeto : listProjectBean){
+            listaProjetos.add(new ProjetoDTO(projeto));
+        }
         lvProjetos.setList(listaProjetos);
-
         processarTodos.setEnabled(true);
         lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
     }
@@ -229,25 +209,22 @@ public class ByTestSmellsPage extends BasePage {
 
             @Override
             protected void onTimer(AjaxRequestTarget target) {
-                progressBar.setModel(Model.of(totalProcessado.getValor()));
-                target.add(progressBar);
-
                 Boolean todosProjetosProcessados = true;
 
-                List<Projeto> listaProjetosProcessar = new ArrayList<>();
+                List<ProjetoDTO> listaProjetosProcessar = new ArrayList<>();
 
-                for (Projeto projeto : listaProjetos) {
+                for (ProjetoDTO projeto : listaProjetos) {
                     if (projeto.getParaProcessar()) {
                         listaProjetosProcessar.add(projeto);
                     }
                 }
 
-                for (Projeto projeto : listaProjetosProcessar) {
+                for (ProjetoDTO projeto : listaProjetosProcessar) {
 
                     lkResultadoBotton.setEnabled(projeto.getProcessado());
                     target.add(lkResultadoBotton);
 
-                    WebMarkupContainer lkResultado = projeto.lkResultado;
+                    WebMarkupContainer lkResultado = projeto.getLkResultado();
                     lkResultado.setEnabled(projeto.getProcessado());
                     target.add(lkResultado);
 
@@ -268,70 +245,9 @@ public class ByTestSmellsPage extends BasePage {
                 }
 
                 boolean processado = true;
-                for (Projeto p : listaProjetosProcessar) {
+                for (ProjetoDTO p : listaProjetosProcessar) {
                     processado = processado && p.getProcessado();
                 }
-
-//                if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
-//                    linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_testsmesll.csv"));
-//                    target.add(linkCSVFinal);
-//                }
-
-            }
-        };
-        add(timer);
-    }
-
-    private void criarTimer2(){
-        AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
-            int cont = 0;
-
-            @Override
-            protected void onTimer(AjaxRequestTarget target) {
-                progressBar.setModel(Model.of(totalProcessado.getValor()));
-                target.add(progressBar);
-
-                Boolean todosProjetosProcessados = true;
-
-                List<Projeto> listaProjetosProcessar = new ArrayList<>();
-
-                for (Projeto projeto : listaProjetos) {
-                    if (projeto.getParaProcessar()) {
-                        listaProjetosProcessar.add(projeto);
-                    }
-                }
-
-                for (Projeto projeto : listaProjetosProcessar) {
-
-                    WebMarkupContainer lkResultado = projeto.lkResultado;
-                    lkResultado.setEnabled(projeto.getProcessado());
-                    target.add(lkResultado);
-
-                    Label lbPorcentagem = projeto.lbPorcentagem;
-                    lbPorcentagem.setDefaultModel(Model.of(projeto.getProcentagem()));
-                    target.add(lbPorcentagem);
-
-                    WebMarkupContainer progressProject = projeto.progressProject;
-                    progressProject.add(new AttributeModifier("style", "width: " + projeto.getProcentagem() + "%"));
-                    target.add(progressProject);
-
-                    todosProjetosProcessados = todosProjetosProcessados && projeto.getProcessado();
-                }
-
-                if (todosProjetosProcessados) {
-                    totalProcessado.setValor( (100 - totalProcessado.getValor()) + totalProcessado.getValor());
-                    processando = false;
-                }
-
-                boolean processado = true;
-                for (Projeto p : listaProjetosProcessar) {
-                    processado = processado && p.getProcessado();
-                }
-
-//                if (dataProcessamentoAtual != null && !dataProcessamentoAtual.isEmpty()) {
-//                    linkCSVFinal.setDefaultModel(Model.of("/reports/" + dataProcessamentoAtual + File.separatorChar + "all_report_by_testsmells.csv"));
-//                    target.add(linkCSVFinal);
-//                }
 
             }
         };

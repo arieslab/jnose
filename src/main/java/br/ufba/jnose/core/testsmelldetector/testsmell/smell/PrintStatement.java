@@ -38,8 +38,8 @@ public class PrintStatement extends AbstractSmell {
 
         for (MethodUsage method : methodPrints) {
             TestMethod testClass = new TestMethod(method.getTestMethodName());
-            testClass.addDataItem("begin", method.getBegin());
-            testClass.addDataItem("end", method.getEnd());
+            testClass.addDataItem("begin", method.getLine());
+            testClass.addDataItem("end", method.getLine()); // [Remover]
             testClass.setHasSmell(true);
             smellyElementList.add(testClass);
         }
@@ -47,19 +47,18 @@ public class PrintStatement extends AbstractSmell {
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
         private MethodDeclaration currentMethod = null;
-        TestMethod testMethod;
+        int countPrint = 0;
 
         // examine all methods in the test class
         @Override
         public void visit(MethodDeclaration n, Void arg) {
             if (Util.isValidTestMethod(n)) {
                 currentMethod = n;
-                testMethod = new TestMethod(n.getNameAsString());
-                testMethod.setHasSmell(false); //default value is false (i.e. no smell)
                 super.visit(n, arg);
 
                 //reset values for next method
                 currentMethod = null;
+                countPrint = 0;
             }
         }
 
@@ -82,14 +81,12 @@ public class PrintStatement extends AbstractSmell {
                                 f1.getScope() instanceof NameExpr &&
                                 ((NameExpr) f1.getScope()).getNameAsString().equals("System"))) {
                             //a print statement exists in the method body
-                            System.out.println("teste    "+String.valueOf(n.getRange().get().begin.line) +"    "+String.valueOf(n.getRange().get().end.line));
-                            methodPrints.add(new MethodUsage(n.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().begin.line)));
+                            countPrint++;
+                            methodPrints.add(new MethodUsage(currentMethod.getNameAsString(), "", String.valueOf(n.getRange().get().begin.line), String.valueOf(n.getRange().get().begin.line)));
                         }
                     }
-
                 }
             }
         }
-
     }
 }

@@ -1,5 +1,6 @@
 package br.ufba.jnose.core.testsmelldetector.testsmell.smell;
 
+import br.ufba.jnose.core.testsmelldetector.testsmell.MethodUsage;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
@@ -7,7 +8,6 @@ import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
-import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
 import br.ufba.jnose.core.testsmelldetector.testsmell.TestMethod;
 import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
 
@@ -17,8 +17,11 @@ import java.util.List;
 
 public class ResourceOptimism extends AbstractSmell {
 
+    private ArrayList<MethodUsage> instanceResource;
+
     public ResourceOptimism() {
         super("Resource Optimism");
+        instanceResource = new ArrayList<> ();
     }
 
     /**
@@ -28,13 +31,20 @@ public class ResourceOptimism extends AbstractSmell {
     public void runAnalysis(CompilationUnit testFileCompilationUnit, CompilationUnit productionFileCompilationUnit, String testFileName, String productionFileName) throws FileNotFoundException {
         classVisitor = new ResourceOptimism.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
+
+        for (MethodUsage method : instanceResource) {
+            TestMethod testClass = new TestMethod(method.getTestMethodName());
+            testClass.addDataItem("begin", method.getBlock ());
+            testClass.addDataItem("end",method.getBlock ()); // [Remover]
+            testClass.setHasSmell(true);
+            smellyElementList.add(testClass);
+        }
     }
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
         private MethodDeclaration currentMethod = null;
         private int resourceOptimismCount = 0;
         private boolean hasSmell = false;
-        TestMethod testMethod;
         private List<String> methodVariables = new ArrayList<>();
         private List<String> classVariables = new ArrayList<>();
 
@@ -44,16 +54,13 @@ public class ResourceOptimism extends AbstractSmell {
         public void visit(MethodDeclaration n, Void arg) {
             if (Util.isValidTestMethod(n) || Util.isValidSetupMethod(n)) {
                 currentMethod = n;
-                testMethod = new TestMethod(n.getNameAsString());
-                testMethod.setHasSmell(false); //default value is false (i.e. no smell)
-                testMethod.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
-                testMethod.addDataItem("end",String.valueOf(n.getRange().get().end.line));
                 super.visit(n, arg);
 
-                testMethod.setHasSmell(methodVariables.size() >= 1 || hasSmell==true);
-                testMethod.addDataItem("ResourceOptimismCount", String.valueOf(resourceOptimismCount));
-
-                smellyElementList.add(testMethod);
+                if(methodVariables.size() >= 1 || hasSmell==true){
+                    instanceResource.add(new MethodUsage (n.getNameAsString ( ), "",
+                            String.valueOf(n.getRange().get().begin.line),
+                            String.valueOf(n.getRange().get().end.line)));
+                }
 
                 //reset values for next method
                 currentMethod = null;
@@ -85,8 +92,6 @@ public class ResourceOptimism extends AbstractSmell {
                         }
                     }
                 }
-            } else {
-                System.out.println(n.getType());
             }
             super.visit(n, arg);
         }

@@ -1,13 +1,13 @@
 package br.ufba.jnose.core.testsmelldetector.testsmell.smell;
 
+import br.ufba.jnose.core.testsmelldetector.testsmell.*;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
-import br.ufba.jnose.core.testsmelldetector.testsmell.SmellyElement;
-import br.ufba.jnose.core.testsmelldetector.testsmell.TestClass;
+import org.checkerframework.checker.units.qual.A;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -16,14 +16,24 @@ This code marks the class as smelly if the class name corresponds to the name of
  */
 public class DefaultTest extends AbstractSmell {
 
+    private ArrayList<MethodUsage> instanceDefault;
     public DefaultTest() {
         super("Default Test");
+        instanceDefault = new ArrayList<> (  );
     }
 
     @Override
     public void runAnalysis(CompilationUnit testFileCompilationUnit,CompilationUnit productionFileCompilationUnit, String testFileName, String productionFileName) throws FileNotFoundException {
         classVisitor = new DefaultTest.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
+
+        for (MethodUsage method : instanceDefault) {
+            TestMethod testClass = new TestMethod(method.getTestMethodName());
+            testClass.addDataItem("begin", method.getBlock());
+            testClass.addDataItem("end", method.getBlock()); // [Remover]
+            testClass.setHasSmell(true);
+            smellyElementList.add(testClass);
+        }
     }
 
     /**
@@ -35,18 +45,13 @@ public class DefaultTest extends AbstractSmell {
     }
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
-        TestClass testClass;
 
         @Override
         public void visit(ClassOrInterfaceDeclaration n, Void arg) {
             if (n.getNameAsString().equals("ExampleUnitTest") || n.getNameAsString().equals("ExampleInstrumentedTest")) {
-                testClass = new TestClass(n.getNameAsString());
-                testClass.setHasSmell(true);
-
-                testClass.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
-                testClass.addDataItem("end",String.valueOf(n.getRange().get().end.line));
-
-                smellyElementList.add(testClass);
+                instanceDefault.add(new MethodUsage(n.getNameAsString(), "",
+                        String.valueOf(n.getRange().get().begin.line),
+                        String.valueOf(n.getRange().get().end.line)));
             }
             super.visit(n, arg);
         }

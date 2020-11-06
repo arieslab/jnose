@@ -1,5 +1,6 @@
 package br.ufba.jnose.core.testsmelldetector.testsmell.smell;
 
+import br.ufba.jnose.core.testsmelldetector.testsmell.MethodUsage;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.Expression;
@@ -10,11 +11,14 @@ import br.ufba.jnose.core.testsmelldetector.testsmell.TestMethod;
 import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 public class SensitiveEquality extends AbstractSmell {
-
+	ArrayList<MethodUsage> methodSensitiveEquality = null;
+	
     public SensitiveEquality() {
         super("Sensitive Equality");
+        methodSensitiveEquality = new ArrayList<MethodUsage>();
     }
 
     /**
@@ -24,28 +28,26 @@ public class SensitiveEquality extends AbstractSmell {
     public void runAnalysis(CompilationUnit testFileCompilationUnit, CompilationUnit productionFileCompilationUnit, String testFileName, String productionFileName) throws FileNotFoundException {
         classVisitor = new SensitiveEquality.ClassVisitor();
         classVisitor.visit(testFileCompilationUnit, null);
+        
+        for (MethodUsage method : methodSensitiveEquality) {
+            TestMethod testClass = new TestMethod(method.getTestMethodName());
+            testClass.addDataItem("begin", method.getLine());
+            testClass.addDataItem("end",method.getLine()); // [Remover]
+            testClass.setHasSmell(true);
+            smellyElementList.add(testClass);
+        }
     }
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
         private MethodDeclaration currentMethod = null;
         private int sensitiveCount = 0;
-        TestMethod testMethod;
 
         // examine all methods in the test class
         @Override
         public void visit(MethodDeclaration n, Void arg) {
             if (Util.isValidTestMethod(n)) {
                 currentMethod = n;
-                testMethod = new TestMethod(n.getNameAsString());
-                testMethod.setHasSmell(false); //default value is false (i.e. no smell)
-                testMethod.addDataItem("begin",String.valueOf(n.getRange().get().begin.line));
-                testMethod.addDataItem("end",String.valueOf(n.getRange().get().end.line));
                 super.visit(n, arg);
-
-                testMethod.setHasSmell(sensitiveCount >= 1);
-                testMethod.addDataItem("SensitiveCount", String.valueOf(sensitiveCount));
-
-                smellyElementList.add(testMethod);
 
                 //reset values for next method
                 currentMethod = null;
@@ -64,15 +66,20 @@ public class SensitiveEquality extends AbstractSmell {
                     for (Expression argument : n.getArguments()) {
                         if (argument.toString().contains("toString")) {
                             sensitiveCount++;
+                            methodSensitiveEquality.add(new MethodUsage(currentMethod.getNameAsString(), "",
+                                    String.valueOf(n.getRange().get().begin.line), ""));
                         }
                     }
                 }
-                // if the name of a method being called is 'fail'
-                else if (n.getNameAsString().equals("fail")) {
+                // if the name of a method being called is 'fail' \/ added validation to jUnit3 fail cases
+                else if (n.getNameAsString().equals("fail") || n.getNameAsString().equals("failNotEquals") ||
+                		 n.getNameAsString().equals("failSame") || n.getNameAsString().equals("failNotSame"))  {
                     // fail methods that contain toString
                     for (Expression argument : n.getArguments()) {
                         if (argument.toString().contains("toString")) {
                             sensitiveCount++;
+                            methodSensitiveEquality.add(new MethodUsage(currentMethod.getNameAsString(), "",
+                                    String.valueOf(n.getRange().get().begin.line), ""));
                         }
                     }
                 }

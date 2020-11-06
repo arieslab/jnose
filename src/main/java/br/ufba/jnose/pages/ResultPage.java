@@ -17,7 +17,6 @@ public class ResultPage extends ImprimirPage {
     private static final long serialVersionUID = 1L;
 
     public ResultPage(List<List<String>> todasLinhas, String title, String csvFileName, boolean fontColorized) {
-        super("ResultPage");
 
         add(new Label("title",title));
 
@@ -28,7 +27,7 @@ public class ResultPage extends ImprimirPage {
             @Override
             protected void populateItem(ListItem<List<String>> item) {
                 List<String> linha = item.getModelObject();
-                for(int i = 0; i <= 26; i++){
+                for(int i = 0; i <= 35; i++){
                     lb(i,linha,item, fontColorized);
                 }
             }
@@ -38,7 +37,7 @@ public class ResultPage extends ImprimirPage {
     }
 
     private File gerarCSV(List<List<String>> todasLinhas, String csvFileName){
-        String pathFile = CSVCore.criarCSV(todasLinhas, JNoseCore.dateNowFolder(),csvFileName);
+        String pathFile = CSVCore.criarCSV(todasLinhas, br.ufba.jnose.core.Util.dateNowFolder(),csvFileName);
         return new File(pathFile);
     }
 
