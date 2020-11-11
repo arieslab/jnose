@@ -13,9 +13,9 @@ public class Util {
             // method name starts with 'test'
             if (n.getAnnotationByName("Test").isPresent() || n.getNameAsString().toLowerCase().startsWith("test")) {
                 // must be a public method
-                if (n.getModifiers().contains(Modifier.PUBLIC)) {
+//                if (n.getModifiers().contains(Modifier.PUBLIC)) {
                     valid = true;
-                }
+//                }
             }
         }
 
