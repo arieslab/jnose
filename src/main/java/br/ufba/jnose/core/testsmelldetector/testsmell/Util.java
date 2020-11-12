@@ -30,9 +30,9 @@ public class Util {
             // method name is 'setUp'
             if (n.getAnnotationByName("Before").isPresent() || n.getNameAsString().equals("setUp")) {
                 // must be a public method
-                if (n.getModifiers().contains(Modifier.PUBLIC)) {
+//                if (n.getModifiers().contains(Modifier.PUBLIC)) {
                     valid = true;
-                }
+//                }
             }
         }
 

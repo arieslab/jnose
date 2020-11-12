@@ -47,7 +47,8 @@ Please, feel very welcome to create new issues on this project to request new fe
  - <a target="_blank" href="https://github.com/danielevalverde">Daniele Valverde</a>
  - <a target="_blank" href="https://github.com/luana-martins">Luana Martins</a>
  - <a target="_blank" href="https://github.com/Railana">Railana Santana</a>
-
+ - <a target="_blank" href="https://github.com/jonathanbisp">Jonathan Bispo</a>
+ 
 ## Contributing
 
 - Create an issue on this repository
