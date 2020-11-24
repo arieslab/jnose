@@ -79,3 +79,11 @@ Please, feel very welcome to create new issues on this project to request new fe
 
 ### Contact email:
 - tassiovirginio@gmail.com
+
+# Docker
+
+```shell
+docker build -t jnose .
+docker run -dp "8080:8080" -v "$HOME/.m2":/root/.m2 --name jnose jnose:latest
+docker logs -f jnose # para ver os logs, caso queira
+```
