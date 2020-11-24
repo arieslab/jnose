@@ -7,7 +7,7 @@ JNose Test is a tool developed to automatically detect test smells in test code,
 
 ___
 
-<a href="http://jnose.herokuapp.com/">
+<a target="_blank" href="http://jnose.herokuapp.com/">
   Demo Jnose Heroku
 </a>
 
