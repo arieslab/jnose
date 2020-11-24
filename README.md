@@ -5,11 +5,20 @@ Java TestSmells Detection
 
 JNose Test is a tool developed to automatically detect test smells in test code, and to collect coverage metrics. JNose test is an extension of the Test Smell Detector. Besides presenting the number of test smells detected by class, our tool shows the collection of code metrics and test coverage using the JaCoCo library; a unified result for all projects under analysis; and a graphical interface. In addition, the project uses the Apache Maven to manage all library dependencies and support the compilation and execution of the JNose Test tool.
 
+___
+
+<a href="http://jnose.herokuapp.com/">
+  <h1>Demo Jnose Heroku</h1>
+</a>
+
 ## CBSoft 2020
 <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/premio.jpeg?raw=true">
 
-## Video
+## Videos
+[![JNose Test](https://img.youtube.com/vi/6qrglBetOSc/0.jpg)](https://www.youtube.com/watch?v=6qrglBetOSc)
+
 [![JNose Test](https://img.youtube.com/vi/BfYtwqQeqHc/0.jpg)](https://www.youtube.com/watch?v=BfYtwqQeqHc)
+
 
 ## Tutorials
  - <a href="TUTORIAL_pt-br.md">Tutorial PT-BR</a>
@@ -17,8 +26,16 @@ JNose Test is a tool developed to automatically detect test smells in test code,
 
 ## Papers
 
- - Used to detect TestSmells and Coverage in the article:
+- JNose: Java Test Smell Detector
+Tássio Virgínio, Luana Almeida Martins, Larissa Rocha Soares, Railana Santana, Adriana Priscila Santos Cruz, Heitor Costa, Ivan Machado (2020): http://cbsoft2020.imd.ufrn.br/artigos.php?evento=sbes-ferramentas
+
+- An Empirical Study of Automatically-Generated Tests from the Perspective of Test Smells
+Tássio Virgínio, Luana Martins, Larissa Soares, Railana Santana, Heitor Costa, Ivan Machado (2020): http://cbsoft2020.imd.ufrn.br/artigos.php?evento=sbes-pesquisa
+
+ - Used to detect TestSmells and Coverage in the article (2019):
 https://dl.acm.org/citation.cfm?doid=3350768.3350775
+
+___
 
 <table>
 <tr>
