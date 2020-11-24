@@ -90,3 +90,8 @@ docker logs -f jnose # para ver os logs, caso queira
 # Dockerhub
 
 https://hub.docker.com/r/tassiovirginio/jnose
+
+```shell
+docker pull tassiovirginio/jnose
+```
+
