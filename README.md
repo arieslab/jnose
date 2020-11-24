@@ -87,3 +87,6 @@ docker build -t jnose .
 docker run -dp "8080:8080" -v "$HOME/.m2":/root/.m2 --name jnose jnose:latest
 docker logs -f jnose # para ver os logs, caso queira
 ```
+# Dockerhub
+
+https://hub.docker.com/r/tassiovirginio/jnose
