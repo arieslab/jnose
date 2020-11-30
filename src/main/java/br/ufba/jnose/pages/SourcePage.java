@@ -1,23 +1,15 @@
 package br.ufba.jnose.pages;
 
 import br.ufba.jnose.WicketApplication;
-import br.ufba.jnose.core.CSVCore;
-import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
-import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
-import br.ufba.jnose.core.testsmelldetector.testsmell.smell.AssertionRoulette;
+import br.ufba.jnose.base.testsmelldetector.testsmell.AbstractSmell;
 import br.ufba.jnose.pages.base.ImprimirPage;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.DownloadLink;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.stream.Stream;
 
 public class SourcePage extends ImprimirPage {

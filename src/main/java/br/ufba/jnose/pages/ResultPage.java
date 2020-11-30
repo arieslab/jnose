@@ -1,7 +1,7 @@
 package br.ufba.jnose.pages;
 
-import br.ufba.jnose.core.CSVCore;
-import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
+import br.ufba.jnose.base.CSVCore;
+import br.ufba.jnose.base.testsmelldetector.testsmell.Util;
 import br.ufba.jnose.pages.base.ImprimirPage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
@@ -36,7 +36,7 @@ public class ResultPage extends ImprimirPage {
     }
 
     private File gerarCSV(List<List<String>> todasLinhas, String csvFileName){
-        String pathFile = CSVCore.criarCSV(todasLinhas, br.ufba.jnose.core.Util.dateNowFolder(),csvFileName);
+        String pathFile = CSVCore.criarCSV(todasLinhas, br.ufba.jnose.base.Util.dateNowFolder(),csvFileName);
         return new File(pathFile);
     }
 

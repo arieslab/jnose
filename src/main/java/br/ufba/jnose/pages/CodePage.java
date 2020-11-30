@@ -1,7 +1,7 @@
 package br.ufba.jnose.pages;
 
-import br.ufba.jnose.core.GitCore;
-import br.ufba.jnose.dto.ProjetoDTO;
+import br.ufba.jnose.base.GitCore;
+import br.ufba.jnose.dtolocal.ProjetoDTO;
 import br.ufba.jnose.pages.base.ImprimirPage;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -9,7 +9,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 
-import static br.ufba.jnose.core.testsmelldetector.testsmell.Util.*;
+import static br.ufba.jnose.base.testsmelldetector.testsmell.Util.*;
 
 import java.io.BufferedReader;
 import java.io.File;

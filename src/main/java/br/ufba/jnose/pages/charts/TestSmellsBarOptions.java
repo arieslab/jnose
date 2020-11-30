@@ -1,6 +1,6 @@
 package br.ufba.jnose.pages.charts;
 
-import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
+import br.ufba.jnose.base.testsmelldetector.testsmell.Util;
 import de.adesso.wickedcharts.highcharts.options.*;
 import de.adesso.wickedcharts.highcharts.options.color.HexColor;
 import de.adesso.wickedcharts.highcharts.options.series.SimpleSeries;

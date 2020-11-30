@@ -1,6 +1,6 @@
 package br.ufba.jnose;
 
-import br.ufba.jnose.core.CSVCore;
+import br.ufba.jnose.base.CSVCore;
 import br.ufba.jnose.pages.*;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;

@@ -2,12 +2,12 @@ package br.ufba.jnose.pages;
 
 import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.business.ProjetoBusiness;
-import br.ufba.jnose.core.Util;
-import br.ufba.jnose.dto.ProjetoDTO;
-import br.ufba.jnose.dto.TotalProcessado;
+import br.ufba.jnose.base.Util;
+import br.ufba.jnose.dtolocal.ProjetoDTO;
+import br.ufba.jnose.dtolocal.TotalProcessado;
 import br.ufba.jnose.entities.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
-import br.ufba.jnose.core.JNose;
+import br.ufba.jnose.base.JNose;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;

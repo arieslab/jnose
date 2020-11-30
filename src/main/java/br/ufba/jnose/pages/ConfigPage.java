@@ -1,7 +1,7 @@
 package br.ufba.jnose.pages;
 
-import br.ufba.jnose.core.testsmelldetector.testsmell.TestSmellDetector;
-import br.ufba.jnose.core.testsmelldetector.testsmell.smell.*;
+import br.ufba.jnose.base.testsmelldetector.testsmell.TestSmellDetector;
+import br.ufba.jnose.base.testsmelldetector.testsmell.smell.ExceptionCatchingThrowing;
 import br.ufba.jnose.pages.base.BasePage;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -40,7 +40,7 @@ public class ConfigPage extends BasePage {
     public ConfigPage() {
         super("ConfigPage");
 
-        this.verboseTestMaxStatements = VerboseTest.MAX_STATEMENTS+"";
+        this.verboseTestMaxStatements = br.ufba.jnose.base.testsmelldetector.testsmell.smell.VerboseTest.MAX_STATEMENTS+"";
 
         emptyTest = TestSmellDetector.emptyTest;
         exceptionCatchingThrowing = TestSmellDetector.exceptionCatchingThrowing;
@@ -89,7 +89,7 @@ public class ConfigPage extends BasePage {
                 TestSmellDetector.eagerTest = eagerTest;
 
                 TestSmellDetector.verboseTest = verboseTest;
-                VerboseTest.MAX_STATEMENTS = Integer.parseInt(verboseTestMaxStatements);
+                br.ufba.jnose.base.testsmelldetector.testsmell.smell.VerboseTest.MAX_STATEMENTS = Integer.parseInt(verboseTestMaxStatements);
             }
         };
 
@@ -223,49 +223,49 @@ public class ConfigPage extends BasePage {
         form.add(new Link<String>("lkSourceAssertionRoulette") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new AssertionRoulette()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.AssertionRoulette()));
             }
         });
         form.add(new Link<String>("lkSourceConditionalTestLogic") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new ConditionalTestLogic()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.ConditionalTestLogic()));
             }
         });
         form.add(new Link<String>("lkSourceConstructorInitialization") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new ConstructorInitialization()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.ConstructorInitialization()));
             }
         });
         form.add(new Link<String>("lkSourceDefaultTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new DefaultTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.DefaultTest()));
             }
         });
         form.add(new Link<String>("lkSourceDependentTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new DependentTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.DependentTest()));
             }
         });
         form.add(new Link<String>("lkSourceDuplicateAssert") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new DuplicateAssert()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.DuplicateAssert()));
             }
         });
         form.add(new Link<String>("lkSourceEagerTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new EagerTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.EagerTest()));
             }
         });
         form.add(new Link<String>("lkSourceEmptyTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new EmptyTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.EmptyTest()));
             }
         });
         form.add(new Link<String>("lkSourceExceptionCatchingThrowing") {
@@ -277,73 +277,73 @@ public class ConfigPage extends BasePage {
         form.add(new Link<String>("lkSourceGeneralFixture") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new GeneralFixture()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.GeneralFixture()));
             }
         });
         form.add(new Link<String>("IgnoredTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new IgnoredTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.IgnoredTest()));
             }
         });
         form.add(new Link<String>("LazyTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new LazyTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.LazyTest()));
             }
         });
         form.add(new Link<String>("MagicNumberTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new MagicNumberTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.MagicNumberTest()));
             }
         });
         form.add(new Link<String>("MysteryGuest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new MysteryGuest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.MysteryGuest()));
             }
         });
         form.add(new Link<String>("PrintStatement") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new PrintStatement()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.PrintStatement()));
             }
         });
         form.add(new Link<String>("RedundantAssertion") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new RedundantAssertion()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.RedundantAssertion()));
             }
         });
         form.add(new Link<String>("ResourceOptimism") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new ResourceOptimism()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.ResourceOptimism()));
             }
         });
         form.add(new Link<String>("SensitiveEquality") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new SensitiveEquality()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.SensitiveEquality()));
             }
         });
         form.add(new Link<String>("SleepyTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new SleepyTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.SleepyTest()));
             }
         });
         form.add(new Link<String>("UnknownTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new UnknownTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.UnknownTest()));
             }
         });
         form.add(new Link<String>("VerboseTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new VerboseTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.VerboseTest()));
             }
         });
 

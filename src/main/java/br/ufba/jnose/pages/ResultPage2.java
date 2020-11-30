@@ -1,8 +1,8 @@
 package br.ufba.jnose.pages;
 
-import br.ufba.jnose.core.CSVCore;
-import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
-import br.ufba.jnose.dto.ProjetoDTO;
+import br.ufba.jnose.base.CSVCore;
+import br.ufba.jnose.base.testsmelldetector.testsmell.Util;
+import br.ufba.jnose.dtolocal.ProjetoDTO;
 import br.ufba.jnose.pages.base.ImprimirPage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
@@ -12,7 +12,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ResultPage2 extends ImprimirPage {
@@ -80,7 +79,7 @@ public class ResultPage2 extends ImprimirPage {
     }
 
     private File gerarCSV(List<List<String>> todasLinhas, String csvFileName){
-        String pathFile = CSVCore.criarCSV(todasLinhas, br.ufba.jnose.core.Util.dateNowFolder(),csvFileName);
+        String pathFile = CSVCore.criarCSV(todasLinhas, br.ufba.jnose.base.Util.dateNowFolder(),csvFileName);
         return new File(pathFile);
     }
 

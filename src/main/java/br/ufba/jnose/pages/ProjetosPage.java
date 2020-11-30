@@ -1,10 +1,10 @@
 package br.ufba.jnose.pages;
 
 import br.ufba.jnose.business.ProjetoBusiness;
-import br.ufba.jnose.core.GitCore;
-import br.ufba.jnose.core.JNose;
-import br.ufba.jnose.dto.Commit;
-import br.ufba.jnose.dto.ProjetoDTO;
+import br.ufba.jnose.base.GitCore;
+import br.ufba.jnose.base.JNose;
+import br.ufba.jnose.dtolocal.Commit;
+import br.ufba.jnose.dtolocal.ProjetoDTO;
 import br.ufba.jnose.pages.base.BasePage;
 import org.apache.commons.io.FileUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
