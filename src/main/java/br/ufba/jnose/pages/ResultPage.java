@@ -1,7 +1,6 @@
 package br.ufba.jnose.pages;
 
 import br.ufba.jnose.core.CSVCore;
-import br.ufba.jnose.core.JNoseCore;
 import br.ufba.jnose.core.testsmelldetector.testsmell.Util;
 import br.ufba.jnose.pages.base.ImprimirPage;
 import org.apache.wicket.AttributeModifier;

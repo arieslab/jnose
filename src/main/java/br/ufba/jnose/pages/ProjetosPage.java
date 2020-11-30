@@ -2,7 +2,7 @@ package br.ufba.jnose.pages;
 
 import br.ufba.jnose.business.ProjetoBusiness;
 import br.ufba.jnose.core.GitCore;
-import br.ufba.jnose.core.JNoseCore;
+import br.ufba.jnose.core.JNose;
 import br.ufba.jnose.dto.Commit;
 import br.ufba.jnose.dto.ProjetoDTO;
 import br.ufba.jnose.pages.base.BasePage;
@@ -64,7 +64,7 @@ public class ProjetosPage extends BasePage {
 
                 br.ufba.jnose.entities.Projeto projeto2 = new br.ufba.jnose.entities.Projeto();
                 projeto2.setName(projeto.getName());
-                projeto2.setJunitVersion(JNoseCore.getJUnitVersion(projeto.getPath()).toString());
+                projeto2.setJunitVersion(JNose.getJUnitVersion(projeto.getPath()).toString());
                 projeto2.setStars(GitCore.getStarts(projeto.getPath()));
                 projeto2.setPath(projeto.getPath());
                 projeto2.setUrl(repoGit);

@@ -24,9 +24,86 @@ import java.util.logging.Logger;
 
 import static java.lang.System.out;
 
-public class JNoseCore {
+public class JNose {
 
-    private final static Logger LOGGER = Logger.getLogger(JNoseCore.class.getName());
+//    private JNoseCore jNoseCore;
+//
+//    public JNoseCore getInstance(){
+//
+//        Config conf = new Config() {
+//            public Boolean assertionRoulette() {
+//                return true;
+//            }
+//            public Boolean conditionalTestLogic() {
+//                return true;
+//            }
+//            public Boolean constructorInitialization() {
+//                return true;
+//            }
+//            public Boolean defaultTest() {
+//                return true;
+//            }
+//            public Boolean dependentTest() {
+//                return true;
+//            }
+//            public Boolean duplicateAssert() {
+//                return true;
+//            }
+//            public Boolean eagerTest() {
+//                return true;
+//            }
+//            public Boolean emptyTest() {
+//                return true;
+//            }
+//            public Boolean exceptionCatchingThrowing() {
+//                return true;
+//            }
+//            public Boolean generalFixture() {
+//                return true;
+//            }
+//            public Boolean mysteryGuest() {
+//                return true;
+//            }
+//            public Boolean printStatement() {
+//                return true;
+//            }
+//            public Boolean redundantAssertion() {
+//                return true;
+//            }
+//            public Boolean sensitiveEquality() {
+//                return true;
+//            }
+//            public Boolean verboseTest() {
+//                return true;
+//            }
+//            public Boolean sleepyTest() {
+//                return true;
+//            }
+//            public Boolean lazyTest() {
+//                return true;
+//            }
+//            public Boolean unknownTest() {
+//                return true;
+//            }
+//            public Boolean ignoredTest() {
+//                return true;
+//            }
+//            public Boolean resourceOptimism() {
+//                return true;
+//            }
+//            public Boolean magicNumberTest() {
+//                return true;
+//            }
+//        };
+//
+//        if(jNoseCore == null) {
+//            jNoseCore = new JNoseCore(conf);
+//        }
+//
+//        return jNoseCore;
+//    }
+
+    private final static Logger LOGGER = Logger.getLogger(JNose.class.getName());
 
     public static List<String[]> testfilemapping(List<TestClass> listTestClass, Commit commit, String projectName) {
         System.out.println("Saving results. Total lines:" + listTestClass.size());
@@ -303,7 +380,7 @@ public class JNoseCore {
     public static String processarTestFileMapping(List<TestClass> listTestClass, String pathProjeto, String folderTime, StringBuffer logRetorno) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
         logRetorno.insert(0,Util.dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>");
-        return JNoseCore.testfilemapping(listTestClass, folderTime, nameProjeto);
+        return JNose.testfilemapping(listTestClass, folderTime, nameProjeto);
     }
 
 
@@ -335,7 +412,7 @@ public class JNoseCore {
 
     public static List<TestClass> processarProjeto(ProjetoDTO projeto, StringBuffer logRetorno) throws IOException {
         projeto.setProcentagem(25);
-        List<TestClass> listaTestClass = JNoseCore.getFilesTest(projeto.getPath(), logRetorno);
+        List<TestClass> listaTestClass = JNose.getFilesTest(projeto.getPath(), logRetorno);
         projeto.setProcentagem(100);
         projeto.setProcessado(true);
         projeto.setProcessado2(true);
@@ -358,15 +435,15 @@ public class JNoseCore {
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
         projeto.setProcentagem(25);
 
-        List<TestClass> listaTestClass = JNoseCore.getFilesTest(projeto.getPath(),logRetorno);
+        List<TestClass> listaTestClass = JNose.getFilesTest(projeto.getPath(),logRetorno);
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
         projeto.setProcentagem(50);
 
-        String csvMapping = JNoseCore.processarTestFileMapping(listaTestClass, projeto.getPath(), folderTime, logRetorno);
+        String csvMapping = JNose.processarTestFileMapping(listaTestClass, projeto.getPath(), folderTime, logRetorno);
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
         projeto.setProcentagem(75);
 
-        List<List<String>> todasLinhas  =  JNoseCore.processarTestSmellDetector2(csvMapping, projeto.getPath(), folderTime, pastaPathReport, logRetorno);
+        List<List<String>> todasLinhas  =  JNose.processarTestSmellDetector2(csvMapping, projeto.getPath(), folderTime, pastaPathReport, logRetorno);
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
         projeto.setProcentagem(100);
 
@@ -397,7 +474,7 @@ public class JNoseCore {
                 @Override
                 public void run() {
                     try {
-                        List<List<String>> todasLinhas = JNoseCore.processarProjeto2(projeto, valorSoma, folderTime, totalProcessado, pastaPathReport, logRetorno);
+                        List<List<String>> todasLinhas = JNose.processarProjeto2(projeto, valorSoma, folderTime, totalProcessado, pastaPathReport, logRetorno);
                         projeto.setResultado(todasLinhas);
                         listaTodos.addAll(todasLinhas);
                     } catch (Exception e) {
@@ -431,9 +508,9 @@ public class JNoseCore {
 
         for (ProjetoDTO projeto : lista) {
             try {
-                List<TestClass> todasLinhas = JNoseCore.processarProjeto(projeto, logRetorno);
+                List<TestClass> todasLinhas = JNose.processarProjeto(projeto, logRetorno);
                 projeto.setResultadoByTestSmells(todasLinhas);
-                projeto.setResultado(JNoseCore.convert(todasLinhas));
+                projeto.setResultado(JNose.convert(todasLinhas));
                 listaTestClass.addAll(todasLinhas);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -445,14 +522,14 @@ public class JNoseCore {
     public static List<String[]> processarTestSmells(String pathProjeto, Commit commit, Boolean cabecalho, StringBuffer logRetorno) {
         List<String[]> listTestSmells = null;
         try {
-            List<TestClass> listTestFile = JNoseCore.getFilesTest(pathProjeto,logRetorno);
+            List<TestClass> listTestFile = JNose.getFilesTest(pathProjeto,logRetorno);
 
             if(pathProjeto.lastIndexOf(File.separator) + 1 == pathProjeto.length()){
                 pathProjeto = pathProjeto.substring(0,pathProjeto.lastIndexOf(File.separator)-1);
             }
 
             String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separator) + 1, pathProjeto.length());
-            List<String[]> listaResultado = JNoseCore.testfilemapping(listTestFile, commit, nameProjeto);
+            List<String[]> listaResultado = JNose.testfilemapping(listTestFile, commit, nameProjeto);
             listTestSmells = br.ufba.jnose.core.testsmelldetector.Main.start(listaResultado, cabecalho);
         } catch (Exception e) {
             e.printStackTrace();
@@ -494,7 +571,7 @@ public class JNoseCore {
 
             int total = 0;
             //criando a lista de testsmells
-            List<String[]> listaTestSmells = JNoseCore.processarTestSmells(projeto.getPath(), commit, vizualizarCabecalho, logRetorno);
+            List<String[]> listaTestSmells = JNose.processarTestSmells(projeto.getPath(), commit, vizualizarCabecalho, logRetorno);
             for (String[] linhaArray : listaTestSmells) {
                 List<String> list = Arrays.asList(linhaArray);
                 for (int i = 10; i <= (list.size() - 1); i++) {

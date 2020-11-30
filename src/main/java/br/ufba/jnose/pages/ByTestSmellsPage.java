@@ -7,9 +7,8 @@ import br.ufba.jnose.dto.ProjetoDTO;
 import br.ufba.jnose.dto.TotalProcessado;
 import br.ufba.jnose.entities.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
-import br.ufba.jnose.core.JNoseCore;
+import br.ufba.jnose.core.JNose;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
-import com.googlecode.wicket.jquery.ui.widget.progressbar.ProgressBar;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -115,7 +114,7 @@ public class ByTestSmellsPage extends BasePage {
                     }
                 }
 
-                JNoseCore.processarProjetos(listaParaProcessar, dataProcessamentoAtual, pastaPathReport, totalProcessado, logRetorno);
+                JNose.processarProjetos(listaParaProcessar, dataProcessamentoAtual, pastaPathReport, totalProcessado, logRetorno);
 
                 for (ProjetoDTO projeto : listaProjetos) {
                     if (projeto.getResultado() != null) {

@@ -4,7 +4,7 @@ import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.business.ProjetoBusiness;
 import br.ufba.jnose.core.Util;
 import br.ufba.jnose.dto.TotalProcessado;
-import br.ufba.jnose.core.JNoseCore;
+import br.ufba.jnose.core.JNose;
 import br.ufba.jnose.dto.ProjetoDTO;
 import br.ufba.jnose.entities.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
@@ -119,7 +119,7 @@ public class ByClassTestPage extends BasePage {
                         listaParaProcessar.add(projetoDTO);
                     }
                 }
-                listaResultado = JNoseCore.processarProjetos2(listaParaProcessar, dataProcessamentoAtual, totalProcessado, pastaPathReport, logRetorno);
+                listaResultado = JNose.processarProjetos2(listaParaProcessar, dataProcessamentoAtual, totalProcessado, pastaPathReport, logRetorno);
             }
         };
         processarTodos.setEnabled(false);

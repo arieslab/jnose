@@ -2,7 +2,7 @@ package br.ufba.jnose.pages;
 
 import br.ufba.jnose.business.ProjetoBusiness;
 import br.ufba.jnose.core.GitCore;
-import br.ufba.jnose.core.JNoseCore;
+import br.ufba.jnose.core.JNose;
 import br.ufba.jnose.dto.ProjetoDTO;
 import br.ufba.jnose.entities.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
@@ -178,7 +178,7 @@ public class EvolutionPage extends BasePage {
                         new Thread() { // IMPORTANTE: AQUI SE CRIA AS THREADS
                             @Override
                             public void run() {
-                                JNoseCore.processarEvolution(projeto, logRetorno, projeto.getMapResults());
+                                JNose.processarEvolution(projeto, logRetorno, projeto.getMapResults());
                             }
                         }.start();
 
