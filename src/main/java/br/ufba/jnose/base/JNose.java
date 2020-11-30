@@ -2,6 +2,7 @@ package br.ufba.jnose.base;
 
 import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.base.testsmelldetector.Main;
+import br.ufba.jnose.base.testsmelldetector.testsmell.TestSmellDetector;
 import br.ufba.jnose.core.Config;
 import br.ufba.jnose.core.JNoseCore;
 import br.ufba.jnose.dtolocal.Commit;
@@ -21,67 +22,67 @@ public class JNose {
 
         Config conf = new Config() {
             public Boolean assertionRoulette() {
-                return true;
+                return TestSmellDetector.assertionRoulette;
             }
             public Boolean conditionalTestLogic() {
-                return true;
+                return TestSmellDetector.conditionalTestLogic;
             }
             public Boolean constructorInitialization() {
-                return true;
+                return TestSmellDetector.constructorInitialization;
             }
             public Boolean defaultTest() {
-                return true;
+                return TestSmellDetector.defaultTest;
             }
             public Boolean dependentTest() {
-                return true;
+                return TestSmellDetector.dependentTest;
             }
             public Boolean duplicateAssert() {
-                return true;
+                return TestSmellDetector.duplicateAssert;
             }
             public Boolean eagerTest() {
-                return true;
+                return TestSmellDetector.eagerTest;
             }
             public Boolean emptyTest() {
-                return true;
+                return TestSmellDetector.emptyTest;
             }
             public Boolean exceptionCatchingThrowing() {
-                return true;
+                return TestSmellDetector.exceptionCatchingThrowing;
             }
             public Boolean generalFixture() {
-                return true;
+                return TestSmellDetector.generalFixture;
             }
             public Boolean mysteryGuest() {
-                return true;
+                return TestSmellDetector.mysteryGuest;
             }
             public Boolean printStatement() {
-                return true;
+                return TestSmellDetector.printStatement;
             }
             public Boolean redundantAssertion() {
-                return true;
+                return TestSmellDetector.redundantAssertion;
             }
             public Boolean sensitiveEquality() {
-                return true;
+                return TestSmellDetector.sensitiveEquality;
             }
             public Boolean verboseTest() {
-                return true;
+                return TestSmellDetector.verboseTest;
             }
             public Boolean sleepyTest() {
-                return true;
+                return TestSmellDetector.sleepyTest;
             }
             public Boolean lazyTest() {
-                return true;
+                return TestSmellDetector.lazyTest;
             }
             public Boolean unknownTest() {
-                return true;
+                return TestSmellDetector.unknownTest;
             }
             public Boolean ignoredTest() {
-                return true;
+                return TestSmellDetector.ignoredTest;
             }
             public Boolean resourceOptimism() {
-                return true;
+                return TestSmellDetector.resourceOptimism;
             }
             public Boolean magicNumberTest() {
-                return true;
+                return TestSmellDetector.magicNumberTest;
             }
         };
 
