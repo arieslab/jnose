@@ -8,18 +8,10 @@ import br.ufba.jnose.dtolocal.Commit;
 import br.ufba.jnose.dtolocal.ProjetoDTO;
 import br.ufba.jnose.dto.TestClass;
 import br.ufba.jnose.dtolocal.TotalProcessado;
-import com.github.javaparser.ast.ImportDeclaration;
-import com.github.javaparser.ast.NodeList;
 
 import java.io.*;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Logger;
-
-import static java.lang.System.out;
 
 public class JNose {
 
@@ -115,17 +107,17 @@ public class JNose {
                     commit.msg,
                     commit.tag,
                     projectName,
-                    testClass.getPathFile().toString(),
+                    testClass.getPathFile(),
                     testClass.getProductionFile(),
-                    testClass.getNumberLine()+ "",
-                    testClass.getNumberMethods() + ""
+                    testClass.getNumberLine().toString(),
+                    testClass.getNumberMethods().toString()
             };
             listRetorno.add(linha);
         }
         return listRetorno;
     }
 
-    public static String testfilemapping(List<br.ufba.jnose.dto.TestClass> listTestClass, String pastaDataHora, String projectName) {
+    public static String testfilemapping(List<TestClass> listTestClass, String pastaDataHora, String projectName) {
         System.out.println("Saving results. Total lines:" + listTestClass.size());
 
         List<List<String>> todasLinhas = new ArrayList<>();
@@ -133,7 +125,7 @@ public class JNose {
         for (br.ufba.jnose.dto.TestClass testClass : listTestClass) {
             List<String> columnValues = new ArrayList<>();
             columnValues.add(0, projectName);
-            columnValues.add(1, testClass.getPathFile().toString());
+            columnValues.add(1, testClass.getPathFile());
             columnValues.add(2, testClass.getProductionFile());
             columnValues.add(3, testClass.getNumberLine() + "");
             columnValues.add(4, testClass.getNumberMethods() + "");
@@ -171,7 +163,7 @@ public class JNose {
                 columnValues = new ArrayList<>();
                 columnValues.add(0, testClass.getProjectName());
                 columnValues.add(1, testClass.getName());
-                columnValues.add(2, testClass.getPathFile().toString());
+                columnValues.add(2, testClass.getPathFile());
                 columnValues.add(3, testClass.getProductionFile());
                 columnValues.add(4, testClass.getJunitVersion().name());
                 columnValues.add(5, testClass.getNumberLine().toString());
@@ -187,181 +179,21 @@ public class JNose {
         return todasLinhas;
     }
 
-    public static List<br.ufba.jnose.dto.TestClass> getFilesTest(String directoryPath, StringBuffer logRetorno) throws IOException {
+    public static List<TestClass> getFilesTest(String directoryPath, StringBuffer logRetorno) throws IOException {
         return getInstance().getFilesTest(directoryPath);
     }
 
-//    public static List<TestClass> getFilesTest(String directoryPath, StringBuffer logRetorno) throws IOException {
-//        String projectName = directoryPath.substring(directoryPath.lastIndexOf(File.separatorChar) + 1, directoryPath.length());
-//
-//        logRetorno.insert(0,Util.dateNow() + projectName + " - <font style='color:red'>TestFileDetector</font> <br>");
-//
-//        List<TestClass> files = new ArrayList<>();
-//        Path startDir = Paths.get(directoryPath);
-//        Files.walk(startDir)
-//                .filter(Files::isRegularFile)
-//                .forEach(filePath -> {
-//                    if (filePath.getFileName().toString().lastIndexOf(".") != -1) {
-//                        String fileNameWithoutExtension = filePath.getFileName().toString().substring(0, filePath.getFileName().toString().lastIndexOf(".")).toLowerCase();
-//                        if (filePath.toString().toLowerCase().endsWith(".java") && fileNameWithoutExtension.matches("^.*test\\d*$")) {
-//                            TestClass testClass = new TestClass();
-//                            testClass.projectName = projectName;
-//                            testClass.pathFile = filePath.toString();
-//                            if (isTestFile(testClass)) {
-//                                System.out.println("TestClass Detect -> " + testClass.pathFile);
-//                                String productionFileName = "";
-//                                int index = testClass.name.toLowerCase().lastIndexOf("test");
-//                                if (index > 0) {
-//                                    productionFileName = testClass.name.substring(0, testClass.name.toLowerCase().lastIndexOf("test")) + ".java";
-//                                }
-//                                testClass.productionFile = getFileProduction(startDir.toString(), productionFileName);
-//
-//                                if (!testClass.productionFile.isEmpty()) {
-//                                    getTestSmells(testClass);
-//                                    files.add(testClass);
-//                                }
-//                            }
-//                        }
-//                    }
-//                });
-//        return files;
-//    }
-
-    public static br.ufba.jnose.dto.TestClass.JunitVersion getJUnitVersion(String directoryPath) {
-        String projectName = directoryPath.substring(directoryPath.lastIndexOf(File.separatorChar) + 1, directoryPath.length());
-
-        final br.ufba.jnose.dto.TestClass.JunitVersion[] jUnitVersion = new br.ufba.jnose.dto.TestClass.JunitVersion[1];
-
-        List<br.ufba.jnose.dto.TestClass> files = new ArrayList<>();
-        Path startDir = Paths.get(directoryPath);
-        try {
-            Files.walk(startDir)
-                    .filter(Files::isRegularFile)
-                    .forEach(filePath -> {
-                        if (filePath.getFileName().toString().lastIndexOf(".") != -1) {
-                            String fileNameWithoutExtension = filePath.getFileName().toString().substring(0, filePath.getFileName().toString().lastIndexOf(".")).toLowerCase();
-                            if (filePath.toString().toLowerCase().endsWith(".java") && fileNameWithoutExtension.matches("^.*test\\d*$")) {
-                                br.ufba.jnose.dto.TestClass testClass = new br.ufba.jnose.dto.TestClass();
-                                testClass.setProjectName(projectName);
-                                testClass.setPathFile(filePath.toString());
-                                if (isTestFile(testClass)) {
-                                    jUnitVersion[0] = testClass.getJunitVersion();
-
-                                }
-                            }
-                        }
-                    });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return jUnitVersion[0];
+    public static TestClass.JunitVersion getJUnitVersion(String directoryPath) {
+        return getInstance().getJUnitVersion(directoryPath);
     }
 
     private static boolean isTestFile(br.ufba.jnose.dto.TestClass testClass) {
         return getInstance().isTestFile(testClass);
     }
 
-//    private static boolean isTestFile(TestClass testClass) {
-//        Boolean isTestFile = false;
-//        try {
-//            FileInputStream fileInputStream = null;
-//            fileInputStream = new FileInputStream(new File(testClass.pathFile));
-//            CompilationUnit compilationUnit = JavaParser.parse(fileInputStream);
-//            testClass.numberLine = compilationUnit.getRange().get().end.line;
-//            detectJUnitVersion(compilationUnit.getImports(), testClass);
-//            List<NodeList<?>> nodeList = compilationUnit.getNodeLists();
-//            for (NodeList node : nodeList) {
-//                isTestFile = flowClass(node, testClass);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return isTestFile;
-//    }
-
-    private static void detectJUnitVersion(NodeList<ImportDeclaration> nodeList, br.ufba.jnose.dto.TestClass testClass) {
-        getInstance().detectJUnitVersion(nodeList,testClass);
-    }
-
-//    private static void detectJUnitVersion(NodeList<ImportDeclaration> nodeList, TestClass testClass) {
-//        for (ImportDeclaration node : nodeList) {
-//            if (node.getNameAsString().contains("org.junit.jupiter")) {
-//                testClass.junitVersion = TestClass.JunitVersion.JUnit5;
-//            } else if (node.getNameAsString().contains("org.junit")) {
-//                testClass.junitVersion = TestClass.JunitVersion.JUnit4;
-//            } else if (node.getNameAsString().contains("junit.framework")) {
-//                testClass.junitVersion = TestClass.JunitVersion.JUnit3;
-//            }
-//        }
-//    }
-
-//    private static Boolean flowClass(NodeList<?> nodeList, TestClass testClass) {
-//        boolean isTestClass = false;
-//        for (Object node : nodeList) {
-//            if (node instanceof ClassOrInterfaceDeclaration) {
-//                ClassOrInterfaceDeclaration classAtual = ((ClassOrInterfaceDeclaration) node);
-//                testClass.name = classAtual.getNameAsString();
-//                NodeList<?> nodeList_members = classAtual.getMembers();
-//                testClass.numberMethods = classAtual.getMembers().size();
-//                isTestClass = flowClass(nodeList_members, testClass);
-//                if(isTestClass)return true;
-//            } else if (node instanceof MethodDeclaration) {
-//                isTestClass = flowClass(((MethodDeclaration) node).getAnnotations(), testClass);
-//                if(isTestClass)return true;
-//            } else if (node instanceof AnnotationExpr) {
-//                return ((AnnotationExpr) node).getNameAsString().toLowerCase().contains("test");
-//            }
-//        }
-//        return isTestClass;
-//    }
-
-//    public static String getFileProduction(String directoryPath, String productionFileName) {
-//        final String[] retorno = {""};
-//        try {
-//            Path startDir = Paths.get(directoryPath);
-//            Files.walk(startDir)
-//                    .filter(Files::isRegularFile)
-//                    .forEach(filePath -> {
-//                        if (filePath.getFileName().toString().toLowerCase().equals(productionFileName.toLowerCase())) {
-//                            retorno[0] = filePath.toString();
-//                        }
-//                    });
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return retorno[0];
-//    }
-
     public static void getTestSmells(br.ufba.jnose.dto.TestClass testClass) {
         getInstance().getTestSmells(testClass);
     }
-//    public static void getTestSmells(TestClass testClass) {
-//        TestSmellDetector testSmellDetector = TestSmellDetector.createTestSmellDetector();
-//        TestFile testFile = new TestFile("Teste", testClass.pathFile.toString(), testClass.productionFile, testClass.numberLine, testClass.numberMethods);
-//
-//        try {
-//            TestFile tempFile = testSmellDetector.detectSmells(testFile);
-//            for (AbstractSmell smell : tempFile.getTestSmells()) {
-//                smell.getSmellyElements();
-//                for (SmellyElement smellyElement : smell.getSmellyElements()) {
-//                    if (smellyElement.getHasSmell()) {
-//                        TestSmell testSmell = new TestSmell();
-//                        testSmell.name = smell.getSmellName();
-//
-//                        testSmell.method = smellyElement.getElementName();
-//                        testSmell.begin = smellyElement.getData().get("begin");
-//                        testSmell.end = smellyElement.getData().get("end");
-////                        testSmell.lineNumber = smellyElement.getData().get("lineNumber");
-//
-//                        testClass.listTestSmell.add(testSmell);
-//                    }
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
 
     public static String processarTestSmellDetector(String pathCSVMapping, String pathProjeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
@@ -392,32 +224,6 @@ public class JNose {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
         logRetorno.insert(0,Util.dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>");
         return JNose.testfilemapping(listTestClass, folderTime, nameProjeto);
-    }
-
-
-    public static List<ProjetoDTO> listaProjetos(URI path, StringBuffer logRetornoInfo) {
-        java.io.File[] directories = new File(path).listFiles(java.io.File::isDirectory);
-        List<ProjetoDTO> lista = new ArrayList<ProjetoDTO>();
-
-        if (directories != null) {
-            for (java.io.File dir : directories) {
-                String pathPom = dir.getAbsolutePath() + File.separatorChar + "pom.xml";
-
-                if (new File(pathPom).exists()) {
-                    String pathProjeto = dir.getAbsolutePath().trim();
-                    String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-                    br.ufba.jnose.entities.Projeto projetoBean = new br.ufba.jnose.entities.Projeto();
-                    projetoBean.setName(nameProjeto);
-                    projetoBean.setPath(pathProjeto);
-                    lista.add(new ProjetoDTO(projetoBean));
-                } else {
-                    String msg = "It is not a project MAVEN: " + dir.getAbsolutePath();
-                    out.println(msg);
-                }
-            }
-        }
-
-        return lista;
     }
 
 
