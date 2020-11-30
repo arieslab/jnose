@@ -94,7 +94,7 @@ public class JNose {
 
     private final static Logger LOGGER = Logger.getLogger(JNose.class.getName());
 
-    public static List<String[]> testfilemapping(List<br.ufba.jnose.dto.TestClass> listTestClass, Commit commit, String projectName) {
+    public static List<String[]> testfilemapping(List<TestClass> listTestClass, Commit commit, String projectName) {
         System.out.println("Saving results. Total lines:" + listTestClass.size());
 
         List<String[]> listRetorno = new ArrayList<>();
@@ -185,10 +185,6 @@ public class JNose {
 
     public static TestClass.JunitVersion getJUnitVersion(String directoryPath) {
         return getInstance().getJUnitVersion(directoryPath);
-    }
-
-    private static boolean isTestFile(br.ufba.jnose.dto.TestClass testClass) {
-        return getInstance().isTestFile(testClass);
     }
 
     public static void getTestSmells(br.ufba.jnose.dto.TestClass testClass) {
@@ -321,7 +317,7 @@ public class JNose {
             valorSoma = 0;
         }
 
-        List<br.ufba.jnose.dto.TestClass> listaTestClass = new ArrayList<>();
+        List<TestClass> listaTestClass = new ArrayList<>();
 
         for (ProjetoDTO projeto : lista) {
             try {
