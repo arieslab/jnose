@@ -11,7 +11,7 @@ ___
   Demo Jnose Heroku
 </a>
 
-___
+---
 
 ## CBSoft 2020
 <img src="https://github.com/tassiovirginio/jnose/blob/master/docs/premio.jpeg?raw=true">
@@ -20,6 +20,21 @@ ___
 [![JNose Test](https://img.youtube.com/vi/6qrglBetOSc/0.jpg)](https://www.youtube.com/watch?v=6qrglBetOSc)
 
 [![JNose Test](https://img.youtube.com/vi/BfYtwqQeqHc/0.jpg)](https://www.youtube.com/watch?v=BfYtwqQeqHc)
+
+
+___
+OBS: 
+<a target="_blank" href="https://github.com/tassiovirginio/jnose-core">
+  Dependence on Project (JNose-Core)
+</a>
+
+It is necessary to install the "jnose-core" dependency for JNose to work. Below is the step by step to install, before installing Jnose.
+
+```shell
+git clone https://github.com/tassiovirginio/jnose-core.git
+cd jnose-core
+mvn install
+```
 
 
 ## Tutorials
