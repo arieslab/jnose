@@ -114,7 +114,7 @@ public class ByTestSmellsPage extends BasePage {
                     }
                 }
 
-                JNose.processarProjetos(listaParaProcessar, dataProcessamentoAtual, pastaPathReport, totalProcessado, logRetorno);
+                JNose.processarProjetos(listaParaProcessar, dataProcessamentoAtual, pastaPathReport, totalProcessado);
 
                 for (ProjetoDTO projeto : listaProjetos) {
                     if (projeto.getResultado() != null) {

@@ -5,6 +5,7 @@ import br.ufba.jnose.base.testsmelldetector.Main;
 import br.ufba.jnose.base.testsmelldetector.testsmell.TestSmellDetector;
 import br.ufba.jnose.core.Config;
 import br.ufba.jnose.core.JNoseCore;
+import br.ufba.jnose.dto.TestSmell;
 import br.ufba.jnose.dtolocal.Commit;
 import br.ufba.jnose.dtolocal.ProjetoDTO;
 import br.ufba.jnose.dto.TestClass;
@@ -123,13 +124,13 @@ public class JNose {
 
         List<List<String>> todasLinhas = new ArrayList<>();
 
-        for (br.ufba.jnose.dto.TestClass testClass : listTestClass) {
+        for (TestClass testClass : listTestClass) {
             List<String> columnValues = new ArrayList<>();
             columnValues.add(0, projectName);
             columnValues.add(1, testClass.getPathFile());
             columnValues.add(2, testClass.getProductionFile());
-            columnValues.add(3, testClass.getNumberLine() + "");
-            columnValues.add(4, testClass.getNumberMethods() + "");
+            columnValues.add(3, testClass.getNumberLine().toString());
+            columnValues.add(4, testClass.getNumberMethods().toString());
             todasLinhas.add(columnValues);
         }
         System.out.println("Completed!");
@@ -139,7 +140,7 @@ public class JNose {
 
 
 
-    public static List<List<String>> convert(List<br.ufba.jnose.dto.TestClass> listTestClass){
+    public static List<List<String>> convert(List<TestClass> listTestClass){
 
         List<List<String>> todasLinhas = new ArrayList<>();
 
@@ -180,7 +181,7 @@ public class JNose {
         return todasLinhas;
     }
 
-    public static List<TestClass> getFilesTest(String directoryPath, StringBuffer logRetorno) throws IOException {
+    public static List<TestClass> getFilesTest(String directoryPath) throws IOException {
         return getInstance().getFilesTest(directoryPath);
     }
 
@@ -205,28 +206,62 @@ public class JNose {
     }
 
 
-    public static List<List<String>> processarTestSmellDetector2(String pathCSVMapping, String pathProjeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
+//    public static List<List<String>> processarTestSmellDetector3(String pathCSVMapping, String pathProjeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
+//        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
+//        logRetorno.insert(0,Util.dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>");
+//        List<List<String>> todasLinhas = new ArrayList<>();
+//        try {
+//            todasLinhas = Main.start2(pathCSVMapping, nameProjeto, pastaPathReport + folderTime + File.separatorChar,folderTime);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return todasLinhas;
+//    }
+
+    public static List<List<String>> processarTestSmellDetector2(String pathProjeto, StringBuffer logRetorno) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-        logRetorno.insert(0,Util.dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>");
+        logRetorno.insert(0,Util.dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector novo</font> <br>");
         List<List<String>> todasLinhas = new ArrayList<>();
+
         try {
-            todasLinhas = Main.start2(pathCSVMapping, nameProjeto, pastaPathReport + folderTime + File.separatorChar,folderTime);
+            List<TestClass> listFileTests = getInstance().getFilesTest(pathProjeto);
+            List<String> linhacolunas = new ArrayList<>();
+            linhacolunas.add("App");
+            linhacolunas.add("TestFileName");
+            linhacolunas.add("ProductionFileName");
+            linhacolunas.add("LOC");
+            linhacolunas.add("numberMethods");
+            listFileTests.get(0).getLineSumTestSmells().keySet().stream().forEach(v -> linhacolunas.add(v.toString()));
+            todasLinhas.add(linhacolunas);
+
+            for(TestClass testClass : listFileTests){
+                List<String> linha = new ArrayList<>();
+                linha.add(testClass.getProjectName());
+                linha.add(testClass.getName());
+                linha.add(testClass.getProductionFile());
+                linha.add(testClass.getNumberLine().toString());
+                linha.add(testClass.getNumberMethods().toString());
+                testClass.getLineSumTestSmells().values().stream().forEach(v -> linha.add(v.toString()));
+                todasLinhas.add(linha);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return todasLinhas;
     }
 
-    public static String processarTestFileMapping(List<br.ufba.jnose.dto.TestClass> listTestClass, String pathProjeto, String folderTime, StringBuffer logRetorno) {
+    public static String processarTestFileMapping(List<TestClass> listTestClass, String pathProjeto, String folderTime, StringBuffer logRetorno) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
         logRetorno.insert(0,Util.dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>");
         return JNose.testfilemapping(listTestClass, folderTime, nameProjeto);
     }
 
 
-    public static List<br.ufba.jnose.dto.TestClass> processarProjeto(ProjetoDTO projeto, StringBuffer logRetorno) throws IOException {
+    public static List<TestClass> processarProjeto(ProjetoDTO projeto) throws IOException {
         projeto.setProcentagem(25);
-        List<br.ufba.jnose.dto.TestClass> listaTestClass = JNose.getFilesTest(projeto.getPath(), logRetorno);
+        List<TestClass> listaTestClass = JNose.getFilesTest(projeto.getPath());
         projeto.setProcentagem(100);
         projeto.setProcessado(true);
         projeto.setProcessado2(true);
@@ -249,15 +284,15 @@ public class JNose {
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
         projeto.setProcentagem(25);
 
-        List<br.ufba.jnose.dto.TestClass> listaTestClass = JNose.getFilesTest(projeto.getPath(),logRetorno);
+//        List<br.ufba.jnose.dto.TestClass> listaTestClass = JNose.getFilesTest(projeto.getPath(),logRetorno);
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
         projeto.setProcentagem(50);
 
-        String csvMapping = JNose.processarTestFileMapping(listaTestClass, projeto.getPath(), folderTime, logRetorno);
+//        String csvMapping = JNose.processarTestFileMapping(listaTestClass, projeto.getPath(), folderTime, logRetorno);
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
         projeto.setProcentagem(75);
 
-        List<List<String>> todasLinhas  =  JNose.processarTestSmellDetector2(csvMapping, projeto.getPath(), folderTime, pastaPathReport, logRetorno);
+        List<List<String>> todasLinhas  =  JNose.processarTestSmellDetector2(projeto.getPath(), logRetorno);
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
         projeto.setProcentagem(100);
 
@@ -303,7 +338,7 @@ public class JNose {
 
     }
 
-    public static void processarProjetos(List<ProjetoDTO> lista, String folderTime,String pastaPathReport, TotalProcessado totalProcessado, StringBuffer logRetorno) {
+    public static void processarProjetos(List<ProjetoDTO> lista, String folderTime,String pastaPathReport, TotalProcessado totalProcessado) {
 
         boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
         if (!success) System.out.println("Created Folder...");
@@ -322,7 +357,7 @@ public class JNose {
 
         for (ProjetoDTO projeto : lista) {
             try {
-                List<br.ufba.jnose.dto.TestClass> todasLinhas = JNose.processarProjeto(projeto, logRetorno);
+                List<br.ufba.jnose.dto.TestClass> todasLinhas = JNose.processarProjeto(projeto);
                 projeto.setResultadoByTestSmells(todasLinhas);
                 projeto.setResultado(JNose.convert(todasLinhas));
                 listaTestClass.addAll(todasLinhas);
@@ -336,7 +371,7 @@ public class JNose {
     public static List<String[]> processarTestSmells(String pathProjeto, Commit commit, Boolean cabecalho, StringBuffer logRetorno) {
         List<String[]> listTestSmells = null;
         try {
-            List<TestClass> listTestFile = JNose.getFilesTest(pathProjeto,logRetorno);
+            List<TestClass> listTestFile = JNose.getFilesTest(pathProjeto);
 
             if(pathProjeto.lastIndexOf(File.separator) + 1 == pathProjeto.length()){
                 pathProjeto = pathProjeto.substring(0,pathProjeto.lastIndexOf(File.separator)-1);

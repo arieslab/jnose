@@ -30,6 +30,7 @@ public class Main {
         br.ufba.jnose.base.testsmelldetector.testsmell.TestFile testFile;
 
         List<br.ufba.jnose.base.testsmelldetector.testsmell.TestFile> testFiles = new ArrayList<>();
+
         for(String[] lineItem:listMapping) {
 
             if(lineItem[3] == null){
@@ -124,6 +125,7 @@ public class Main {
         br.ufba.jnose.base.testsmelldetector.testsmell.TestFile testFile;
 
         List<br.ufba.jnose.base.testsmelldetector.testsmell.TestFile> testFiles = new ArrayList<>();
+
         while ((str = in.readLine()) != null) {
             System.out.println(str);
             lineItem = str.split(",");
