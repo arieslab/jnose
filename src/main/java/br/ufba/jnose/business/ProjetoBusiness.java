@@ -8,9 +8,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 import static org.hibernate.criterion.Restrictions.*;
 
 @Component
 @Transactional
 public class ProjetoBusiness extends BusinessGeneric<ProjectDao, Projeto> {
+
+    public List<Projeto> listAllWithFilter(){
+        return dao.listAll().stream().filter(o -> !o.getJunitVersion().equals("None")).collect(toList());
+    }
 }

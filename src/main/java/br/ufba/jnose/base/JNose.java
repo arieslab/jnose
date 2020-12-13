@@ -101,7 +101,7 @@ public class JNose {
 
         List<String[]> listRetorno = new ArrayList<>();
 
-        for (br.ufba.jnose.dto.TestClass testClass : listTestClass) {
+        for (TestClass testClass : listTestClass) {
             String[] linha = {
                     commit.id,
                     commit.name,
@@ -231,7 +231,7 @@ public class JNose {
             linhacolunas.add("ProductionFileName");
             linhacolunas.add("LOC");
             linhacolunas.add("numberMethods");
-            listFileTests.get(0).getLineSumTestSmells().keySet().stream().forEach(v -> linhacolunas.add(v.toString()));
+            listFileTests.get(0).getLineSumTestSmells().keySet().stream().forEach(v -> linhacolunas.add(v));
             todasLinhas.add(linhacolunas);
 
             for(TestClass testClass : listFileTests){
@@ -284,11 +284,9 @@ public class JNose {
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
         projeto.setProcentagem(25);
 
-//        List<br.ufba.jnose.dto.TestClass> listaTestClass = JNose.getFilesTest(projeto.getPath(),logRetorno);
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
         projeto.setProcentagem(50);
 
-//        String csvMapping = JNose.processarTestFileMapping(listaTestClass, projeto.getPath(), folderTime, logRetorno);
         totalProcessado.setValor(totalProcessado.getValor() + valorSoma.intValue());
         projeto.setProcentagem(75);
 
@@ -357,7 +355,7 @@ public class JNose {
 
         for (ProjetoDTO projeto : lista) {
             try {
-                List<br.ufba.jnose.dto.TestClass> todasLinhas = JNose.processarProjeto(projeto);
+                List<TestClass> todasLinhas = JNose.processarProjeto(projeto);
                 projeto.setResultadoByTestSmells(todasLinhas);
                 projeto.setResultado(JNose.convert(todasLinhas));
                 listaTestClass.addAll(todasLinhas);
@@ -368,7 +366,7 @@ public class JNose {
     }
 
 
-    public static List<String[]> processarTestSmells(String pathProjeto, Commit commit, Boolean cabecalho, StringBuffer logRetorno) {
+    public static List<String[]> processarTestSmells(String pathProjeto, Commit commit, Boolean cabecalho) {
         List<String[]> listTestSmells = null;
         try {
             List<TestClass> listTestFile = JNose.getFilesTest(pathProjeto);
@@ -378,8 +376,11 @@ public class JNose {
             }
 
             String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separator) + 1, pathProjeto.length());
+
             List<String[]> listaResultado = JNose.testfilemapping(listTestFile, commit, nameProjeto);
+
             listTestSmells = Main.start(listaResultado, cabecalho);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -420,7 +421,7 @@ public class JNose {
 
             int total = 0;
             //criando a lista de testsmells
-            List<String[]> listaTestSmells = JNose.processarTestSmells(projeto.getPath(), commit, vizualizarCabecalho, logRetorno);
+            List<String[]> listaTestSmells = JNose.processarTestSmells(projeto.getPath(), commit, vizualizarCabecalho);
             for (String[] linhaArray : listaTestSmells) {
                 List<String> list = Arrays.asList(linhaArray);
                 for (int i = 10; i <= (list.size() - 1); i++) {

@@ -48,7 +48,7 @@ public class EvolutionPage extends BasePage {
     }
 
     private void loadProjetos() {
-        List<Projeto> listProjetoBean = projetoBusiness.listAll();
+        List<Projeto> listProjetoBean = projetoBusiness.listAllWithFilter();
         for(Projeto projeto : listProjetoBean){
             listaProjetos.add(new ProjetoDTO(projeto));
         }

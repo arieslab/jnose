@@ -25,19 +25,19 @@ public class Main {
 
     public static List<String[]> start(List<String[]> listMapping, Boolean cabecalho){
 
-        br.ufba.jnose.base.testsmelldetector.testsmell.TestSmellDetector testSmellDetector = br.ufba.jnose.base.testsmelldetector.testsmell.TestSmellDetector.createTestSmellDetector();
+        TestSmellDetector testSmellDetector = TestSmellDetector.createTestSmellDetector();
 
-        br.ufba.jnose.base.testsmelldetector.testsmell.TestFile testFile;
+        TestFile testFile;
 
-        List<br.ufba.jnose.base.testsmelldetector.testsmell.TestFile> testFiles = new ArrayList<>();
+        List<TestFile> testFiles = new ArrayList<>();
 
         for(String[] lineItem:listMapping) {
 
             if(lineItem[3] == null){
-                testFile = new br.ufba.jnose.base.testsmelldetector.testsmell.TestFile(lineItem[0],lineItem[1],lineItem[2],lineItem[3],lineItem[4], lineItem[5],lineItem[6], "",0,0);
+                testFile = new TestFile(lineItem[0],lineItem[1],lineItem[2],lineItem[3],lineItem[4], lineItem[5],lineItem[6], "",0,0);
             }
             else{
-                testFile = new br.ufba.jnose.base.testsmelldetector.testsmell.TestFile(lineItem[0],lineItem[1],lineItem[2],lineItem[3],lineItem[4],lineItem[5], lineItem[6], lineItem[7], Integer.parseInt(lineItem[8]),Integer.parseInt(lineItem[9]));
+                testFile = new TestFile(lineItem[0],lineItem[1],lineItem[2],lineItem[3],lineItem[4],lineItem[5], lineItem[6], lineItem[7], Integer.parseInt(lineItem[8]),Integer.parseInt(lineItem[9]));
             }
             testFiles.add(testFile);
         }
@@ -53,11 +53,11 @@ public class Main {
         }
 
 
-        br.ufba.jnose.base.testsmelldetector.testsmell.TestFile tempFile;
+        TestFile tempFile;
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date;
 
-        for (br.ufba.jnose.base.testsmelldetector.testsmell.TestFile file : testFiles) {
+        for (TestFile file : testFiles) {
             try {
                 date = new Date();
                 System.out.println(dateFormat.format(date) + " Processing: " + file.getTestFilePath());
@@ -86,7 +86,7 @@ public class Main {
                 columnValues.add(file.getQtdMethods().toString());
 
                 //add test smells
-                for (br.ufba.jnose.base.testsmelldetector.testsmell.AbstractSmell smell : tempFile.getTestSmells()) {
+                for (AbstractSmell smell : tempFile.getTestSmells()) {
 //                    if(smell != null) {//verificar porque esta vindo smells nulls
 //                        smell.getSmellyElements();
                     try {
@@ -115,25 +115,25 @@ public class Main {
     public static String start(String csvPath, String projectName, String reportPath, String pastaDataHora) throws IOException {
 
         File selectedFile = new File(csvPath);
-        br.ufba.jnose.base.testsmelldetector.testsmell.TestSmellDetector testSmellDetector = br.ufba.jnose.base.testsmelldetector.testsmell.TestSmellDetector.createTestSmellDetector();
+        TestSmellDetector testSmellDetector = TestSmellDetector.createTestSmellDetector();
 
         FileReader fileReader = new FileReader(selectedFile);
         BufferedReader in = new BufferedReader(fileReader);
         String str;
 
         String[] lineItem;
-        br.ufba.jnose.base.testsmelldetector.testsmell.TestFile testFile;
+        TestFile testFile;
 
-        List<br.ufba.jnose.base.testsmelldetector.testsmell.TestFile> testFiles = new ArrayList<>();
+        List<TestFile> testFiles = new ArrayList<>();
 
         while ((str = in.readLine()) != null) {
             System.out.println(str);
             lineItem = str.split(",");
             if(lineItem[2] == null){
-                testFile = new br.ufba.jnose.base.testsmelldetector.testsmell.TestFile(lineItem[0], lineItem[1], "",0,0);
+                testFile = new TestFile(lineItem[0], lineItem[1], "",0,0);
             }
             else{
-                testFile = new br.ufba.jnose.base.testsmelldetector.testsmell.TestFile(lineItem[0], lineItem[1], lineItem[2], Integer.parseInt(lineItem[3]),Integer.parseInt(lineItem[4]));
+                testFile = new TestFile(lineItem[0], lineItem[1], lineItem[2], Integer.parseInt(lineItem[3]),Integer.parseInt(lineItem[4]));
             }
             testFiles.add(testFile);
         }
@@ -171,11 +171,11 @@ public class Main {
             jacocoMap = jacocoProcess(projectName, reportPath);
         }
 
-        br.ufba.jnose.base.testsmelldetector.testsmell.TestFile tempFile;
+        TestFile tempFile;
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date;
         
-        for (br.ufba.jnose.base.testsmelldetector.testsmell.TestFile file : testFiles) {
+        for (TestFile file : testFiles) {
             try {
                 date = new Date();
                 System.out.println(dateFormat.format(date) + " Processing: " + file.getTestFilePath());
@@ -198,7 +198,7 @@ public class Main {
                 columnValues.add(file.getQtdMethods().toString());
 
                 //add test smells
-                for (br.ufba.jnose.base.testsmelldetector.testsmell.AbstractSmell smell : tempFile.getTestSmells()) {
+                for (AbstractSmell smell : tempFile.getTestSmells()) {
                     smell.getSmellyElements();
                     try {
                         columnValues.add(String.valueOf(smell.getSmellyElements().stream().filter(x -> x.getHasSmell()).count()));
@@ -227,24 +227,24 @@ public class Main {
     public static List<List<String>> start2(String csvPath, String projectName, String reportPath, String pastaDataHora) throws IOException {
 
         File selectedFile = new File(csvPath);
-        br.ufba.jnose.base.testsmelldetector.testsmell.TestSmellDetector testSmellDetector = TestSmellDetector.createTestSmellDetector();
+        TestSmellDetector testSmellDetector = TestSmellDetector.createTestSmellDetector();
 
         FileReader fileReader = new FileReader(selectedFile);
         BufferedReader in = new BufferedReader(fileReader);
         String str;
 
         String[] lineItem;
-        br.ufba.jnose.base.testsmelldetector.testsmell.TestFile testFile;
+        TestFile testFile;
 
-        List<br.ufba.jnose.base.testsmelldetector.testsmell.TestFile> testFiles = new ArrayList<>();
+        List<TestFile> testFiles = new ArrayList<>();
         while ((str = in.readLine()) != null) {
             System.out.println(str);
             lineItem = str.split(",");
             if(lineItem[2] == null){
-                testFile = new br.ufba.jnose.base.testsmelldetector.testsmell.TestFile(lineItem[0], lineItem[1], "",0,0);
+                testFile = new TestFile(lineItem[0], lineItem[1], "",0,0);
             }
             else{
-                testFile = new br.ufba.jnose.base.testsmelldetector.testsmell.TestFile(lineItem[0], lineItem[1], lineItem[2], Integer.parseInt(lineItem[3]),Integer.parseInt(lineItem[4]));
+                testFile = new TestFile(lineItem[0], lineItem[1], lineItem[2], Integer.parseInt(lineItem[3]),Integer.parseInt(lineItem[4]));
             }
             testFiles.add(testFile);
         }
@@ -282,11 +282,11 @@ public class Main {
             jacocoMap = jacocoProcess(projectName, reportPath);
         }
 
-        br.ufba.jnose.base.testsmelldetector.testsmell.TestFile tempFile;
+        TestFile tempFile;
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date;
 
-        for (br.ufba.jnose.base.testsmelldetector.testsmell.TestFile file : testFiles) {
+        for (TestFile file : testFiles) {
             try {
                 date = new Date();
                 System.out.println(dateFormat.format(date) + " Processing: " + file.getTestFilePath());

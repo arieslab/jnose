@@ -3,6 +3,7 @@ package br.ufba.jnose.pages;
 import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.business.ProjetoBusiness;
 import br.ufba.jnose.base.Util;
+import br.ufba.jnose.dto.TestClass;
 import br.ufba.jnose.dtolocal.TotalProcessado;
 import br.ufba.jnose.base.JNose;
 import br.ufba.jnose.dtolocal.ProjetoDTO;
@@ -143,8 +144,10 @@ public class ByClassTestPage extends BasePage {
         dataProcessamentoAtual = Util.dateNowFolder();
         logRetorno = new StringBuffer();
         totalProcessado.setValor(0);
-        List<Projeto> listaProjetosBean = projetoBusiness.listAll();
-        for(Projeto projeto : listaProjetosBean)listaProjetos.add(new ProjetoDTO(projeto));
+        List<Projeto> listaProjetosBean = projetoBusiness.listAllWithFilter();
+        for (Projeto projeto : listaProjetosBean) {
+            listaProjetos.add(new ProjetoDTO(projeto));
+        }
         lvProjetos.setList(listaProjetos);
         processarTodos.setEnabled(true);
     }
@@ -191,7 +194,8 @@ public class ByClassTestPage extends BasePage {
                         for (ProjetoDTO projetoDTO : listaProjetos) {
                             if (projetoDTO.getParaProcessar()) {
                                 listaProjetosProcessar.add(projetoDTO);
-                            } ;
+                            }
+                            ;
                         }
 
                         if (listaProjetosProcessar.size() > 0) {
@@ -264,20 +268,20 @@ public class ByClassTestPage extends BasePage {
 
                 for (ProjetoDTO projetoDTO : listaProjetosProcessar) {
 
-                    if(!lkResultadoBotton.isEnabled()) {
+                    if (!lkResultadoBotton.isEnabled()) {
                         lkResultadoBotton.setEnabled(projetoDTO.getProcessado());
                         target.add(lkResultadoBotton);
                     }
 
 
-                        WebMarkupContainer lkResultado = projetoDTO.getLkResultado();
-                    if(!lkResultado.isEnabled()) {
+                    WebMarkupContainer lkResultado = projetoDTO.getLkResultado();
+                    if (!lkResultado.isEnabled()) {
                         lkResultado.setEnabled(projetoDTO.getProcessado());
                         target.add(lkResultado);
                     }
 
                     WebMarkupContainer lkCharts = projetoDTO.lkCharts;
-                    if(!lkCharts.isEnabled()) {
+                    if (!lkCharts.isEnabled()) {
                         lkCharts.setEnabled(projetoDTO.getProcessado());
                         target.add(lkCharts);
                     }

@@ -193,7 +193,7 @@ public class ByTestSmellsPage extends BasePage {
         dataProcessamentoAtual = Util.dateNowFolder();
         totalProcessado.setValor(0);
         lbPastaSelecionada.setDefaultModel(Model.of(WicketApplication.JNOSE_PROJECTS_FOLDER));
-        List<Projeto> listProjectBean = projetoBusiness.listAll();
+        List<Projeto> listProjectBean = projetoBusiness.listAllWithFilter();
         for(Projeto projeto : listProjectBean){
             listaProjetos.add(new ProjetoDTO(projeto));
         }
