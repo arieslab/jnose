@@ -409,6 +409,7 @@ public class JNose {
 
         List<List<String>> todasLinhas1 = new ArrayList<>();
         List<List<String>> todasLinhas2 = new ArrayList<>();
+        List<List<String>> todasLinhas3 = new ArrayList<>();
 
         boolean vizualizarCabecalho = true;
 
@@ -420,8 +421,59 @@ public class JNose {
             GitCore.checkout(commit.id, projeto.getPath());
 
             int total = 0;
+
             //criando a lista de testsmells
             List<String[]> listaTestSmells = JNose.processarTestSmells(projeto.getPath(), commit, vizualizarCabecalho);
+
+            List<TestClass> listTestClass = new ArrayList<>();
+
+            int totalTestSmells = 0;
+
+            try {
+
+                listTestClass = jNoseCore.getFilesTest(projeto.getPath());
+
+
+                if(listTestClass.size() != 0) {
+                    List<String> listaColumName = new ArrayList<>();
+                    listaColumName.add("commit.id");
+                    listaColumName.add("commit.name");
+                    listaColumName.add("commit.date");
+                    listaColumName.add("commit.msg");
+                    listaColumName.add("commit.tag");
+                    listaColumName.add("project");
+                    listaColumName.add("TestClass");
+                    listaColumName.add("ProductionFile");
+                    listaColumName.add("NumberLine");
+                    listaColumName.add("NumberMethods");
+                    listTestClass.get(0).getLineSumTestSmells().keySet().stream().forEach(v -> listaColumName.add(v));
+                    todasLinhas3.add(listaColumName);
+                }
+
+
+                for (TestClass testClass : listTestClass){
+                    jNoseCore.getTestSmells(testClass);
+                    totalTestSmells += testClass.getListTestSmell().size();
+
+
+                    List<String> lista3 = new ArrayList<>();
+                    lista3.add(commit.id);
+                    lista3.add(commit.name);
+                    lista3.add(commit.date.toString());
+                    lista3.add(commit.msg);
+                    lista3.add(commit.tag);
+                    lista3.add(projeto.getName());
+                    lista3.add(testClass.getName());
+                    lista3.add(testClass.getProductionFile());
+                    lista3.add(testClass.getNumberLine().toString());
+                    lista3.add(testClass.getNumberMethods().toString());
+                    testClass.getLineSumTestSmells().values().stream().forEach(v -> lista3.add(v.toString()));
+                    todasLinhas3.add(lista3);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             for (String[] linhaArray : listaTestSmells) {
                 List<String> list = Arrays.asList(linhaArray);
                 for (int i = 10; i <= (list.size() - 1); i++) {
@@ -437,16 +489,126 @@ public class JNose {
             lista2.add(commit.id);
             lista2.add(commit.tag);
             lista2.add(commit.date + "");
-            lista2.add(total + "");
+            lista2.add(totalTestSmells + "");
             todasLinhas2.add(lista2);
             vizualizarCabecalho = false;
+
         }
 
         mapa.put(1, todasLinhas1);
         mapa.put(2, todasLinhas2);
+        mapa.put(3, todasLinhas3);
 
         GitCore.checkout("master", projeto.getPath());
     }
+
+
+    private static Config config = new Config() {
+        @Override
+        public Boolean assertionRoulette() {
+            return true;
+        }
+
+        @Override
+        public Boolean conditionalTestLogic() {
+            return true;
+        }
+
+        @Override
+        public Boolean constructorInitialization() {
+            return true;
+        }
+
+        @Override
+        public Boolean defaultTest() {
+            return true;
+        }
+
+        @Override
+        public Boolean dependentTest() {
+            return true;
+        }
+
+        @Override
+        public Boolean duplicateAssert() {
+            return true;
+        }
+
+        @Override
+        public Boolean eagerTest() {
+            return true;
+        }
+
+        @Override
+        public Boolean emptyTest() {
+            return true;
+        }
+
+        @Override
+        public Boolean exceptionCatchingThrowing() {
+            return true;
+        }
+
+        @Override
+        public Boolean generalFixture() {
+            return true;
+        }
+
+        @Override
+        public Boolean mysteryGuest() {
+            return true;
+        }
+
+        @Override
+        public Boolean printStatement() {
+            return true;
+        }
+
+        @Override
+        public Boolean redundantAssertion() {
+            return true;
+        }
+
+        @Override
+        public Boolean sensitiveEquality() {
+            return true;
+        }
+
+        @Override
+        public Boolean verboseTest() {
+            return true;
+        }
+
+        @Override
+        public Boolean sleepyTest() {
+            return true;
+        }
+
+        @Override
+        public Boolean lazyTest() {
+            return true;
+        }
+
+        @Override
+        public Boolean unknownTest() {
+            return null;
+        }
+
+        @Override
+        public Boolean ignoredTest() {
+            return null;
+        }
+
+        @Override
+        public Boolean resourceOptimism() {
+            return null;
+        }
+
+        @Override
+        public Boolean magicNumberTest() {
+            return null;
+        }
+    };
 
 
 }
