@@ -1,11 +1,9 @@
 package br.ufba.jnose.base;
 
 import br.ufba.jnose.WicketApplication;
-import br.ufba.jnose.base.testsmelldetector.Main;
 import br.ufba.jnose.base.testsmelldetector.testsmell.TestSmellDetector;
 import br.ufba.jnose.core.Config;
 import br.ufba.jnose.core.JNoseCore;
-import br.ufba.jnose.dto.TestSmell;
 import br.ufba.jnose.dtolocal.Commit;
 import br.ufba.jnose.dtolocal.ProjetoDTO;
 import br.ufba.jnose.dto.TestClass;
@@ -13,7 +11,6 @@ import br.ufba.jnose.dtolocal.TotalProcessado;
 
 import java.io.*;
 import java.util.*;
-import java.util.logging.Logger;
 
 public class JNose {
 
@@ -94,51 +91,9 @@ public class JNose {
         return jNoseCore;
     }
 
-    private final static Logger LOGGER = Logger.getLogger(JNose.class.getName());
-
-    public static List<String[]> testfilemapping(List<TestClass> listTestClass, Commit commit, String projectName) {
-        System.out.println("Saving results. Total lines:" + listTestClass.size());
-
-        List<String[]> listRetorno = new ArrayList<>();
-
-        for (TestClass testClass : listTestClass) {
-            String[] linha = {
-                    commit.id,
-                    commit.name,
-                    commit.date.toString(),
-                    commit.msg,
-                    commit.tag,
-                    projectName,
-                    testClass.getPathFile(),
-                    testClass.getProductionFile(),
-                    testClass.getNumberLine().toString(),
-                    testClass.getNumberMethods().toString()
-            };
-            listRetorno.add(linha);
-        }
-        return listRetorno;
+    public JNose(){
+        jNoseCore = getInstance();
     }
-
-    public static String testfilemapping(List<TestClass> listTestClass, String pastaDataHora, String projectName) {
-        System.out.println("Saving results. Total lines:" + listTestClass.size());
-
-        List<List<String>> todasLinhas = new ArrayList<>();
-
-        for (TestClass testClass : listTestClass) {
-            List<String> columnValues = new ArrayList<>();
-            columnValues.add(0, projectName);
-            columnValues.add(1, testClass.getPathFile());
-            columnValues.add(2, testClass.getProductionFile());
-            columnValues.add(3, testClass.getNumberLine().toString());
-            columnValues.add(4, testClass.getNumberMethods().toString());
-            todasLinhas.add(columnValues);
-        }
-        System.out.println("Completed!");
-
-        return CSVCore.criarTestmappingdetectorCSV(todasLinhas,pastaDataHora,projectName);
-    }
-
-
 
     public static List<List<String>> convert(List<TestClass> listTestClass){
 
@@ -182,41 +137,13 @@ public class JNose {
     }
 
     public static List<TestClass> getFilesTest(String directoryPath) throws IOException {
-        return getInstance().getFilesTest(directoryPath);
+        return jNoseCore.getFilesTest(directoryPath);
     }
 
     public static TestClass.JunitVersion getJUnitVersion(String directoryPath) {
-        return getInstance().getJUnitVersion(directoryPath);
+        return jNoseCore.getJUnitVersion(directoryPath);
     }
 
-    public static void getTestSmells(br.ufba.jnose.dto.TestClass testClass) {
-        getInstance().getTestSmells(testClass);
-    }
-
-    public static String processarTestSmellDetector(String pathCSVMapping, String pathProjeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
-        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-        logRetorno.insert(0,Util.dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>");
-        String csvTestSmells = "";
-        try {
-            csvTestSmells = Main.start(pathCSVMapping, nameProjeto, pastaPathReport + folderTime + File.separatorChar,folderTime);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return csvTestSmells;
-    }
-
-
-//    public static List<List<String>> processarTestSmellDetector3(String pathCSVMapping, String pathProjeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
-//        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-//        logRetorno.insert(0,Util.dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector</font> <br>");
-//        List<List<String>> todasLinhas = new ArrayList<>();
-//        try {
-//            todasLinhas = Main.start2(pathCSVMapping, nameProjeto, pastaPathReport + folderTime + File.separatorChar,folderTime);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return todasLinhas;
-//    }
 
     public static List<List<String>> processarTestSmellDetector2(String pathProjeto, StringBuffer logRetorno) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
@@ -250,12 +177,6 @@ public class JNose {
         }
 
         return todasLinhas;
-    }
-
-    public static String processarTestFileMapping(List<TestClass> listTestClass, String pathProjeto, String folderTime, StringBuffer logRetorno) {
-        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
-        logRetorno.insert(0,Util.dateNow() + nameProjeto + " - <font style='color:green'>TestFileMapping</font> <br>");
-        return JNose.testfilemapping(listTestClass, folderTime, nameProjeto);
     }
 
 
@@ -366,28 +287,6 @@ public class JNose {
     }
 
 
-    public static List<String[]> processarTestSmells(String pathProjeto, Commit commit, Boolean cabecalho) {
-        List<String[]> listTestSmells = null;
-        try {
-            List<TestClass> listTestFile = JNose.getFilesTest(pathProjeto);
-
-            if(pathProjeto.lastIndexOf(File.separator) + 1 == pathProjeto.length()){
-                pathProjeto = pathProjeto.substring(0,pathProjeto.lastIndexOf(File.separator)-1);
-            }
-
-            String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separator) + 1, pathProjeto.length());
-
-            List<String[]> listaResultado = JNose.testfilemapping(listTestFile, commit, nameProjeto);
-
-            listTestSmells = Main.start(listaResultado, cabecalho);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return listTestSmells;
-    }
-
-
     public static void processarEvolution(ProjetoDTO projeto, StringBuffer logRetorno, Map<Integer, List<List<String>>> mapa) {
 
         GitCore.checkout("master", projeto.getPath());
@@ -409,27 +308,26 @@ public class JNose {
 
         List<List<String>> todasLinhas1 = new ArrayList<>();
         List<List<String>> todasLinhas2 = new ArrayList<>();
-        List<List<String>> todasLinhas3 = new ArrayList<>();
 
-        boolean vizualizarCabecalho = true;
+
+        int cont = 1;
 
         //Para cada commit executa uma busca
         for (Commit commit : lista) {
 
-            logRetorno.insert(0,"Analyze commit: " + commit.id + "<br>");
+            logRetorno.insert(0,cont++ + " - Analyze commit: " + commit.id + "<br>");
 
             GitCore.checkout(commit.id, projeto.getPath());
 
             int total = 0;
-
-            //criando a lista de testsmells
-            List<String[]> listaTestSmells1 = JNose.processarTestSmells(projeto.getPath(), commit, vizualizarCabecalho);
 
             List<TestClass> listTestClass = new ArrayList<>();
 
             int totalTestSmells = 0;
 
             try {
+
+                jNoseCore = getInstance();
 
                 listTestClass = jNoseCore.getFilesTest(projeto.getPath());
 
@@ -447,14 +345,13 @@ public class JNose {
                     listaColumName.add("NumberLine");
                     listaColumName.add("NumberMethods");
                     listTestClass.get(0).getLineSumTestSmells().keySet().stream().forEach(v -> listaColumName.add(v));
-                    todasLinhas3.add(listaColumName);
+                    todasLinhas1.add(listaColumName);
                 }
 
 
                 for (TestClass testClass : listTestClass){
-//                    jNoseCore.getTestSmells(testClass);
-                    totalTestSmells += testClass.getListTestSmell().size();
 
+                    totalTestSmells += testClass.getListTestSmell().size();
 
                     List<String> lista3 = new ArrayList<>();
                     lista3.add(commit.id);
@@ -468,22 +365,12 @@ public class JNose {
                     lista3.add(testClass.getNumberLine().toString());
                     lista3.add(testClass.getNumberMethods().toString());
                     testClass.getLineSumTestSmells().values().stream().forEach(v -> lista3.add(v.toString()));
-                    todasLinhas3.add(lista3);
+                    todasLinhas1.add(lista3);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            for (String[] linhaArray : listaTestSmells1) {
-                List<String> list = Arrays.asList(linhaArray);
-                for (int i = 10; i <= (list.size() - 1); i++) {
-                    boolean isNumeric = list.get(i).chars().allMatch(Character::isDigit);
-                    if (isNumeric) {
-                        total += Integer.parseInt(list.get(i));
-                    }
-                }
-                todasLinhas1.add(list);
-            }
 
             List<String> lista2 = new ArrayList<>();
             lista2.add(commit.id);
@@ -491,125 +378,14 @@ public class JNose {
             lista2.add(commit.date + "");
             lista2.add(totalTestSmells + "");
             todasLinhas2.add(lista2);
-            vizualizarCabecalho = false;
 
         }
 
         mapa.put(1, todasLinhas1);
         mapa.put(2, todasLinhas2);
-        mapa.put(3, todasLinhas3);
 
         GitCore.checkout("master", projeto.getPath());
     }
-
-
-    private static Config config = new Config() {
-        @Override
-        public Boolean assertionRoulette() {
-            return true;
-        }
-
-        @Override
-        public Boolean conditionalTestLogic() {
-            return true;
-        }
-
-        @Override
-        public Boolean constructorInitialization() {
-            return true;
-        }
-
-        @Override
-        public Boolean defaultTest() {
-            return true;
-        }
-
-        @Override
-        public Boolean dependentTest() {
-            return true;
-        }
-
-        @Override
-        public Boolean duplicateAssert() {
-            return true;
-        }
-
-        @Override
-        public Boolean eagerTest() {
-            return true;
-        }
-
-        @Override
-        public Boolean emptyTest() {
-            return true;
-        }
-
-        @Override
-        public Boolean exceptionCatchingThrowing() {
-            return true;
-        }
-
-        @Override
-        public Boolean generalFixture() {
-            return true;
-        }
-
-        @Override
-        public Boolean mysteryGuest() {
-            return true;
-        }
-
-        @Override
-        public Boolean printStatement() {
-            return true;
-        }
-
-        @Override
-        public Boolean redundantAssertion() {
-            return true;
-        }
-
-        @Override
-        public Boolean sensitiveEquality() {
-            return true;
-        }
-
-        @Override
-        public Boolean verboseTest() {
-            return true;
-        }
-
-        @Override
-        public Boolean sleepyTest() {
-            return true;
-        }
-
-        @Override
-        public Boolean lazyTest() {
-            return true;
-        }
-
-        @Override
-        public Boolean unknownTest() {
-            return null;
-        }
-
-        @Override
-        public Boolean ignoredTest() {
-            return null;
-        }
-
-        @Override
-        public Boolean resourceOptimism() {
-            return null;
-        }
-
-        @Override
-        public Boolean magicNumberTest() {
-            return null;
-        }
-    };
-
 
 }
 

@@ -98,15 +98,6 @@ public class EvolutionPage extends BasePage {
                         projeto.lkChart2.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
                         target.add(projeto.lkChart2);
                     }
-                    if(projeto.getMapResults().containsKey(3)){
-                        projeto.lkResult3.setEnabled(true);
-                        projeto.lkResult3.add(AttributeModifier.remove("style"));
-                        target.add(projeto.lkResult3);
-                    }else{
-                        projeto.lkResult3.setEnabled(false);
-                        projeto.lkResult3.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
-                        target.add(projeto.lkResult3);
-                    }
                 }
 
             }
@@ -176,22 +167,6 @@ public class EvolutionPage extends BasePage {
                 lkChart2.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
                 projeto.lkChart2 = lkChart2;
                 form.add(lkChart2);
-
-                Link lkResult3 = new Link<String>("lkResult3") {
-                    @Override
-                    public void onClick() {
-                        List<List<String>> todasLinhas3 = mapResults.get(3);
-                        setResponsePage(new ResultPage(todasLinhas3, "Evolution Report 3 - Total Testsmells by Commit: " + projeto.getName(), "resultado_evolution2", false));
-
-                    }
-                };
-                lkResult3.setOutputMarkupId(true);
-                lkResult3.setOutputMarkupPlaceholderTag(true);
-                lkResult3.setEnabled(false);
-                lkResult3.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
-                projeto.lkResult3 = lkResult3;
-                form.add(lkResult3);
-
 
                 AjaxLink btSubmit = new AjaxLink<String>("btSubmit") {
                     @Override
