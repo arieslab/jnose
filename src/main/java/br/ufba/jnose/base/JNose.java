@@ -11,6 +11,8 @@ import br.ufba.jnose.dto.TestClass;
 import br.ufba.jnose.dtolocal.TotalProcessado;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.*;
 
 public class JNose {
@@ -381,6 +383,13 @@ public class JNose {
                         lista4.add(ts.getName());
                         lista4.add(ts.getMethod());
                         lista4.add(ts.getRange());
+
+                        String identificador = testClass.getName() + ts.getName() + ts.getMethod() + ts.getRange();
+                        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                        byte[] encodedhash = digest.digest(identificador.getBytes(StandardCharsets.UTF_8));
+
+                        lista4.add(bytesToHex(encodedhash));
+
                         todasLinhas3.add(lista4);
                     }
 
@@ -404,6 +413,19 @@ public class JNose {
         mapa.put(3, todasLinhas3);
 
         GitCore.checkout("master", projeto.getPath());
+    }
+
+
+    private static String bytesToHex(byte[] hash) {
+        StringBuilder hexString = new StringBuilder(2 * hash.length);
+        for (int i = 0; i < hash.length; i++) {
+            String hex = Integer.toHexString(0xff & hash[i]);
+            if(hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+        return hexString.toString();
     }
 
 }
