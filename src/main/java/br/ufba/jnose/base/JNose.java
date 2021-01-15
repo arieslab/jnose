@@ -423,7 +423,7 @@ public class JNose {
             int total = 0;
 
             //criando a lista de testsmells
-            List<String[]> listaTestSmells = JNose.processarTestSmells(projeto.getPath(), commit, vizualizarCabecalho);
+            List<String[]> listaTestSmells1 = JNose.processarTestSmells(projeto.getPath(), commit, vizualizarCabecalho);
 
             List<TestClass> listTestClass = new ArrayList<>();
 
@@ -452,7 +452,7 @@ public class JNose {
 
 
                 for (TestClass testClass : listTestClass){
-                    jNoseCore.getTestSmells(testClass);
+//                    jNoseCore.getTestSmells(testClass);
                     totalTestSmells += testClass.getListTestSmell().size();
 
 
@@ -474,7 +474,7 @@ public class JNose {
                 e.printStackTrace();
             }
 
-            for (String[] linhaArray : listaTestSmells) {
+            for (String[] linhaArray : listaTestSmells1) {
                 List<String> list = Arrays.asList(linhaArray);
                 for (int i = 10; i <= (list.size() - 1); i++) {
                     boolean isNumeric = list.get(i).chars().allMatch(Character::isDigit);
