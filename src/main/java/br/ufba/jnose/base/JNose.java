@@ -4,6 +4,7 @@ import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.base.testsmelldetector.testsmell.TestSmellDetector;
 import br.ufba.jnose.core.Config;
 import br.ufba.jnose.core.JNoseCore;
+import br.ufba.jnose.dto.TestSmell;
 import br.ufba.jnose.dtolocal.Commit;
 import br.ufba.jnose.dtolocal.ProjetoDTO;
 import br.ufba.jnose.dto.TestClass;
@@ -305,6 +306,7 @@ public class JNose {
 
         List<List<String>> todasLinhas1 = new ArrayList<>();
         List<List<String>> todasLinhas2 = new ArrayList<>();
+        List<List<String>> todasLinhas3 = new ArrayList<>();
 
 
         int cont = 1;
@@ -363,6 +365,25 @@ public class JNose {
                     lista3.add(testClass.getNumberMethods().toString());
                     testClass.getLineSumTestSmells().values().stream().forEach(v -> lista3.add(v.toString()));
                     todasLinhas1.add(lista3);
+
+                    for(TestSmell ts : testClass.getListTestSmell()){
+                        List<String> lista4 = new ArrayList<>();
+                        lista4.add(commit.id);
+                        lista4.add(commit.name);
+                        lista4.add(commit.date.toString());
+                        lista4.add(commit.msg);
+                        lista4.add(commit.tag);
+                        lista4.add(projeto.getName());
+                        lista4.add(testClass.getName());
+                        lista4.add(testClass.getProductionFile());
+                        lista4.add(testClass.getNumberLine().toString());
+                        lista4.add(testClass.getNumberMethods().toString());
+                        lista4.add(ts.getName());
+                        lista4.add(ts.getMethod());
+                        lista4.add(ts.getRange());
+                        todasLinhas3.add(lista4);
+                    }
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -380,6 +401,7 @@ public class JNose {
 
         mapa.put(1, todasLinhas1);
         mapa.put(2, todasLinhas2);
+        mapa.put(3, todasLinhas3);
 
         GitCore.checkout("master", projeto.getPath());
     }

@@ -89,6 +89,15 @@ public class EvolutionPage extends BasePage {
                         projeto.lkResult2.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
                         target.add(projeto.lkResult2);
                     }
+                    if(projeto.getMapResults().containsKey(3)){
+                        projeto.lkResult3.setEnabled(true);
+                        projeto.lkResult3.add(AttributeModifier.remove("style"));
+                        target.add(projeto.lkResult3);
+                    }else{
+                        projeto.lkResult3.setEnabled(false);
+                        projeto.lkResult3.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
+                        target.add(projeto.lkResult3);
+                    }
                     if(projeto.getMapResults().containsKey(2)){
                         projeto.lkChart2.setEnabled(true);
                         projeto.lkChart2.add(AttributeModifier.remove("style"));
@@ -129,7 +138,7 @@ public class EvolutionPage extends BasePage {
                     @Override
                     public void onClick() {
                         List<List<String>> todasLinhas1 = mapResults.get(1);
-                        setResponsePage(new ResultPage(todasLinhas1, "Evolution Report 1 - TestSmells by Commit: " + projeto.getName(), "resultado_evolution1", false));
+                        setResponsePage(new ResultPage(todasLinhas1, "Evolution Report 1 - TestSmells by Commit and Class: " + projeto.getName(), "resultado_evolution1", false));
                     }
                 };
                 lkResult1.setOutputMarkupId(true);
@@ -153,6 +162,21 @@ public class EvolutionPage extends BasePage {
                 lkResult2.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
                 projeto.lkResult2 = lkResult2;
                 form.add(lkResult2);
+
+                Link lkResult3 = new Link<String>("lkResult3") {
+                    @Override
+                    public void onClick() {
+                        List<List<String>> todasLinhas3 = mapResults.get(3);
+                        setResponsePage(new ResultPage(todasLinhas3, "Evolution Report 3 - Total Testsmells by Commit: " + projeto.getName(), "resultado_evolution2", false));
+
+                    }
+                };
+                lkResult3.setOutputMarkupId(true);
+                lkResult3.setOutputMarkupPlaceholderTag(true);
+                lkResult3.setEnabled(false);
+                lkResult3.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
+                projeto.lkResult3 = lkResult3;
+                form.add(lkResult3);
 
                 Link lkChart2 = new Link<String>("lkChart2") {
                     @Override
