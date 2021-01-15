@@ -136,9 +136,6 @@ public class JNose {
         return todasLinhas;
     }
 
-    public static List<TestClass> getFilesTest(String directoryPath) throws IOException {
-        return jNoseCore.getFilesTest(directoryPath);
-    }
 
     public static TestClass.JunitVersion getJUnitVersion(String directoryPath) {
         return jNoseCore.getJUnitVersion(directoryPath);
@@ -151,7 +148,7 @@ public class JNose {
         List<List<String>> todasLinhas = new ArrayList<>();
 
         try {
-            List<TestClass> listFileTests = getInstance().getFilesTest(pathProjeto);
+            List<TestClass> listFileTests = jNoseCore.getFilesTest(pathProjeto);
             List<String> linhacolunas = new ArrayList<>();
             linhacolunas.add("App");
             linhacolunas.add("TestFileName");
@@ -182,7 +179,7 @@ public class JNose {
 
     public static List<TestClass> processarProjeto(ProjetoDTO projeto) throws IOException {
         projeto.setProcentagem(25);
-        List<TestClass> listaTestClass = JNose.getFilesTest(projeto.getPath());
+        List<TestClass> listaTestClass = jNoseCore.getFilesTest(projeto.getPath());
         projeto.setProcentagem(100);
         projeto.setProcessado(true);
         projeto.setProcessado2(true);
