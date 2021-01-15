@@ -74,10 +74,10 @@ public class CSVCore {
             writer = new FileWriter(outputFile, true);
 
             for (int i = 0; i < dataValues.size(); i++) {
-                writer.append(String.valueOf(dataValues.get(i)));
+                writer.append(dataValues.get(i).replace("\n", "").replace("\r", ""));
 
                 if (i != dataValues.size() - 1)
-                    writer.append(",");
+                    writer.append(";");
                 else
                     writer.append(System.lineSeparator());
 
