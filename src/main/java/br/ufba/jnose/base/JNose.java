@@ -151,7 +151,7 @@ public class JNose {
         List<List<String>> todasLinhas = new ArrayList<>();
 
         try {
-            List<TestClass> listFileTests = jNoseCore.getFilesTest(pathProjeto);
+            List<TestClass> listFileTests = getInstance().getFilesTest(pathProjeto);
             List<String> linhacolunas = new ArrayList<>();
             linhacolunas.add("App");
             linhacolunas.add("TestFileName");
