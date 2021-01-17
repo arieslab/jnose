@@ -66,6 +66,16 @@ public class BasePage extends WebPage {
             linkEvolution.add(new AttributeModifier("style", "color:red"));
         }
 
+        Link linkAnalyze = new Link<String>("linkAnalyze") {
+            @Override
+            public void onClick() {
+                setResponsePage(AnalyzePage.class);
+            }
+        };
+        if(paginaAtual.equals("AnalyzePage")){
+            linkAnalyze.add(new AttributeModifier("style", "color:red"));
+        }
+
         Link linkConfig = new Link<String>("linkConfig") {
             @Override
             public void onClick() {
@@ -88,9 +98,10 @@ public class BasePage extends WebPage {
 
         add(linkProjetos);
         add(linkByClassTest);
+        add(linkByTestSmells);
+        add(linkAnalyze);
         add(linkEvolution);
         add(linkConfig);
-        add(linkByTestSmells);
         add(linkStorage);
 
         AbstractAjaxTimerBehavior timerHome = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
