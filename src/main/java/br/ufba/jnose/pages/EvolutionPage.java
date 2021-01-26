@@ -98,6 +98,15 @@ public class EvolutionPage extends BasePage {
                         projeto.lkResult3.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
                         target.add(projeto.lkResult3);
                     }
+                    if(projeto.getMapResults().containsKey(4)){
+                        projeto.lkResult4.setEnabled(true);
+                        projeto.lkResult4.add(AttributeModifier.remove("style"));
+                        target.add(projeto.lkResult4);
+                    }else{
+                        projeto.lkResult4.setEnabled(false);
+                        projeto.lkResult4.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
+                        target.add(projeto.lkResult4);
+                    }
                     if(projeto.getMapResults().containsKey(2)){
                         projeto.lkChart2.setEnabled(true);
                         projeto.lkChart2.add(AttributeModifier.remove("style"));
@@ -177,6 +186,21 @@ public class EvolutionPage extends BasePage {
                 lkResult3.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
                 projeto.lkResult3 = lkResult3;
                 form.add(lkResult3);
+
+                Link lkResult4 = new Link<String>("lkResult4") {
+                    @Override
+                    public void onClick() {
+                        List<List<String>> todasLinhas4 = mapResults.get(4);
+                        setResponsePage(new ResultPage(todasLinhas4, "Evolution Report 4 - Total Testsmells by Commit: " + projeto.getName(), "resultado_evolution2", false));
+
+                    }
+                };
+                lkResult4.setOutputMarkupId(true);
+                lkResult4.setOutputMarkupPlaceholderTag(true);
+                lkResult4.setEnabled(false);
+                lkResult4.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
+                projeto.lkResult4 = lkResult4;
+                form.add(lkResult4);
 
                 Link lkChart2 = new Link<String>("lkChart2") {
                     @Override

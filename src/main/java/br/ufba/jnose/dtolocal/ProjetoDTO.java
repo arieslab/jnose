@@ -40,6 +40,7 @@ public class ProjetoDTO implements Serializable {
     public Link lkResult1;
     public Link lkResult2;
     public Link lkResult3;
+    public Link lkResult4;
     public Link lkChart2;
 
     public Label lbPorcentagem;
