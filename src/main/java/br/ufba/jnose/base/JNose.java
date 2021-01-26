@@ -316,6 +316,7 @@ public class JNose {
 
         //lista de commits/testsmells/códigoSHA5
         List<List<String>> todasLinhas4 = new ArrayList<>();
+        List<List<String>> todasLinhas5 = new ArrayList<>();
 
 
         int cont = 1;
@@ -422,6 +423,8 @@ public class JNose {
 
         Set<String> setSHA = new HashSet<>();
 
+        Map<String,Integer> mapName = new HashMap<>();
+
         for(List<String> linha : todasLinhas3){
 
             if(!setSHA.contains(linha.get(13))){
@@ -429,9 +432,25 @@ public class JNose {
                 todasLinhas4.add(linha);
             }
 
+            if(!mapName.containsKey(linha.get(1))){
+                mapName.put(linha.get(1),1);
+            }else{
+                mapName.put(linha.get(1),mapName.get(linha.get(1))+1);
+            }
+
         }
 
         mapa.put(4, todasLinhas4);
+
+
+        mapName.forEach((s, i) -> {
+            List<String> lista3 = new ArrayList<>();
+            lista3.add(s);
+            lista3.add(i.toString());
+            todasLinhas5.add(lista3);
+        });
+
+        mapa.put(5, todasLinhas5);
 
         GitCore.checkout("master", projeto.getPath());
     }

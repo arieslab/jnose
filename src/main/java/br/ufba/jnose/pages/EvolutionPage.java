@@ -7,6 +7,7 @@ import br.ufba.jnose.dtolocal.ProjetoDTO;
 import br.ufba.jnose.entities.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
 import br.ufba.jnose.pages.charts.BasicLineOptions;
+import br.ufba.jnose.pages.charts.UserCommitBarOptions;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -116,6 +117,16 @@ public class EvolutionPage extends BasePage {
                         projeto.lkChart2.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
                         target.add(projeto.lkChart2);
                     }
+
+                    if(projeto.getMapResults().containsKey(5)){
+                        projeto.lkChart3.setEnabled(true);
+                        projeto.lkChart3.add(AttributeModifier.remove("style"));
+                        target.add(projeto.lkChart3);
+                    }else{
+                        projeto.lkChart3.setEnabled(false);
+                        projeto.lkChart3.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
+                        target.add(projeto.lkChart3);
+                    }
                 }
 
             }
@@ -215,6 +226,20 @@ public class EvolutionPage extends BasePage {
                 lkChart2.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
                 projeto.lkChart2 = lkChart2;
                 form.add(lkChart2);
+
+                Link lkChart3 = new Link<String>("lkChart3") {
+                    @Override
+                    public void onClick() {
+                        List<List<String>> todasLinhas5 = mapResults.get(5);
+                        setResponsePage(new ChartsPage( projeto.getName() ,new UserCommitBarOptions(todasLinhas5)));
+                    }
+                };
+                lkChart3.setOutputMarkupId(true);
+                lkChart3.setOutputMarkupPlaceholderTag(true);
+                lkChart3.setEnabled(false);
+                lkChart3.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
+                projeto.lkChart3 = lkChart3;
+                form.add(lkChart3);
 
                 AjaxLink btSubmit = new AjaxLink<String>("btSubmit") {
                     @Override
