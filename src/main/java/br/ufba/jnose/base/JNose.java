@@ -94,6 +94,10 @@ public class JNose {
         return jNoseCore;
     }
 
+    static {
+        jNoseCore = getInstance();
+    }
+
     public JNose(){
         jNoseCore = getInstance();
     }
@@ -141,7 +145,7 @@ public class JNose {
 
 
     public static TestClass.JunitVersion getJUnitVersion(String directoryPath) {
-        return jNoseCore.getJUnitVersion(directoryPath);
+        return getInstance().getJUnitVersion(directoryPath);
     }
 
 
