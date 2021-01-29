@@ -360,6 +360,7 @@ public class AnalyzePage extends BasePage {
         descriptions.put("Print Statement", "The printing instructions in the unit tests are redundant, as the unit tests are performed as part of an automated script. It consumes resources or increases the execution time.");
         descriptions.put("Lazy Test", "This test smell occurs when several test methods check the same method using the same equipment (but, for example, they check the values of different instance variables). These tests are usually meaningful only when considered together.");
         descriptions.put("Eager Test", "When a test method checks several methods of the object to be tested, it is difficult to read and understand and, therefore, it is more difficult to use as documentation. In addition, it makes tests more dependent on each other and more difficult to maintain.");
+        descriptions.put("Verbose Test", "Excess test code or Conditional Test Logic. Difficult to verify its accuracy and more likely to contain errors.");
 
     }
 
