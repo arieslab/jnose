@@ -333,6 +333,11 @@ public class AnalyzePage extends BasePage {
             public Boolean magicNumberTest() {
                 return true;
             }
+
+            @Override
+            public Integer maxStatements() {
+                return 30;
+            }
         };
 
         return config;

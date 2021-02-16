@@ -85,6 +85,11 @@ public class JNose {
             public Boolean magicNumberTest() {
                 return TestSmellDetector.magicNumberTest;
             }
+
+            @Override
+            public Integer maxStatements() {
+                return 30;
+            }
         };
 
         if(jNoseCore == null) {
