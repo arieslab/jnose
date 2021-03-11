@@ -395,7 +395,7 @@
         </repository>
         <repository>
             <id>jnose-core</id>
-            <url>https://github.com/tassiovirginio/jnose-core/raw/mvn-repo/</url>
+            <url>https://github.com/arieslab/jnose-core/raw/mvn-repo/</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
