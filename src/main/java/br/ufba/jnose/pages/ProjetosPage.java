@@ -52,7 +52,7 @@ public class ProjetosPage extends BasePage {
         form.add(new Link<String>("lkAddOracle") {
             @Override
             public void onClick() {
-                repoGit = "https://github.com/danielevalverde/jnose-tests.git";
+                repoGit = "https://github.com/tassiovirginio/jnose-dataset.git";
                 setResponsePage(new ProjetosPage(repoGit));
             }
         });
