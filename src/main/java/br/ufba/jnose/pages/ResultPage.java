@@ -19,7 +19,7 @@ public class ResultPage extends ImprimirPage {
 
         add(new Label("title",title));
 
-        DownloadLink lkEsportCSV = new DownloadLink("lkEsportCSV",gerarCSV(todasLinhas,csvFileName));
+        DownloadLink lkEsportCSV = new DownloadLink("lkEsportCSV", gerarCSV(todasLinhas,csvFileName));
         add(lkEsportCSV);
 
         ListView<List<String>> lista = new ListView<List<String>>("lista",todasLinhas) {

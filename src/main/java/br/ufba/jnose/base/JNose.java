@@ -311,7 +311,7 @@ public class JNose {
         Collections.sort(lista, new Comparator<Commit>() {
             public int compare(Commit o1, Commit o2) {
                 if (o1.date == null || o2.date == null) return 0;
-                return o2.date.compareTo(o1.date);
+                return o1.date.compareTo(o2.date);
             }
         });
 
@@ -367,7 +367,7 @@ public class JNose {
 
                 for (TestClass testClass : listTestClass){
 
-                    totalTestSmells += testClass.getListTestSmell().size();
+//                    totalTestSmells += testClass.getListTestSmell().size();
 
                     List<String> lista3 = new ArrayList<>();
                     lista3.add(commit.id);
@@ -389,6 +389,8 @@ public class JNose {
 
                         if(jaProcessado.contains(sha256) == false) {
                             jaProcessado.add(sha256);
+
+                            totalTestSmells++;
 
                             List<String> lista4 = new ArrayList<>();
                             lista4.add(commit.id);
