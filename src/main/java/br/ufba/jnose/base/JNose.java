@@ -326,6 +326,8 @@ public class JNose {
 
         int cont = 1;
 
+        boolean primeiraLinha = true;
+
         List<String> jaProcessado = new ArrayList<>();
 
         //Para cada commit executa uma busca
@@ -348,7 +350,8 @@ public class JNose {
                 listTestClass = jNoseCore.getFilesTest(projeto.getPath());
 
 
-                if(listTestClass.size() != 0) {
+                if(listTestClass.size() != 0 && primeiraLinha) {
+                    primeiraLinha = false;
                     List<String> listaColumName = new ArrayList<>();
                     listaColumName.add("commit.id");
                     listaColumName.add("commit.name");
