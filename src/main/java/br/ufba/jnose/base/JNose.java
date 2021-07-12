@@ -300,11 +300,11 @@ public class JNose {
 
         GitCore.checkout("master", projeto.getPath());
 
-        List<Commit> lista;
+        List<Commit> lista = new ArrayList<>();
 
-        if (projeto.getOptionSelected().contains("/")) {
+        if (projeto.getOptionSelected().equalsIgnoreCase("commit")) {
             lista = projeto.getListaCommits();
-        } else {
+        } else if (projeto.getOptionSelected().equalsIgnoreCase("tag")){
             lista = projeto.getListaTags();
         }
 

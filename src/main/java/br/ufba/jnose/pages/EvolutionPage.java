@@ -16,10 +16,13 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioChoice;
+import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -246,30 +249,47 @@ public class EvolutionPage extends BasePage {
                     public void onClick(AjaxRequestTarget target) {
                         System.out.println("Processamento do projeto: " + projeto.getName() + " - Start");
                         logRetorno.insert(0,"Processamento do projeto: " + projeto.getName() + " - Start<br>");
-
                         new Thread() { // IMPORTANTE: AQUI SE CRIA AS THREADS
                             @Override
                             public void run() {
                                 JNose.processarEvolution(projeto, logRetorno, projeto.getMapResults());
                             }
                         }.start();
-
                     }
                 };
                 btSubmit.setEnabled(false);
                 form.add(btSubmit);
 
-                RadioChoice<String> radioCommitsTags = new RadioChoice<String>(
-                        "radioCommitsTags", new PropertyModel<String>(projeto, "optionSelected"),
-                        Arrays.asList(new String[]{projeto.getListaCommits().size() + " / ", projeto.getListaTags().size() + ""})) {
 
-                };
-                radioCommitsTags.add(new AjaxEventBehavior("change") {
+                RadioGroup radioCommitsTags = new RadioGroup("radioCommitsTags", PropertyModel.of (projeto, "optionSelected"));
+
+                Radio radio1 = new Radio("commit",new Model<String>("commit"));
+                radio1.add(new AjaxEventBehavior("change") {
                     protected void onEvent(AjaxRequestTarget target) {
+                        projeto.setOptionSelected("commit");
                         btSubmit.setEnabled(true);
                         target.add(btSubmit);
                     }
                 });
+                radioCommitsTags.add(radio1);
+                radioCommitsTags.add(new Label("ck1", Model.of(projeto.getListaCommits().size())));
+
+                Radio radio2 = new Radio("tag",new Model<String>("tag"));
+                radio2.add(new AjaxEventBehavior("change") {
+                    protected void onEvent(AjaxRequestTarget target) {
+                        projeto.setOptionSelected("tag");
+                        btSubmit.setEnabled(true);
+                        target.add(btSubmit);
+                    }
+                });
+                radioCommitsTags.add(radio2);
+                radioCommitsTags.add(new Label("ck2", Model.of(projeto.getListaTags().size())));
+
+//                RadioChoice<String> radioCommitsTags = new RadioChoice<String>(
+//                        "radioCommitsTags", PropertyModel.of(projeto, "optionSelected"),
+//                        Arrays.asList(new String[]{projeto.getListaCommits().size() + " / ", projeto.getListaTags().size() + ""})) {
+//
+//                };
                 radioCommitsTags.setOutputMarkupId(true);
                 radioCommitsTags.setOutputMarkupPlaceholderTag(true);
                 form.add(radioCommitsTags);
