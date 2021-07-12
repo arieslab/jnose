@@ -326,6 +326,8 @@ public class JNose {
 
         int cont = 1;
 
+        List<String> jaProcessado = new ArrayList<>();
+
         //Para cada commit executa uma busca
         for (Commit commit : lista) {
 
@@ -382,28 +384,30 @@ public class JNose {
                     todasLinhas1.add(lista3);
 
                     for(TestSmell ts : testClass.getListTestSmell()){
-                        List<String> lista4 = new ArrayList<>();
-                        lista4.add(commit.id);
-                        lista4.add(commit.name);
-                        lista4.add(commit.date.toString());
-                        lista4.add(commit.msg);
-                        lista4.add(commit.tag);
-                        lista4.add(projeto.getName());
-                        lista4.add(testClass.getName());
-                        lista4.add(testClass.getProductionFile());
-                        lista4.add(testClass.getNumberLine().toString());
-                        lista4.add(testClass.getNumberMethods().toString());
-                        lista4.add(ts.getName());
-                        lista4.add(ts.getMethod());
-                        lista4.add(ts.getRange());
 
-                        String identificador = testClass.getName() + ts.getName() + ts.getMethod() + ts.getRange();
-                        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-                        byte[] encodedhash = digest.digest(identificador.getBytes(StandardCharsets.UTF_8));
+                        String sha256 = Util.getSHA5Code(testClass,ts).trim();
 
-                        lista4.add(bytesToHex(encodedhash));
+                        if(jaProcessado.contains(sha256) == false) {
+                            jaProcessado.add(sha256);
 
-                        todasLinhas3.add(lista4);
+                            List<String> lista4 = new ArrayList<>();
+                            lista4.add(commit.id);
+                            lista4.add(commit.name);
+                            lista4.add(commit.date.toString());
+                            lista4.add(commit.msg);
+                            lista4.add(commit.tag);
+                            lista4.add(projeto.getName());
+                            lista4.add(testClass.getName());
+                            lista4.add(testClass.getProductionFile());
+                            lista4.add(testClass.getNumberLine().toString());
+                            lista4.add(testClass.getNumberMethods().toString());
+                            lista4.add(ts.getName());
+                            lista4.add(ts.getMethod());
+                            lista4.add(ts.getRange());
+                            lista4.add(sha256);
+//                            lista4.add(Util.getCode(testClass,ts));
+                            todasLinhas3.add(lista4);
+                        }
                     }
 
                 }
@@ -460,18 +464,6 @@ public class JNose {
         GitCore.checkout("master", projeto.getPath());
     }
 
-
-    private static String bytesToHex(byte[] hash) {
-        StringBuilder hexString = new StringBuilder(2 * hash.length);
-        for (int i = 0; i < hash.length; i++) {
-            String hex = Integer.toHexString(0xff & hash[i]);
-            if(hex.length() == 1) {
-                hexString.append('0');
-            }
-            hexString.append(hex);
-        }
-        return hexString.toString();
-    }
 
 }
 
