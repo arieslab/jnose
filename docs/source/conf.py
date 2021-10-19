@@ -31,8 +31,6 @@ extensions = [
   'sphinx.ext.autosectionlabel',
   'sphinx.ext.autodoc',
   'sphinx.ext.intersphinx',
-  'sphinx-prompt',
-  'sphinx_search.extension',
   'sphinxemoji.sphinxemoji',
 ]
 
