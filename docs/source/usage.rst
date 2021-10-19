@@ -1,5 +1,8 @@
+Other usages 
+=============
+
 How to use JNose Test as a Maven dependency
-==============================================
+---------------------------------------------
 
 Since version 2.0, JNose Test is available in the Maven Central Repository. 
 In order to use JNose Test as a maven dependency in your project, add the following snippet to your project's build configuration file:
@@ -14,7 +17,7 @@ In order to use JNose Test as a maven dependency in your project, add the follow
  
  
 Using Docker
-========================
+-------------
 
 Making a pull https://hub.docker.com/r/tassiovirginio/jnose
 
