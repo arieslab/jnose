@@ -31,11 +31,8 @@ extensions = [
   'sphinx.ext.autosectionlabel',
   'sphinx.ext.autodoc',
   'sphinx.ext.intersphinx',
-  'doc_extensions',
   'sphinx_tabs.tabs',
   'sphinx-prompt',
-  'notfound.extension',
-  'hoverxref.extension',
   'sphinx_search.extension',
   'sphinxemoji.sphinxemoji',
 ]
