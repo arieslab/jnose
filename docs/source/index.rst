@@ -13,7 +13,6 @@ JNose Test is a tool developed to automatically detect test smells in test code,
 This manual is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike License.
 
 .. toctree::
-   :maxdepth: 0
    :hidden:
    :caption: Welcome to JNose's documentation!
 
@@ -26,7 +25,7 @@ Learn how to configure and run the JNose Test.
    * :doc:`Requirements </requirements>` 
    * :doc:`Downloading and running </downloading-and-running>` 
    * :doc:`Feature Overview </features-overview>` 
-   * :doc:`Links` | :doc:`/links`
+   * :doc:`Links </links>`
 
 .. toctree::
    :maxdepth: 2
@@ -43,6 +42,9 @@ Understanding the test smells
 
 Learn about test smells.
 
+.. toctree::
+   :hidden:
+   :caption: Understanding the test smells 
 
 About us
 ------------------------------
