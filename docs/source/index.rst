@@ -40,6 +40,8 @@ Understanding the test smells
 ------------------------------
 
 Learn about test smells.
+* :doc:`Assertion Roulette </smell>`
+* :doc:`Conditional Test Logic </smell>`
 
 
 About JNose Test
