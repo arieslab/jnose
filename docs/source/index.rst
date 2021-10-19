@@ -5,6 +5,8 @@
 
 Welcome to JNose's documentation!
 =================================
+.. meta::
+   :description lang=en: JNose Test
 
 Test smells are bad practices to either design or implement a test code. Their presence may reduce the test code quality, harming the software testing activities, primarily from a maintenance perspective. The objective of this project is to provide an undertanding and automated support to help developers handling test smells. To this extent, this documentation provides examples and definitions of test smells and an open-source tool to detect the different smell types in the test code.
 
