@@ -40,15 +40,15 @@ Understanding the test smells
 ------------------------------
 
 Learn about test smells.
-* :doc:`Assertion Roulette </smell>`
-* :doc:`Conditional Test Logic </smell>`
+* :doc:`Assertion Roulette </smells>`
+* :doc:`Conditional Test Logic </smells>`
 
 .. toctree::
    :maxdepth: 2
    :hidden:
    :caption: Understanding the test smells
    
-   /smell
+   /smells
 
 About JNose Test
 ------------------------------
