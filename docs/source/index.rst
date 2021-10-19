@@ -5,8 +5,6 @@
 
 Welcome to JNose's documentation!
 =================================
-.. meta::
-   :description lang=en: JNose Test
 
 Test smells are bad practices to either design or implement a test code. Their presence may reduce the test code quality, harming the software testing activities, primarily from a maintenance perspective. The objective of this project is to provide an undertanding and automated support to help developers handling test smells. To this extent, this documentation provides examples and definitions of test smells and an open-source tool to detect the different smell types in the test code.
 
@@ -16,7 +14,7 @@ This manual is licensed under the Creative Commons Attribution-NonCommercial-Sha
 
 
 Getting started
------------
+=================================
 Learn how to configure and run the JNose Test.
    * :doc:`Requirements </requirements>` 
    * :doc:`Downloading and running </downloading-and-running>` 
@@ -33,12 +31,12 @@ Learn how to configure and run the JNose Test.
    links
    
 Understanding the test smells 
------------
+=================================
 Learn about test smells.
 
 
 About us
-------------------------------------------
+=================================
 
 Learn about the ARIES Lab organization to find out how you can get involved and contribute to the development and success of the JNose Test project and many others!
 
