@@ -40,7 +40,7 @@ Understanding the test smells
 Learn about test smells.
 
 
-About us
+About JNose Test
 ------------------------------
 
 Learn about the ARIES Lab organization to find out how you can get involved and contribute to the development and success of the JNose Test project and many others!
@@ -52,16 +52,16 @@ Learn about the ARIES Lab organization to find out how you can get involved and 
    * :doc:`Code of conduct </code-of-conduct>`
    * :doc:`Release notes & changelog </changelog>`
 
-* **The people and philosophy behind Read the Docs**:
-   * :doc:`About Us </about>` 
-   * :doc:`Team </team>` 
+* **The people behind Read the Docs**:
+   * :doc:`About us </about>` 
+   * :doc:`Our Team </team>` 
    * :doc:`Open source philosophy </open-source-philosophy>` 
 
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :hidden:
-   :caption: About us
+   :caption: About JNose Test
 
    /contribute
    /install
