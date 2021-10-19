@@ -11,10 +11,12 @@ Test smells are bad practices to either design or implement a test code. Their p
 JNose Test is a tool developed to automatically detect test smells in test code, and to collect coverage metrics. JNose Test is an extension of the `Test Smell Detector <https://testsmells.org/index.html/>`_. Besides presenting the number of test smells detected by class, our tool shows the collection of code metrics and test coverage using the JaCoCo library; a unified result for all projects under analysis; and a graphical interface. In addition, the project uses the Apache Maven to manage all library dependencies and support the compilation and execution of the JNose Test tool.
 
 This manual is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike License.
+:ref:`search`
 
 
 Getting started
-=================================
+------------------------------
+
 Learn how to configure and run the JNose Test.
    * :doc:`Requirements </requirements>` 
    * :doc:`Downloading and running </downloading-and-running>` 
@@ -31,12 +33,13 @@ Learn how to configure and run the JNose Test.
    links
    
 Understanding the test smells 
-=================================
+------------------------------
+
 Learn about test smells.
 
 
 About us
-=================================
+------------------------------
 
 Learn about the ARIES Lab organization to find out how you can get involved and contribute to the development and success of the JNose Test project and many others!
 
