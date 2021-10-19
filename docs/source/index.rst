@@ -43,6 +43,12 @@ Learn about test smells.
 * :doc:`Assertion Roulette </smell>`
 * :doc:`Conditional Test Logic </smell>`
 
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: Understanding the test smells
+   
+   /smell
 
 About JNose Test
 ------------------------------
