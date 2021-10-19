@@ -21,6 +21,7 @@ Learn how to configure and run the JNose Test.
 
    * :doc:`Requirements </requirements>` 
    * :doc:`Downloading and running </downloading-and-running>` 
+   * :doc:`Other usages </usage>`
    * :doc:`Feature Overview </features-overview>` 
    * :doc:`Links </links>`
 
@@ -31,6 +32,7 @@ Learn how to configure and run the JNose Test.
    
    /requirements
    /downloading-and-running
+   /usage
    /features-overview
    /links
    
