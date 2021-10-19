@@ -31,7 +31,6 @@ extensions = [
   'sphinx.ext.autosectionlabel',
   'sphinx.ext.autodoc',
   'sphinx.ext.intersphinx',
-  'sphinxcontrib.httpdomain',
   'doc_extensions',
   'sphinx_tabs.tabs',
   'sphinx-prompt',
