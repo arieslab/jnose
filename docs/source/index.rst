@@ -41,7 +41,8 @@ Understanding the test smells
 
 Learn about test smells.
 
-* :doc:`Test Smells </smells>`
+* :doc:`Assertion Roulette </smells>`
+* :doc:`Conditional Test Logic </smells>`
 
 .. toctree::
    :maxdepth: 2
