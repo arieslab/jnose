@@ -40,13 +40,13 @@ Understanding the test smells
 ------------------------------
 
 Learn about test smells.
-* :doc:`Assertion Roulette </smells>`
-* :doc:`Conditional Test Logic </smells>`
+
+* :doc:`Test Smells </smells>`
 
 .. toctree::
    :maxdepth: 2
    :hidden:
-   :caption: Understanding the test smells
+   :caption: Understanding test smells
    
    /smells
 
