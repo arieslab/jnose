@@ -1,4 +1,4 @@
-JNose Test Features
+JNose Test features
 ==============================
 
 The JNose Test home screen presents a description for the analysis mode and a menu with the options:
