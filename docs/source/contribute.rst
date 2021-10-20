@@ -1,34 +1,29 @@
 Contributing to JNose Test project
 =============================
 
-You are here to help on Read the Docs? Awesome, feel welcome and read the following sections in order to know how to ask questions and how to work on something.
-
-All members of our community are expected to follow our :doc:`/code-of-conduct`.
-Please make sure you are welcoming and friendly in all of our spaces.
-
-Get in touch
-------------
-
-- Report bugs, suggest features or view the source code on `GitHub <https:arieslab/jnose/>`_.
-- Discuss topics on XX.
-
-Contributing to development
----------------------------
-
-If you want to deep dive and help out with development on Read the Docs, then first get the project installed locally according to the
-:doc:`installation guide </development/install>`. After that is done we suggest you have a look at tickets in our issue tracker that are labelled `Good
-First Issue`_. These are meant to be a great way to get a smooth start and won't put you in front of the most complex parts of the system.
-
-If you are up to more challenging tasks with a bigger scope, then there are a set of tickets with a `Feature`_ or `Improvement`_ tag.
-These tickets have a general overview and description of the work required to finish.
-If you want to start somewhere, this would be a good place to start (make sure that the issue also have the `Accepted`_ label).
-
-You can read all of our :doc:`/development/index` to understand more the development of Read the Docs. When contributing code, then please follow the standard Contribution Guidelines set forth at `contribution-guide.org`_.
+Are you here to help on JNose Test project? Awesome!
+We have prepared some guidelines to help you to help us out :smiley:
 
 
-Contributing to documentation
------------------------------
+Contributing
+-------------
 
-Documentation for JNose Test is hosted by Read the Docs.
-There are guidelines around writing and formatting documentation for the project.
-For full details, including how to build it, see :doc:`/development/docs`.
+*Suggesting new ideas*
+
+Please create a new topic on GitHub discussions <https://github.com/arieslab/jnose/discussions/categories/ideas>`_ to request a new feature. Even if you plan to implement it yourself and submit it back to the project, we would like to know what feature you are working on!
+
+*File bug reports*
+
+If you see something, say something (about bugs)! Please file an issue on the GitHub `issue tracker <https://github.com/arieslab/jnose/issues>`_. No quirk is too small for a report. We care about the details.
+
+*Make our documentation better*
+
+Did you learn how to do something in JNose Test but it wasn't obvious on first try? You can contribute to our documentation!
+While the JNose Test documentation is hosted on ReadTheDocs, the code is available in the `docs module<https://github.com/arieslab/jnose/tree/main/docs>`_ on the GitHub repository.
+
+*Tackling some open issues*
+
+If you want to deep dive and help out with development on JNose Test, we suggest you have a look at the tickets in the GitHub `issue tracker <https://github.com/arieslab/jnose/issues>`_.
+
+*How to submit a change?*
+Create a fork of our GitHub `repository <https://github.com/arieslab/jnose>`_, and push your changes to it. Then, you can open a Pull Request to contribute your changes upstream. Make sure to write some notes about what your change does!

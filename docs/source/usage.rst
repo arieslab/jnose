@@ -1,6 +1,14 @@
 Other usages 
 =============
 
+Building JNose Test with Heroku!
+---------------------------------------------
+
+If you want to try JNose Test, we suggest you to use the `JNose Test application <http://jnose.herokuapp.com/?1>`_ hosted in Heroku!
+It can give you an overview of all features suported by JNose Test, saving you the trouble of downloading and running the tool on your machine.
+Please, be aware that the Heroku application has time constraints and it may not work whether you choose to analyze large software projects.
+
+
 How to use JNose Test as a Maven dependency
 ---------------------------------------------
 
@@ -16,8 +24,8 @@ In order to use JNose Test as a maven dependency in your project, add the follow
   </dependency> 
  
  
-Using Docker
--------------
+Building JNose Test with Docker
+---------------------------------------------
 
 Making a pull https://hub.docker.com/r/tassiovirginio/jnose
 

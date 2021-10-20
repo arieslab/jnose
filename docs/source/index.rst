@@ -1,8 +1,3 @@
-.. jnose documentation master file, created by
-   sphinx-quickstart on Tue Oct 19 08:20:47 2021.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Welcome to JNose's documentation!
 =================================
 
@@ -57,17 +52,10 @@ About JNose Test
 
 Learn about the ARIES Lab organization to find out how you can get involved and contribute to the development and success of the JNose Test project and many others!
 
-* **Getting involved with JNose Test**:
-   * :doc:`Contributing </contribute>` 
-   * :doc:`Development installation </install>` 
-   * :doc:`roadmap </roadmap>` 
-   * :doc:`Code of conduct </code-of-conduct>`
-   * :doc:`Release notes & changelog </changelog>`
-
-* **The people behind Read the Docs**:
-   * :doc:`About us </about>` 
-   * :doc:`Our Team </team>` 
-   * :doc:`Open source philosophy </open-source-philosophy>` 
+* :doc:`Contributing </contribute>`
+* :doc:`Release notes & changelog </changelog>`
+* :doc:`Publications</publications>`
+* :doc:`Our Team </team>`
 
 
 .. toctree::
@@ -76,11 +64,6 @@ Learn about the ARIES Lab organization to find out how you can get involved and 
    :caption: About JNose Test
 
    /contribute
-   /install
-   /roadmap
-   /code-of-conduct
    /changelog
-
-   /about
+   /publications
    /team
-   /open-source-philosophy
