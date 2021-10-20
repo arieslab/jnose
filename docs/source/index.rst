@@ -28,7 +28,7 @@ Learn how to configure and run the JNose Test.
    /requirements
    /downloading-and-running
    /usage
-   /feature
+   /features
    /links
    
 Understanding the test smells 
