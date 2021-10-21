@@ -31,7 +31,7 @@ OBS:
 It is necessary to install the "jnose-core" dependency for JNose to work. Below is the step by step to install, before installing Jnose.
 
 ```shell
-git clone https://github.com/arieslab/jnose
+git clone https://github.com/arieslab/jnose-core
 cd jnose-core
 mvn install
 ```
