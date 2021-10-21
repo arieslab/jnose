@@ -14,7 +14,7 @@ Além disso, o projeto usa o Apache Maven para gerenciar todas as dependências 
  - GIT
 
 ## Download e Executar
- - git clone https://github.com/tassiovirginio/jnose.git
+ - git clone https://github.com/arieslab/jnose
  - cd jnose
  - mvn jetty:run
  - acessar: http://127.0.0.1:8080
