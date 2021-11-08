@@ -10,12 +10,25 @@ JNose Test is a tool developed to automatically detect test smells in test code,
 In addition, the project uses Apache Maven to manage all library dependencies and offer support to the build and run of the JNose test tool.
 
 ## Prerequisites
+
+<a target="_blank" href="https://github.com/arieslab/jnose">
+  Dependence on Project (JNose-Core)
+</a>
+
+It is necessary to install the "jnose-core" dependency for JNose to work. Below is the step by step to install, before installing Jnose.
+
+```shell
+git clone https://github.com/arieslab/jnose-core
+cd jnose-core
+mvn install
+```
+
  - JDK 1.8 
  - Maven 3 
  - GIT
 
 ## Download and Run
- - git clone https://github.com/tassiovirginio/jnose.git
+ - git clone https://github.com/arieslab/jnose
  - cd jnose
  - mvn jetty:run
  - acessar: http://127.0.0.1:8080
