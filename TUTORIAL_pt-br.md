@@ -9,6 +9,19 @@ um resultado unificado para todos os projetos em análise; e uma interface gráf
 Além disso, o projeto usa o Apache Maven para gerenciar todas as dependências da biblioteca e oferecer suporte à compilação e execução da ferramenta JNose Test.
 
 ## Pré-requisitos
+
+<a target="_blank" href="https://github.com/arieslab/jnose">
+  Dependence on Project (JNose-Core)
+</a>
+
+It is necessary to install the "jnose-core" dependency for JNose to work. Below is the step by step to install, before installing Jnose.
+
+```shell
+git clone https://github.com/arieslab/jnose-core
+cd jnose-core
+mvn install
+```
+
  - JDK 1.8 
  - Maven 3 
  - GIT
