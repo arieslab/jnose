@@ -1,13 +1,15 @@
 <p align="center"><img src="https://github.com/tassiovirginio/jnose/blob/master/src/main/webapp/logo.png?raw=true" width="70"></p>
 
-<p align="center">
+<div align="center">
+
   [![Documentation Status](https://readthedocs.org/projects/jnose/badge/?version=latest)](http://jnose.readthedocs.io/en/latest/?badge=latest)
   [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-  [![Build Status](https://github.com/arieslab/jnose-core/actions/workflows/build/badge.svg)](https://github.com/arieslab/jnose-core/actions)
+  [![Actions Status](https://github.com/arieslab/jnose-core/workflows/maven/badge.svg)](https://github.com/arieslab/jnose-core/actions)
   <a><img src="https://img.shields.io/badge/Powered-ARIES%20Lab-blueviolet.svg"/></a>
-</p>
+  
+</div>
 
-
+------------------------
 
 # JNose: Java Test Smell Detector
 
@@ -21,16 +23,17 @@ The current verion of JNose Test:
 
 The project uses the Apache Maven to manage all library dependencies and support its compilation and execution.
 
-___
-
-# How to use JNose Test?
+## How to use JNose Test?
 
 To use the JNose Test, you need a runtime environment compatible with:
 
  - JDK 1.8
  - Maven 3
 
-## JNose-Core API
+The steps to download and install the JNose-Core and JNose Test are described as follows. <br>
+For more detais, please refer to the [JNose Test documentation](https://jnose.readthedocs.io/en/latest/index.html).
+
+### JNose-Core API
 
 We suggest you to use the latest version of JNose-Core API through the following the steps:
 
@@ -38,7 +41,7 @@ We suggest you to use the latest version of JNose-Core API through the following
 2. Go to the project directory: ``cd ../jnose-core``
 3. Install the dependency: ``mvn install``
 
-## JNose Test
+### JNose Test
 
 To start the web-based user interface, please follow the steps:
 
@@ -47,7 +50,6 @@ To start the web-based user interface, please follow the steps:
 3. Start the JNose Test: ``mvn jetty:run``
 4. Access the localhost in your browser: ``http://127.0.0.1:8080``
 
-For more detais, please refer to the [JNose Test documentation](https://jnose.readthedocs.io/en/latest/index.html).
 
 ## Contributors
  - <a target="_blank" href="https://github.com/tassiovirginio">Tássio Virgínio</a>
@@ -57,7 +59,7 @@ For more detais, please refer to the [JNose Test documentation](https://jnose.re
  - <a target="_blank" href="https://github.com/jonathanbisp">Jonathan Bispo</a>
  
 
-### Contact us:
+## Contact us:
 The best way to contact us is to post a message in our issue tracker or discussion forum. You can use it for things like asking questions about the project or requesting technical help.
 
 Alternatively, you can email us at arieslab@outlook.com
