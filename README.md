@@ -5,7 +5,7 @@
   [![Documentation Status](https://readthedocs.org/projects/jnose/badge/?version=latest)](http://jnose.readthedocs.io/en/latest/?badge=latest)
   [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
   [![Actions Status](https://github.com/arieslab/jnose-core/workflows/maven/badge.svg)](https://github.com/arieslab/jnose-core/actions)
-  <a><img src="https://img.shields.io/badge/Powered-ARIES%20Lab-blueviolet.svg"/></a>
+  <a><img src="https://img.shields.io/badge/Powered_by-ARIES%20Lab-blueviolet.svg"/></a>
   
 </div>
 
