@@ -24,14 +24,14 @@ ___
 
 ___
 OBS: 
-<a target="_blank" href="https://github.com/tassiovirginio/jnose-core">
+<a target="_blank" href="https://github.com/arieslab/jnose">
   Dependence on Project (JNose-Core)
 </a>
 
 It is necessary to install the "jnose-core" dependency for JNose to work. Below is the step by step to install, before installing Jnose.
 
 ```shell
-git clone https://github.com/tassiovirginio/jnose-core.git
+git clone https://github.com/arieslab/jnose-core
 cd jnose-core
 mvn install
 ```

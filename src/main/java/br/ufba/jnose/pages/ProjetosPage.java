@@ -5,6 +5,7 @@ import br.ufba.jnose.base.GitCore;
 import br.ufba.jnose.base.JNose;
 import br.ufba.jnose.dtolocal.Commit;
 import br.ufba.jnose.dtolocal.ProjetoDTO;
+import br.ufba.jnose.entities.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
 import org.apache.commons.io.FileUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -77,6 +78,15 @@ public class ProjetosPage extends BasePage {
         };
         form.add(btEnviar);
         add(form);
+
+        List<br.ufba.jnose.entities.Projeto> listaProjetosVerificar = projetoBusiness.listAll();
+
+        for(Projeto projeto : listaProjetosVerificar){
+            File file = new File(projeto.getPath());
+            if(file.exists() == false){
+                projetoBusiness.delete(projeto);
+            }
+        }
 
         List<br.ufba.jnose.entities.Projeto> listaProjetos = projetoBusiness.listAll();
 
