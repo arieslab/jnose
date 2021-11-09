@@ -23,7 +23,7 @@ The current verion of JNose Test:
 
 The project uses the Apache Maven to manage all library dependencies and support its compilation and execution.
 
-## How to use JNose Test?
+## How to use JNose?
 
 To use the JNose Test, you need a runtime environment compatible with:
 
