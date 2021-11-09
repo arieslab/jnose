@@ -47,7 +47,7 @@ Initially, you need to specify the projects that you want to analyze. By default
 
 Once the execution is over, you can visualize the results and generates a `.csv` file with the results of the data analysis by test class. Each `.csv` row corresponds to a given test class, and each column represents the type of parameter collected: project name, test class and production class location, twenty-one types  of test smells, the number of test class lines, the number of test methods, and five columns with coverage data.
 
-.. image:: images/result-by-class.png
+.. image:: images/results-by-test-class.png
   :alt: Result of the execution By TestClass
 
 
@@ -64,7 +64,7 @@ Initially, you need to specify the projects that you want to analyze. By default
 Once the execution is over, you can visualize the results and generates a `.csv` file with the results of the data analysis by test smells.
 Unlike the previous analysis, `By TestClass`, the JNose Test provides the exact method and line where the test smell is located. Each row of the `.csv` represents a test smell, and it has six columns to show the type of parameter collected, the project name, the test class and the production class location, the test smell name, the method of the test smell location in number of line, and the method name.
 
-.. image:: images/result-by-test-smell.png
+.. image:: images/results-by-test-smells.png
   :alt: Result of the execution By TestSmell
 
 
