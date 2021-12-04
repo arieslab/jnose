@@ -172,7 +172,7 @@ public class AnalyzePage extends BasePage {
                 //Mudar a lógica depois no Core
                 testClass.setJunitVersion(TestClass.JunitVersion.JUnit4);
 
-                JNoseCore jNoseCore = new JNoseCore(loadConfig(!testClass.getProductionFile().isBlank()));
+                JNoseCore jNoseCore = new JNoseCore(loadConfig(!testClass.getProductionFile().isBlank()),3);
 //                Boolean isClassTest = jNoseCore.isTestFile(testClass);
                 jNoseCore.getTestSmells(testClass);
 

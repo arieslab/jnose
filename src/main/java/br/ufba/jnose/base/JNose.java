@@ -93,7 +93,7 @@ public class JNose {
         };
 
         if(jNoseCore == null) {
-            jNoseCore = new JNoseCore(conf);
+            jNoseCore = new JNoseCore(conf, 3);
         }
 
         return jNoseCore;
@@ -181,7 +181,7 @@ public class JNose {
                 todasLinhas.add(linha);
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -189,7 +189,7 @@ public class JNose {
     }
 
 
-    public static List<TestClass> processarProjeto(ProjetoDTO projeto) throws IOException {
+    public static List<TestClass> processarProjeto(ProjetoDTO projeto) throws Exception {
         projeto.setProcentagem(25);
         List<TestClass> listaTestClass = jNoseCore.getFilesTest(projeto.getPath());
         projeto.setProcentagem(100);
