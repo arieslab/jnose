@@ -1,112 +1,66 @@
 <p align="center"><img src="https://github.com/tassiovirginio/jnose/blob/master/src/main/webapp/logo.png?raw=true" width="70"></p>
 
-# JNose
-Java TestSmells Detection
+<div align="center">
 
-JNose Test is a tool developed to automatically detect test smells in test code, and to collect coverage metrics. JNose test is an extension of the Test Smell Detector. Besides presenting the number of test smells detected by class, our tool shows the collection of code metrics and test coverage using the JaCoCo library; a unified result for all projects under analysis; and a graphical interface. In addition, the project uses the Apache Maven to manage all library dependencies and support the compilation and execution of the JNose Test tool.
+  [![Documentation](https://readthedocs.org/projects/jnose/badge/?version=latest)](http://jnose.readthedocs.io/en/latest/?badge=latest)
+  [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+  [![Actions](https://github.com/arieslab/jnose-core/workflows/maven/badge.svg)](https://github.com/arieslab/jnose-core/actions)
+  <a><img src="https://img.shields.io/badge/powered_by-ARIES%20Lab-blueviolet.svg"/></a>
+  
+</div>
 
-___
+------------------------
 
-<a target="_blank" href="http://jnose.herokuapp.com/">
-  Demo Jnose Heroku
-</a>
+# JNose: Java Test Smell Detector
 
----
+JNose Test is a tool developed to automatically detect test smells in test code, and to collect coverage metrics. JNose Test implements the interface methods of the [JNose-Core API](https://github.com/arieslab/jnose-core) to detect the test smells and organizes the data flow in a web-based user interface. The JNose-Core API provides a flexible architecture that extends the test smells detection rules from the [Test Smell Detector](https://testsmells.org/index.html) tool and supports the addition of new rules.
 
-## CBSoft 2020
-<img src="https://github.com/tassiovirginio/jnose/blob/master/docs/premio.jpeg?raw=true">
+The current verion of JNose Test:
+1. detects test smells in different code granularities (line, method, block, and class);
+2. detects test smells more accurately according to the literature definition;
+3. calculates test coverage metrics using the JaCoCo library;
+4. presents the outputs in a more user-friendly interface;
 
-## Videos
-[![JNose Test](https://img.youtube.com/vi/6qrglBetOSc/0.jpg)](https://www.youtube.com/watch?v=6qrglBetOSc)
+The project uses the Apache Maven to manage all library dependencies and support its compilation and execution.
 
-[![JNose Test](https://img.youtube.com/vi/BfYtwqQeqHc/0.jpg)](https://www.youtube.com/watch?v=BfYtwqQeqHc)
+## How to use JNose?
 
+To use the JNose Test, you need a runtime environment compatible with:
 
-___
-OBS: 
-<a target="_blank" href="https://github.com/arieslab/jnose">
-  Dependence on Project (JNose-Core)
-</a>
+ - JDK 1.8
+ - Maven 3
 
-It is necessary to install the "jnose-core" dependency for JNose to work. Below is the step by step to install, before installing Jnose.
+The steps to download and install the JNose-Core and JNose Test are described as follows. <br>
+For more detais, please refer to the [JNose Test documentation](https://jnose.readthedocs.io/en/latest/index.html).
 
-```shell
-git clone https://github.com/arieslab/jnose-core
-cd jnose-core
-mvn install
-```
+### JNose-Core API
 
+We suggest you to use the latest version of JNose-Core API through the following the steps:
 
-## Tutorials
- - <a href="TUTORIAL_pt-br.md">Tutorial PT-BR</a>
- - <a href="TUTORIAL_eng.md">Tutorial English</a>
+1. Clone the project: ``git clone https://github.com/arieslab/jnose-core``
+2. Go to the project directory: ``cd ../jnose-core``
+3. Install the dependency: ``mvn install``
 
-## Papers
+### JNose Test
 
-- JNose: Java Test Smell Detector
-Tássio Virgínio, Luana Almeida Martins, Larissa Rocha Soares, Railana Santana, Adriana Priscila Santos Cruz, Heitor Costa, Ivan Machado (2020): http://cbsoft2020.imd.ufrn.br/artigos.php?evento=sbes-ferramentas
+To start the web-based user interface, please follow the steps:
 
-- An Empirical Study of Automatically-Generated Tests from the Perspective of Test Smells
-Tássio Virgínio, Luana Martins, Larissa Soares, Railana Santana, Heitor Costa, Ivan Machado (2020): http://cbsoft2020.imd.ufrn.br/artigos.php?evento=sbes-pesquisa
+1. Clone the project: ``https://github.com/arieslab/jnose``
+2. Go to the project directory: ``cd ../jnose``
+3. Start the JNose Test: ``mvn jetty:run``
+4. Access the localhost in your browser: ``http://127.0.0.1:8080``
 
- - Used to detect TestSmells and Coverage in the article (2019):
-https://dl.acm.org/citation.cfm?doid=3350768.3350775
-
-___
-
-<table>
-<tr>
-<td>
-<img src="http://cbsoft2019.ufba.br/assets/images/logo.png" width="400">
-</td>
-<td>
-<img src="https://github.com/tassiovirginio/jnose/blob/master/src/main/webapp/cbsoft.jpeg?raw=true" width="400">
-</td>
-</tr>
-<tr>
-<td colspan="2">
-Apresentação no CBSoft 2019 - Salvador - Bahia - Brazil<br>
-  <a href="http://cbsoft2019.ufba.br">http://cbsoft2019.ufba.br</a>
-</td>
-</tr>
-</table>
-
-
-## Feature requests
-
-Please, feel very welcome to create new issues on this project to request new features and report bugs. 
 
 ## Contributors
  - <a target="_blank" href="https://github.com/tassiovirginio">Tássio Virgínio</a>
- - <a target="_blank" href="https://github.com/danielevalverde">Daniele Valverde</a>
  - <a target="_blank" href="https://github.com/luana-martins">Luana Martins</a>
  - <a target="_blank" href="https://github.com/Railana">Railana Santana</a>
+ - <a target="_blank" href="https://github.com/danielevalverde">Daniele Valverde</a>
  - <a target="_blank" href="https://github.com/jonathanbisp">Jonathan Bispo</a>
  
-## Contributing
 
-- Create an issue on this repository
-- Fork this repository
-- create a branch and link the name to the related issue
-- git commit -m 'description about what this commit does'
-- git push origin your-branch-name
-- Open a Pull Request
+## Contact us:
+The best way to contact us is to post a message in our issue tracker or discussion forum. You can use it for things like asking questions about the project or requesting technical help.
 
-### Contact email:
-- tassiovirginio@gmail.com
-
-# Docker
-
-```shell
-docker build -t jnose .
-docker run -dp "8080:8080" -v "$HOME/.m2":/root/.m2 --name jnose jnose:latest
-docker logs -f jnose # para ver os logs, caso queira
-```
-# Dockerhub
-
-https://hub.docker.com/r/tassiovirginio/jnose
-
-```shell
-docker pull tassiovirginio/jnose
-```
+Alternatively, you can email us at arieslab@outlook.com
 
