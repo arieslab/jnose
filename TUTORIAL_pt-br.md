@@ -22,7 +22,7 @@ cd jnose-core
 mvn install
 ```
 
- - JDK 1.8 
+ - JDK 11
  - Maven 3 
  - GIT
 
