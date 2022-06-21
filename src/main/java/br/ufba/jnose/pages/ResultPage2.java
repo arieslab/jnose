@@ -19,12 +19,20 @@ public class ResultPage2 extends ImprimirPage {
 
     public ResultPage2(ProjetoDTO projeto, List<List<String>> todasLinhas, String title, String csvFileName, boolean fontColorized) {
 
-        add(new Label("title",title));
+        add(new Label("title",title + " - View Sample (100 of " + todasLinhas.size() + ")"));
 
         DownloadLink lkEsportCSV = new DownloadLink("lkEsportCSV",gerarCSV(todasLinhas,csvFileName));
         add(lkEsportCSV);
 
-        ListView<List<String>> lista = new ListView<List<String>>("lista",todasLinhas) {
+        List<List<String>> todasLinhasSample;
+
+        if(todasLinhas.size() > 101){
+            todasLinhasSample = todasLinhas.subList(0, 101);
+        }else{
+            todasLinhasSample = todasLinhas;
+        }
+
+        ListView<List<String>> lista = new ListView<List<String>>("lista",todasLinhasSample) {
             @Override
             protected void populateItem(ListItem<List<String>> item) {
                 List<String> linha = item.getModelObject();

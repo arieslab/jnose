@@ -17,12 +17,16 @@ public class ResultPage extends ImprimirPage {
 
     public ResultPage(List<List<String>> todasLinhas, String title, String csvFileName, boolean fontColorized) {
 
-        add(new Label("title",title));
+        add(new Label("title",title + " - View Sample (100 of " + todasLinhas.size() + ")"));
 
         DownloadLink lkEsportCSV = new DownloadLink("lkEsportCSV", gerarCSV(todasLinhas,csvFileName));
         add(lkEsportCSV);
 
-        ListView<List<String>> lista = new ListView<List<String>>("lista",todasLinhas) {
+        if(todasLinhas.size() > 101){
+            todasLinhas = todasLinhas.subList(0, 101);
+        }
+        
+        ListView<List<String>> lista = new ListView<List<String>>("lista", todasLinhas) {
             @Override
             protected void populateItem(ListItem<List<String>> item) {
                 List<String> linha = item.getModelObject();
