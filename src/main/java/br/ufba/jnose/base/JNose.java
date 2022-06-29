@@ -141,7 +141,7 @@ public class JNose {
 
 
     public static TestClass.JunitVersion getJUnitVersion(String directoryPath) {
-        return getInstance().getJUnitVersion(directoryPath);
+        return jNoseCore.getJUnitVersion(directoryPath);
     }
 
 
