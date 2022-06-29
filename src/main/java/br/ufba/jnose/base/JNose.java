@@ -16,7 +16,7 @@ public class JNose {
 
     private static JNoseCore jNoseCore;
 
-    public static JNoseCore getInstance(){
+    public static JNoseCore getInstanceJNoseCore(){
 
         Config conf = new Config() {
             public Boolean assertionRoulette() {return TestSmellDetectorConfig.assertionRoulette;}
@@ -91,11 +91,11 @@ public class JNose {
     }
 
     static {
-        jNoseCore = getInstance();
+        jNoseCore = getInstanceJNoseCore();
     }
 
     public JNose(){
-        jNoseCore = getInstance();
+        jNoseCore = getInstanceJNoseCore();
     }
 
     public static List<List<String>> convert(List<TestClass> listTestClass){
@@ -141,7 +141,7 @@ public class JNose {
 
 
     public static TestClass.JunitVersion getJUnitVersion(String directoryPath) {
-        return jNoseCore.getJUnitVersion(directoryPath);
+        return getInstanceJNoseCore().getJUnitVersion(directoryPath);
     }
 
 
@@ -151,7 +151,7 @@ public class JNose {
         List<List<String>> todasLinhas = new ArrayList<>();
 
         try {
-            List<TestClass> listFileTests = jNoseCore.getFilesTest(pathProjeto);
+            List<TestClass> listFileTests = getInstanceJNoseCore().getFilesTest(pathProjeto);
             List<String> linhacolunas = new ArrayList<>();
             linhacolunas.add("App");
             linhacolunas.add("TestFileName");
@@ -182,7 +182,7 @@ public class JNose {
 
     public static List<TestClass> processarProjeto(ProjetoDTO projeto) throws Exception {
         projeto.setProcentagem(25);
-        List<TestClass> listaTestClass = jNoseCore.getFilesTest(projeto.getPath());
+        List<TestClass> listaTestClass = getInstanceJNoseCore().getFilesTest(projeto.getPath());
         projeto.setProcentagem(100);
         projeto.setProcessado(true);
         projeto.setProcessado2(true);
@@ -336,10 +336,7 @@ public class JNose {
 
             try {
 
-                jNoseCore = getInstance();
-
-                listTestClass = jNoseCore.getFilesTest(projeto.getPath());
-
+                listTestClass = getInstanceJNoseCore().getFilesTest(projeto.getPath());
 
                 if(listTestClass.size() != 0 && primeiraLinha) {
                     primeiraLinha = false;
