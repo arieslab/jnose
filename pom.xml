@@ -7,7 +7,7 @@
     <groupId>br.ufba.jnose</groupId>
     <artifactId>jnose</artifactId>
     <packaging>war</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1</version>
     <name>jnose</name>
     <description></description>
     <licenses>

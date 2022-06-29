@@ -9,7 +9,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 
-import static br.ufba.jnose.base.testsmelldetector.testsmell.Util.*;
+import static br.ufba.jnose.base.Util.*;
 
 import java.io.BufferedReader;
 import java.io.File;

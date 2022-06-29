@@ -1,7 +1,7 @@
 package br.ufba.jnose.pages;
 
-import br.ufba.jnose.base.testsmelldetector.testsmell.TestSmellDetector;
-import br.ufba.jnose.base.testsmelldetector.testsmell.smell.ExceptionCatchingThrowing;
+import br.ufba.jnose.base.TestSmellDetectorConfig;
+import br.ufba.jnose.core.testsmelldetector.testsmell.smell.ExceptionCatchingThrowing;
 import br.ufba.jnose.pages.base.BasePage;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -40,105 +40,105 @@ public class ConfigPage extends BasePage {
     public ConfigPage() {
         super("ConfigPage");
 
-        this.verboseTestMaxStatements = br.ufba.jnose.base.testsmelldetector.testsmell.smell.VerboseTest.MAX_STATEMENTS+"";
+        this.verboseTestMaxStatements = br.ufba.jnose.core.testsmelldetector.testsmell.smell.VerboseTest.MAX_STATEMENTS+"";
 
-        emptyTest = TestSmellDetector.emptyTest;
-        exceptionCatchingThrowing = TestSmellDetector.exceptionCatchingThrowing;
-        generalFixture = TestSmellDetector.generalFixture;
-        mysteryGuest = TestSmellDetector.mysteryGuest;
-        sleepyTest = TestSmellDetector.sleepyTest;
-        verboseTest = TestSmellDetector.verboseTest;
-        sensitiveEquality = TestSmellDetector.sensitiveEquality;
-        redundantAssertion = TestSmellDetector.redundantAssertion;
-        printStatement = TestSmellDetector.printStatement;
-        magicNumberTest = TestSmellDetector.magicNumberTest;
-        resourceOptimism = TestSmellDetector.resourceOptimism;
-        ignoredTest = TestSmellDetector.ignoredTest;
-        unknownTest = TestSmellDetector.unknownTest;
-        lazyTest = TestSmellDetector.lazyTest;
-        assertionRoulette = TestSmellDetector.assertionRoulette;
-        conditionalTestLogic = TestSmellDetector.conditionalTestLogic;
-        constructorInitialization = TestSmellDetector.constructorInitialization;
-        defaultTest = TestSmellDetector.defaultTest;
-        dependentTest = TestSmellDetector.dependentTest;
-        duplicateAssert = TestSmellDetector.duplicateAssert;
-        eagerTest = TestSmellDetector.eagerTest;
+        emptyTest = TestSmellDetectorConfig.emptyTest;
+        exceptionCatchingThrowing = TestSmellDetectorConfig.exceptionCatchingThrowing;
+        generalFixture = TestSmellDetectorConfig.generalFixture;
+        mysteryGuest = TestSmellDetectorConfig.mysteryGuest;
+        sleepyTest = TestSmellDetectorConfig.sleepyTest;
+        verboseTest = TestSmellDetectorConfig.verboseTest;
+        sensitiveEquality = TestSmellDetectorConfig.sensitiveEquality;
+        redundantAssertion = TestSmellDetectorConfig.redundantAssertion;
+        printStatement = TestSmellDetectorConfig.printStatement;
+        magicNumberTest = TestSmellDetectorConfig.magicNumberTest;
+        resourceOptimism = TestSmellDetectorConfig.resourceOptimism;
+        ignoredTest = TestSmellDetectorConfig.ignoredTest;
+        unknownTest = TestSmellDetectorConfig.unknownTest;
+        lazyTest = TestSmellDetectorConfig.lazyTest;
+        assertionRoulette = TestSmellDetectorConfig.assertionRoulette;
+        conditionalTestLogic = TestSmellDetectorConfig.conditionalTestLogic;
+        constructorInitialization = TestSmellDetectorConfig.constructorInitialization;
+        defaultTest = TestSmellDetectorConfig.defaultTest;
+        dependentTest = TestSmellDetectorConfig.dependentTest;
+        duplicateAssert = TestSmellDetectorConfig.duplicateAssert;
+        eagerTest = TestSmellDetectorConfig.eagerTest;
 
         Form form = new Form<String>("form") {
             @Override
             protected void onSubmit() {
-                TestSmellDetector.emptyTest = emptyTest;
-                TestSmellDetector.exceptionCatchingThrowing = exceptionCatchingThrowing;
-                TestSmellDetector.generalFixture = generalFixture;
-                TestSmellDetector.mysteryGuest = mysteryGuest;
-                TestSmellDetector.sleepyTest = sleepyTest;
-                TestSmellDetector.sensitiveEquality = sensitiveEquality;
-                TestSmellDetector.redundantAssertion = redundantAssertion;
-                TestSmellDetector.printStatement = printStatement;
-                TestSmellDetector.magicNumberTest = magicNumberTest;
-                TestSmellDetector.resourceOptimism = resourceOptimism;
-                TestSmellDetector.ignoredTest = ignoredTest;
-                TestSmellDetector.unknownTest = unknownTest;
-                TestSmellDetector.lazyTest = lazyTest;
-                TestSmellDetector.assertionRoulette = assertionRoulette;
-                TestSmellDetector.conditionalTestLogic = conditionalTestLogic;
-                TestSmellDetector.constructorInitialization = constructorInitialization;
-                TestSmellDetector.defaultTest = defaultTest;
-                TestSmellDetector.dependentTest = dependentTest;
-                TestSmellDetector.duplicateAssert = duplicateAssert;
-                TestSmellDetector.eagerTest = eagerTest;
+                TestSmellDetectorConfig.emptyTest = emptyTest;
+                TestSmellDetectorConfig.exceptionCatchingThrowing = exceptionCatchingThrowing;
+                TestSmellDetectorConfig.generalFixture = generalFixture;
+                TestSmellDetectorConfig.mysteryGuest = mysteryGuest;
+                TestSmellDetectorConfig.sleepyTest = sleepyTest;
+                TestSmellDetectorConfig.sensitiveEquality = sensitiveEquality;
+                TestSmellDetectorConfig.redundantAssertion = redundantAssertion;
+                TestSmellDetectorConfig.printStatement = printStatement;
+                TestSmellDetectorConfig.magicNumberTest = magicNumberTest;
+                TestSmellDetectorConfig.resourceOptimism = resourceOptimism;
+                TestSmellDetectorConfig.ignoredTest = ignoredTest;
+                TestSmellDetectorConfig.unknownTest = unknownTest;
+                TestSmellDetectorConfig.lazyTest = lazyTest;
+                TestSmellDetectorConfig.assertionRoulette = assertionRoulette;
+                TestSmellDetectorConfig.conditionalTestLogic = conditionalTestLogic;
+                TestSmellDetectorConfig.constructorInitialization = constructorInitialization;
+                TestSmellDetectorConfig.defaultTest = defaultTest;
+                TestSmellDetectorConfig.dependentTest = dependentTest;
+                TestSmellDetectorConfig.duplicateAssert = duplicateAssert;
+                TestSmellDetectorConfig.eagerTest = eagerTest;
 
-                TestSmellDetector.verboseTest = verboseTest;
-                br.ufba.jnose.base.testsmelldetector.testsmell.smell.VerboseTest.MAX_STATEMENTS = Integer.parseInt(verboseTestMaxStatements);
+                TestSmellDetectorConfig.verboseTest = verboseTest;
+                br.ufba.jnose.core.testsmelldetector.testsmell.smell.VerboseTest.MAX_STATEMENTS = Integer.parseInt(verboseTestMaxStatements);
             }
         };
 
         form.add(new Button("btAll"){
             @Override
             public void onSubmit() {
-                TestSmellDetector.emptyTest = true;
-                TestSmellDetector.exceptionCatchingThrowing = true;
-                TestSmellDetector.generalFixture = true;
-                TestSmellDetector.mysteryGuest = true;
-                TestSmellDetector.sleepyTest = true;
-                TestSmellDetector.verboseTest = true;
-                TestSmellDetector.sensitiveEquality = true;
-                TestSmellDetector.redundantAssertion = true;
-                TestSmellDetector.printStatement = true;
-                TestSmellDetector.magicNumberTest = true;
-                TestSmellDetector.resourceOptimism = true;
-                TestSmellDetector.ignoredTest = true;
-                TestSmellDetector.unknownTest = true;
-                TestSmellDetector.lazyTest = true;
-                TestSmellDetector.assertionRoulette = true;
-                TestSmellDetector.conditionalTestLogic = true;
-                TestSmellDetector.constructorInitialization = true;
-                TestSmellDetector.defaultTest = true;
-                TestSmellDetector.dependentTest = true;
-                TestSmellDetector.duplicateAssert = true;
-                TestSmellDetector.eagerTest = true;
+                TestSmellDetectorConfig.emptyTest = true;
+                TestSmellDetectorConfig.exceptionCatchingThrowing = true;
+                TestSmellDetectorConfig.generalFixture = true;
+                TestSmellDetectorConfig.mysteryGuest = true;
+                TestSmellDetectorConfig.sleepyTest = true;
+                TestSmellDetectorConfig.verboseTest = true;
+                TestSmellDetectorConfig.sensitiveEquality = true;
+                TestSmellDetectorConfig.redundantAssertion = true;
+                TestSmellDetectorConfig.printStatement = true;
+                TestSmellDetectorConfig.magicNumberTest = true;
+                TestSmellDetectorConfig.resourceOptimism = true;
+                TestSmellDetectorConfig.ignoredTest = true;
+                TestSmellDetectorConfig.unknownTest = true;
+                TestSmellDetectorConfig.lazyTest = true;
+                TestSmellDetectorConfig.assertionRoulette = true;
+                TestSmellDetectorConfig.conditionalTestLogic = true;
+                TestSmellDetectorConfig.constructorInitialization = true;
+                TestSmellDetectorConfig.defaultTest = true;
+                TestSmellDetectorConfig.dependentTest = true;
+                TestSmellDetectorConfig.duplicateAssert = true;
+                TestSmellDetectorConfig.eagerTest = true;
 
-                emptyTest = TestSmellDetector.emptyTest;
-                exceptionCatchingThrowing = TestSmellDetector.exceptionCatchingThrowing;
-                generalFixture = TestSmellDetector.generalFixture;
-                mysteryGuest = TestSmellDetector.mysteryGuest;
-                sleepyTest = TestSmellDetector.sleepyTest;
-                verboseTest = TestSmellDetector.verboseTest;
-                sensitiveEquality = TestSmellDetector.sensitiveEquality;
-                redundantAssertion = TestSmellDetector.redundantAssertion;
-                printStatement = TestSmellDetector.printStatement;
-                magicNumberTest = TestSmellDetector.magicNumberTest;
-                resourceOptimism = TestSmellDetector.resourceOptimism;
-                ignoredTest = TestSmellDetector.ignoredTest;
-                unknownTest = TestSmellDetector.unknownTest;
-                lazyTest = TestSmellDetector.lazyTest;
-                assertionRoulette = TestSmellDetector.assertionRoulette;
-                conditionalTestLogic = TestSmellDetector.conditionalTestLogic;
-                constructorInitialization = TestSmellDetector.constructorInitialization;
-                defaultTest = TestSmellDetector.defaultTest;
-                dependentTest = TestSmellDetector.dependentTest;
-                duplicateAssert = TestSmellDetector.duplicateAssert;
-                eagerTest = TestSmellDetector.eagerTest;
+                emptyTest = TestSmellDetectorConfig.emptyTest;
+                exceptionCatchingThrowing = TestSmellDetectorConfig.exceptionCatchingThrowing;
+                generalFixture = TestSmellDetectorConfig.generalFixture;
+                mysteryGuest = TestSmellDetectorConfig.mysteryGuest;
+                sleepyTest = TestSmellDetectorConfig.sleepyTest;
+                verboseTest = TestSmellDetectorConfig.verboseTest;
+                sensitiveEquality = TestSmellDetectorConfig.sensitiveEquality;
+                redundantAssertion = TestSmellDetectorConfig.redundantAssertion;
+                printStatement = TestSmellDetectorConfig.printStatement;
+                magicNumberTest = TestSmellDetectorConfig.magicNumberTest;
+                resourceOptimism = TestSmellDetectorConfig.resourceOptimism;
+                ignoredTest = TestSmellDetectorConfig.ignoredTest;
+                unknownTest = TestSmellDetectorConfig.unknownTest;
+                lazyTest = TestSmellDetectorConfig.lazyTest;
+                assertionRoulette = TestSmellDetectorConfig.assertionRoulette;
+                conditionalTestLogic = TestSmellDetectorConfig.conditionalTestLogic;
+                constructorInitialization = TestSmellDetectorConfig.constructorInitialization;
+                defaultTest = TestSmellDetectorConfig.defaultTest;
+                dependentTest = TestSmellDetectorConfig.dependentTest;
+                duplicateAssert = TestSmellDetectorConfig.duplicateAssert;
+                eagerTest = TestSmellDetectorConfig.eagerTest;
 
                 ConfigPage.this.setResponsePage(ConfigPage.class);
             }
@@ -147,49 +147,49 @@ public class ConfigPage extends BasePage {
         form.add(new Button("btDAll"){
             @Override
             public void onSubmit() {
-                TestSmellDetector.emptyTest = false;
-                TestSmellDetector.exceptionCatchingThrowing = false;
-                TestSmellDetector.generalFixture = false;
-                TestSmellDetector.mysteryGuest = false;
-                TestSmellDetector.sleepyTest = false;
-                TestSmellDetector.verboseTest = false;
-                TestSmellDetector.sensitiveEquality = false;
-                TestSmellDetector.redundantAssertion = false;
-                TestSmellDetector.printStatement = false;
-                TestSmellDetector.magicNumberTest = false;
-                TestSmellDetector.resourceOptimism = false;
-                TestSmellDetector.ignoredTest = false;
-                TestSmellDetector.unknownTest = false;
-                TestSmellDetector.lazyTest = false;
-                TestSmellDetector.assertionRoulette = false;
-                TestSmellDetector.conditionalTestLogic = false;
-                TestSmellDetector.constructorInitialization = false;
-                TestSmellDetector.defaultTest = false;
-                TestSmellDetector.dependentTest = false;
-                TestSmellDetector.duplicateAssert = false;
-                TestSmellDetector.eagerTest = false;
+                TestSmellDetectorConfig.emptyTest = false;
+                TestSmellDetectorConfig.exceptionCatchingThrowing = false;
+                TestSmellDetectorConfig.generalFixture = false;
+                TestSmellDetectorConfig.mysteryGuest = false;
+                TestSmellDetectorConfig.sleepyTest = false;
+                TestSmellDetectorConfig.verboseTest = false;
+                TestSmellDetectorConfig.sensitiveEquality = false;
+                TestSmellDetectorConfig.redundantAssertion = false;
+                TestSmellDetectorConfig.printStatement = false;
+                TestSmellDetectorConfig.magicNumberTest = false;
+                TestSmellDetectorConfig.resourceOptimism = false;
+                TestSmellDetectorConfig.ignoredTest = false;
+                TestSmellDetectorConfig.unknownTest = false;
+                TestSmellDetectorConfig.lazyTest = false;
+                TestSmellDetectorConfig.assertionRoulette = false;
+                TestSmellDetectorConfig.conditionalTestLogic = false;
+                TestSmellDetectorConfig.constructorInitialization = false;
+                TestSmellDetectorConfig.defaultTest = false;
+                TestSmellDetectorConfig.dependentTest = false;
+                TestSmellDetectorConfig.duplicateAssert = false;
+                TestSmellDetectorConfig.eagerTest = false;
 
-                emptyTest = TestSmellDetector.emptyTest;
-                exceptionCatchingThrowing = TestSmellDetector.exceptionCatchingThrowing;
-                generalFixture = TestSmellDetector.generalFixture;
-                mysteryGuest = TestSmellDetector.mysteryGuest;
-                sleepyTest = TestSmellDetector.sleepyTest;
-                verboseTest = TestSmellDetector.verboseTest;
-                sensitiveEquality = TestSmellDetector.sensitiveEquality;
-                redundantAssertion = TestSmellDetector.redundantAssertion;
-                printStatement = TestSmellDetector.printStatement;
-                magicNumberTest = TestSmellDetector.magicNumberTest;
-                resourceOptimism = TestSmellDetector.resourceOptimism;
-                ignoredTest = TestSmellDetector.ignoredTest;
-                unknownTest = TestSmellDetector.unknownTest;
-                lazyTest = TestSmellDetector.lazyTest;
-                assertionRoulette = TestSmellDetector.assertionRoulette;
-                conditionalTestLogic = TestSmellDetector.conditionalTestLogic;
-                constructorInitialization = TestSmellDetector.constructorInitialization;
-                defaultTest = TestSmellDetector.defaultTest;
-                dependentTest = TestSmellDetector.dependentTest;
-                duplicateAssert = TestSmellDetector.duplicateAssert;
-                eagerTest = TestSmellDetector.eagerTest;
+                emptyTest = TestSmellDetectorConfig.emptyTest;
+                exceptionCatchingThrowing = TestSmellDetectorConfig.exceptionCatchingThrowing;
+                generalFixture = TestSmellDetectorConfig.generalFixture;
+                mysteryGuest = TestSmellDetectorConfig.mysteryGuest;
+                sleepyTest = TestSmellDetectorConfig.sleepyTest;
+                verboseTest = TestSmellDetectorConfig.verboseTest;
+                sensitiveEquality = TestSmellDetectorConfig.sensitiveEquality;
+                redundantAssertion = TestSmellDetectorConfig.redundantAssertion;
+                printStatement = TestSmellDetectorConfig.printStatement;
+                magicNumberTest = TestSmellDetectorConfig.magicNumberTest;
+                resourceOptimism = TestSmellDetectorConfig.resourceOptimism;
+                ignoredTest = TestSmellDetectorConfig.ignoredTest;
+                unknownTest = TestSmellDetectorConfig.unknownTest;
+                lazyTest = TestSmellDetectorConfig.lazyTest;
+                assertionRoulette = TestSmellDetectorConfig.assertionRoulette;
+                conditionalTestLogic = TestSmellDetectorConfig.conditionalTestLogic;
+                constructorInitialization = TestSmellDetectorConfig.constructorInitialization;
+                defaultTest = TestSmellDetectorConfig.defaultTest;
+                dependentTest = TestSmellDetectorConfig.dependentTest;
+                duplicateAssert = TestSmellDetectorConfig.duplicateAssert;
+                eagerTest = TestSmellDetectorConfig.eagerTest;
 
                 ConfigPage.this.setResponsePage(ConfigPage.class);
             }
@@ -223,49 +223,49 @@ public class ConfigPage extends BasePage {
         form.add(new Link<String>("lkSourceAssertionRoulette") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.AssertionRoulette()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.AssertionRoulette()));
             }
         });
         form.add(new Link<String>("lkSourceConditionalTestLogic") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.ConditionalTestLogic()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.ConditionalTestLogic()));
             }
         });
         form.add(new Link<String>("lkSourceConstructorInitialization") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.ConstructorInitialization()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.ConstructorInitialization()));
             }
         });
         form.add(new Link<String>("lkSourceDefaultTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.DefaultTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.DefaultTest()));
             }
         });
         form.add(new Link<String>("lkSourceDependentTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.DependentTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.DependentTest()));
             }
         });
         form.add(new Link<String>("lkSourceDuplicateAssert") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.DuplicateAssert()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.DuplicateAssert()));
             }
         });
         form.add(new Link<String>("lkSourceEagerTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.EagerTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.EagerTest()));
             }
         });
         form.add(new Link<String>("lkSourceEmptyTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.EmptyTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.EmptyTest()));
             }
         });
         form.add(new Link<String>("lkSourceExceptionCatchingThrowing") {
@@ -277,73 +277,73 @@ public class ConfigPage extends BasePage {
         form.add(new Link<String>("lkSourceGeneralFixture") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.GeneralFixture()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.GeneralFixture()));
             }
         });
         form.add(new Link<String>("IgnoredTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.IgnoredTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.IgnoredTest()));
             }
         });
         form.add(new Link<String>("LazyTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.LazyTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.LazyTest()));
             }
         });
         form.add(new Link<String>("MagicNumberTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.MagicNumberTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.MagicNumberTest()));
             }
         });
         form.add(new Link<String>("MysteryGuest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.MysteryGuest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.MysteryGuest()));
             }
         });
         form.add(new Link<String>("PrintStatement") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.PrintStatement()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.PrintStatement()));
             }
         });
         form.add(new Link<String>("RedundantAssertion") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.RedundantAssertion()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.RedundantAssertion()));
             }
         });
         form.add(new Link<String>("ResourceOptimism") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.ResourceOptimism()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.ResourceOptimism()));
             }
         });
         form.add(new Link<String>("SensitiveEquality") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.SensitiveEquality()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.SensitiveEquality()));
             }
         });
         form.add(new Link<String>("SleepyTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.SleepyTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.SleepyTest()));
             }
         });
         form.add(new Link<String>("UnknownTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.UnknownTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.UnknownTest()));
             }
         });
         form.add(new Link<String>("VerboseTest") {
             @Override
             public void onClick() {
-                setResponsePage(new SourcePage(new br.ufba.jnose.base.testsmelldetector.testsmell.smell.VerboseTest()));
+                setResponsePage(new SourcePage(new br.ufba.jnose.core.testsmelldetector.testsmell.smell.VerboseTest()));
             }
         });
 

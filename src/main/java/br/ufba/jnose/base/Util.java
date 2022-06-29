@@ -14,9 +14,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static br.ufba.jnose.base.testsmelldetector.testsmell.Util.isInt;
+import static br.ufba.jnose.base.Util.isInt;
 
 public class Util {
+
+    public static boolean isInt(String s) {
+        try {
+            int i = Integer.parseInt(s);
+            return true;
+        }
+
+        catch (NumberFormatException er) {
+            return false;
+        }
+    }
 
     public static String dateNow() {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm:ss")) + " - ";

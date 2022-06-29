@@ -1,7 +1,7 @@
 package br.ufba.jnose.pages;
 
 import br.ufba.jnose.WicketApplication;
-import br.ufba.jnose.base.testsmelldetector.testsmell.AbstractSmell;
+import br.ufba.jnose.core.testsmelldetector.testsmell.AbstractSmell;
 import br.ufba.jnose.pages.base.ImprimirPage;
 import org.apache.wicket.markup.html.basic.Label;
 
