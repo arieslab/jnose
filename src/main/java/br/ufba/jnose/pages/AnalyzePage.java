@@ -11,7 +11,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
@@ -31,47 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
-
-
-        import br.ufba.jnose.core.Config;
-        import br.ufba.jnose.core.JNoseCore;
-        import br.ufba.jnose.dto.TestClass;
-        import br.ufba.jnose.dto.TestSmell;
-        import de.agilecoders.wicket.core.markup.html.bootstrap.badge.BadgeBehavior;
-        import de.agilecoders.wicket.core.markup.html.bootstrap.badge.BootstrapBadge;
-        import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
-        import de.agilecoders.wicket.core.markup.html.bootstrap.components.PopoverBehavior;
-        import de.agilecoders.wicket.core.markup.html.bootstrap.components.PopoverConfig;
-        import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal;
-        import org.apache.wicket.ajax.AjaxRequestTarget;
-        import org.apache.wicket.ajax.markup.html.AjaxLink;
-        import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-        import org.apache.wicket.markup.html.WebMarkupContainer;
-        import org.apache.wicket.markup.html.basic.Label;
-        import org.apache.wicket.markup.html.form.Form;
-        import org.apache.wicket.markup.html.form.upload.FileUpload;
-        import org.apache.wicket.markup.html.form.upload.FileUploadField;
-        import org.apache.wicket.markup.html.link.Link;
-        import org.apache.wicket.markup.html.list.ListItem;
-        import org.apache.wicket.markup.html.list.ListView;
-        import org.apache.wicket.markup.html.WebPage;
-        import org.apache.wicket.model.IModel;
-        import org.apache.wicket.model.Model;
-        import org.apache.wicket.request.cycle.RequestCycle;
-        import org.apache.wicket.request.http.WebRequest;
-        import org.apache.wicket.util.lang.Bytes;
-
-        import javax.servlet.http.HttpServletRequest;
-        import java.io.File;
-        import java.io.IOException;
-        import java.nio.file.Files;
-        import java.nio.file.Paths;
-        import java.util.ArrayList;
-        import java.util.HashMap;
-        import java.util.List;
-        import java.util.Map;
-        import java.util.stream.Stream;
-
 
 public class AnalyzePage extends BasePage {
     private static final long serialVersionUID = 1L;

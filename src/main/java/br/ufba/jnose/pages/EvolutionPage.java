@@ -17,12 +17,10 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.Radio;
-import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -284,12 +282,6 @@ public class EvolutionPage extends BasePage {
                 });
                 radioCommitsTags.add(radio2);
                 radioCommitsTags.add(new Label("ck2", Model.of(projeto.getListaTags().size())));
-
-//                RadioChoice<String> radioCommitsTags = new RadioChoice<String>(
-//                        "radioCommitsTags", PropertyModel.of(projeto, "optionSelected"),
-//                        Arrays.asList(new String[]{projeto.getListaCommits().size() + " / ", projeto.getListaTags().size() + ""})) {
-//
-//                };
                 radioCommitsTags.setOutputMarkupId(true);
                 radioCommitsTags.setOutputMarkupPlaceholderTag(true);
                 form.add(radioCommitsTags);

@@ -2,7 +2,6 @@ package br.ufba.jnose.pages.charts;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.*;
 
 import de.adesso.wickedcharts.highcharts.options.*;
