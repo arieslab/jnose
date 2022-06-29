@@ -3,20 +3,14 @@ package br.ufba.jnose.base.cobertura;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.tools.ExecFileLoader;
 import org.jacoco.report.DirectorySourceFileLocator;
-import org.jacoco.report.FileMultiReportOutput;
 import org.jacoco.report.IReportVisitor;
-import org.jacoco.report.MultiReportVisitor;
-import org.jacoco.report.html.HTMLFormatter;
 import org.jacoco.report.csv.CSVFormatter;
-import org.jacoco.report.xml.XMLFormatter;
 
 public class ReportGenerator {
 
@@ -63,27 +57,6 @@ public class ReportGenerator {
 		visitor.visitEnd();
 	}
 
-	private IReportVisitor createVisitor(final File outputDirectory) throws IOException {
-		final List<IReportVisitor> visitors = new ArrayList<IReportVisitor>();
-
-		outputDirectory.mkdirs();
-
-		final XMLFormatter xmlFormatter = new XMLFormatter();
-//		xmlFormatter.setOutputEncoding(outputEncoding);
-		visitors.add(xmlFormatter.createVisitor(new FileOutputStream(new File(outputDirectory, "jacoco.xml"))));
-
-		final CSVFormatter csvFormatter = new CSVFormatter();
-//		csvFormatter.setOutputEncoding(outputEncoding);
-		visitors.add(csvFormatter.createVisitor(new FileOutputStream(new File(outputDirectory, "jacoco.csv"))));
-
-		final HTMLFormatter htmlFormatter = new HTMLFormatter();
-//		htmlFormatter.setOutputEncoding(outputEncoding);
-//		htmlFormatter.setLocale(locale);
-		visitors.add(htmlFormatter.createVisitor(new FileMultiReportOutput(outputDirectory)));
-
-		return new MultiReportVisitor(visitors);
-	}
-
 	private void loadExecutionData() throws IOException {
 		execFileLoader = new ExecFileLoader();
 		execFileLoader.load(executionDataFile);
@@ -103,12 +76,5 @@ public class ReportGenerator {
 		return coverageBuilder.getBundle(title);
 	}
 
-//	public static void main(final String[] args) throws IOException {
-//		for (int i = 0; i < args.length; i++) {
-//			final ReportGenerator generator = new ReportGenerator(new File(
-//					args[i]));
-//			generator.create();
-//		}
-//	}
 
 }

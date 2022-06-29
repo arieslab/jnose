@@ -11,10 +11,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import static br.ufba.jnose.base.Util.isInt;
 
 public class Util {
 
