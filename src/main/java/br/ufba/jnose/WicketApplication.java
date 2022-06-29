@@ -56,6 +56,8 @@ public class WicketApplication extends WebApplication {
         USERHOME = System.getProperty("user.home");
         System.out.println("OS current user home directory is " + USERHOME);
 
+        Runtime runTime = Runtime.getRuntime();
+
         String strTmp = System.getProperty("java.io.tmpdir");
         System.out.println("OS current temporary directory: " + strTmp);
         System.out.println("OS Name: " + System.getProperty("os.name"));
@@ -63,6 +65,9 @@ public class WicketApplication extends WebApplication {
         System.out.println("OS user home directory is " + USERHOME);
         System.out.println("JDK Version: " + System.getProperty("java.version"));
         System.out.println("JDK VM Version: " + System.getProperty("java.vm.version"));
+        System.out.println("Cores: " + runTime.availableProcessors());
+        System.out.println("Mem free: " + runTime.freeMemory() + " bytes");
+        System.out.println("Mem total: " + runTime.totalMemory() + " bytes");
 
 
         JNOSE_PROJECTS_FOLDER = USERHOME+ File.separator + ".jnose_projects" + File.separator;

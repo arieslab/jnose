@@ -84,7 +84,7 @@ public class JNose {
         };
 
         if(jNoseCore == null) {
-            jNoseCore = new JNoseCore(conf, 3);
+            jNoseCore = new JNoseCore(conf, Runtime.getRuntime().availableProcessors() * 2);
         }
 
         return jNoseCore;
