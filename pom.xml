@@ -24,7 +24,7 @@
         <junit.version>4.13.1</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <wtp.version>none</wtp.version>
-        <hibernate-core-version>4.3.11.Final</hibernate-core-version>
+        <hibernate-core-version>5.3.20.Final</hibernate-core-version>
         <spring.version>4.3.22.RELEASE</spring.version>
         <c3p0.version>0.9.1.2</c3p0.version>
     </properties>
