@@ -84,7 +84,7 @@ public class ByClassTestPage extends BasePage {
         lkResultadoBotton = new Link<String>("lkResultado") {
             @Override
             public void onClick() {
-                setResponsePage(new ResultPage(listaResultado, "Result By ClassTest", "result_byclasstest_testsmells", true));
+                setResponsePage(new ResultPage(listaResultado, "Result By ClassTest", "result_byclasstest", true));
             }
         };
         lkResultadoBotton.setEnabled(processando);
