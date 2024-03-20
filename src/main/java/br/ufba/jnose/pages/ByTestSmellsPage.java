@@ -90,7 +90,7 @@ public class ByTestSmellsPage extends BasePage {
         lkResultadoBotton = new Link<String>("lkResultado") {
             @Override
             public void onClick() {
-                setResponsePage(new ResultPage(listaResultado,"Result By TestSmells", "result_byclasstest_testsmells",false));
+                setResponsePage(new ResultPage(listaResultado,"Result By TestSmells", "result_bytestsmells",false));
             }
         };
         lkResultadoBotton.setEnabled(processando);
@@ -137,7 +137,7 @@ public class ByTestSmellsPage extends BasePage {
                 Link lkResultado = new Link<String>("lkResultado") {
                     @Override
                     public void onClick() {
-                        setResponsePage(new ResultPage2(projeto, projeto.getResultado(),"Result By TestSmells: " + projeto.getName(), projeto.getName()+"_result_byclasstest_testsmells",false));
+                        setResponsePage(new ResultPage2(projeto, projeto.getResultado(),"Result By TestSmells: " + projeto.getName(), projeto.getName()+"_result_bytestsmells",false));
                     }
                 };
                 lkResultado.setEnabled(projeto.getProcessado());
