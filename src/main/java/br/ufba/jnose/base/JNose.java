@@ -10,6 +10,9 @@ import br.ufba.jnose.dto.TestClass;
 import br.ufba.jnose.dtolocal.TotalProcessado;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class JNose {
@@ -115,6 +118,9 @@ public class JNose {
         columnValues.add(8, "testSmellMethod");
         columnValues.add(9, "testSmellLineBegin");
         columnValues.add(10, "testSmellLineEnd");
+        columnValues.add(11, "methodNameHash");
+        columnValues.add(12, "methodNameFullHash");
+        columnValues.add(13, "methodCode");
 
         todasLinhas.add(columnValues);
 
@@ -132,11 +138,61 @@ public class JNose {
                 columnValues.add(8, testSmell.getMethod());
                 columnValues.add(9, testSmell.getRange());
                 columnValues.add(10, testSmell.getRange());
+                columnValues.add(11, testSmell.getMethodNameHash());
+                columnValues.add(12, testSmell.getMethodNameFullURIHash());
+
+                if(testSmell.getRange().contains("-")){
+                    int start = Integer.parseInt(testSmell.getRange().split("-")[0]);
+                    int end = Integer.parseInt(testSmell.getRange().split("-")[1]);
+                    String code_ = getSource(testClass.getPathFile(),start,end);
+                    columnValues.add(13, code_);
+                }else if(testSmell.getRange().contains(",")) {
+                    String[] lista = testSmell.getRange().split(",");
+                    String code_ = getSource(testClass.getPathFile(),lista);
+                    columnValues.add(13, code_);
+                }else{
+                    System.out.println("Não listado...");
+                }
+
+
+
                 todasLinhas.add(columnValues);
             }
         }
 
         return todasLinhas;
+    }
+
+
+    private static String getSource(String pathFile, int start, int end) {
+        StringBuilder stringBuilder = new StringBuilder();
+        Path path = Paths.get(pathFile);
+        try {
+            List<String> lines = Files.readAllLines(path);
+            for (int i = start; i <= end; i++) {
+                String textoLinha = lines.get(i).trim().replaceAll(";",":");
+                stringBuilder.append(textoLinha);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return stringBuilder.toString();
+    }
+
+    private static String getSource(String pathFile, String[] lista) {
+        StringBuilder stringBuilder = new StringBuilder();
+        Path path = Paths.get(pathFile);
+        try{
+            List<String> lines = Files.readAllLines(path);
+            for (String i : lista) {
+                int number = Integer.parseInt(i.trim());
+                String textoLinha = lines.get(number).replaceAll(";",":");
+                stringBuilder.append(textoLinha);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return stringBuilder.toString();
     }
 
 
