@@ -10,9 +10,12 @@ import br.ufba.jnose.dto.TestClass;
 import br.ufba.jnose.dtolocal.TotalProcessado;
 
 import java.io.*;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
 import java.util.*;
 
 public class JNose {
@@ -121,6 +124,8 @@ public class JNose {
         columnValues.add(11, "methodNameHash");
         columnValues.add(12, "methodNameFullHash");
         columnValues.add(13, "methodCode");
+        columnValues.add(14, "methodCodeHash");
+        columnValues.add(15, "FullHash");
 
         todasLinhas.add(columnValues);
 
@@ -142,14 +147,20 @@ public class JNose {
                 columnValues.add(12, testSmell.getMethodNameFullURIHash());
 
                 if(testSmell.getRange().contains("-")){
-                    int start = Integer.parseInt(testSmell.getRange().split("-")[0]);
-                    int end = Integer.parseInt(testSmell.getRange().split("-")[1]);
+                    int start = Integer.parseInt(testSmell.getRange().replaceAll(" ","").split("-")[0]);
+                    int end = Integer.parseInt(testSmell.getRange().replaceAll(" ","").split("-")[1]);
                     String code_ = getSource(testClass.getPathFile(),start,end);
+                    code_ = code_.replace("/\\r?\\n|\\r/", "");
                     columnValues.add(13, code_);
+                    columnValues.add(14, hash(code_));
+                    columnValues.add(15, hash(code_+testSmell.getMethodNameFullURIHash()));
                 }else if(testSmell.getRange().contains(",")) {
                     String[] lista = testSmell.getRange().split(",");
                     String code_ = getSource(testClass.getPathFile(),lista);
+                    code_ = code_.replace("/\\r?\\n|\\r/", "");
                     columnValues.add(13, code_);
+                    columnValues.add(14, hash(code_));
+                    columnValues.add(15, hash(code_+testSmell.getMethodNameFullURIHash()));
                 }else{
                     System.out.println("Não listado...");
                 }
@@ -163,14 +174,32 @@ public class JNose {
         return todasLinhas;
     }
 
+    public static String hash(String string) {
+        String hash = "";
+        try {
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            md5.update(StandardCharsets.UTF_8.encode(string));
+            hash = String.format("%032x", new BigInteger(1, md5.digest()));
+            return hash;
+        } catch (Exception var3) {
+            Exception e = var3;
+            e.printStackTrace();
+            return "";
+        }
+    }
+
 
     private static String getSource(String pathFile, int start, int end) {
         StringBuilder stringBuilder = new StringBuilder();
         Path path = Paths.get(pathFile);
+
+        if(start >= 1) start--;
+        if(end >= 1) end--;
+
         try {
             List<String> lines = Files.readAllLines(path);
             for (int i = start; i <= end; i++) {
-                String textoLinha = lines.get(i).trim().replaceAll(";",":");
+                String textoLinha = lines.get(i).trim().replaceAll(" ","").replaceAll(";","|");
                 stringBuilder.append(textoLinha);
             }
         } catch (Exception ex) {
@@ -186,7 +215,8 @@ public class JNose {
             List<String> lines = Files.readAllLines(path);
             for (String i : lista) {
                 int number = Integer.parseInt(i.trim());
-                String textoLinha = lines.get(number).replaceAll(";",":");
+                if(number >= 1) number--;
+                String textoLinha = lines.get(number).replaceAll(" ","").replaceAll(";","|");
                 stringBuilder.append(textoLinha);
             }
         } catch (Exception ex) {
