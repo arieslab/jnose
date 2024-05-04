@@ -74,6 +74,9 @@ public class CSVCore {
             writer = new FileWriter(outputFile, true);
 
             for (int i = 0; i < dataValues.size(); i++) {
+                if(dataValues.get(i) == null){
+                    dataValues.set(i,"");
+                }
                 writer.append(dataValues.get(i).replace("\n", "").replace("\r", ""));
 
                 if (i != dataValues.size() - 1)
