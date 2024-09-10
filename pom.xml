@@ -365,7 +365,7 @@
     </build>
 
     <repositories>
-        <repository>
+        <!-- <repository>
             <id>Apache Nexus</id>
             <url>https://repository.apache.org/content/repositories/snapshots/</url>
             <releases>
@@ -392,14 +392,14 @@
             <id>central</id>
             <name>bintray</name>
             <url>https://jcenter.bintray.com</url>
-        </repository>
-       <!-- <repository>
-           <id>jnose-core</id>
-           <url>https://maven.pkg.github.com/arieslab/jnose-core</url>
-           <snapshots>
-               <enabled>true</enabled>
-               <updatePolicy>always</updatePolicy>
-           </snapshots>
-       </repository> -->
+        </repository> -->
+                    <!-- <repository>
+                        <id>jnose-core</id>
+                        <url>https://maven.pkg.github.com/arieslab/jnose-core</url>
+                        <snapshots>
+                            <enabled>true</enabled>
+                            <updatePolicy>always</updatePolicy>
+                        </snapshots>
+                    </repository> -->
     </repositories>
 </project>
