@@ -8,7 +8,7 @@ import br.ufba.jnose.base.JNose;
 import br.ufba.jnose.dtolocal.ProjetoDTO;
 import br.ufba.jnose.entities.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
-import br.ufba.jnose.pages.charts.TestSmellsBarOptions;
+//import br.ufba.jnose.pages.charts.TestSmellsBarOptions;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
@@ -95,7 +95,7 @@ public class ByClassTestPage extends BasePage {
         Link lkCharts = new Link<String>("lkCharts") {
             @Override
             public void onClick() {
-                setResponsePage(new ChartsPage("Charts By ClassTest", new TestSmellsBarOptions(listaResultado)));
+//                setResponsePage(new ChartsPage("Charts By ClassTest", new TestSmellsBarOptions(listaResultado)));
             }
         };
         add(lkCharts.setVisible(false));
@@ -161,7 +161,7 @@ public class ByClassTestPage extends BasePage {
                 Link lkCharts = new Link<String>("lkCharts") {
                     @Override
                     public void onClick() {
-                        setResponsePage(new ChartsPage("Charts By ClassTest: " + projetoDTO.getName(), new TestSmellsBarOptions(projetoDTO.getResultado())));
+//                        setResponsePage(new ChartsPage("Charts By ClassTest: " + projetoDTO.getName(), new TestSmellsBarOptions(projetoDTO.getResultado())));
                     }
                 };
                 lkCharts.setEnabled(projetoDTO.getProcessado());
