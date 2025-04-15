@@ -6,8 +6,8 @@ import br.ufba.jnose.base.JNose;
 import br.ufba.jnose.dtolocal.ProjetoDTO;
 import br.ufba.jnose.entities.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
-import br.ufba.jnose.pages.charts.BasicLineOptions;
-import br.ufba.jnose.pages.charts.UserCommitBarOptions;
+//import br.ufba.jnose.pages.charts.BasicLineOptions;
+//import br.ufba.jnose.pages.charts.UserCommitBarOptions;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -218,7 +218,7 @@ public class EvolutionPage extends BasePage {
                     @Override
                     public void onClick() {
                         List<List<String>> todasLinhas2 = mapResults.get(2);
-                        setResponsePage(new ChartsPage( projeto.getName() ,new BasicLineOptions(todasLinhas2)));
+//                        setResponsePage(new ChartsPage( projeto.getName() ,new BasicLineOptions(todasLinhas2)));
                     }
                 };
                 lkChart2.setOutputMarkupId(true);
@@ -232,7 +232,7 @@ public class EvolutionPage extends BasePage {
                     @Override
                     public void onClick() {
                         List<List<String>> todasLinhas5 = mapResults.get(5);
-                        setResponsePage(new ChartsPage( projeto.getName() ,new UserCommitBarOptions(todasLinhas5)));
+//                        setResponsePage(new ChartsPage( projeto.getName() ,new UserCommitBarOptions(todasLinhas5)));
                     }
                 };
                 lkChart3.setOutputMarkupId(true);

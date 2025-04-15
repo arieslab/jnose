@@ -34,11 +34,11 @@
             <artifactId>jnose-core</artifactId>
             <version>0.8.3</version>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>de.adesso.wicked-charts</groupId>
             <artifactId>wicked-charts-wicket8</artifactId>
-            <version>3.2.1</version>
-        </dependency>
+            <version>3.0.0</version>
+        </dependency> -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -365,7 +365,7 @@
     </build>
 
     <repositories>
-        <!-- <repository>
+        <repository>
             <id>Apache Nexus</id>
             <url>https://repository.apache.org/content/repositories/snapshots/</url>
             <releases>
@@ -392,7 +392,11 @@
             <id>central</id>
             <name>bintray</name>
             <url>https://jcenter.bintray.com</url>
-        </repository> -->
+        </repository>
+        <repository>
+            <id>spring.io</id>
+            <url>https://repo.spring.io/ui/native/libs-release/</url>
+        </repository>
                     <!-- <repository>
                         <id>jnose-core</id>
                         <url>https://maven.pkg.github.com/arieslab/jnose-core</url>
