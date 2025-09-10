@@ -342,6 +342,8 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty9.version}</version>
                 <configuration>
+                   <stopPort>9966</stopPort>
+                   <stopKey>foo</stopKey>
                     <!--					<jvmArgs>-Xms10024m -Xmx10024m -server -XX:+UseConcMarkSweepGC</jvmArgs>-->
                     <!--<systemProperties>-->
                     <!--<systemProperty>-->
