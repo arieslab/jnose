@@ -15,17 +15,11 @@ public class TestSmell implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
-
     private String nome;
-
     private String pathTestClass;
-
     private String pathProductionClass;
-
     private String method;
-
     private String begin;
-
     private String end;
 
     @ManyToOne
