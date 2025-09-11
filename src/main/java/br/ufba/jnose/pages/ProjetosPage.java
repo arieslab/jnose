@@ -23,6 +23,8 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -100,9 +102,21 @@ public class ProjetosPage extends BasePage {
                 item.add(new Label("junit", projeto.getJunitVersion()));
                 item.add(new Label("stars", projeto.getStars()));
 
-                ArrayList<Commit> lista = GitCore.gitLogOneLine(projeto.getPath());
+                ArrayList<Commit> lista = new ArrayList<>();
+                if(Files.exists(Path.of(projeto.getPath()))){
+                    lista = GitCore.gitLogOneLine(projeto.getPath());
+                }
+
                 SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                item.add(new Label("lastupdate", df.format(lista.get(0).date)));
+                try {
+                    if(lista.size() > 0) {
+                        item.add(new Label("lastupdate", df.format(lista.get(0).date)));
+                    }else{
+                        item.add(new Label("lastupdate", "N/A"));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 item.add(new Link<String>("linkPull") {
                     @Override

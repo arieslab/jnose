@@ -1,20 +1,35 @@
 package br.ufba.jnose;
 
 import br.ufba.jnose.base.CSVCore;
+import br.ufba.jnose.business.ProjetoBusiness;
+import br.ufba.jnose.entities.Projeto;
 import br.ufba.jnose.pages.*;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import br.ufba.jnose.pages.HomePage;
 import de.agilecoders.wicket.core.Bootstrap;
 import org.apache.wicket.response.filter.AjaxServerAndClientTimeFilter;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.time.Duration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class WicketApplication extends WebApplication {
+
+    @Autowired
+    private ProjetoBusiness projetoBusiness;
 
     public static boolean COBERTURA_ON = false;
 
@@ -70,13 +85,13 @@ public class WicketApplication extends WebApplication {
         System.out.println("Mem total: " + runTime.totalMemory() + " bytes");
 
 
-        JNOSE_PROJECTS_FOLDER = USERHOME+ File.separator + ".jnose_projects" + File.separator;
+        JNOSE_PROJECTS_FOLDER = USERHOME + File.separator + ".jnose_projects" + File.separator;
         System.out.println("JNose Projects folder: " + JNOSE_PROJECTS_FOLDER);
 
         CSVCore.load(this);
 
         File file = new File(JNOSE_PROJECTS_FOLDER);
-        if(!file.exists()){
+        if (!file.exists()) {
             file.mkdirs();
         }
 
@@ -86,5 +101,46 @@ public class WicketApplication extends WebApplication {
         this.mountPage("/evolution", EvolutionPage.class);
         this.mountPage("/config", ConfigPage.class);
         this.mountPage("/research", ResearchPage.class);
+
+
+        salvarProjeto(JNOSE_PROJECTS_FOLDER);
     }
+
+    public List<Path> findJavaProjects(Path root) {
+        try {
+            try (Stream<Path> stream = Files.walk(root)) {
+                return stream
+                        .filter(Files::isDirectory)
+                        .filter(p -> p.endsWith("src/main/java"))
+                        .map(p -> root.relativize(p).getParent().getParent().getParent())
+                        .map(root::resolve)
+                        .distinct()
+                        .collect(Collectors.toList());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    void salvarProjeto(String javaProjectsFolder){
+        Path root = Paths.get(javaProjectsFolder);
+        List<Path> javaProjects = findJavaProjects(root);
+
+        for (Path javaProject : javaProjects) {
+            Projeto projeto = new Projeto();
+            projeto.setDateUpdate(new Date());
+            projeto.setJunitVersion("JUnit5");
+            String lastFolder = javaProject.getFileName().toString();
+            projeto.setName(lastFolder);
+            projeto.setPath(javaProject.toString());
+            projeto.setStars(0);
+            projeto.setUrl("");
+            System.out.println(projeto);
+            projetoBusiness.save(projeto);
+        }
+    }
+
+
 }
