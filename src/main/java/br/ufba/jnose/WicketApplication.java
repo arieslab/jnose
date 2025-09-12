@@ -1,6 +1,8 @@
 package br.ufba.jnose;
 
 import br.ufba.jnose.base.CSVCore;
+import br.ufba.jnose.base.GitCore;
+import br.ufba.jnose.base.JNose;
 import br.ufba.jnose.business.ProjetoBusiness;
 import br.ufba.jnose.entities.Projeto;
 import br.ufba.jnose.pages.*;
@@ -128,18 +130,34 @@ public class WicketApplication extends WebApplication {
         Path root = Paths.get(javaProjectsFolder);
         List<Path> javaProjects = findJavaProjects(root);
 
+
+
         for (Path javaProject : javaProjects) {
             Projeto projeto = new Projeto();
+            projeto.setPath(javaProject.toString());
             projeto.setDateUpdate(new Date());
-            projeto.setJunitVersion("JUnit5");
+            projeto.setJunitVersion(JNose.getJUnitVersion(javaProject.toString()).toString());
             String lastFolder = javaProject.getFileName().toString();
             projeto.setName(lastFolder);
-            projeto.setPath(javaProject.toString());
             projeto.setStars(0);
-            projeto.setUrl("");
+            Path projectFoldetGit = findGitRoot(javaProject);
+            String urlGit = GitCore.getURL(projectFoldetGit.toString());
+            projeto.setUrl(urlGit);
             System.out.println(projeto);
             projetoBusiness.save(projeto);
         }
+    }
+
+
+    public Path findGitRoot(Path start) {
+        Path current = start.toAbsolutePath();
+        while (current != null) {
+            if (Files.exists(current.resolve(".git"))) {
+                return current;
+            }
+            current = current.getParent(); // sobe um nível
+        }
+        return null; // não encontrou
     }
 
 
