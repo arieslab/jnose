@@ -148,7 +148,12 @@ public class WicketApplication extends WebApplication {
 
             System.out.println(projeto);
 
-            projetoBusiness.save(projeto);
+            Projeto projetoExiste = projetoBusiness.getProjetoByName(projeto.getName());
+
+            if (projetoExiste == null) {
+                projetoBusiness.save(projeto);
+            }
+
         }
     }
 

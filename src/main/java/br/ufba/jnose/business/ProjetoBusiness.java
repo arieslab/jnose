@@ -14,4 +14,8 @@ public class ProjetoBusiness extends BusinessGeneric<ProjectDao, Projeto> {
     public List<Projeto> listAllWithFilter(){
         return dao.listAll().stream().filter(o -> !o.getJunitVersion().equals("None")).collect(toList());
     }
+
+    public Projeto getProjetoByName(String nomeProjeto){
+        return dao.findByHQLUniqueResult("FROM Projeto p WHERE p.name = '" + nomeProjeto+ "'");
+    }
 }
