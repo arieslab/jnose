@@ -128,6 +128,30 @@ public class GitCore {
         return lista;
     }
 
+    public static ArrayList<Commit> getLastCommit(String pathProject) {
+
+        ArrayList<Commit> lista = new ArrayList<>();
+        try {
+            Git git = Git.open(new File(pathProject));
+            git.log().all().call().forEach(revCommit -> {
+                        PersonIdent authorIdent = revCommit.getAuthorIdent();
+                        Date authorDate = authorIdent.getWhen();
+                        TimeZone authorTimeZone = authorIdent.getTimeZone();
+
+                        lista.add(new Commit(
+                                revCommit.getId().getName(),
+                                authorIdent.getName(),
+                                authorDate,
+                                revCommit.getFullMessage()));
+                    }
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
     public static ArrayList<Commit> gitTags(String pathExecute) {
 
         ArrayList<Commit> lista = new ArrayList<>();

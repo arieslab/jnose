@@ -135,7 +135,7 @@ public class WicketApplication extends WebApplication {
         for (Path javaProject : javaProjects) {
             Projeto projeto = new Projeto();
             projeto.setPath(javaProject.toString());
-            projeto.setDateUpdate(new Date());
+
             projeto.setJunitVersion(JNose.getJUnitVersion(javaProject.toString()).toString());
             String lastFolder = javaProject.getFileName().toString();
             projeto.setName(lastFolder);
@@ -143,7 +143,11 @@ public class WicketApplication extends WebApplication {
             Path projectFoldetGit = findGitRoot(javaProject);
             String urlGit = GitCore.getURL(projectFoldetGit.toString());
             projeto.setUrl(urlGit);
+            //projeto.setDateUpdate(GitCore.getLastCommit(javaProject.toString()).get(0).date);
+            projeto.setDateUpdate(new Date());
+
             System.out.println(projeto);
+
             projetoBusiness.save(projeto);
         }
     }
