@@ -100,11 +100,15 @@ public class GitCore {
     }
 
     public static ArrayList<Commit> gitLogOneLine(String pathExecute) {
+        return gitLogOneLine(pathExecute, 500);
+    }
+
+    public static ArrayList<Commit> gitLogOneLine(String pathExecute, int maxCount) {
 
         ArrayList<Commit> lista = new ArrayList<>();
         try {
             Git git = Git.open(new File(pathExecute));
-            git.log().all().call().forEach(revCommit -> {
+            git.log().all().setMaxCount(maxCount).call().forEach(revCommit -> {
                         PersonIdent authorIdent = revCommit.getAuthorIdent();
                         Date authorDate = authorIdent.getWhen();
 

@@ -6,8 +6,6 @@ import br.ufba.jnose.base.JNose;
 import br.ufba.jnose.dtolocal.ProjetoDTO;
 import br.ufba.jnose.entities.Projeto;
 import br.ufba.jnose.pages.base.BasePage;
-//import br.ufba.jnose.pages.charts.BasicLineOptions;
-//import br.ufba.jnose.pages.charts.UserCommitBarOptions;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -25,8 +23,12 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,6 +41,7 @@ public class EvolutionPage extends BasePage {
     private StringBuffer logRetorno;
     private List<ProjetoDTO> listaProjetos;
     private ListView<ProjetoDTO> lvProjetos;
+    private transient ExecutorService evolutionExecutor;
 
     @SpringBean
     private ProjetoBusiness projetoBusiness;
@@ -47,6 +50,7 @@ public class EvolutionPage extends BasePage {
         super("EvolutionPage");
         listaProjetos = new ArrayList<>();
         logRetorno = new StringBuffer();
+        evolutionExecutor = Executors.newSingleThreadExecutor();
         criarTimer();
         criarListaProjetos();
         criarLogInfo();
@@ -77,7 +81,7 @@ public class EvolutionPage extends BasePage {
                 target.add(taLogInfo);
 
                 for(ProjetoDTO projeto:listaProjetos){
-                    if(projeto.getMapResults().containsKey(1)){
+                    if(projeto.getMapResults() != null && projeto.getMapResults().containsKey(1)){
                         projeto.lkResult1.setEnabled(true);
                         projeto.lkResult1.add(AttributeModifier.remove("style"));
                         target.add(projeto.lkResult1);
@@ -86,7 +90,7 @@ public class EvolutionPage extends BasePage {
                         projeto.lkResult1.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
                         target.add(projeto.lkResult1);
                     }
-                    if(projeto.getMapResults().containsKey(2)){
+                    if(projeto.getMapResults() != null && projeto.getMapResults().containsKey(2)){
                         projeto.lkResult2.setEnabled(true);
                         projeto.lkResult2.add(AttributeModifier.remove("style"));
                         target.add(projeto.lkResult2);
@@ -95,7 +99,7 @@ public class EvolutionPage extends BasePage {
                         projeto.lkResult2.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
                         target.add(projeto.lkResult2);
                     }
-                    if(projeto.getMapResults().containsKey(3)){
+                    if(projeto.getMapResults() != null && projeto.getMapResults().containsKey(3)){
                         projeto.lkResult3.setEnabled(true);
                         projeto.lkResult3.add(AttributeModifier.remove("style"));
                         target.add(projeto.lkResult3);
@@ -104,7 +108,7 @@ public class EvolutionPage extends BasePage {
                         projeto.lkResult3.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
                         target.add(projeto.lkResult3);
                     }
-                    if(projeto.getMapResults().containsKey(4)){
+                    if(projeto.getMapResults() != null && projeto.getMapResults().containsKey(4)){
                         projeto.lkResult4.setEnabled(true);
                         projeto.lkResult4.add(AttributeModifier.remove("style"));
                         target.add(projeto.lkResult4);
@@ -112,25 +116,6 @@ public class EvolutionPage extends BasePage {
                         projeto.lkResult4.setEnabled(false);
                         projeto.lkResult4.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
                         target.add(projeto.lkResult4);
-                    }
-                    if(projeto.getMapResults().containsKey(2)){
-                        projeto.lkChart2.setEnabled(true);
-                        projeto.lkChart2.add(AttributeModifier.remove("style"));
-                        target.add(projeto.lkChart2);
-                    }else{
-                        projeto.lkChart2.setEnabled(false);
-                        projeto.lkChart2.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
-                        target.add(projeto.lkChart2);
-                    }
-
-                    if(projeto.getMapResults().containsKey(5)){
-                        projeto.lkChart3.setEnabled(true);
-                        projeto.lkChart3.add(AttributeModifier.remove("style"));
-                        target.add(projeto.lkChart3);
-                    }else{
-                        projeto.lkChart3.setEnabled(false);
-                        projeto.lkChart3.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
-                        target.add(projeto.lkChart3);
                     }
                 }
 
@@ -147,13 +132,20 @@ public class EvolutionPage extends BasePage {
 
                 ProjetoDTO projeto = item.getModelObject();
 
-                Map<Integer, List<List<String>>> mapResults = new HashMap<>();
+                Map<Integer, List<List<String>>> mapResults = new ConcurrentHashMap<>();
                 projeto.setMapResults(mapResults);
                 item.add(new Label("nomeProjeto", projeto.getName()));
                 item.add(new Label("path", projeto.getPath()));
-                item.add(new Label("branch", GitCore.branch(projeto.getPath())));
-                projeto.setListaCommits(GitCore.gitLogOneLine(projeto.getPath()));
-                projeto.setListaTags(GitCore.gitTags(projeto.getPath()));
+
+                if (Files.exists(Path.of(projeto.getPath()))) {
+                    item.add(new Label("branch", GitCore.branch(projeto.getPath())));
+                    projeto.setListaCommits(GitCore.gitLogOneLine(projeto.getPath()));
+                    projeto.setListaTags(GitCore.gitTags(projeto.getPath()));
+                } else {
+                    item.add(new Label("branch", "Diretório não encontrado"));
+                    projeto.setListaCommits(new ArrayList<>());
+                    projeto.setListaTags(new ArrayList<>());
+                }
 
                 Form form = new Form<String>("form");
                 form.setOutputMarkupId(true);
@@ -192,7 +184,7 @@ public class EvolutionPage extends BasePage {
                     @Override
                     public void onClick() {
                         List<List<String>> todasLinhas3 = mapResults.get(3);
-                        setResponsePage(new ResultPage(todasLinhas3, "Evolution Report 3 - Total Testsmells by Commit: " + projeto.getName(), "resultado_evolution2", false));
+                        setResponsePage(new ResultPage(todasLinhas3, "Evolution Report 3 - Testsmells Detail by Commit: " + projeto.getName(), "resultado_evolution3", false));
 
                     }
                 };
@@ -207,7 +199,7 @@ public class EvolutionPage extends BasePage {
                     @Override
                     public void onClick() {
                         List<List<String>> todasLinhas4 = mapResults.get(4);
-                        setResponsePage(new ResultPage(todasLinhas4, "Evolution Report 4 - Total Testsmells by Commit: " + projeto.getName(), "resultado_evolution2", false));
+                        setResponsePage(new ResultPage(todasLinhas4, "Evolution Report 4 - Unique Testsmells: " + projeto.getName(), "resultado_evolution4", false));
 
                     }
                 };
@@ -218,45 +210,14 @@ public class EvolutionPage extends BasePage {
                 projeto.lkResult4 = lkResult4;
                 form.add(lkResult4);
 
-                Link lkChart2 = new Link<String>("lkChart2") {
-                    @Override
-                    public void onClick() {
-                        List<List<String>> todasLinhas2 = mapResults.get(2);
-//                        setResponsePage(new ChartsPage( projeto.getName() ,new BasicLineOptions(todasLinhas2)));
-                    }
-                };
-                lkChart2.setOutputMarkupId(true);
-                lkChart2.setOutputMarkupPlaceholderTag(true);
-                lkChart2.setEnabled(false);
-                lkChart2.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
-                projeto.lkChart2 = lkChart2;
-                form.add(lkChart2);
-
-                Link lkChart3 = new Link<String>("lkChart3") {
-                    @Override
-                    public void onClick() {
-                        List<List<String>> todasLinhas5 = mapResults.get(5);
-//                        setResponsePage(new ChartsPage( projeto.getName() ,new UserCommitBarOptions(todasLinhas5)));
-                    }
-                };
-                lkChart3.setOutputMarkupId(true);
-                lkChart3.setOutputMarkupPlaceholderTag(true);
-                lkChart3.setEnabled(false);
-                lkChart3.add(AttributeModifier.append("style","background-color: #e0e0eb;"));
-                projeto.lkChart3 = lkChart3;
-                form.add(lkChart3);
-
                 AjaxLink btSubmit = new AjaxLink<String>("btSubmit") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         LOGGER.log(Level.INFO, "Processamento do projeto: {0} - Start", projeto.getName());
                         logRetorno.insert(0,"Processamento do projeto: " + projeto.getName() + " - Start<br>");
-                        new Thread() { // IMPORTANTE: AQUI SE CRIA AS THREADS
-                            @Override
-                            public void run() {
-                                JNose.processarEvolution(projeto, logRetorno, projeto.getMapResults());
-                            }
-                        }.start();
+                        evolutionExecutor.submit(() ->
+                                JNose.processarEvolution(projeto, logRetorno, projeto.getMapResults())
+                        );
                     }
                 };
                 btSubmit.setEnabled(false);

@@ -3,6 +3,7 @@ package br.ufba.jnose.base;
 import br.ufba.jnose.WicketApplication;
 import br.ufba.jnose.core.Config;
 import br.ufba.jnose.core.JNoseCore;
+import br.ufba.jnose.core.testsmelldetector.testsmell.TestSmellDetector;
 import br.ufba.jnose.dto.TestSmell;
 import br.ufba.jnose.dtolocal.Commit;
 import br.ufba.jnose.dtolocal.ProjetoDTO;
@@ -16,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -371,54 +373,54 @@ public class JNose {
 
 
     public static void processarEvolution(ProjetoDTO projeto, StringBuffer logRetorno, Map<Integer, List<List<String>>> mapa) {
+        final SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         GitCore.checkout("master", projeto.getPath());
 
         List<Commit> lista = new ArrayList<>();
 
-        if (projeto.getOptionSelected().equalsIgnoreCase("commit")) {
+        if ("commit".equalsIgnoreCase(projeto.getOptionSelected())) {
             lista = projeto.getListaCommits();
-        } else if (projeto.getOptionSelected().equalsIgnoreCase("tag")){
+        } else if ("tag".equalsIgnoreCase(projeto.getOptionSelected())) {
             lista = projeto.getListaTags();
         }
 
-        Collections.sort(lista, (o1, o2) -> {
-            if (o1.date == null || o2.date == null) return 0;
-            return o1.date.compareTo(o2.date);
-        });
+        if (lista.isEmpty()) {
+            logRetorno.insert(0, "Nenhum commit ou tag selecionado<br>");
+            return;
+        }
+
+        int MAX_COMMITS = 50;
+        if (lista.size() > MAX_COMMITS) {
+            logRetorno.insert(0, "Limitando a " + MAX_COMMITS + " de " + lista.size() + " commits<br>");
+            lista = lista.subList(0, MAX_COMMITS);
+        }
+
+        lista.sort(Comparator.comparing((Commit c) -> c.date, Comparator.nullsLast(Comparator.naturalOrder())));
 
         List<List<String>> todasLinhas1 = new ArrayList<>();
         List<List<String>> todasLinhas2 = new ArrayList<>();
         List<List<String>> todasLinhas3 = new ArrayList<>();
-
         List<List<String>> todasLinhas4 = new ArrayList<>();
         List<List<String>> todasLinhas5 = new ArrayList<>();
 
         int cont = 1;
-
         boolean primeiraLinha = true;
-
-        List<String> jaProcessado = new ArrayList<>();
+        Set<String> jaProcessado = new HashSet<>();
 
         for (Commit commit : lista) {
-
-            logRetorno.insert(0,cont++ + " - Analyze commit: " + commit.id + "<br>");
-
-            GitCore.checkout(commit.id, projeto.getPath());
-
-            List<TestClass> listTestClass = new ArrayList<>();
-
-            int totalTestSmells = 0;
+            logRetorno.insert(0, cont++ + " - Analyze commit: " + commit.id + "<br>");
 
             try {
+                GitCore.checkout(commit.id, projeto.getPath());
 
-                listTestClass = getInstanceJNoseCore().getFilesTest(projeto.getPath());
+                List<TestClass> listTestClass = getInstanceJNoseCore().getFilesTest(projeto.getPath());
 
-                if(listTestClass.size() != 0 && primeiraLinha) {
+                if (!listTestClass.isEmpty() && primeiraLinha) {
                     primeiraLinha = false;
                     List<String> listaColumName = new ArrayList<>();
                     listaColumName.add("commit.id");
-                    listaColumName.add("commit.name");
+                    listaColumName.add("commit.authorName");
                     listaColumName.add("commit.date");
                     listaColumName.add("commit.msg");
                     listaColumName.add("commit.tag");
@@ -427,17 +429,19 @@ public class JNose {
                     listaColumName.add("ProductionFile");
                     listaColumName.add("NumberLine");
                     listaColumName.add("NumberMethods");
-                    listTestClass.get(0).getLineSumTestSmells().keySet().stream().forEach(v -> listaColumName.add(v));
+                    listaColumName.addAll(TestSmellDetector.getAllTestSmellNames());
                     todasLinhas1.add(listaColumName);
                 }
 
-                for (TestClass testClass : listTestClass){
+                int totalTestSmells = 0;
+
+                for (TestClass testClass : listTestClass) {
                     List<String> lista3 = new ArrayList<>();
                     lista3.add(commit.id);
-                    lista3.add(commit.name);
-                    lista3.add(commit.date.toString());
+                    lista3.add(commit.authorName);
+                    lista3.add(commit.date != null ? DATE_FMT.format(commit.date) : "");
                     lista3.add(commit.msg);
-                    lista3.add(commit.tag);
+                    lista3.add(commit.tag != null ? commit.tag : "");
                     lista3.add(projeto.getName());
                     lista3.add(testClass.getName());
                     lista3.add(testClass.getProductionFile());
@@ -446,21 +450,18 @@ public class JNose {
                     testClass.getLineSumTestSmells().values().stream().forEach(v -> lista3.add(v.toString()));
                     todasLinhas1.add(lista3);
 
-                    for(TestSmell ts : testClass.getListTestSmell()){
+                    for (TestSmell ts : testClass.getListTestSmell()) {
+                        String sha256 = Util.getSHA5Code(testClass, ts).trim();
 
-                        String sha256 = Util.getSHA5Code(testClass,ts).trim();
-
-                        if(!jaProcessado.contains(sha256)) {
-                            jaProcessado.add(sha256);
-
+                        if (jaProcessado.add(sha256)) {
                             totalTestSmells++;
 
                             List<String> lista4 = new ArrayList<>();
                             lista4.add(commit.id);
-                            lista4.add(commit.name);
-                            lista4.add(commit.date.toString());
+                            lista4.add(commit.authorName);
+                            lista4.add(commit.date != null ? DATE_FMT.format(commit.date) : "");
                             lista4.add(commit.msg);
-                            lista4.add(commit.tag);
+                            lista4.add(commit.tag != null ? commit.tag : "");
                             lista4.add(projeto.getName());
                             lista4.add(testClass.getName());
                             lista4.add(testClass.getProductionFile());
@@ -473,19 +474,18 @@ public class JNose {
                             todasLinhas3.add(lista4);
                         }
                     }
-
                 }
+
+                List<String> lista2 = new ArrayList<>();
+                lista2.add(commit.id);
+                lista2.add(commit.tag != null ? commit.tag : "");
+                lista2.add(commit.date != null ? DATE_FMT.format(commit.date) : "");
+                lista2.add(String.valueOf(totalTestSmells));
+                todasLinhas2.add(lista2);
+
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, "Failed processing evolution for commit: " + commit.id, e);
             }
-
-            List<String> lista2 = new ArrayList<>();
-            lista2.add(commit.id);
-            lista2.add(commit.tag);
-            lista2.add(commit.date + "");
-            lista2.add(totalTestSmells + "");
-            todasLinhas2.add(lista2);
-
         }
 
         mapa.put(1, todasLinhas1);
@@ -493,21 +493,13 @@ public class JNose {
         mapa.put(3, todasLinhas3);
 
         Set<String> setSHA = new HashSet<>();
-        Map<String,Integer> mapName = new HashMap<>();
+        Map<String, Integer> mapName = new HashMap<>();
 
-        for(List<String> linha : todasLinhas3){
-
-            if(!setSHA.contains(linha.get(13))){
-                setSHA.add(linha.get(13));
+        for (List<String> linha : todasLinhas3) {
+            if (setSHA.add(linha.get(13))) {
                 todasLinhas4.add(linha);
             }
-
-            if(!mapName.containsKey(linha.get(1))){
-                mapName.put(linha.get(1),1);
-            }else{
-                mapName.put(linha.get(1),mapName.get(linha.get(1))+1);
-            }
-
+            mapName.merge(linha.get(1), 1, Integer::sum);
         }
 
         mapa.put(4, todasLinhas4);

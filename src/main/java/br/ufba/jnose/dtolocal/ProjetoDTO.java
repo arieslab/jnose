@@ -20,7 +20,7 @@ public class ProjetoDTO implements Serializable {
 
     private List<List<String>> resultado;
 
-    private List<br.ufba.jnose.dto.TestClass> resultadoByTestSmells;
+    private List<TestClass> resultadoByTestSmells;
 
     private List<Commit> listaCommits;
 
@@ -41,8 +41,6 @@ public class ProjetoDTO implements Serializable {
     public Link lkResult2;
     public Link lkResult3;
     public Link lkResult4;
-    public Link lkChart2;
-    public Link lkChart3;
 
     public Label lbPorcentagem;
     public String bugs;
