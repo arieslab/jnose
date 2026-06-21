@@ -13,7 +13,6 @@ import de.agilecoders.wicket.core.Bootstrap;
 import org.apache.wicket.response.filter.AjaxServerAndClientTimeFilter;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.apache.wicket.util.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -49,9 +48,10 @@ public class WicketApplication extends WebApplication {
     @Override
     public void init() {
         super.init();
+        getCspSettings().blocking().disabled();
         Bootstrap.install(this);
 
-        getResourceSettings().setResourcePollFrequency(Duration.ONE_MINUTE);
+        getResourceSettings().setResourcePollFrequency(java.time.Duration.ofMinutes(1));
         getApplicationSettings().setUploadProgressUpdatesEnabled(true);
         getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
         getComponentInstantiationListeners().add(new SpringComponentInjector(this));

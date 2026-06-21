@@ -25,7 +25,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.time.Duration;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -203,7 +203,7 @@ public class ByTestSmellsPage extends BasePage {
     }
 
     private void criarTimer(){
-        AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
+        AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(java.time.Duration.ofSeconds(1)) {
             int cont = 0;
 
             @Override

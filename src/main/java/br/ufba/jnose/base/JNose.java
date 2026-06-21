@@ -25,66 +25,66 @@ public class JNose {
     public static JNoseCore getInstanceJNoseCore(){
 
         Config conf = new Config() {
-            public Boolean assertionRoulette() {return TestSmellDetectorConfig.assertionRoulette;}
-            public Boolean conditionalTestLogic() {
+            public boolean assertionRoulette() {return TestSmellDetectorConfig.assertionRoulette;}
+            public boolean conditionalTestLogic() {
                 return TestSmellDetectorConfig.conditionalTestLogic;
             }
-            public Boolean constructorInitialization() {
+            public boolean constructorInitialization() {
                 return TestSmellDetectorConfig.constructorInitialization;
             }
-            public Boolean defaultTest() {
+            public boolean defaultTest() {
                 return TestSmellDetectorConfig.defaultTest;
             }
-            public Boolean dependentTest() {
+            public boolean dependentTest() {
                 return TestSmellDetectorConfig.dependentTest;
             }
-            public Boolean duplicateAssert() {
+            public boolean duplicateAssert() {
                 return TestSmellDetectorConfig.duplicateAssert;
             }
-            public Boolean eagerTest() {
+            public boolean eagerTest() {
                 return TestSmellDetectorConfig.eagerTest;
             }
-            public Boolean emptyTest() {
+            public boolean emptyTest() {
                 return TestSmellDetectorConfig.emptyTest;
             }
-            public Boolean exceptionCatchingThrowing() {
+            public boolean exceptionCatchingThrowing() {
                 return TestSmellDetectorConfig.exceptionCatchingThrowing;
             }
-            public Boolean generalFixture() {return TestSmellDetectorConfig.generalFixture;}
-            public Boolean mysteryGuest() {
+            public boolean generalFixture() {return TestSmellDetectorConfig.generalFixture;}
+            public boolean mysteryGuest() {
                 return TestSmellDetectorConfig.mysteryGuest;
             }
-            public Boolean printStatement() {
+            public boolean printStatement() {
                 return TestSmellDetectorConfig.printStatement;
             }
-            public Boolean redundantAssertion() {
+            public boolean redundantAssertion() {
                 return TestSmellDetectorConfig.redundantAssertion;
             }
-            public Boolean sensitiveEquality() {
+            public boolean sensitiveEquality() {
                 return TestSmellDetectorConfig.sensitiveEquality;
             }
-            public Boolean verboseTest() {
+            public boolean verboseTest() {
                 return TestSmellDetectorConfig.verboseTest;
             }
-            public Boolean sleepyTest() {
+            public boolean sleepyTest() {
                 return TestSmellDetectorConfig.sleepyTest;
             }
-            public Boolean lazyTest() {
+            public boolean lazyTest() {
                 return TestSmellDetectorConfig.lazyTest;
             }
-            public Boolean unknownTest() {
+            public boolean unknownTest() {
                 return TestSmellDetectorConfig.unknownTest;
             }
-            public Boolean ignoredTest() {
+            public boolean ignoredTest() {
                 return TestSmellDetectorConfig.ignoredTest;
             }
-            public Boolean resourceOptimism() {
+            public boolean resourceOptimism() {
                 return TestSmellDetectorConfig.resourceOptimism;
             }
-            public Boolean magicNumberTest() {return TestSmellDetectorConfig.magicNumberTest;}
+            public boolean magicNumberTest() {return TestSmellDetectorConfig.magicNumberTest;}
 
             @Override
-            public Integer maxStatements() {
+            public int maxStatements() {
                 return 30;
             }
         };

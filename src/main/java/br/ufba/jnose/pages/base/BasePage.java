@@ -9,7 +9,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.time.Duration;
+
 
 public class BasePage extends WebPage {
     private static final long serialVersionUID = 1L;
@@ -104,7 +104,7 @@ public class BasePage extends WebPage {
         add(linkConfig);
         add(linkStorage);
 
-        AbstractAjaxTimerBehavior timerHome = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
+        AbstractAjaxTimerBehavior timerHome = new AbstractAjaxTimerBehavior(java.time.Duration.ofSeconds(1)) {
             String signal = "";
             @Override
             protected void onTimer(AjaxRequestTarget target) {

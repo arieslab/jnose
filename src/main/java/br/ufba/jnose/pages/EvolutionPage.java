@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.time.Duration;
+
 
 import java.util.*;
 
@@ -66,7 +66,7 @@ public class EvolutionPage extends BasePage {
     }
 
     private void criarTimer() {
-        AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
+        AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(java.time.Duration.ofSeconds(1)) {
             @Override
             protected void onTimer(AjaxRequestTarget target) {
                 taLogInfo.setDefaultModelObject(logRetorno);

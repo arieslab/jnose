@@ -188,112 +188,112 @@ public class AnalyzePage extends BasePage {
     private Config loadConfig(boolean withClassProduction) {
         Config config = new Config() {
             @Override
-            public Boolean assertionRoulette() {
+            public boolean assertionRoulette() {
                 return true;
             }
 
             @Override
-            public Boolean conditionalTestLogic() {
+            public boolean conditionalTestLogic() {
                 return true;
             }
 
             @Override
-            public Boolean constructorInitialization() {
+            public boolean constructorInitialization() {
                 return true;
             }
 
             @Override
-            public Boolean defaultTest() {
+            public boolean defaultTest() {
                 return true;
             }
 
             @Override
-            public Boolean dependentTest() {
+            public boolean dependentTest() {
                 return true;
             }
 
             @Override
-            public Boolean duplicateAssert() {
+            public boolean duplicateAssert() {
                 return true;
             }
 
             @Override
-            public Boolean eagerTest() {
+            public boolean eagerTest() {
                 return withClassProduction;
             }
 
             @Override
-            public Boolean emptyTest() {
+            public boolean emptyTest() {
                 return true;
             }
 
             @Override
-            public Boolean exceptionCatchingThrowing() {
+            public boolean exceptionCatchingThrowing() {
                 return true;
             }
 
             @Override
-            public Boolean generalFixture() {
+            public boolean generalFixture() {
                 return true;
             }
 
             @Override
-            public Boolean mysteryGuest() {
+            public boolean mysteryGuest() {
                 return true;
             }
 
             @Override
-            public Boolean printStatement() {
+            public boolean printStatement() {
                 return true;
             }
 
             @Override
-            public Boolean redundantAssertion() {
+            public boolean redundantAssertion() {
                 return true;
             }
 
             @Override
-            public Boolean sensitiveEquality() {
+            public boolean sensitiveEquality() {
                 return true;
             }
 
             @Override
-            public Boolean verboseTest() {
+            public boolean verboseTest() {
                 return true;
             }
 
             @Override
-            public Boolean sleepyTest() {
+            public boolean sleepyTest() {
                 return true;
             }
 
             @Override
-            public Boolean lazyTest() {
+            public boolean lazyTest() {
                 return withClassProduction;
             }
 
             @Override
-            public Boolean unknownTest() {
+            public boolean unknownTest() {
                 return true;
             }
 
             @Override
-            public Boolean ignoredTest() {
+            public boolean ignoredTest() {
                 return true;
             }
 
             @Override
-            public Boolean resourceOptimism() {
+            public boolean resourceOptimism() {
                 return true;
             }
 
             @Override
-            public Boolean magicNumberTest() {
+            public boolean magicNumberTest() {
                 return true;
             }
 
             @Override
-            public Integer maxStatements() {
+            public int maxStatements() {
                 return 30;
             }
         };
