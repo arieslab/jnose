@@ -19,6 +19,8 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -390,12 +392,6 @@ public class JNose {
             return;
         }
 
-        int MAX_COMMITS = 50;
-        if (lista.size() > MAX_COMMITS) {
-            logRetorno.insert(0, "Limitando a " + MAX_COMMITS + " de " + lista.size() + " commits<br>");
-            lista = lista.subList(0, MAX_COMMITS);
-        }
-
         lista.sort(Comparator.comparing((Commit c) -> c.date, Comparator.nullsLast(Comparator.naturalOrder())));
 
         List<List<String>> todasLinhas1 = new ArrayList<>();
@@ -408,13 +404,18 @@ public class JNose {
         boolean primeiraLinha = true;
         Set<String> jaProcessado = new HashSet<>();
 
-        for (Commit commit : lista) {
-            logRetorno.insert(0, cont++ + " - Analyze commit: " + commit.id + "<br>");
+        JNoseCore core = getInstanceJNoseCore();
+        int numberThread = Runtime.getRuntime().availableProcessors() * 2;
+        ExecutorService threadpool = Executors.newFixedThreadPool(numberThread);
 
-            try {
-                GitCore.checkout(commit.id, projeto.getPath());
+        try {
+            for (Commit commit : lista) {
+                logRetorno.insert(0, cont++ + " - Analyze commit: " + commit.id + "<br>");
 
-                List<TestClass> listTestClass = getInstanceJNoseCore().getFilesTest(projeto.getPath());
+                try {
+                    GitCore.checkout(commit.id, projeto.getPath());
+
+                    List<TestClass> listTestClass = core.getFilesTest(projeto.getPath(), threadpool);
 
                 if (!listTestClass.isEmpty() && primeiraLinha) {
                     primeiraLinha = false;
@@ -514,6 +515,9 @@ public class JNose {
         mapa.put(5, todasLinhas5);
 
         GitCore.checkout("master", projeto.getPath());
+        } finally {
+            threadpool.shutdown();
+        }
     }
 
 
