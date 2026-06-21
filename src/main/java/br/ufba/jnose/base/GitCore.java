@@ -22,18 +22,13 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GitCore {
 
-    public static void main(String[] args) {
-        GitCore.getStarts("hub4j/github-api");
-    }
+    private static final Logger LOGGER = Logger.getLogger(GitCore.class.getName());
 
-    /**
-     * Retorna a quantidade de estrelas do projeto
-     * @param repoLocal path do repo local
-     * @return
-     */
     public static Integer getStarts(String repoLocal){
 
         String url = getURL(repoLocal);
@@ -45,7 +40,7 @@ public class GitCore {
             GHRepository repo = github.getRepository(repoName);
             stars = repo.getStargazersCount();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Failed to get stars for: " + repoLocal, e);
         }
         return stars;
     }
@@ -60,9 +55,9 @@ public class GitCore {
             path_ = path_.substring(0,path_.length()-1);
         }
 
-        String projeto_ = path_.substring(path_.lastIndexOf("/")+1,path_.length());
+        String projeto_ = path_.substring(path_.lastIndexOf("/")+1);
         owner_ = path_.substring(0,path_.lastIndexOf("/"));
-        owner_ = owner_.substring(owner_.lastIndexOf("/")+1,owner_.length());
+        owner_ = owner_.substring(owner_.lastIndexOf("/")+1);
 
         return owner_ + "/" + projeto_;
     }
@@ -76,9 +71,9 @@ public class GitCore {
             int size = repoURL.length();
             if (x == size - 1) {
                 repoURL = repoURL.substring(0, repoURL.length() - 2);
-                repoName = repoURL.substring(repoURL.lastIndexOf("/") + 1, repoURL.length());
+                repoName = repoURL.substring(repoURL.lastIndexOf("/") + 1);
             } else {
-                repoName = repoURL.substring(repoURL.lastIndexOf("/") + 1, repoURL.length());
+                repoName = repoURL.substring(repoURL.lastIndexOf("/") + 1);
             }
 
         }
@@ -93,7 +88,7 @@ public class GitCore {
                     .setDirectory(file)
                     .call();
         } catch (GitAPIException | IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Failed to clone: " + repoURL, e);
         }
 
         br.ufba.jnose.entities.Projeto projetoBean = new br.ufba.jnose.entities.Projeto();
@@ -112,7 +107,6 @@ public class GitCore {
             git.log().all().call().forEach(revCommit -> {
                         PersonIdent authorIdent = revCommit.getAuthorIdent();
                         Date authorDate = authorIdent.getWhen();
-                        TimeZone authorTimeZone = authorIdent.getTimeZone();
 
                         lista.add(new Commit(
                                 revCommit.getId().getName(),
@@ -122,7 +116,7 @@ public class GitCore {
                     }
             );
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Failed to get git log for: " + pathExecute, e);
         }
 
         return lista;
@@ -136,7 +130,6 @@ public class GitCore {
             git.log().all().call().forEach(revCommit -> {
                         PersonIdent authorIdent = revCommit.getAuthorIdent();
                         Date authorDate = authorIdent.getWhen();
-                        TimeZone authorTimeZone = authorIdent.getTimeZone();
 
                         lista.add(new Commit(
                                 revCommit.getId().getName(),
@@ -146,7 +139,7 @@ public class GitCore {
                     }
             );
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Failed to get last commit for: " + pathProject, e);
         }
 
         return lista;
@@ -161,7 +154,7 @@ public class GitCore {
 
             List<Ref> call = git.tagList().call();
             for (Ref ref : call) {
-                System.out.println("Tag: " + ref + " " + ref.getName() + " " + ref.getObjectId().getName());
+                LOGGER.log(Level.FINE, "Tag: {0} {1} {2}", new Object[]{ref, ref.getName(), ref.getObjectId().getName()});
 
                 LogCommand log = git.log();
 
@@ -176,8 +169,8 @@ public class GitCore {
                 for (RevCommit revCommit : logs) {
                     PersonIdent authorIdent = revCommit.getAuthorIdent();
                     Date authorDate = authorIdent.getWhen();
-                    TimeZone authorTimeZone = authorIdent.getTimeZone();
-                    System.out.println(authorDate + " - Commit: " + revCommit + ", name: " + revCommit.getName() + ", id: " + revCommit.getId().getName());
+                    LOGGER.log(Level.FINE, "{0} - Commit: {1}, name: {2}, id: {3}",
+                            new Object[]{authorDate, revCommit, revCommit.getName(), revCommit.getId().getName()});
 
                     lista.add(new Commit(
                             revCommit.getId().getName(),
@@ -190,7 +183,7 @@ public class GitCore {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Failed to get tags for: " + pathExecute, e);
         }
 
         return lista;
@@ -201,7 +194,8 @@ public class GitCore {
             Git git = Git.open(new File(projetoPath));
             git.checkout().setForced(true).setName(commitId).call();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Failed to checkout {0} in {1}", new Object[]{commitId, projetoPath});
+            LOGGER.log(Level.FINE, "Checkout error", e);
         }
     }
 
@@ -211,7 +205,7 @@ public class GitCore {
             Git git = Git.open(new File(projetoPath));
             url = git.getRepository().getConfig().getString("remote", "origin", "url");
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Failed to get URL for: " + projetoPath, e);
         }
         return url;
     }
@@ -222,7 +216,7 @@ public class GitCore {
             Git git = Git.open(new File(projetoPath));
             branchcurrent = git.getRepository().getBranch();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Failed to get branch for: " + projetoPath, e);
         }
         return branchcurrent;
     }
@@ -232,7 +226,7 @@ public class GitCore {
             Git git = Git.open(new File(projetoPath));
             git.pull().call();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Failed to pull in: " + projetoPath, e);
         }
     }
 
@@ -242,35 +236,30 @@ public class GitCore {
 
         String filePathRepo = filePathAbsolut.replace(projetoPath+"/","");
 
-        Git git = null;
         try {
-
             final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("YYYY-MM-dd HH:mm");
 
-            git = Git.open(new File(projetoPath));
+            Git git = Git.open(new File(projetoPath));
             BlameCommand blameCommand = git.blame();
             blameCommand.setStartCommit(git.getRepository().resolve("HEAD"));
             blameCommand.setFilePath(filePathRepo);
             BlameResult result = blameCommand.call();
 
-//            System.out.println("Blaming " + filePath);
-//            final BlameResult result = git.blame().setFilePath(filePath)
-//                    .setTextComparator(RawTextComparator.WS_IGNORE_ALL).call();
             final RawText rawText = result.getResultContents();
 
             for (int i = 0; i < rawText.size(); i++) {
                 final PersonIdent sourceAuthor = result.getSourceAuthor(i);
                 final RevCommit sourceCommit = result.getSourceCommit(i);
-                System.out.println(sourceAuthor.getName() +
-                        (sourceCommit != null ? " - " + DATE_FORMAT.format(((long) sourceCommit.getCommitTime()) * 1000) +
-                                " - " + sourceCommit.getName() : "") +
-                        ": " + rawText.getString(i));
+                LOGGER.log(Level.FINE, "{0} - {1} - {2}: {3}",
+                        new Object[]{sourceAuthor.getName(),
+                                sourceCommit != null ? DATE_FORMAT.format(((long) sourceCommit.getCommitTime()) * 1000) : "",
+                                sourceCommit != null ? sourceCommit.getName() : "",
+                                rawText.getString(i)});
 
-                retorno.put(i+1,sourceAuthor.getName());
-
+                retorno.put(i+1, sourceAuthor.getName());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Failed to blame file: " + filePathAbsolut, e);
         }
 
         return retorno;
@@ -278,9 +267,8 @@ public class GitCore {
 
     public static BlameResult getBlameResultForFile(String projetoPath, String filePath) {
         BlameResult blame = null;
-        Git git = null;
         try {
-            git = Git.open(new File(projetoPath));
+            Git git = Git.open(new File(projetoPath));
             Iterable<RevCommit> lista = git.log().all().call();
             Repository jgitRepository = git.getRepository();
             BlameCommand blamer = new BlameCommand(jgitRepository);
@@ -290,7 +278,7 @@ public class GitCore {
             blamer.setFilePath(filePath);
             blame = blamer.call();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Failed to blame file: " + filePath, e);
         }
         return blame;
     }

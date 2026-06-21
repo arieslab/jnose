@@ -29,9 +29,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ProjetosPage extends BasePage {
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOGGER = Logger.getLogger(ProjetosPage.class.getName());
 
     @SpringBean
     private ProjetoBusiness projetoBusiness;
@@ -115,7 +119,7 @@ public class ProjetosPage extends BasePage {
                         item.add(new Label("lastupdate", "N/A"));
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LOGGER.log(Level.WARNING, "Failed to format date", e);
                 }
 
                 item.add(new Link<String>("linkPull") {
@@ -138,7 +142,7 @@ public class ProjetosPage extends BasePage {
                         try {
                             FileUtils.deleteDirectory(file);
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            LOGGER.log(Level.WARNING, "Failed to delete directory: " + file.getPath(), e);
                         }
                         setResponsePage(ProjetosPage.class);
                     }
@@ -163,5 +167,3 @@ public class ProjetosPage extends BasePage {
     }
 
 }
-
-

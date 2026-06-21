@@ -12,16 +12,18 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Util {
 
+    private static final Logger LOGGER = Logger.getLogger(Util.class.getName());
+
     public static boolean isInt(String s) {
         try {
-            int i = Integer.parseInt(s);
+            Integer.parseInt(s);
             return true;
-        }
-
-        catch (NumberFormatException er) {
+        } catch (NumberFormatException er) {
             return false;
         }
     }
@@ -35,18 +37,17 @@ public class Util {
     }
 
     public static void execCommand(final String commandLine, String pathExecute) {
-        int r = 0;
         try {
             Process p = Runtime.getRuntime().exec(commandLine, null, new File(pathExecute));
             BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String lineOut;
             while ((lineOut = input.readLine()) != null) {
-                System.out.println(lineOut);
+                LOGGER.log(Level.INFO, lineOut);
             }
             input.close();
-            r = p.waitFor();
+            p.waitFor();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Command failed: " + commandLine, e);
         }
     }
 
@@ -76,9 +77,9 @@ public class Util {
         List<String> linhasStringComSmells = new ArrayList();
 
         try {
-            File file = new File(nomeClassPath);    //creates a new file instance
-            FileReader fr = new FileReader(file);   //reads the file
-            BufferedReader br = new BufferedReader(fr);  //creates a buffering character input stream
+            File file = new File(nomeClassPath);
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
             String line;
             int contLinha = 1;
             while ((line = br.readLine()) != null) {
@@ -87,9 +88,9 @@ public class Util {
                 }
                 contLinha++;
             }
-            fr.close();    //closes the stream and release the resources
+            fr.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Failed to read file: " + nomeClassPath, e);
         }
 
         return linhasStringComSmells.toString();
@@ -99,12 +100,11 @@ public class Util {
         String code = getCode(testClass,testSmell);
         byte[] encodedhash = null;
 
-        MessageDigest digest = null;
         try {
-            digest = MessageDigest.getInstance("SHA-256");
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
             encodedhash = digest.digest(code.getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "SHA-256 not available", e);
         }
 
         return bytesToHex(encodedhash);
@@ -121,7 +121,5 @@ public class Util {
         }
         return hexString.toString();
     }
-
-
 
 }

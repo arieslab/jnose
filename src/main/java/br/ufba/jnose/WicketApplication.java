@@ -23,11 +23,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
 public class WicketApplication extends WebApplication {
+
+    private static final Logger LOGGER = Logger.getLogger(WicketApplication.class.getName());
 
     @Autowired
     private ProjetoBusiness projetoBusiness;
@@ -68,27 +72,21 @@ public class WicketApplication extends WebApplication {
         File fileRoot = new File(".");
 
         JNOSE_PATH = fileRoot.getAbsolutePath();
-        System.out.println("JNOSE Path: " + JNOSE_PATH);
+        LOGGER.log(Level.INFO, "JNOSE Path: {0}", JNOSE_PATH);
 
         USERHOME = System.getProperty("user.home");
-        System.out.println("OS current user home directory is " + USERHOME);
 
         Runtime runTime = Runtime.getRuntime();
 
         String strTmp = System.getProperty("java.io.tmpdir");
-        System.out.println("OS current temporary directory: " + strTmp);
-        System.out.println("OS Name: " + System.getProperty("os.name"));
-        System.out.println("OS Version: " + System.getProperty("os.version"));
-        System.out.println("OS user home directory is " + USERHOME);
-        System.out.println("JDK Version: " + System.getProperty("java.version"));
-        System.out.println("JDK VM Version: " + System.getProperty("java.vm.version"));
-        System.out.println("Cores: " + runTime.availableProcessors());
-        System.out.println("Mem free: " + runTime.freeMemory() + " bytes");
-        System.out.println("Mem total: " + runTime.totalMemory() + " bytes");
-
+        LOGGER.log(Level.INFO, "OS: {0} {1} | JDK: {2} {3} | Cores: {4} | Mem free: {5} | Mem total: {6}",
+                new Object[]{System.getProperty("os.name"), System.getProperty("os.version"),
+                        System.getProperty("java.version"), System.getProperty("java.vm.version"),
+                        runTime.availableProcessors(), runTime.freeMemory(), runTime.totalMemory()});
+        LOGGER.log(Level.FINE, "Temp dir: {0} | User home: {1}", new Object[]{strTmp, USERHOME});
 
         JNOSE_PROJECTS_FOLDER = USERHOME + File.separator + ".jnose_projects" + File.separator;
-        System.out.println("JNose Projects folder: " + JNOSE_PROJECTS_FOLDER);
+        LOGGER.log(Level.INFO, "JNose Projects folder: {0}", JNOSE_PROJECTS_FOLDER);
 
         CSVCore.load(this);
 
@@ -120,7 +118,7 @@ public class WicketApplication extends WebApplication {
                         .collect(Collectors.toList());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Failed to find Java projects in: " + root, e);
         }
 
         return null;
@@ -145,8 +143,6 @@ public class WicketApplication extends WebApplication {
             projeto.setUrl(urlGit);
             //projeto.setDateUpdate(GitCore.getLastCommit(javaProject.toString()).get(0).date);
             projeto.setDateUpdate(new Date());
-
-            System.out.println(projeto);
 
             Projeto projetoExiste = projetoBusiness.getProjetoByName(projeto.getName());
 

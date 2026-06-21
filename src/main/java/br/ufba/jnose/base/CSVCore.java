@@ -6,8 +6,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CSVCore {
+
+    private static final Logger LOGGER = Logger.getLogger(CSVCore.class.getName());
 
     private static String outputFile;
     private static FileWriter writer;
@@ -61,7 +65,7 @@ public class CSVCore {
             new File(outputFile).createNewFile();
             writer = new FileWriter(outputFile,false);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Failed to create CSV file: " + outputFile, e);
         }
     }
 
@@ -88,7 +92,7 @@ public class CSVCore {
             writer.flush();
             writer.close();
         }catch (Exception e){
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Failed to write CSV line", e);
         }
     }
 

@@ -29,10 +29,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 public class AnalyzePage extends BasePage {
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOGGER = Logger.getLogger(AnalyzePage.class.getName());
 
     private WebMarkupContainer container;
 
@@ -96,14 +100,14 @@ public class AnalyzePage extends BasePage {
                         classTestFile = new File(uploadedFile1.getClientFileName());
                         uploadedFile1.writeTo(classTestFile);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        LOGGER.log(Level.WARNING, "Failed to process uploaded file 1", e);
                     }
                 }
 
                 try (Stream<String> stream = Files.lines(classTestFile.getAbsoluteFile().toPath())) {
                     stream.forEach(line -> fileInList.add(line));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.log(Level.WARNING, "Failed to read uploaded file", e);
                 }
 
                 if (uploadedFile2 != null) {
@@ -111,7 +115,7 @@ public class AnalyzePage extends BasePage {
                         classProductionFile = new File(uploadedFile2.getClientFileName());
                         uploadedFile2.writeTo(classProductionFile);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        LOGGER.log(Level.WARNING, "Failed to process uploaded file 2", e);
                     }
                 }
 
@@ -130,7 +134,7 @@ public class AnalyzePage extends BasePage {
                 //Mudar a lógica depois no Core
                 testClass.setJunitVersion(TestClass.JunitVersion.JUnit4);
 
-                JNoseCore jNoseCore = new JNoseCore(loadConfig(!testClass.getProductionFile().isBlank()),3);
+                JNoseCore jNoseCore = new JNoseCore(loadConfig(!testClass.getProductionFile().isBlank()));
 //                Boolean isClassTest = jNoseCore.isTestFile(testClass);
                 jNoseCore.getTestSmells(testClass);
 

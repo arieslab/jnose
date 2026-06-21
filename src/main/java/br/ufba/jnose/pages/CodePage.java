@@ -19,9 +19,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CodePage extends ImprimirPage {
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOGGER = Logger.getLogger(CodePage.class.getName());
+
     private static int cont = 0;
 
     public CodePage(ProjetoDTO projeto, String title, String pathFile, String range) {
@@ -32,16 +37,16 @@ public class CodePage extends ImprimirPage {
         List<String> linhas = new ArrayList();
 
         try {
-            File file = new File(pathFile);    //creates a new file instance
-            FileReader fr = new FileReader(file);   //reads the file
-            BufferedReader br = new BufferedReader(fr);  //creates a buffering character input stream
+            File file = new File(pathFile);
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
             String line;
             while ((line = br.readLine()) != null) {
                 linhas.add(line);
             }
-            fr.close();    //closes the stream and release the resources
+            fr.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Failed to read file: " + pathFile, e);
         }
 
         cont = 1;
@@ -74,8 +79,6 @@ public class CodePage extends ImprimirPage {
                     }
                 }
 
-
-
                 container.add(new Label("codigo", linha));
                 item.add(container);
 
@@ -86,4 +89,3 @@ public class CodePage extends ImprimirPage {
         add(lvCodigo);
     }
 }
-

@@ -3,6 +3,8 @@ package br.ufba.jnose.base.cobertura;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
@@ -13,6 +15,8 @@ import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.csv.CSVFormatter;
 
 public class ReportGenerator {
+
+	private static final Logger LOGGER = Logger.getLogger(ReportGenerator.class.getName());
 
 	private final String title;
 
@@ -70,7 +74,7 @@ public class ReportGenerator {
 		try {
 			analyzer.analyzeAll(classesDirectory);
 		}catch (Exception e){
-			e.printStackTrace();
+			LOGGER.log(Level.WARNING, "Failed to analyze classes directory", e);
 		}
 
 		return coverageBuilder.getBundle(title);

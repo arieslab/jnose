@@ -4,8 +4,12 @@ import br.ufba.jnose.base.cobertura.ReportGenerator;
 import br.ufba.jnose.dtolocal.ProjetoDTO;
 
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CoverageCore {
+
+    private static final Logger LOGGER = Logger.getLogger(CoverageCore.class.getName());
 
     public static void processarCobertura(ProjetoDTO projeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
         logRetorno.append(Util.dateNow() + projeto.getName() + " - <font style='color:blue'>Coverage</font> <br>");
@@ -14,7 +18,7 @@ public class CoverageCore {
             ReportGenerator reportGenerator = new ReportGenerator(new File(projeto.getPath()), new File(pastaPathReport + folderTime + File.separatorChar));
             reportGenerator.create();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Coverage processing failed", e);
         }
     }
 

@@ -17,8 +17,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class JNose {
+
+    private static final Logger LOGGER = Logger.getLogger(JNose.class.getName());
 
     private static JNoseCore jNoseCore;
 
@@ -90,7 +94,7 @@ public class JNose {
         };
 
         if(jNoseCore == null) {
-            jNoseCore = new JNoseCore(conf, Runtime.getRuntime().availableProcessors() * 2);
+            jNoseCore = new JNoseCore(conf);
         }
 
         return jNoseCore;
@@ -108,7 +112,7 @@ public class JNose {
 
         List<List<String>> todasLinhas = new ArrayList<>();
 
-        List<String> columnValues = null;
+        List<String> columnValues;
         columnValues = new ArrayList<>();
         columnValues.add(0, "projectName");
         columnValues.add(1, "name");
@@ -129,8 +133,8 @@ public class JNose {
 
         todasLinhas.add(columnValues);
 
-        for (br.ufba.jnose.dto.TestClass testClass : listTestClass) {
-            for (br.ufba.jnose.dto.TestSmell testSmell : testClass.getListTestSmell()) {
+        for (TestClass testClass : listTestClass) {
+            for (TestSmell testSmell : testClass.getListTestSmell()) {
                 columnValues = new ArrayList<>();
                 columnValues.add(0, testClass.getProjectName());
                 columnValues.add(1, testClass.getName());
@@ -161,11 +165,7 @@ public class JNose {
                     columnValues.add(13, code_);
                     columnValues.add(14, hash(code_));
                     columnValues.add(15, hash(code_+testSmell.getMethodNameFullURIHash()));
-                }else{
-                    System.out.println("Não listado...");
                 }
-
-
 
                 todasLinhas.add(columnValues);
             }
@@ -175,15 +175,12 @@ public class JNose {
     }
 
     public static String hash(String string) {
-        String hash = "";
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             md5.update(StandardCharsets.UTF_8.encode(string));
-            hash = String.format("%032x", new BigInteger(1, md5.digest()));
-            return hash;
-        } catch (Exception var3) {
-            Exception e = var3;
-            e.printStackTrace();
+            return String.format("%032x", new BigInteger(1, md5.digest()));
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Failed to hash", e);
             return "";
         }
     }
@@ -203,7 +200,7 @@ public class JNose {
                 stringBuilder.append(textoLinha);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOGGER.log(Level.WARNING, "Failed to read source: " + pathFile, ex);
         }
         return stringBuilder.toString();
     }
@@ -220,7 +217,7 @@ public class JNose {
                 stringBuilder.append(textoLinha);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOGGER.log(Level.WARNING, "Failed to read source: " + pathFile, ex);
         }
         return stringBuilder.toString();
     }
@@ -232,7 +229,7 @@ public class JNose {
 
 
     public static List<List<String>> processarTestSmellDetector2(String pathProjeto, StringBuffer logRetorno) {
-        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1, pathProjeto.length());
+        String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1);
         logRetorno.insert(0,Util.dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector novo</font> <br>");
         List<List<String>> todasLinhas = new ArrayList<>();
 
@@ -259,7 +256,7 @@ public class JNose {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Failed to process test smell detector for: " + pathProjeto, e);
         }
 
         return todasLinhas;
@@ -309,7 +306,7 @@ public class JNose {
     public static List<List<String>> processarProjetos2(List<ProjetoDTO> lista, String folderTime, TotalProcessado totalProcessado, String pastaPathReport, StringBuffer logRetorno) {
 
         boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
-        if (!success) System.out.println("Created Folder...");
+        if (!success) LOGGER.log(Level.FINE, "Created Folder...");
 
         totalProcessado.setValor(0);
 
@@ -324,7 +321,7 @@ public class JNose {
         List<List<String>> listaTodos = new ArrayList<>();
 
         for (ProjetoDTO projeto : lista) {
-            new Thread() { // IMPORTANTE: AQUI SE CRIA AS THREADS
+            new Thread() {
                 @Override
                 public void run() {
                     try {
@@ -332,7 +329,7 @@ public class JNose {
                         projeto.setResultado(todasLinhas);
                         listaTodos.addAll(todasLinhas);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        LOGGER.log(Level.SEVERE, "Failed processing project: " + projeto.getName(), e);
                         projeto.bugs = projeto.bugs + "\n" + e.getMessage();
                     }
                 }
@@ -346,7 +343,7 @@ public class JNose {
     public static void processarProjetos(List<ProjetoDTO> lista, String folderTime,String pastaPathReport, TotalProcessado totalProcessado) {
 
         boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
-        if (!success) System.out.println("Created Folder...");
+        if (!success) LOGGER.log(Level.FINE, "Created Folder...");
 
         totalProcessado.setValor(0);
 
@@ -367,7 +364,7 @@ public class JNose {
                 projeto.setResultado(JNose.convert(todasLinhas));
                 listaTestClass.addAll(todasLinhas);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Failed processing project: " + projeto.getName(), e);
             }
         }
     }
@@ -385,21 +382,17 @@ public class JNose {
             lista = projeto.getListaTags();
         }
 
-        Collections.sort(lista, new Comparator<Commit>() {
-            public int compare(Commit o1, Commit o2) {
-                if (o1.date == null || o2.date == null) return 0;
-                return o1.date.compareTo(o2.date);
-            }
+        Collections.sort(lista, (o1, o2) -> {
+            if (o1.date == null || o2.date == null) return 0;
+            return o1.date.compareTo(o2.date);
         });
 
         List<List<String>> todasLinhas1 = new ArrayList<>();
         List<List<String>> todasLinhas2 = new ArrayList<>();
         List<List<String>> todasLinhas3 = new ArrayList<>();
 
-        //lista de commits/testsmells/códigoSHA5
         List<List<String>> todasLinhas4 = new ArrayList<>();
         List<List<String>> todasLinhas5 = new ArrayList<>();
-
 
         int cont = 1;
 
@@ -407,14 +400,11 @@ public class JNose {
 
         List<String> jaProcessado = new ArrayList<>();
 
-        //Para cada commit executa uma busca
         for (Commit commit : lista) {
 
             logRetorno.insert(0,cont++ + " - Analyze commit: " + commit.id + "<br>");
 
             GitCore.checkout(commit.id, projeto.getPath());
-
-            int total = 0;
 
             List<TestClass> listTestClass = new ArrayList<>();
 
@@ -441,11 +431,7 @@ public class JNose {
                     todasLinhas1.add(listaColumName);
                 }
 
-
                 for (TestClass testClass : listTestClass){
-
-//                    totalTestSmells += testClass.getListTestSmell().size();
-
                     List<String> lista3 = new ArrayList<>();
                     lista3.add(commit.id);
                     lista3.add(commit.name);
@@ -464,7 +450,7 @@ public class JNose {
 
                         String sha256 = Util.getSHA5Code(testClass,ts).trim();
 
-                        if(jaProcessado.contains(sha256) == false) {
+                        if(!jaProcessado.contains(sha256)) {
                             jaProcessado.add(sha256);
 
                             totalTestSmells++;
@@ -484,16 +470,14 @@ public class JNose {
                             lista4.add(ts.getMethod());
                             lista4.add(ts.getRange());
                             lista4.add(sha256);
-//                            lista4.add(Util.getCode(testClass,ts));
                             todasLinhas3.add(lista4);
                         }
                     }
 
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Failed processing evolution for commit: " + commit.id, e);
             }
-
 
             List<String> lista2 = new ArrayList<>();
             lista2.add(commit.id);
@@ -508,9 +492,7 @@ public class JNose {
         mapa.put(2, todasLinhas2);
         mapa.put(3, todasLinhas3);
 
-
         Set<String> setSHA = new HashSet<>();
-
         Map<String,Integer> mapName = new HashMap<>();
 
         for(List<String> linha : todasLinhas3){
@@ -530,7 +512,6 @@ public class JNose {
 
         mapa.put(4, todasLinhas4);
 
-
         mapName.forEach((s, i) -> {
             List<String> lista3 = new ArrayList<>();
             lista3.add(s);
@@ -545,4 +526,3 @@ public class JNose {
 
 
 }
-

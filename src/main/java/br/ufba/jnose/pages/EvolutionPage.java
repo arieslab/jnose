@@ -27,9 +27,13 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class EvolutionPage extends BasePage {
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOGGER = Logger.getLogger(EvolutionPage.class.getName());
 
     private Label taLogInfo;
     private StringBuffer logRetorno;
@@ -245,7 +249,7 @@ public class EvolutionPage extends BasePage {
                 AjaxLink btSubmit = new AjaxLink<String>("btSubmit") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        System.out.println("Processamento do projeto: " + projeto.getName() + " - Start");
+                        LOGGER.log(Level.INFO, "Processamento do projeto: {0} - Start", projeto.getName());
                         logRetorno.insert(0,"Processamento do projeto: " + projeto.getName() + " - Start<br>");
                         new Thread() { // IMPORTANTE: AQUI SE CRIA AS THREADS
                             @Override
