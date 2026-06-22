@@ -44,7 +44,7 @@
         <wtp.version>none</wtp.version>
         <hibernate-core-version>7.4.1.Final</hibernate-core-version>
         <spring.version>7.0.8</spring.version>
-        <c3p0.version>0.9.5.5</c3p0.version>
+        <c3p0.version>0.12.0</c3p0.version>
         <jetty.scope>compile</jetty.scope>
     </properties>
 
