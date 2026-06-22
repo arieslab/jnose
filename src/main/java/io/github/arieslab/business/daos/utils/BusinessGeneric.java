@@ -1,6 +1,5 @@
 package io.github.arieslab.business.daos.utils;
 
-import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,7 +56,7 @@ public class BusinessGeneric<T extends DAOGeneric, Y extends Serializable> {
      * @return list of entities
      */
     public List<Y> find(Long first, Long count) {
-        return dao.findByHQL(Order.desc("id"), first.intValue(), count.intValue());
+        return dao.findByHQL("id", false, first.intValue(), count.intValue());
     }
 
     /**

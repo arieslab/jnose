@@ -8,7 +8,6 @@ import io.github.arieslab.dtolocal.TotalProcessado;
 import io.github.arieslab.entities.Projeto;
 import io.github.arieslab.pages.base.BasePage;
 import io.github.arieslab.base.JNose;
-import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -84,7 +83,7 @@ public class ByTestSmellsPage extends BasePage {
 
         criarTimer();
 
-        FeedbackPanel feedback = new JQueryFeedbackPanel("feedback");
+        FeedbackPanel feedback = new FeedbackPanel("feedback");
         add(feedback.setOutputMarkupId(true));
 
         criarBotaoProcessarTodos();

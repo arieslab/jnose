@@ -10,7 +10,6 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import io.github.arieslab.pages.HomePage;
 import de.agilecoders.wicket.core.Bootstrap;
-import org.apache.wicket.response.filter.AjaxServerAndClientTimeFilter;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -56,7 +55,6 @@ public class WicketApplication extends WebApplication {
 
         getResourceSettings().setResourcePollFrequency(java.time.Duration.ofMinutes(1));
         getApplicationSettings().setUploadProgressUpdatesEnabled(true);
-        getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
         getComponentInstantiationListeners().add(new SpringComponentInjector(this));
         getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
         getMarkupSettings().setDefaultMarkupEncoding("UTF-8");

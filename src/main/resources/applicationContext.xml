@@ -27,11 +27,11 @@
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <bean id="transactionManager"
-          class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+          class="org.springframework.orm.jpa.hibernate.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+    <bean id="sessionFactory" class="org.springframework.orm.jpa.hibernate.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="hibernateProperties">
             <props>
