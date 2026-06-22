@@ -21,14 +21,14 @@ Web tool for automatic **Test Smells** detection and code coverage metrics in Ja
 ### Standalone JAR (embedded Jetty)
 
 ```bash
-curl -LO https://github.com/arieslab/jnose/releases/download/v2.4.1/jnose-2.4.1-standalone.jar
-java -jar jnose-2.4.1-standalone.jar
+curl -LO https://github.com/arieslab/jnose/releases/download/v2.4.2/jnose-2.4.2-standalone.jar
+java -jar jnose-2.4.2-standalone.jar
 ```
 
 ### WAR (deploy to any servlet container)
 
 ```bash
-curl -LO https://github.com/arieslab/jnose/releases/download/v2.4.1/jnose-2.4.1.war
+curl -LO https://github.com/arieslab/jnose/releases/download/v2.4.2/jnose-2.4.2.war
 # Deploy to Tomcat/Jetty as usual
 ```
 
@@ -52,7 +52,7 @@ docker run -dp "8080:8080" tassiovirginio/jnose
 git clone https://github.com/arieslab/jnose
 cd jnose
 mvn clean package -DskipTests
-java -jar target/jnose-2.4.1-standalone.jar
+java -jar target/jnose-2.4.2-standalone.jar
 ```
 
 ### Maven Dependency
@@ -61,7 +61,7 @@ java -jar target/jnose-2.4.1-standalone.jar
 <dependency>
     <groupId>io.github.arieslab</groupId>
     <artifactId>jnose</artifactId>
-    <version>2.4.1</version>
+    <version>2.4.2</version>
 </dependency>
 ```
 
@@ -71,7 +71,7 @@ The project depends on [jnose-core](https://github.com/arieslab/jnose-core), ava
 <dependency>
     <groupId>io.github.arieslab</groupId>
     <artifactId>jnose-core</artifactId>
-    <version>0.9.2</version>
+    <version>0.9.3</version>
 </dependency>
 ```
 
