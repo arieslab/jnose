@@ -27,6 +27,12 @@ public class ReportGenerator {
 
 	private ExecFileLoader execFileLoader;
 
+	/**
+	 * Creates a new ReportGenerator for the given project directory with the specified coverage report output directory.
+	 *
+	 * @param projectDirectory the project root directory
+	 * @param coveragereport the directory where the coverage report will be written
+	 */
 	public ReportGenerator(final File projectDirectory, final File coveragereport) {
 		this.title = projectDirectory.getName();
 		this.executionDataFile = new File(projectDirectory, "target/jacoco.exec");
@@ -40,12 +46,20 @@ public class ReportGenerator {
 		this.reportDirectory = new File(coveragereport, "");
 	}
 
+	/**
+	 * Loads execution data, analyzes the structure, and creates the CSV report.
+	 */
 	public void create() throws IOException {
 		loadExecutionData();
 		final IBundleCoverage bundleCoverage = analyzeStructure();
 		createReport(bundleCoverage);
 	}
 
+	/**
+	 * Generates a CSV coverage report from the analyzed bundle structure.
+	 *
+	 * @param bundleCoverage the coverage data bundle
+	 */
 	private void createReport(final IBundleCoverage bundleCoverage)
 			throws IOException {
 		final CSVFormatter csvFormatter = new CSVFormatter();
@@ -61,11 +75,19 @@ public class ReportGenerator {
 		visitor.visitEnd();
 	}
 
+	/**
+	 * Loads JaCoCo execution data from the jacoco.exec file.
+	 */
 	private void loadExecutionData() throws IOException {
 		execFileLoader = new ExecFileLoader();
 		execFileLoader.load(executionDataFile);
 	}
 
+	/**
+	 * Analyzes all compiled classes to build a coverage bundle.
+	 *
+	 * @return the bundle coverage data
+	 */
 	private IBundleCoverage analyzeStructure() throws IOException {
 		final CoverageBuilder coverageBuilder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(

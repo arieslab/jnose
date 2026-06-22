@@ -32,6 +32,9 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Page for analyzing the evolution of test smells across commits and tags of a project.
+ */
 public class EvolutionPage extends BasePage {
     private static final long serialVersionUID = 1L;
 
@@ -46,6 +49,9 @@ public class EvolutionPage extends BasePage {
     @SpringBean
     private ProjetoBusiness projetoBusiness;
 
+    /**
+     * Constructs the evolution analysis page.
+     */
     public EvolutionPage() {
         super("EvolutionPage");
         listaProjetos = new ArrayList<>();
@@ -57,6 +63,9 @@ public class EvolutionPage extends BasePage {
         loadProjetos();
     }
 
+    /**
+     * Loads all projects from the database into the list.
+     */
     private void loadProjetos() {
         List<Projeto> listProjetoBean = projetoBusiness.listAllWithFilter();
         for(Projeto projeto : listProjetoBean){
@@ -65,6 +74,9 @@ public class EvolutionPage extends BasePage {
         lvProjetos.setList(listaProjetos);
     }
 
+    /**
+     * Creates the log display area.
+     */
     private void criarLogInfo() {
         taLogInfo = new Label("taLogInfo", Model.of(logRetorno));
         taLogInfo.setEscapeModelStrings(false);
@@ -73,6 +85,9 @@ public class EvolutionPage extends BasePage {
         add(taLogInfo);
     }
 
+    /**
+     * Creates a timer that periodically updates result link enable states and log display.
+     */
     private void criarTimer() {
         AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(java.time.Duration.ofSeconds(1)) {
             @Override
@@ -125,6 +140,9 @@ public class EvolutionPage extends BasePage {
     }
 
 
+    /**
+     * Creates the project list view with commit/tag selection, process button, and result links.
+     */
     private void criarListaProjetos() {
         lvProjetos = new ListView<ProjetoDTO>("lvProjetos", listaProjetos) {
             @Override

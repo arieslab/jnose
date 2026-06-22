@@ -11,7 +11,6 @@ import org.apache.wicket.protocol.http.WebApplication;
 import io.github.arieslab.pages.HomePage;
 import de.agilecoders.wicket.core.Bootstrap;
 import org.apache.wicket.response.filter.AjaxServerAndClientTimeFilter;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -62,11 +61,8 @@ public class WicketApplication extends WebApplication {
         getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
         getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
         getDebugSettings().setAjaxDebugModeEnabled(false);
-        // don't throw exceptions for missing translations
         getResourceSettings().setThrowExceptionOnMissingResource(false);
-        // enable ajax debug etc.
         getDebugSettings().setDevelopmentUtilitiesEnabled(false);
-        // make markup friendly as in deployment-mode
         getMarkupSettings().setStripWicketTags(false);
 
         File fileRoot = new File(".");
@@ -106,6 +102,12 @@ public class WicketApplication extends WebApplication {
         salvarProjeto(JNOSE_PROJECTS_FOLDER);
     }
 
+    /**
+     * Scans a root directory for Java projects by locating paths ending with "src/main/java".
+     *
+     * @param root the root directory to scan
+     * @return list of project root directories containing Java sources, or null on failure
+     */
     public List<Path> findJavaProjects(Path root) {
         try {
             try (Stream<Path> stream = Files.walk(root)) {
@@ -124,6 +126,11 @@ public class WicketApplication extends WebApplication {
         return null;
     }
 
+    /**
+     * Persists discovered Java projects into the database if they do not already exist.
+     *
+     * @param javaProjectsFolder the base folder containing Java projects
+     */
     void salvarProjeto(String javaProjectsFolder){
         Path root = Paths.get(javaProjectsFolder);
         List<Path> javaProjects = findJavaProjects(root);
@@ -141,7 +148,6 @@ public class WicketApplication extends WebApplication {
             Path projectFoldetGit = findGitRoot(javaProject);
             String urlGit = GitCore.getURL(projectFoldetGit.toString());
             projeto.setUrl(urlGit);
-            //projeto.setDateUpdate(GitCore.getLastCommit(javaProject.toString()).get(0).date);
             projeto.setDateUpdate(new Date());
 
             Projeto projetoExiste = projetoBusiness.getProjetoByName(projeto.getName());
@@ -154,15 +160,21 @@ public class WicketApplication extends WebApplication {
     }
 
 
+    /**
+     * Traverses upward from the given path to find the directory containing a .git folder.
+     *
+     * @param start the starting path
+     * @return the git root directory, or null if not found
+     */
     public Path findGitRoot(Path start) {
         Path current = start.toAbsolutePath();
         while (current != null) {
             if (Files.exists(current.resolve(".git"))) {
                 return current;
             }
-            current = current.getParent(); // sobe um nível
+            current = current.getParent();
         }
-        return null; // não encontrou
+        return null;
     }
 
 

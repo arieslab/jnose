@@ -19,6 +19,11 @@ public class BasePage extends WebPage {
 
     private WebMarkupContainer footTime;
 
+    /**
+     * Constructs the base page with navigation links and a blinking footer timer.
+     *
+     * @param paginaAtual the current page name, used to highlight the active navigation link
+     */
     public BasePage(String paginaAtual) {
 
         footTime = new WebMarkupContainer("footTimeHome");

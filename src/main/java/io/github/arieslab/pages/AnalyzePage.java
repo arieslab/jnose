@@ -33,6 +33,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+/**
+ * Page for uploading and analyzing individual test source files for test smells.
+ */
 public class AnalyzePage extends BasePage {
     private static final long serialVersionUID = 1L;
 
@@ -50,11 +53,16 @@ public class AnalyzePage extends BasePage {
         this(new ArrayList<>());
     }
 
+    /**
+     * Constructs the analyze page with file upload forms and a list view for detected smells.
+     *
+     * @param listaTestSmellBeans initial list of test smell results
+     */
     public AnalyzePage(List<TestSmell> listaTestSmellBeans) {
         super("AnalyzePage");
 
         fileInList = new ArrayList<>();
-        fileInList.add("//zero");//add line zero
+        fileInList.add("//zero");
 
         loadDescriptions();
 
@@ -131,11 +139,9 @@ public class AnalyzePage extends BasePage {
 
                 testClass.setProjectName("");
 
-                //Mudar a lógica depois no Core
                 testClass.setJunitVersion(TestClass.JunitVersion.JUnit4);
 
                 JNoseCore jNoseCore = new JNoseCore(loadConfig(!testClass.getProductionFile().isBlank()));
-//                Boolean isClassTest = jNoseCore.isTestFile(testClass);
                 jNoseCore.getTestSmells(testClass);
 
                 List<TestSmell> listaTestSmellBean = testClass.getListTestSmell();
@@ -189,6 +195,12 @@ public class AnalyzePage extends BasePage {
 
     }
 
+    /**
+     * Loads a Config with all smell detectors enabled.
+     *
+     * @param withClassProduction whether to enable EagerTest and LazyTest (require production class)
+     * @return the configuration
+     */
     private Config loadConfig(boolean withClassProduction) {
         Config config = new Config() {
             @Override
@@ -307,6 +319,9 @@ public class AnalyzePage extends BasePage {
 
     private Map<String, String> descriptions = new HashMap<>();
 
+    /**
+     * Loads English descriptions for all test smell types.
+     */
     private void loadDescriptions() {
 
         descriptions.put("Unknown Test", "A test method without a assertion condition, the test will always be valid, not resulting in an exception. This programming practice makes it difficult to understand the test.");
@@ -331,6 +346,12 @@ public class AnalyzePage extends BasePage {
 
     }
 
+    /**
+     * Formats the source code lines for a given range string (e.g. "1-5" or "1,3,5").
+     *
+     * @param range the range descriptor
+     * @return HTML-formatted source code lines
+     */
     private String getLines(String range) {
 
         StringBuffer lines = new StringBuffer();
@@ -369,6 +390,12 @@ public class AnalyzePage extends BasePage {
         return lines.toString();
     }
 
+    /**
+     * Appends source lines for a range descriptor (e.g. "3-7").
+     *
+     * @param lines the buffer to append to
+     * @param range the range string
+     */
     private void getLinesByRange(StringBuffer lines, String range) {
         String[] r = range.trim().split("-");
         Integer start = Integer.parseInt(r[0]);
@@ -388,6 +415,12 @@ public class AnalyzePage extends BasePage {
         }
     }
 
+    /**
+     * Returns a single source code line formatted as HTML, or empty string if out of bounds.
+     *
+     * @param line the line number
+     * @return the formatted line
+     */
     private String getLine(int line) {
         if (line > 0 && line < fileInList.size()) {
             return fileInList.get(line) + "<br>";
@@ -397,7 +430,6 @@ public class AnalyzePage extends BasePage {
     }
 
 }
-
 
 
 

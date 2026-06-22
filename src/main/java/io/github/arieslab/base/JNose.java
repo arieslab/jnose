@@ -30,6 +30,11 @@ public class JNose {
 
     private static JNoseCore jNoseCore;
 
+    /**
+     * Returns the singleton JNoseCore instance, creating it with the current test smell detector configuration if necessary.
+     *
+     * @return the shared JNoseCore instance
+     */
     public static JNoseCore getInstanceJNoseCore(){
 
         Config conf = new Config() {
@@ -112,6 +117,12 @@ public class JNose {
         jNoseCore = getInstanceJNoseCore();
     }
 
+    /**
+     * Converts a list of TestClass results into a tabular format (list of rows) suitable for CSV export.
+     *
+     * @param listTestClass the list of analyzed test classes
+     * @return a list of rows, where the first row contains column headers
+     */
     public static List<List<String>> convert(List<TestClass> listTestClass){
 
         List<List<String>> todasLinhas = new ArrayList<>();
@@ -178,6 +189,12 @@ public class JNose {
         return todasLinhas;
     }
 
+    /**
+     * Computes an MD5 hash of the given string.
+     *
+     * @param string the input string
+     * @return the MD5 hash as a 32-character hexadecimal string
+     */
     public static String hash(String string) {
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
@@ -190,6 +207,14 @@ public class JNose {
     }
 
 
+    /**
+     * Reads source code lines within a line range from a file.
+     *
+     * @param pathFile the path to the source file
+     * @param start the start line (1-indexed)
+     * @param end the end line (1-indexed)
+     * @return concatenated source code with whitespace and semicolons normalized
+     */
     private static String getSource(String pathFile, int start, int end) {
         StringBuilder stringBuilder = new StringBuilder();
         Path path = Paths.get(pathFile);
@@ -209,6 +234,13 @@ public class JNose {
         return stringBuilder.toString();
     }
 
+    /**
+     * Reads source code at specific line numbers from a file.
+     *
+     * @param pathFile the path to the source file
+     * @param lista an array of line numbers (1-indexed) as strings
+     * @return concatenated source code with whitespace and semicolons normalized
+     */
     private static String getSource(String pathFile, String[] lista) {
         StringBuilder stringBuilder = new StringBuilder();
         Path path = Paths.get(pathFile);
@@ -227,11 +259,24 @@ public class JNose {
     }
 
 
+    /**
+     * Detects the JUnit version used in the given project directory.
+     *
+     * @param directoryPath the project directory path
+     * @return the detected JUnit version
+     */
     public static TestClass.JunitVersion getJUnitVersion(String directoryPath) {
         return getInstanceJNoseCore().getJUnitVersion(directoryPath);
     }
 
 
+    /**
+     * Runs the test smell detector on a project and returns results in tabular format.
+     *
+     * @param pathProjeto the project directory path
+     * @param logRetorno a buffer for appending log messages
+     * @return a list of rows where the first row contains column headers
+     */
     public static List<List<String>> processarTestSmellDetector2(String pathProjeto, StringBuffer logRetorno) {
         String nameProjeto = pathProjeto.substring(pathProjeto.lastIndexOf(File.separatorChar) + 1);
         logRetorno.insert(0,Util.dateNow() + nameProjeto + " - <font style='color:yellow'>TestSmellDetector novo</font> <br>");
@@ -267,6 +312,12 @@ public class JNose {
     }
 
 
+    /**
+     * Processes a single project, detecting test smells and returning the analyzed test classes.
+     *
+     * @param projeto the project DTO
+     * @return list of analyzed test classes
+     */
     public static List<TestClass> processarProjeto(ProjetoDTO projeto) throws Exception {
         projeto.setProcentagem(25);
         List<TestClass> listaTestClass = getInstanceJNoseCore().getFilesTest(projeto.getPath());
@@ -277,6 +328,17 @@ public class JNose {
     }
 
 
+    /**
+     * Processes a single project with progress tracking, optional coverage analysis, and log output.
+     *
+     * @param projeto the project DTO
+     * @param valorProcProject the progress value allocated to this project
+     * @param folderTime the timestamp folder for report output
+     * @param totalProcessado shared progress tracker
+     * @param pastaPathReport the base report directory path
+     * @param logRetorno a buffer for appending log messages
+     * @return results in tabular format
+     */
     public static List<List<String>> processarProjeto2(ProjetoDTO projeto, float valorProcProject, String folderTime, TotalProcessado totalProcessado, String pastaPathReport, StringBuffer logRetorno) throws IOException {
         logRetorno.insert(0,Util.dateNow() + projeto.getName() + " - started <br>");
         Float valorSoma = valorProcProject / 4;
@@ -307,6 +369,16 @@ public class JNose {
     }
 
 
+    /**
+     * Processes a list of projects concurrently, each in its own thread, collecting all results.
+     *
+     * @param lista list of project DTOs to process
+     * @param folderTime the timestamp folder for report output
+     * @param totalProcessado shared progress tracker
+     * @param pastaPathReport the base report directory path
+     * @param logRetorno a buffer for appending log messages
+     * @return aggregated results from all projects in tabular format
+     */
     public static List<List<String>> processarProjetos2(List<ProjetoDTO> lista, String folderTime, TotalProcessado totalProcessado, String pastaPathReport, StringBuffer logRetorno) {
 
         boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
@@ -344,6 +416,14 @@ public class JNose {
 
     }
 
+    /**
+     * Processes a list of projects sequentially, detecting test smells and collecting results.
+     *
+     * @param lista list of project DTOs to process
+     * @param folderTime the timestamp folder for report output
+     * @param pastaPathReport the base report directory path
+     * @param totalProcessado shared progress tracker
+     */
     public static void processarProjetos(List<ProjetoDTO> lista, String folderTime,String pastaPathReport, TotalProcessado totalProcessado) {
 
         boolean success = (new File(pastaPathReport + folderTime + File.separatorChar)).mkdirs();
@@ -374,6 +454,13 @@ public class JNose {
     }
 
 
+    /**
+     * Processes the evolution of test smells across multiple commits/tags of a project.
+     *
+     * @param projeto the project DTO with selected commits or tags
+     * @param logRetorno a buffer for appending log messages
+     * @param mapa a map to store result tables: 1=full data, 2=summary, 3=smell details, 4=deduplicated, 5=author counts
+     */
     public static void processarEvolution(ProjetoDTO projeto, StringBuffer logRetorno, Map<Integer, List<List<String>>> mapa) {
         final SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 

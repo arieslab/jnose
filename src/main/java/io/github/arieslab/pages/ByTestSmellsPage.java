@@ -33,6 +33,9 @@ import java.util.List;
 import java.util.Map;
 import java.io.*;
 
+/**
+ * Page for processing projects grouped by test smell types.
+ */
 public class ByTestSmellsPage extends BasePage {
     private static final long serialVersionUID = 2L;
 
@@ -56,10 +59,12 @@ public class ByTestSmellsPage extends BasePage {
     @SpringBean
     private ProjetoBusiness projetoBusiness;
 
+    /**
+     * Constructs the By Test Smells analysis page.
+     */
     public ByTestSmellsPage() {
         super("ByTestSmellsPage");
 
-        //carregar variáveis
         listaResultado = new ArrayList<>();
         logRetorno = new StringBuffer();
         processando = false;
@@ -101,6 +106,9 @@ public class ByTestSmellsPage extends BasePage {
         loadProjetos();
     }
 
+    /**
+     * Creates the "Process All" button that triggers test smell analysis on selected projects.
+     */
     private void criarBotaoProcessarTodos(){
         processarTodos = new IndicatingAjaxLink<String>("processarTodos") {
             @Override
@@ -128,6 +136,9 @@ public class ByTestSmellsPage extends BasePage {
         add(processarTodos);
     }
 
+    /**
+     * Creates the project list view with checkboxes and progress indicators.
+     */
     private void criarListaProjetos(){
         lvProjetos = new ListView<ProjetoDTO>("lvProjetos", listaProjetos) {
             @Override
@@ -189,6 +200,9 @@ public class ByTestSmellsPage extends BasePage {
         add(lvProjetos);
     }
 
+    /**
+     * Loads all projects from the database into the page.
+     */
     private void loadProjetos(){
         dataProcessamentoAtual = Util.dateNowFolder();
         totalProcessado.setValor(0);
@@ -202,6 +216,9 @@ public class ByTestSmellsPage extends BasePage {
         lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
     }
 
+    /**
+     * Creates a timer that periodically updates the UI with processing progress.
+     */
     private void criarTimer(){
         AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(java.time.Duration.ofSeconds(1)) {
             int cont = 0;

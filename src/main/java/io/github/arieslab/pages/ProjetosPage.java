@@ -32,6 +32,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Page for managing cloned git projects: clone, list, pull, delete, and view details.
+ */
 public class ProjetosPage extends BasePage {
     private static final long serialVersionUID = 1L;
 
@@ -46,6 +49,11 @@ public class ProjetosPage extends BasePage {
         this("");
     }
 
+    /**
+     * Constructs the projects page with a repository URL field and project list.
+     *
+     * @param repo the repository URL to pre-fill
+     */
     public ProjetosPage(String repo) {
         super("ProjetosPage");
         this.repoGit = repo;

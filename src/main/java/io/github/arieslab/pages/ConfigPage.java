@@ -10,6 +10,10 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.PropertyModel;
 import io.github.arieslab.core.testsmelldetector.testsmell.smell.*;
 
+/**
+ * Configuration page for enabling/disabling individual test smell detectors
+ * and viewing their source code.
+ */
 public class ConfigPage extends BasePage {
     private static final long serialVersionUID = 1L;
 
@@ -37,6 +41,9 @@ public class ConfigPage extends BasePage {
 
     public String verboseTestMaxStatements;
 
+    /**
+     * Constructs the configuration page with checkboxes for each test smell detector.
+     */
     public ConfigPage() {
         super("ConfigPage");
 

@@ -24,6 +24,11 @@ public class JNoseRunner {
             "--add-opens", "java.desktop/java.awt.font=ALL-UNNAMED"
     };
 
+    /**
+     * Entry point. Restarts with --add-opens flags if needed, otherwise starts Jetty.
+     *
+     * @param args command-line arguments
+     */
     public static void main(String[] args) throws Exception {
         if (needsAddOpens()) {
             restartWithAddOpens(args);
@@ -32,10 +37,20 @@ public class JNoseRunner {
         start(args);
     }
 
+    /**
+     * Checks whether the JVM is running without the required --add-opens flags.
+     *
+     * @return true if the system property jnose.addopens is not set
+     */
     private static boolean needsAddOpens() {
         return System.getProperty("jnose.addopens") == null;
     }
 
+    /**
+     * Spawns a child JVM process with the required --add-opens flags and terminates the current one.
+     *
+     * @param args the original command-line arguments to forward
+     */
     private static void restartWithAddOpens(String[] args) throws Exception {
         String jarPath = JNoseRunner.class.getProtectionDomain()
                 .getCodeSource().getLocation().toURI().getPath();
@@ -59,6 +74,11 @@ public class JNoseRunner {
                 .start();
     }
 
+    /**
+     * Starts the embedded Jetty server with the JNose web application.
+     *
+     * @param args command-line arguments; first argument may specify the port number
+     */
     private static void start(String[] args) throws Exception {
         int port = args.length > 0 ? Integer.parseInt(args[0]) : 8080;
 
@@ -85,6 +105,13 @@ public class JNoseRunner {
         server.join();
     }
 
+    /**
+     * Extracts the webapp resources from the standalone JAR (or from the filesystem during development)
+     * into the given temporary directory.
+     *
+     * @param jarPath  path to the standalone JAR file
+     * @param targetDir directory where webapp resources are extracted
+     */
     private static void extractWebapp(String jarPath, Path targetDir) throws IOException {
         File file = new File(jarPath);
         if (file.isDirectory()) {

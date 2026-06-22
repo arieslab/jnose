@@ -7,8 +7,17 @@ import org.apache.wicket.model.Model;
 
 import java.text.SimpleDateFormat;
 
+/**
+ * A Bootstrap modal for displaying detailed project information.
+ */
 public class ModalDetalhes<Void> extends Modal<Void> {
 
+    /**
+     * Creates a modal dialog showing project details such as name, URL, path, JUnit version, stars, and last update date.
+     *
+     * @param id the Wicket component markup ID
+     * @param projeto the project entity whose details are displayed
+     */
     public ModalDetalhes(String id, Projeto projeto) {
         super(id);
         this.header(Model.of(projeto.getName()));

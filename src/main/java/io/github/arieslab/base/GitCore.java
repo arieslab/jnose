@@ -29,6 +29,12 @@ public class GitCore {
 
     private static final Logger LOGGER = Logger.getLogger(GitCore.class.getName());
 
+    /**
+     * Fetches the stargazer count from GitHub for the project at the given local repository path.
+     *
+     * @param repoLocal the local repository path
+     * @return the number of stars, or 0 if unavailable
+     */
     public static Integer getStarts(String repoLocal){
 
         String url = getURL(repoLocal);
@@ -46,6 +52,12 @@ public class GitCore {
     }
 
 
+    /**
+     * Extracts the GitHub owner/repo name from a git remote URL.
+     *
+     * @param path_ the git remote URL
+     * @return the repository name in "owner/repo" format
+     */
     private static String getNameByGithub(String path_) {
         String owner_ = "";
 
@@ -62,6 +74,12 @@ public class GitCore {
         return owner_ + "/" + projeto_;
     }
 
+    /**
+     * Clones a git repository from the given URL into the JNose projects folder.
+     *
+     * @param repoURL the repository URL to clone
+     * @return a ProjetoDTO representing the cloned project
+     */
     public static ProjetoDTO gitClone(String repoURL) {
         String repoName = "";
         if (repoURL.contains(".git")) {
@@ -99,10 +117,23 @@ public class GitCore {
         return projeto;
     }
 
+    /**
+     * Retrieves the last 500 commits from the git log.
+     *
+     * @param pathExecute the repository path
+     * @return list of commits
+     */
     public static ArrayList<Commit> gitLogOneLine(String pathExecute) {
         return gitLogOneLine(pathExecute, 500);
     }
 
+    /**
+     * Retrieves up to maxCount commits from the git log.
+     *
+     * @param pathExecute the repository path
+     * @param maxCount maximum number of commits to retrieve
+     * @return list of commits
+     */
     public static ArrayList<Commit> gitLogOneLine(String pathExecute, int maxCount) {
 
         ArrayList<Commit> lista = new ArrayList<>();
@@ -126,6 +157,12 @@ public class GitCore {
         return lista;
     }
 
+    /**
+     * Retrieves all commits in the repository.
+     *
+     * @param pathProject the repository path
+     * @return list of all commits
+     */
     public static ArrayList<Commit> getLastCommit(String pathProject) {
 
         ArrayList<Commit> lista = new ArrayList<>();
@@ -149,6 +186,12 @@ public class GitCore {
         return lista;
     }
 
+    /**
+     * Retrieves all git tags with their associated commit information.
+     *
+     * @param pathExecute the repository path
+     * @return list of commits with tag information
+     */
     public static ArrayList<Commit> gitTags(String pathExecute) {
 
         ArrayList<Commit> lista = new ArrayList<>();
@@ -193,6 +236,12 @@ public class GitCore {
         return lista;
     }
 
+    /**
+     * Performs a git checkout to the specified commit ID or branch name.
+     *
+     * @param commitId the commit ID, tag, or branch name to check out
+     * @param projetoPath the repository path
+     */
     public static void checkout(String commitId, String projetoPath) {
         try {
             Git git = Git.open(new File(projetoPath));
@@ -203,6 +252,12 @@ public class GitCore {
         }
     }
 
+    /**
+     * Retrieves the remote origin URL of the git repository.
+     *
+     * @param projetoPath the repository path
+     * @return the remote origin URL, or empty string on failure
+     */
     public static String getURL(String projetoPath) {
         String url = "";
         try {
@@ -214,6 +269,12 @@ public class GitCore {
         return url;
     }
 
+    /**
+     * Retrieves the current branch name of the git repository.
+     *
+     * @param projetoPath the repository path
+     * @return the current branch name
+     */
     public static String branch(String projetoPath) {
         String branchcurrent = "";
         try {
@@ -225,6 +286,11 @@ public class GitCore {
         return branchcurrent;
     }
 
+    /**
+     * Performs a git pull on the repository.
+     *
+     * @param projetoPath the repository path
+     */
     public static void pull(String projetoPath) {
         try {
             Git git = Git.open(new File(projetoPath));
@@ -234,6 +300,13 @@ public class GitCore {
         }
     }
 
+    /**
+     * Executes a git blame on the specified file and returns a map of line numbers to author names.
+     *
+     * @param projetoPath the repository path
+     * @param filePathAbsolut the absolute path to the file
+     * @return a map where keys are line numbers (1-indexed) and values are author names
+     */
     public static Map<Integer,String> blame(String projetoPath, String filePathAbsolut) {
 
         Map<Integer,String> retorno = new HashMap<>();
@@ -269,6 +342,13 @@ public class GitCore {
         return retorno;
     }
 
+    /**
+     * Retrieves the BlameResult for a specific file in the repository.
+     *
+     * @param projetoPath the repository path
+     * @param filePath the absolute path to the file
+     * @return the BlameResult object, or null on failure
+     */
     public static BlameResult getBlameResultForFile(String projetoPath, String filePath) {
         BlameResult blame = null;
         try {

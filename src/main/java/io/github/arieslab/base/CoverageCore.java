@@ -11,6 +11,14 @@ public class CoverageCore {
 
     private static final Logger LOGGER = Logger.getLogger(CoverageCore.class.getName());
 
+    /**
+     * Runs JaCoCo coverage analysis on the project and generates a CSV report.
+     *
+     * @param projeto the project DTO
+     * @param folderTime the timestamp folder for report output
+     * @param pastaPathReport the base report directory path
+     * @param logRetorno a buffer for appending log messages
+     */
     public static void processarCobertura(ProjetoDTO projeto, String folderTime, String pastaPathReport, StringBuffer logRetorno) {
         logRetorno.append(Util.dateNow() + projeto.getName() + " - <font style='color:blue'>Coverage</font> <br>");
         try {

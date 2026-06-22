@@ -22,6 +22,9 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Page that displays source code with blame annotations and highlights the test smell line range.
+ */
 public class CodePage extends ImprimirPage {
     private static final long serialVersionUID = 1L;
 
@@ -29,6 +32,14 @@ public class CodePage extends ImprimirPage {
 
     private static int cont = 0;
 
+    /**
+     * Constructs a code view page showing the source file with blame and smell range highlighting.
+     *
+     * @param projeto the project DTO
+     * @param title the smell name
+     * @param pathFile the source file path
+     * @param range the line range descriptor (e.g. "1-5", "1,3,5", or single number)
+     */
     public CodePage(ProjetoDTO projeto, String title, String pathFile, String range) {
         add(new Label("title", "Code Test Smell: " + title + " ["+range+"]"));
 

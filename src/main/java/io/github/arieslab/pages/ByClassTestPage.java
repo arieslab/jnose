@@ -8,7 +8,6 @@ import io.github.arieslab.base.JNose;
 import io.github.arieslab.dtolocal.ProjetoDTO;
 import io.github.arieslab.entities.Projeto;
 import io.github.arieslab.pages.base.BasePage;
-//import io.github.arieslab.pages.charts.TestSmellsBarOptions;
 import com.googlecode.wicket.jquery.ui.panel.JQueryFeedbackPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
@@ -33,6 +32,9 @@ import java.util.List;
 
 import static java.lang.System.out;
 
+/**
+ * Page for processing projects grouped by test class, with optional coverage analysis.
+ */
 public class ByClassTestPage extends BasePage {
     private static final long serialVersionUID = 1L;
 
@@ -58,7 +60,6 @@ public class ByClassTestPage extends BasePage {
     public ByClassTestPage() {
         super("ByClassTestPage");
 
-        //Carregando variáveis
         pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
         pastaPathReport = pathAppToWebapp + File.separatorChar + "reports" + File.separatorChar;
         pastaPath = "";
@@ -95,7 +96,6 @@ public class ByClassTestPage extends BasePage {
         Link lkCharts = new Link<String>("lkCharts") {
             @Override
             public void onClick() {
-//                setResponsePage(new ChartsPage("Charts By ClassTest", new TestSmellsBarOptions(listaResultado)));
             }
         };
         add(lkCharts.setVisible(false));
@@ -105,6 +105,9 @@ public class ByClassTestPage extends BasePage {
         criarTimer();
     }
 
+    /**
+     * Creates the "Process All" button that triggers test smell and optional coverage analysis.
+     */
     private void criarBotaoProcessarTodos() {
         processarTodos = new IndicatingAjaxLink<String>("processarTodos") {
             @Override
@@ -124,6 +127,9 @@ public class ByClassTestPage extends BasePage {
         add(processarTodos);
     }
 
+    /**
+     * Creates the checkbox for enabling/disabling coverage analysis.
+     */
     private void criarCheckBoxCobertura() {
         AjaxCheckBox acbCobertura = new AjaxCheckBox("acbCobertura", new PropertyModel(this, "processarCobertura")) {
             @Override
@@ -137,6 +143,9 @@ public class ByClassTestPage extends BasePage {
     }
 
 
+    /**
+     * Loads all projects from the database into the page.
+     */
     private void loadProjetos() {
         dataProcessamentoAtual = Util.dateNowFolder();
         logRetorno = new StringBuffer();
@@ -149,6 +158,9 @@ public class ByClassTestPage extends BasePage {
         processarTodos.setEnabled(true);
     }
 
+    /**
+     * Creates the project list view with selection, progress, and result links.
+     */
     private void criarListaProjetos() {
         listaProjetos = new ArrayList<>();
 
@@ -161,7 +173,6 @@ public class ByClassTestPage extends BasePage {
                 Link lkCharts = new Link<String>("lkCharts") {
                     @Override
                     public void onClick() {
-//                        setResponsePage(new ChartsPage("Charts By ClassTest: " + projetoDTO.getName(), new TestSmellsBarOptions(projetoDTO.getResultado())));
                     }
                 };
                 lkCharts.setEnabled(projetoDTO.getProcessado());
@@ -224,7 +235,7 @@ public class ByClassTestPage extends BasePage {
 
                 WebMarkupContainer progressProject = new WebMarkupContainer("progressProject");
                 progressProject.setOutputMarkupPlaceholderTag(true);
-                progressProject.setOutputMarkupId(true);//style="width: 25%"
+                progressProject.setOutputMarkupId(true);
                 progressProject.add(new AttributeModifier("style", "width: " + projetoDTO.getProcentagem() + "%"));
                 item.add(progressProject);
                 projetoDTO.progressProject = progressProject;
@@ -243,6 +254,9 @@ public class ByClassTestPage extends BasePage {
 
     }
 
+    /**
+     * Creates a timer that periodically updates the UI with processing progress and logs.
+     */
     private void criarTimer() {
         AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(java.time.Duration.ofSeconds(1)) {
             int cont = 0;

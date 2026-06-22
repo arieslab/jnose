@@ -19,6 +19,12 @@ public class Util {
 
     private static final Logger LOGGER = Logger.getLogger(Util.class.getName());
 
+    /**
+     * Checks whether the given string can be parsed as an integer.
+     *
+     * @param s the input string
+     * @return true if the string is a valid integer
+     */
     public static boolean isInt(String s) {
         try {
             Integer.parseInt(s);
@@ -28,14 +34,30 @@ public class Util {
         }
     }
 
+    /**
+     * Returns the current date and time formatted as "yyyyMMdd-HH:mm:ss - ".
+     *
+     * @return the formatted date-time string
+     */
     public static String dateNow() {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm:ss")) + " - ";
     }
 
+    /**
+     * Returns the current date and time formatted as "yyyyMMddHHmmss" for use in folder names.
+     *
+     * @return the formatted date-time string
+     */
     public static String dateNowFolder() {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
     }
 
+    /**
+     * Executes an external command in the specified directory and logs its output.
+     *
+     * @param commandLine the command to execute
+     * @param pathExecute the working directory for the command
+     */
     public static void execCommand(final String commandLine, String pathExecute) {
         try {
             Process p = Runtime.getRuntime().exec(commandLine, null, new File(pathExecute));
@@ -51,6 +73,13 @@ public class Util {
         }
     }
 
+    /**
+     * Extracts the source code lines associated with a test smell from the test class file.
+     *
+     * @param testClass the test class containing the smell
+     * @param testSmell the test smell descriptor
+     * @return the source code lines as a string representation of a list
+     */
     public static String getCode(TestClass testClass, TestSmell testSmell){
         String nomeClassPath = testClass.getPathFile();
         String range = testSmell.getRange();
@@ -96,6 +125,13 @@ public class Util {
         return linhasStringComSmells.toString();
     }
 
+    /**
+     * Computes a SHA-256 hash of the source code associated with a test smell.
+     *
+     * @param testClass the test class containing the smell
+     * @param testSmell the test smell descriptor
+     * @return the SHA-256 hash as a hexadecimal string
+     */
     public static String getSHA5Code(TestClass testClass, TestSmell testSmell){
         String code = getCode(testClass,testSmell);
         byte[] encodedhash = null;
@@ -110,6 +146,12 @@ public class Util {
         return bytesToHex(encodedhash);
     }
 
+    /**
+     * Converts a byte array to a hexadecimal string representation.
+     *
+     * @param hash the byte array
+     * @return the hexadecimal string
+     */
     private static String bytesToHex(byte[] hash) {
         StringBuilder hexString = new StringBuilder(2 * hash.length);
         for (int i = 0; i < hash.length; i++) {
