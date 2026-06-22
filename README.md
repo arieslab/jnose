@@ -9,9 +9,10 @@ Web tool for automatic **Test Smells** detection and code coverage metrics in Ja
 - Detects 21 test smells in JUnit test code
 - Collects code coverage metrics via JaCoCo
 - Supports JUnit 3, 4, and 5
-- Web interface built with Apache Wicket
+- Web interface built with Apache Wicket 10 (Jakarta EE)
 - Git integration for evolution analysis
 - CSV export of results
+- Built with JDK 21+, Wicket 10, Spring 7, Hibernate 7, Jetty 12 (Jakarta EE 11)
 
 ## Quick Start
 
@@ -20,14 +21,14 @@ Web tool for automatic **Test Smells** detection and code coverage metrics in Ja
 ### Standalone JAR (embedded Jetty)
 
 ```bash
-curl -LO https://github.com/arieslab/jnose/releases/download/2.3.0/jnose-2.3.0-standalone.jar
-java -jar jnose-2.3.0-standalone.jar
+curl -LO https://github.com/arieslab/jnose/releases/download/v2.4.0/jnose-2.4.0-standalone.jar
+java -jar jnose-2.4.0-standalone.jar
 ```
 
 ### WAR (deploy to any servlet container)
 
 ```bash
-curl -LO https://github.com/arieslab/jnose/releases/download/2.3.0/jnose-2.3.0.war
+curl -LO https://github.com/arieslab/jnose/releases/download/v2.4.0/jnose-2.4.0.war
 # Deploy to Tomcat/Jetty as usual
 ```
 
@@ -51,7 +52,7 @@ docker run -dp "8080:8080" tassiovirginio/jnose
 git clone https://github.com/arieslab/jnose
 cd jnose
 mvn clean package -DskipTests
-java -jar target/jnose-2.3.0-standalone.jar
+java -jar target/jnose-2.4.0-standalone.jar
 ```
 
 ### Maven Dependency
@@ -60,7 +61,7 @@ java -jar target/jnose-2.3.0-standalone.jar
 <dependency>
     <groupId>io.github.arieslab</groupId>
     <artifactId>jnose</artifactId>
-    <version>2.3.0</version>
+    <version>2.4.0</version>
 </dependency>
 ```
 
