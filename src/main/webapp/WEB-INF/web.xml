@@ -15,7 +15,7 @@
 		</init-param>
 		<init-param>
 			<param-name>applicationClassName</param-name>
-			<param-value>br.ufba.jnose.WicketApplication</param-value>
+			<param-value>io.github.arieslab.WicketApplication</param-value>
 		</init-param>
 	</filter>
 	<filter-mapping>

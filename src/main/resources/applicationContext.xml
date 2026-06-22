@@ -22,7 +22,7 @@
         <property name="fileEncoding" value="utf-8"/>
     </bean>
 
-    <context:component-scan base-package="br.ufba.jnose"/>
+    <context:component-scan base-package="io.github.arieslab"/>
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
@@ -40,7 +40,7 @@
                 <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
             </props>
         </property>
-        <property name="packagesToScan" value="br.ufba.jnose.entities"/>
+        <property name="packagesToScan" value="io.github.arieslab.entities"/>
     </bean>
 
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
