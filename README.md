@@ -18,7 +18,15 @@ Web tool for automatic **Test Smells** detection and code coverage metrics in Ja
 ### Using Docker
 
 ```shell
-docker run -dp "8080:8080" -v "$HOME/.m2":/root/.m2 tassiovirginio/jnose
+docker build -t jnose .
+docker run -dp "8080:8080" jnose
+```
+
+Or pull from Docker Hub:
+
+```shell
+docker pull tassiovirginio/jnose
+docker run -dp "8080:8080" tassiovirginio/jnose
 ```
 
 ### Building from source

@@ -1,0 +1,12 @@
+target/
+.git/
+.gitignore
+README.md
+TUTORIAL_eng.md
+TUTORIAL_pt-br.md
+LICENSE
+Dockerfile
+.dockerignore
+*.md
+docs/
+jnose.db
