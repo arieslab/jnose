@@ -17,10 +17,18 @@ Web tool for automatic **Test Smells** detection and code coverage metrics in Ja
 
 ## Quick Run (Linux)
 
+### Standalone JAR (embedded Jetty)
+
 ```bash
-# Download and run the standalone JAR
 curl -LO https://github.com/arieslab/jnose/releases/download/2.3.0/jnose-2.3.0-standalone.jar
 java -jar jnose-2.3.0-standalone.jar
+```
+
+### WAR (deploy to any servlet container)
+
+```bash
+curl -LO https://github.com/arieslab/jnose/releases/download/2.3.0/jnose-2.3.0.war
+# Deploy to Tomcat/Jetty as usual
 ```
 
 ### Using Docker
