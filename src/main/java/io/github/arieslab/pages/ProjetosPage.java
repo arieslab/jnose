@@ -84,7 +84,7 @@ public class ProjetosPage extends BasePage {
                 projeto2.setPath(projeto.getPath());
                 projeto2.setUrl(repoGit);
                 ArrayList<Commit> lista = GitCore.gitLogOneLine(projeto.getPath());
-                projeto2.setDateUpdate(lista.get(0).date);
+                projeto2.setDateUpdate(lista.getFirst().date());
                 projetoBusiness.save(projeto2);
 
                 setResponsePage(ProjetosPage.class);
@@ -122,7 +122,7 @@ public class ProjetosPage extends BasePage {
                 SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                 try {
                     if(lista.size() > 0) {
-                        item.add(new Label("lastupdate", df.format(lista.get(0).date)));
+                        item.add(new Label("lastupdate", df.format(lista.getFirst().date())));
                     }else{
                         item.add(new Label("lastupdate", "N/A"));
                     }
@@ -135,7 +135,7 @@ public class ProjetosPage extends BasePage {
                     public void onClick() {
                         GitCore.pull(projeto.getPath());
                         ArrayList<Commit> lista = GitCore.gitLogOneLine(projeto.getPath());
-                        Date dateUpdate = lista.get(0).date;
+                        Date dateUpdate = lista.getFirst().date();
                         projeto.setDateUpdate(dateUpdate);
                         projetoBusiness.save(projeto);
                         setResponsePage(ProjetosPage.class);

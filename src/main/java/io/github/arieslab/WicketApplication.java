@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
@@ -115,7 +114,7 @@ public class WicketApplication extends WebApplication {
                         .map(p -> root.relativize(p).getParent().getParent().getParent())
                         .map(root::resolve)
                         .distinct()
-                        .collect(Collectors.toList());
+                        .toList();
             }
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "Failed to find Java projects in: " + root, e);

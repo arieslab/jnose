@@ -180,8 +180,7 @@ public class Projeto implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Projeto projeto = (Projeto) o;
+        if (!(o instanceof Projeto projeto)) return false;
         return id.equals(projeto.id);
     }
 
@@ -192,13 +191,7 @@ public class Projeto implements Serializable {
 
     @Override
     public String toString() {
-        return "Projeto{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", path='" + path + '\'' +
-                ", url='" + url + '\'' +
-                ", stars=" + stars +
-                ", junitVersion='" + junitVersion + '\'' +
-                '}';
+        return "Projeto{id=%d, name='%s', path='%s', url='%s', stars=%d, junitVersion='%s'}"
+                .formatted(id, name, path, url, stars, junitVersion);
     }
 }

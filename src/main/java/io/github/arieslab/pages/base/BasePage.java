@@ -7,9 +7,10 @@ import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.time.Duration;
 
 public class BasePage extends WebPage {
     private static final long serialVersionUID = 1L;
@@ -19,110 +20,37 @@ public class BasePage extends WebPage {
 
     private WebMarkupContainer footTime;
 
-    /**
-     * Constructs the base page with navigation links and a blinking footer timer.
-     *
-     * @param paginaAtual the current page name, used to highlight the active navigation link
-     */
     public BasePage(String paginaAtual) {
-
         footTime = new WebMarkupContainer("footTimeHome");
         footTime.setOutputMarkupId(true);
         footTime.setOutputMarkupPlaceholderTag(true);
         add(footTime);
 
-        Link linkProjetos = new Link<String>("linkProjetos") {
-            @Override
-            public void onClick() {
-                setResponsePage(ProjetosPage.class);
-            }
-        };
-        if(paginaAtual.equals("ProjetosPage")){
-            linkProjetos.add(new AttributeModifier("style", "color:red"));
-        }
+        add(linkPara("linkProjetos", ProjetosPage.class, paginaAtual));
+        add(linkPara("linkByClassTest", ByClassTestPage.class, paginaAtual));
+        add(linkPara("linkByTestSmells", ByTestSmellsPage.class, paginaAtual));
+        add(linkPara("linkEvolution", EvolutionPage.class, paginaAtual));
+        add(linkPara("linkAnalyze", AnalyzePage.class, paginaAtual));
+        add(linkPara("linkConfig", ConfigPage.class, paginaAtual));
+        add(linkPara("linkResearch", ResearchPage.class, paginaAtual));
 
-        Link linkByClassTest = new Link<String>("linkByClassTest") {
-            @Override
-            public void onClick() {
-                setResponsePage(ByClassTestPage.class);
-            }
-        };
-        if(paginaAtual.equals("ByClassTestPage")){
-            linkByClassTest.add(new AttributeModifier("style", "color:red"));
-        }
-
-        Link linkByTestSmells = new Link<String>("linkByTestSmells") {
-            @Override
-            public void onClick() {
-                setResponsePage(ByTestSmellsPage.class);
-            }
-        };
-        if(paginaAtual.equals("ByTestSmellsPage")){
-            linkByTestSmells.add(new AttributeModifier("style", "color:red"));
-        }
-
-        Link linkEvolution = new Link<String>("linkEvolution") {
-            @Override
-            public void onClick() {
-                setResponsePage(EvolutionPage.class);
-            }
-        };
-        if(paginaAtual.equals("EvolutionPage")){
-            linkEvolution.add(new AttributeModifier("style", "color:red"));
-        }
-
-        Link linkAnalyze = new Link<String>("linkAnalyze") {
-            @Override
-            public void onClick() {
-                setResponsePage(AnalyzePage.class);
-            }
-        };
-        if(paginaAtual.equals("AnalyzePage")){
-            linkAnalyze.add(new AttributeModifier("style", "color:red"));
-        }
-
-        Link linkConfig = new Link<String>("linkConfig") {
-            @Override
-            public void onClick() {
-                setResponsePage(ConfigPage.class);
-            }
-        };
-        if(paginaAtual.equals("ConfigPage")){
-            linkConfig.add(new AttributeModifier("style", "color:red"));
-        }
-
-        Link linkStorage = new Link<String>("linkResearch") {
-            @Override
-            public void onClick() {
-                setResponsePage(ResearchPage.class);
-            }
-        };
-        if(paginaAtual.equals("StoragePage")){
-            linkStorage.add(new AttributeModifier("style", "color:red"));
-        }
-
-        add(linkProjetos);
-        add(linkByClassTest);
-        add(linkByTestSmells);
-        add(linkAnalyze);
-        add(linkEvolution);
-        add(linkConfig);
-        add(linkStorage);
-
-        AbstractAjaxTimerBehavior timerHome = new AbstractAjaxTimerBehavior(java.time.Duration.ofSeconds(1)) {
+        AbstractAjaxTimerBehavior timerHome = new AbstractAjaxTimerBehavior(Duration.ofSeconds(1)) {
             String signal = "";
             @Override
             protected void onTimer(AjaxRequestTarget target) {
-                if(footTime.isVisible()){
-                    footTime.setVisible(false);
-                }else{
-                    footTime.setVisible(true);
-                }
+                footTime.setVisible(!footTime.isVisible());
                 target.add(footTime);
             }
         };
         add(timerHome);
-
     }
 
+    private static BookmarkablePageLink<Void> linkPara(String id, Class<? extends WebPage> pageClass, String paginaAtual) {
+        String pageSimpleName = pageClass.getSimpleName();
+        var link = new BookmarkablePageLink<Void>(id, pageClass);
+        if (paginaAtual.equals(pageSimpleName)) {
+            link.add(new AttributeModifier("style", "color:red"));
+        }
+        return link;
+    }
 }

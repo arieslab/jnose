@@ -172,8 +172,7 @@ public class TestSmell implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TestSmell testSmell = (TestSmell) o;
+        if (!(o instanceof TestSmell testSmell)) return false;
         return id.equals(testSmell.id);
     }
 
@@ -184,15 +183,7 @@ public class TestSmell implements Serializable {
 
     @Override
     public String toString() {
-        return "TestSmell{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", pathTestClass='" + pathTestClass + '\'' +
-                ", pathProductionClass='" + pathProductionClass + '\'' +
-                ", method='" + method + '\'' +
-                ", begin='" + begin + '\'' +
-                ", end='" + end + '\'' +
-                ", projeto=" + projeto +
-                '}';
+        return "TestSmell{id=%d, nome='%s', pathTestClass='%s', pathProductionClass='%s', method='%s', begin='%s', end='%s', projeto=%s}"
+                .formatted(id, nome, pathTestClass, pathProductionClass, method, begin, end, projeto);
     }
 }

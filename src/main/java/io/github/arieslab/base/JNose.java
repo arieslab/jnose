@@ -287,6 +287,7 @@ public class JNose {
             List<String> linhacolunas = new ArrayList<>();
             linhacolunas.add("App");
             linhacolunas.add("TestFileName");
+            linhacolunas.add("PathFile");
             linhacolunas.add("ProductionFileName");
             linhacolunas.add("LOC");
             linhacolunas.add("numberMethods");
@@ -297,6 +298,7 @@ public class JNose {
                 List<String> linha = new ArrayList<>();
                 linha.add(testClass.getProjectName());
                 linha.add(testClass.getName());
+                linha.add(testClass.getPathFile());
                 linha.add(testClass.getProductionFile());
                 linha.add(testClass.getNumberLine().toString());
                 linha.add(testClass.getNumberMethods().toString());
@@ -479,7 +481,7 @@ public class JNose {
             return;
         }
 
-        lista.sort(Comparator.comparing((Commit c) -> c.date, Comparator.nullsLast(Comparator.naturalOrder())));
+        lista.sort(Comparator.comparing(Commit::date, Comparator.nullsLast(Comparator.naturalOrder())));
 
         List<List<String>> todasLinhas1 = new ArrayList<>();
         List<List<String>> todasLinhas2 = new ArrayList<>();
@@ -497,23 +499,24 @@ public class JNose {
 
         try {
             for (Commit commit : lista) {
-                logRetorno.insert(0, cont++ + " - Analyze commit: " + commit.id + "<br>");
+                logRetorno.insert(0, cont++ + " - Analyze commit: " + commit.id() + "<br>");
 
                 try {
-                    GitCore.checkout(commit.id, projeto.getPath());
+                    GitCore.checkout(commit.id(), projeto.getPath());
 
                     List<TestClass> listTestClass = core.getFilesTest(projeto.getPath(), threadpool);
 
                 if (!listTestClass.isEmpty() && primeiraLinha) {
                     primeiraLinha = false;
                     List<String> listaColumName = new ArrayList<>();
-                    listaColumName.add("commit.id");
-                    listaColumName.add("commit.authorName");
-                    listaColumName.add("commit.date");
-                    listaColumName.add("commit.msg");
-                    listaColumName.add("commit.tag");
+                    listaColumName.add("commit.id()");
+                    listaColumName.add("commit.authorName()");
+                    listaColumName.add("commit.date()");
+                    listaColumName.add("commit.msg()");
+                    listaColumName.add("commit.tag()");
                     listaColumName.add("project");
                     listaColumName.add("TestClass");
+                    listaColumName.add("PathFile");
                     listaColumName.add("ProductionFile");
                     listaColumName.add("NumberLine");
                     listaColumName.add("NumberMethods");
@@ -525,13 +528,14 @@ public class JNose {
 
                 for (TestClass testClass : listTestClass) {
                     List<String> lista3 = new ArrayList<>();
-                    lista3.add(commit.id);
-                    lista3.add(commit.authorName);
-                    lista3.add(commit.date != null ? DATE_FMT.format(commit.date) : "");
-                    lista3.add(commit.msg);
-                    lista3.add(commit.tag != null ? commit.tag : "");
+                    lista3.add(commit.id());
+                    lista3.add(commit.authorName());
+                    lista3.add(commit.date() != null ? DATE_FMT.format(commit.date()) : "");
+                    lista3.add(commit.msg());
+                    lista3.add(commit.tag() != null ? commit.tag() : "");
                     lista3.add(projeto.getName());
                     lista3.add(testClass.getName());
+                    lista3.add(testClass.getPathFile());
                     lista3.add(testClass.getProductionFile());
                     lista3.add(testClass.getNumberLine().toString());
                     lista3.add(testClass.getNumberMethods().toString());
@@ -545,13 +549,14 @@ public class JNose {
                             totalTestSmells++;
 
                             List<String> lista4 = new ArrayList<>();
-                            lista4.add(commit.id);
-                            lista4.add(commit.authorName);
-                            lista4.add(commit.date != null ? DATE_FMT.format(commit.date) : "");
-                            lista4.add(commit.msg);
-                            lista4.add(commit.tag != null ? commit.tag : "");
+                            lista4.add(commit.id());
+                            lista4.add(commit.authorName());
+                            lista4.add(commit.date() != null ? DATE_FMT.format(commit.date()) : "");
+                            lista4.add(commit.msg());
+                            lista4.add(commit.tag() != null ? commit.tag() : "");
                             lista4.add(projeto.getName());
                             lista4.add(testClass.getName());
+                            lista4.add(testClass.getPathFile());
                             lista4.add(testClass.getProductionFile());
                             lista4.add(testClass.getNumberLine().toString());
                             lista4.add(testClass.getNumberMethods().toString());
@@ -565,14 +570,14 @@ public class JNose {
                 }
 
                 List<String> lista2 = new ArrayList<>();
-                lista2.add(commit.id);
-                lista2.add(commit.tag != null ? commit.tag : "");
-                lista2.add(commit.date != null ? DATE_FMT.format(commit.date) : "");
+                lista2.add(commit.id());
+                lista2.add(commit.tag() != null ? commit.tag() : "");
+                lista2.add(commit.date() != null ? DATE_FMT.format(commit.date()) : "");
                 lista2.add(String.valueOf(totalTestSmells));
                 todasLinhas2.add(lista2);
 
             } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, "Failed processing evolution for commit: " + commit.id, e);
+                LOGGER.log(Level.SEVERE, "Failed processing evolution for commit: " + commit.id(), e);
             }
         }
 
@@ -584,7 +589,7 @@ public class JNose {
         Map<String, Integer> mapName = new HashMap<>();
 
         for (List<String> linha : todasLinhas3) {
-            if (setSHA.add(linha.get(13))) {
+            if (setSHA.add(linha.get(14))) {
                 todasLinhas4.add(linha);
             }
             mapName.merge(linha.get(1), 1, Integer::sum);
