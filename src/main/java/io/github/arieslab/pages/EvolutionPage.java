@@ -20,7 +20,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.nio.file.Files;
@@ -242,7 +242,7 @@ public class EvolutionPage extends BasePage {
                 form.add(btSubmit);
 
 
-                RadioGroup radioCommitsTags = new RadioGroup("radioCommitsTags", PropertyModel.of (projeto, "optionSelected"));
+                RadioGroup radioCommitsTags = new RadioGroup("radioCommitsTags", LambdaModel.of(projeto::getOptionSelected, projeto::setOptionSelected));
 
                 Radio radio1 = new Radio("commit",new Model<String>("commit"));
                 radio1.add(new AjaxEventBehavior("change") {

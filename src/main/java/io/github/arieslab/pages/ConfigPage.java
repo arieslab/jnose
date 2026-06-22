@@ -7,7 +7,7 @@ import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.LambdaModel;
 import io.github.arieslab.core.testsmelldetector.testsmell.smell.*;
 
 /**
@@ -202,29 +202,29 @@ public class ConfigPage extends BasePage {
             }
         });
 
-        form.add(new CheckBox("cbAssertionRoulette", new PropertyModel<>(this, "assertionRoulette")));
-        form.add(new CheckBox("cbConditionalTestLogic", new PropertyModel<>(this, "conditionalTestLogic")));
-        form.add(new CheckBox("cbConstructorInitialization", new PropertyModel<>(this, "constructorInitialization")));
-        form.add(new CheckBox("cbDefaultTest", new PropertyModel<>(this, "defaultTest")));
-        form.add(new CheckBox("cbDependentTest", new PropertyModel<>(this, "dependentTest")));
-        form.add(new CheckBox("cbDuplicateAssert", new PropertyModel<>(this, "duplicateAssert")));
-        form.add(new CheckBox("cbEagerTest", new PropertyModel<>(this, "eagerTest")));
-        form.add(new CheckBox("cbEmptyTest", new PropertyModel<>(this, "emptyTest")));
-        form.add(new CheckBox("cbExceptionCatchingThrowing", new PropertyModel<>(this, "exceptionCatchingThrowing")));
-        form.add(new CheckBox("cbGeneralFixture", new PropertyModel<>(this, "generalFixture")));
-        form.add(new CheckBox("cbMysteryGuest", new PropertyModel<>(this, "mysteryGuest")));
-        form.add(new CheckBox("cbSleepyTest", new PropertyModel<>(this, "sleepyTest")));
-        form.add(new CheckBox("cbSensitiveEquality", new PropertyModel<>(this, "sensitiveEquality")));
-        form.add(new CheckBox("cbRedundantAssertion", new PropertyModel<>(this, "redundantAssertion")));
-        form.add(new CheckBox("cbPrintStatement", new PropertyModel<>(this, "printStatement")));
-        form.add(new CheckBox("cbMagicNumberTest", new PropertyModel<>(this, "magicNumberTest")));
-        form.add(new CheckBox("cbResourceOptimism", new PropertyModel<>(this, "resourceOptimism")));
-        form.add(new CheckBox("cbIgnoredTest", new PropertyModel<>(this, "ignoredTest")));
-        form.add(new CheckBox("cbUnknownTest", new PropertyModel<>(this, "unknownTest")));
-        form.add(new CheckBox("cbLazyTest", new PropertyModel<>(this, "lazyTest")));
+        form.add(new CheckBox("cbAssertionRoulette", LambdaModel.of(() -> assertionRoulette, (v) -> assertionRoulette = v)));
+        form.add(new CheckBox("cbConditionalTestLogic", LambdaModel.of(() -> conditionalTestLogic, (v) -> conditionalTestLogic = v)));
+        form.add(new CheckBox("cbConstructorInitialization", LambdaModel.of(() -> constructorInitialization, (v) -> constructorInitialization = v)));
+        form.add(new CheckBox("cbDefaultTest", LambdaModel.of(() -> defaultTest, (v) -> defaultTest = v)));
+        form.add(new CheckBox("cbDependentTest", LambdaModel.of(() -> dependentTest, (v) -> dependentTest = v)));
+        form.add(new CheckBox("cbDuplicateAssert", LambdaModel.of(() -> duplicateAssert, (v) -> duplicateAssert = v)));
+        form.add(new CheckBox("cbEagerTest", LambdaModel.of(() -> eagerTest, (v) -> eagerTest = v)));
+        form.add(new CheckBox("cbEmptyTest", LambdaModel.of(() -> emptyTest, (v) -> emptyTest = v)));
+        form.add(new CheckBox("cbExceptionCatchingThrowing", LambdaModel.of(() -> exceptionCatchingThrowing, (v) -> exceptionCatchingThrowing = v)));
+        form.add(new CheckBox("cbGeneralFixture", LambdaModel.of(() -> generalFixture, (v) -> generalFixture = v)));
+        form.add(new CheckBox("cbMysteryGuest", LambdaModel.of(() -> mysteryGuest, (v) -> mysteryGuest = v)));
+        form.add(new CheckBox("cbSleepyTest", LambdaModel.of(() -> sleepyTest, (v) -> sleepyTest = v)));
+        form.add(new CheckBox("cbSensitiveEquality", LambdaModel.of(() -> sensitiveEquality, (v) -> sensitiveEquality = v)));
+        form.add(new CheckBox("cbRedundantAssertion", LambdaModel.of(() -> redundantAssertion, (v) -> redundantAssertion = v)));
+        form.add(new CheckBox("cbPrintStatement", LambdaModel.of(() -> printStatement, (v) -> printStatement = v)));
+        form.add(new CheckBox("cbMagicNumberTest", LambdaModel.of(() -> magicNumberTest, (v) -> magicNumberTest = v)));
+        form.add(new CheckBox("cbResourceOptimism", LambdaModel.of(() -> resourceOptimism, (v) -> resourceOptimism = v)));
+        form.add(new CheckBox("cbIgnoredTest", LambdaModel.of(() -> ignoredTest, (v) -> ignoredTest = v)));
+        form.add(new CheckBox("cbUnknownTest", LambdaModel.of(() -> unknownTest, (v) -> unknownTest = v)));
+        form.add(new CheckBox("cbLazyTest", LambdaModel.of(() -> lazyTest, (v) -> lazyTest = v)));
 
-        form.add(new CheckBox("cbVerboseTest", new PropertyModel<>(this, "verboseTest")));
-        form.add(new TextField<String>("verboseTestMaxStatements", new PropertyModel<>(this, "verboseTestMaxStatements")));
+        form.add(new CheckBox("cbVerboseTest", LambdaModel.of(() -> verboseTest, (v) -> verboseTest = v)));
+        form.add(new TextField<String>("verboseTestMaxStatements", LambdaModel.of(() -> verboseTestMaxStatements, (v) -> verboseTestMaxStatements = v)));
 
 
         form.add(new Link<String>("lkSourceAssertionRoulette") {

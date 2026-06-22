@@ -18,7 +18,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.File;
@@ -60,7 +60,7 @@ public class ProjetosPage extends BasePage {
 
         Form form = new Form<>("form");
 
-        TextField tfGitRepo = new TextField("tfGitRepo", new PropertyModel(this, "repoGit"));
+        TextField tfGitRepo = new TextField("tfGitRepo", LambdaModel.of(() -> repoGit, (v) -> repoGit = v));
         tfGitRepo.setRequired(true);
         form.add(tfGitRepo);
 

@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -131,7 +131,7 @@ public class ByClassTestPage extends BasePage {
      * Creates the checkbox for enabling/disabling coverage analysis.
      */
     private void criarCheckBoxCobertura() {
-        AjaxCheckBox acbCobertura = new AjaxCheckBox("acbCobertura", new PropertyModel(this, "processarCobertura")) {
+        AjaxCheckBox acbCobertura = new AjaxCheckBox("acbCobertura", LambdaModel.of(() -> processarCobertura, (v) -> processarCobertura = v)) {
             @Override
             protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
                 WicketApplication.COBERTURA_ON = processarCobertura;
@@ -193,7 +193,7 @@ public class ByClassTestPage extends BasePage {
                 item.add(lkResultado);
                 projetoDTO.setLkResultado(lkResultado);
 
-                AjaxCheckBox paraProcessarACB = new AjaxCheckBox("paraProcessarACB", new PropertyModel(projetoDTO, "paraProcessar")) {
+                AjaxCheckBox paraProcessarACB = new AjaxCheckBox("paraProcessarACB", LambdaModel.of(projetoDTO::getParaProcessar, projetoDTO::setParaProcessar)) {
                     @Override
                     protected void onUpdate(AjaxRequestTarget target) {
 

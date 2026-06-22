@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -157,7 +157,7 @@ public class ByTestSmellsPage extends BasePage {
                 item.add(lkResultado);
                 projeto.setLkResultado(lkResultado);
 
-                AjaxCheckBox paraProcessarACB = new AjaxCheckBox("paraProcessarACB", new PropertyModel(projeto, "paraProcessar")) {
+                AjaxCheckBox paraProcessarACB = new AjaxCheckBox("paraProcessarACB", LambdaModel.of(projeto::getParaProcessar, projeto::setParaProcessar)) {
                     @Override
                     protected void onUpdate(AjaxRequestTarget target) {
 
