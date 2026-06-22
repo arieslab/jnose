@@ -15,6 +15,14 @@ Web tool for automatic **Test Smells** detection and code coverage metrics in Ja
 
 ## Quick Start
 
+## Quick Run (Linux)
+
+```bash
+# Download and run the standalone JAR
+curl -LO https://github.com/arieslab/jnose/releases/download/2.3.0/jnose-2.3.0-standalone.jar
+java -jar jnose-2.3.0-standalone.jar
+```
+
 ### Using Docker
 
 ```shell
@@ -35,7 +43,7 @@ docker run -dp "8080:8080" tassiovirginio/jnose
 git clone https://github.com/arieslab/jnose
 cd jnose
 mvn clean package -DskipTests
-java -jar target/jnose-standalone.jar
+java -jar target/jnose-2.3.0-standalone.jar
 ```
 
 ### Maven Dependency
