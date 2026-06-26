@@ -183,7 +183,7 @@ public class ByClassTestPage extends BasePage {
                 Link lkResultado = new Link<String>("lkResultado") {
                     @Override
                     public void onClick() {
-                        setResponsePage(new ResultPage(projetoDTO.getResultado(), "Result By ClassTest: " + projetoDTO.getName(), projetoDTO.getName() + "_result_byclasstest", true));
+                        setResponsePage(new ResultPage(projetoDTO.getResultado(), "Result By ClassTest: " + projetoDTO.getName(), projetoDTO.getName() + "_result_byclasstest", true, projetoDTO.getCoverageCsvPath()));
                     }
                 };
                 lkResultado.setEnabled(projetoDTO.getProcessado());

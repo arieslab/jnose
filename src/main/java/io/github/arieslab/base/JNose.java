@@ -349,7 +349,8 @@ public class JNose {
         projeto.setProcentagem(totalProcessado.getValor());
 
         if (WicketApplication.COBERTURA_ON) {
-            CoverageCore.processarCobertura(projeto, folderTime, pastaPathReport, logRetorno);
+            var csvPath = CoverageCore.processarCobertura(projeto, folderTime, pastaPathReport, logRetorno);
+            projeto.setCoverageCsvPath(csvPath);
         }
 
         projeto.setProcessado2(true);

@@ -30,6 +30,8 @@ public class ProjetoDTO implements Serializable {
 
     private Map<Integer, List<List<String>>> mapResults;
 
+    private String coverageCsvPath;
+
     public WebMarkupContainer iconProcessado;
     public WebMarkupContainer iconNaoProcessado;
 
@@ -311,6 +313,24 @@ public class ProjetoDTO implements Serializable {
      */
     public void setListaTags(List<Commit> listaTags) {
         this.listaTags = listaTags;
+    }
+
+    /**
+     * Returns the coverage CSV file path.
+     *
+     * @return the coverage CSV path
+     */
+    public String getCoverageCsvPath() {
+        return coverageCsvPath;
+    }
+
+    /**
+     * Sets the coverage CSV file path.
+     *
+     * @param coverageCsvPath the coverage CSV path
+     */
+    public void setCoverageCsvPath(String coverageCsvPath) {
+        this.coverageCsvPath = coverageCsvPath;
     }
 
     /**

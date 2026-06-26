@@ -158,12 +158,27 @@
         <dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>org.jacoco.core</artifactId>
-            <version>0.8.3</version>
+            <version>0.8.12</version>
         </dependency>
         <dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>org.jacoco.report</artifactId>
-            <version>0.8.3</version>
+            <version>0.8.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
+            <version>0.8.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-console-standalone</artifactId>
+            <version>1.11.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-model</artifactId>
+            <version>3.9.9</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
