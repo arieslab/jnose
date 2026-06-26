@@ -1,6 +1,5 @@
 package io.github.arieslab.base.cobertura;
 
-import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 
@@ -8,10 +7,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
 
@@ -24,21 +24,23 @@ public final class CoverageClasspathResolver {
     private CoverageClasspathResolver() {}
 
     public static String resolve(File projectDir) {
+        return resolve(projectDir, BuildExecutor.detect(projectDir));
+    }
+
+    public static String resolve(File projectDir, BuildType type) {
         var entries = new LinkedHashSet<String>();
 
-        if (new File(projectDir, "pom.xml").exists()) {
-            addIfExists(entries, projectDir, "target/classes");
-            addIfExists(entries, projectDir, "target/test-classes");
-            resolveMavenDeps(projectDir, entries);
-        } else if (new File(projectDir, "build.gradle").exists()
-                || new File(projectDir, "build.gradle.kts").exists()) {
-            addIfExists(entries, projectDir, "build/classes/java/main");
-            addIfExists(entries, projectDir, "build/classes/java/test");
-            addIfExists(entries, projectDir, "build/libs");
-            scanDir(entries, projectDir, "libs");
-        } else {
-            addIfExists(entries, projectDir, "bin");
-            addIfExists(entries, projectDir, "out");
+        addIfExists(entries, type.getClassesDir(projectDir));
+        addIfExists(entries, type.getTestClassesDir(projectDir));
+
+        switch (type) {
+            case MAVEN -> resolveMavenDeps(projectDir, entries);
+            case GRADLE -> {
+                addIfExists(entries, projectDir, "build/libs");
+                scanDir(entries, projectDir, "libs");
+            }
+            case ANT -> scanDir(entries, projectDir, "lib");
+            default -> {}
         }
 
         scanDir(entries, projectDir, "lib");
@@ -50,7 +52,7 @@ public final class CoverageClasspathResolver {
     }
 
     private static void resolveMavenDeps(File projectDir, Set<String> entries) {
-        var visited = new HashSet<String>();
+        var visited = new java.util.HashSet<String>();
         try {
             resolvePomRecursive(new File(projectDir, "pom.xml"), entries, visited);
         } catch (Exception e) {
@@ -65,7 +67,6 @@ public final class CoverageClasspathResolver {
             var model = new MavenXpp3Reader().read(reader);
             var props = collectProperties(model);
 
-            // Parent POM
             if (model.getParent() != null) {
                 var parentPom = findMavenArtifact(
                     model.getParent().getGroupId(),
@@ -90,7 +91,6 @@ public final class CoverageClasspathResolver {
                     entries.add(jar.getAbsolutePath());
                 }
 
-                // Recursively resolve transitive deps
                 var depPom = findMavenArtifact(dep.getGroupId(), dep.getArtifactId(), version, "pom");
                 if (depPom != null) {
                     resolvePomRecursive(depPom, entries, visited);
@@ -147,6 +147,10 @@ public final class CoverageClasspathResolver {
             + "/" + artifactId + "-" + version + "." + type;
         var file = new File(path);
         return file.exists() ? file : null;
+    }
+
+    private static void addIfExists(Set<String> entries, File f) {
+        if (f.exists()) entries.add(f.getAbsolutePath());
     }
 
     private static void addIfExists(Set<String> entries, File base, String relative) {

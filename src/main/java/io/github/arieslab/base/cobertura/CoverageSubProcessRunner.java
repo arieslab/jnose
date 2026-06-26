@@ -24,6 +24,10 @@ public final class CoverageSubProcessRunner {
     }
 
     public static boolean runTests(File projectDir, String classpath) {
+        return runTests(projectDir, classpath, BuildExecutor.detect(projectDir));
+    }
+
+    public static boolean runTests(File projectDir, String classpath, BuildType type) {
         if (jacocoAgentPath == null) {
             LOGGER.log(Level.SEVERE, "JaCoCo agent not available");
             return false;
@@ -38,7 +42,7 @@ public final class CoverageSubProcessRunner {
             }
         }
 
-        var jacocoExec = new File(projectDir, "target/jacoco.exec");
+        var jacocoExec = type.getJacocoExecFile(projectDir);
         jacocoExec.getParentFile().mkdirs();
 
         var javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
@@ -50,7 +54,7 @@ public final class CoverageSubProcessRunner {
         cmd.add(junitStandalonePath.getAbsolutePath() + File.pathSeparator + classpath);
         cmd.add("org.junit.platform.console.ConsoleLauncher");
         cmd.add("--scan-directory");
-        cmd.add(new File(projectDir, "target/test-classes").getAbsolutePath());
+        cmd.add(type.getTestClassesDir(projectDir).getAbsolutePath());
         cmd.add("--disable-ansi-colors");
         cmd.add("--fail-if-no-tests");
         cmd.add("false");
