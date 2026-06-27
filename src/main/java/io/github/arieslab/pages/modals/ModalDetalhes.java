@@ -5,7 +5,8 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 
-import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 /**
  * A Bootstrap modal for displaying detailed project information.
@@ -26,11 +27,11 @@ public class ModalDetalhes<Void> extends Modal<Void> {
         add(new Label("path", projeto.getPath()));
         add(new Label("version", projeto.getJunitVersion()));
         add(new Label("stars", projeto.getStars()));
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         if(projeto.getDateUpdate() == null) {
             add(new Label("update", ""));
         }else{
-            add(new Label("update", df.format(projeto.getDateUpdate())));
+            add(new Label("update", df.format(projeto.getDateUpdate().toInstant().atZone(ZoneId.systemDefault()))));
         }
     }
 

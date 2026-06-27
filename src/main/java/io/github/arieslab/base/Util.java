@@ -6,6 +6,8 @@ import org.apache.wicket.behavior.AttributeAppender;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
@@ -61,14 +63,17 @@ public class Util {
      */
     public static void execCommand(final String commandLine, String pathExecute) {
         try {
-            Process p = Runtime.getRuntime().exec(commandLine, null, new File(pathExecute));
-            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String lineOut;
-            while ((lineOut = input.readLine()) != null) {
-                LOGGER.log(Level.INFO, lineOut);
+            var pb = new ProcessBuilder(commandLine.split(" "));
+            pb.directory(new File(pathExecute));
+            pb.redirectErrorStream(true);
+            var process = pb.start();
+            try (var reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                String lineOut;
+                while ((lineOut = reader.readLine()) != null) {
+                    LOGGER.log(Level.INFO, lineOut);
+                }
             }
-            input.close();
-            p.waitFor();
+            process.waitFor();
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Command failed: " + commandLine, e);
         }
@@ -106,19 +111,15 @@ public class Util {
 
         List<String> linhasStringComSmells = new ArrayList();
 
-        try {
-            File file = new File(nomeClassPath);
-            FileReader fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
+        try (var reader = Files.newBufferedReader(Path.of(nomeClassPath), StandardCharsets.UTF_8)) {
             String line;
             int contLinha = 1;
-            while ((line = br.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 if(linhasComTestSmells.contains(contLinha)) {
                     linhasStringComSmells.add(line);
                 }
                 contLinha++;
             }
-            fr.close();
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Failed to read file: " + nomeClassPath, e);
         }

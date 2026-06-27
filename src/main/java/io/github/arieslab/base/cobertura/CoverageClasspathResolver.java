@@ -4,7 +4,8 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 
 import java.io.File;
-import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedHashSet;
@@ -28,7 +29,7 @@ public final class CoverageClasspathResolver {
     }
 
     public static String resolve(File projectDir, BuildType type) {
-        var entries = new LinkedHashSet<String>();
+        Set<String> entries = new LinkedHashSet<>();
 
         addIfExists(entries, type.getClassesDir(projectDir));
         addIfExists(entries, type.getTestClassesDir(projectDir));
@@ -63,7 +64,7 @@ public final class CoverageClasspathResolver {
     private static void resolvePomRecursive(File pomFile, Set<String> entries, Set<String> visited) {
         if (pomFile == null || !pomFile.exists()) return;
 
-        try (var reader = new FileReader(pomFile)) {
+        try (var reader = Files.newBufferedReader(pomFile.toPath(), StandardCharsets.UTF_8)) {
             var model = new MavenXpp3Reader().read(reader);
             var props = collectProperties(model);
 
@@ -109,7 +110,7 @@ public final class CoverageClasspathResolver {
                 model.getParent().getArtifactId(),
                 model.getParent().getVersion());
             if (parentPom != null) {
-                try (var r = new FileReader(parentPom)) {
+                try (var r = Files.newBufferedReader(parentPom.toPath(), StandardCharsets.UTF_8)) {
                     var parentModel = new MavenXpp3Reader().read(r);
                     props.putAll(parentModel.getProperties());
                 } catch (Exception ignored) {}

@@ -25,7 +25,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -119,10 +120,10 @@ public class ProjetosPage extends BasePage {
                     lista = GitCore.gitLogOneLine(projeto.getPath());
                 }
 
-                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
                 try {
                     if(lista.size() > 0) {
-                        item.add(new Label("lastupdate", df.format(lista.getFirst().date())));
+                        item.add(new Label("lastupdate", df.format(lista.getFirst().date().toInstant().atZone(ZoneId.systemDefault()))));
                     }else{
                         item.add(new Label("lastupdate", "N/A"));
                     }

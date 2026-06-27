@@ -20,7 +20,9 @@ import org.kohsuke.github.GitHub;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -314,22 +316,22 @@ public class GitCore {
         String filePathRepo = filePathAbsolut.replace(projetoPath+"/","");
 
         try {
-            final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("YYYY-MM-dd HH:mm");
-
-            Git git = Git.open(new File(projetoPath));
-            BlameCommand blameCommand = git.blame();
-            blameCommand.setStartCommit(git.getRepository().resolve("HEAD"));
-            blameCommand.setFilePath(filePathRepo);
-            BlameResult result = blameCommand.call();
-
-            final RawText rawText = result.getResultContents();
-
-            for (int i = 0; i < rawText.size(); i++) {
-                final PersonIdent sourceAuthor = result.getSourceAuthor(i);
-                final RevCommit sourceCommit = result.getSourceCommit(i);
-                LOGGER.log(Level.FINE, "{0} - {1} - {2}: {3}",
-                        new Object[]{sourceAuthor.getName(),
-                                sourceCommit != null ? DATE_FORMAT.format(((long) sourceCommit.getCommitTime()) * 1000) : "",
+            final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+ 
+             Git git = Git.open(new File(projetoPath));
+             BlameCommand blameCommand = git.blame();
+             blameCommand.setStartCommit(git.getRepository().resolve("HEAD"));
+             blameCommand.setFilePath(filePathRepo);
+             BlameResult result = blameCommand.call();
+ 
+             final RawText rawText = result.getResultContents();
+ 
+             for (int i = 0; i < rawText.size(); i++) {
+                 final PersonIdent sourceAuthor = result.getSourceAuthor(i);
+                 final RevCommit sourceCommit = result.getSourceCommit(i);
+                 LOGGER.log(Level.FINE, "{0} - {1} - {2}: {3}",
+                         new Object[]{sourceAuthor.getName(),
+                                 sourceCommit != null ? DATE_FORMAT.format(Instant.ofEpochSecond(sourceCommit.getCommitTime()).atZone(ZoneId.systemDefault())) : "",
                                 sourceCommit != null ? sourceCommit.getName() : "",
                                 rawText.getString(i)});
 

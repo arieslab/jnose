@@ -12,9 +12,10 @@ import org.apache.wicket.markup.html.list.ListView;
 import static io.github.arieslab.base.Util.*;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -47,15 +48,11 @@ public class CodePage extends ImprimirPage {
 
         List<String> linhas = new ArrayList();
 
-        try {
-            File file = new File(pathFile);
-            FileReader fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
+        try (var reader = Files.newBufferedReader(Path.of(pathFile), StandardCharsets.UTF_8)) {
             String line;
-            while ((line = br.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 linhas.add(line);
             }
-            fr.close();
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, "Failed to read file: " + pathFile, e);
         }

@@ -17,7 +17,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
-import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -199,7 +200,7 @@ public class JNose {
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             md5.update(StandardCharsets.UTF_8.encode(string));
-            return String.format("%032x", new BigInteger(1, md5.digest()));
+            return "%032x".formatted(new BigInteger(1, md5.digest()));
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Failed to hash", e);
             return "";
@@ -465,7 +466,7 @@ public class JNose {
      * @param mapa a map to store result tables: 1=full data, 2=summary, 3=smell details, 4=deduplicated, 5=author counts
      */
     public static void processarEvolution(ProjetoDTO projeto, StringBuffer logRetorno, Map<Integer, List<List<String>>> mapa) {
-        final SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         GitCore.checkout("master", projeto.getPath());
 
@@ -531,7 +532,7 @@ public class JNose {
                     List<String> lista3 = new ArrayList<>();
                     lista3.add(commit.id());
                     lista3.add(commit.authorName());
-                    lista3.add(commit.date() != null ? DATE_FMT.format(commit.date()) : "");
+                    lista3.add(commit.date() != null ? DATE_FMT.format(commit.date().toInstant().atZone(ZoneId.systemDefault())) : "");
                     lista3.add(commit.msg());
                     lista3.add(commit.tag() != null ? commit.tag() : "");
                     lista3.add(projeto.getName());
@@ -552,7 +553,7 @@ public class JNose {
                             List<String> lista4 = new ArrayList<>();
                             lista4.add(commit.id());
                             lista4.add(commit.authorName());
-                            lista4.add(commit.date() != null ? DATE_FMT.format(commit.date()) : "");
+                            lista4.add(commit.date() != null ? DATE_FMT.format(commit.date().toInstant().atZone(ZoneId.systemDefault())) : "");
                             lista4.add(commit.msg());
                             lista4.add(commit.tag() != null ? commit.tag() : "");
                             lista4.add(projeto.getName());
@@ -573,7 +574,7 @@ public class JNose {
                 List<String> lista2 = new ArrayList<>();
                 lista2.add(commit.id());
                 lista2.add(commit.tag() != null ? commit.tag() : "");
-                lista2.add(commit.date() != null ? DATE_FMT.format(commit.date()) : "");
+                lista2.add(commit.date() != null ? DATE_FMT.format(commit.date().toInstant().atZone(ZoneId.systemDefault())) : "");
                 lista2.add(String.valueOf(totalTestSmells));
                 todasLinhas2.add(lista2);
 

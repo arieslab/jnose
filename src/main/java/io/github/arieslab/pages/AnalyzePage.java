@@ -354,7 +354,7 @@ public class AnalyzePage extends BasePage {
      */
     private String getLines(String range) {
 
-        StringBuffer lines = new StringBuffer();
+        StringBuilder lines = new StringBuilder();
 
         if (range.contains(",")) {
             String[] r = range.split(",");
@@ -396,7 +396,7 @@ public class AnalyzePage extends BasePage {
      * @param lines the buffer to append to
      * @param range the range string
      */
-    private void getLinesByRange(StringBuffer lines, String range) {
+    private void getLinesByRange(StringBuilder lines, String range) {
         String[] r = range.trim().split("-");
         Integer start = Integer.parseInt(r[0]);
         Integer end = Integer.parseInt(r[1]);
