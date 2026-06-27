@@ -69,7 +69,7 @@ public class ByTestSmellsPage extends BasePage {
         processando = false;
         indicator = new AjaxIndicatorAppender();
         pastaPath = "";
-        pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
+        pathAppToWebapp = resolveRealPath();
         pastaPathReport = pathAppToWebapp + File.separatorChar + "reports" + File.separatorChar;
         totalProcessado = new TotalProcessado();
         totalProgressBar = new HashMap<>();

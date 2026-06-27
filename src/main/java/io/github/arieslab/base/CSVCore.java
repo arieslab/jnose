@@ -25,7 +25,12 @@ public class CSVCore {
      * @param webApplication the Wicket web application
      */
     public static void load(WebApplication webApplication){
-        pathAppToWebapp = webApplication.getServletContext().getRealPath("");
+        var realPath = webApplication.getServletContext().getRealPath("");
+        if (realPath != null) {
+            pathAppToWebapp = realPath;
+        } else {
+            pathAppToWebapp = System.getProperty("user.dir");
+        }
         reportPath = pathAppToWebapp + File.separatorChar + "reports" + File.separatorChar;
     }
 

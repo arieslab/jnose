@@ -8,6 +8,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.time.Duration;
@@ -52,5 +53,14 @@ public class BasePage extends WebPage {
             link.add(new AttributeModifier("style", "color:red"));
         }
         return link;
+    }
+
+    protected static String resolveRealPath() {
+        try {
+            var app = (WebApplication) org.apache.wicket.Application.get();
+            var realPath = app.getServletContext().getRealPath("");
+            if (realPath != null) return realPath;
+        } catch (Exception ignored) {}
+        return System.getProperty("user.dir");
     }
 }

@@ -59,7 +59,7 @@ public class ByClassTestPage extends BasePage {
     public ByClassTestPage() {
         super("ByClassTestPage");
 
-        pathAppToWebapp = WebApplication.get().getServletContext().getRealPath("");
+        pathAppToWebapp = resolveRealPath();
         pastaPathReport = pathAppToWebapp + File.separatorChar + "reports" + File.separatorChar;
         pastaPath = "";
         logRetorno = new StringBuffer();
