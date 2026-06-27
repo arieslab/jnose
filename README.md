@@ -1,4 +1,4 @@
-<p align="center"><img src="https://github.com/arieslab/jnose/blob/main/src/main/webapp/logo.png?raw=true" width="70"></p>
+<p align="center"><img src="https://github.com/arieslab/jnose/blob/main/src/main/resources/static/logo.png?raw=true" width="70"></p>
 
 # JNose
 
@@ -12,25 +12,35 @@ Web tool for automatic **Test Smells** detection and code coverage metrics in Ja
 - Web interface built with Apache Wicket 10 (Jakarta EE)
 - Git integration for evolution analysis
 - CSV export of results
-- Built with JDK 25+, Wicket 10, Spring 7, Hibernate 7, Jetty 12 (Jakarta EE 11)
+- Built with JDK 25+, Spring Boot 4.0, Wicket 10, Spring 7, Hibernate 7, Tomcat 11 (Jakarta EE 11)
 
 ## Quick Start
 
-## Quick Run (Linux)
-
-### Standalone JAR (embedded Jetty)
+### Run with Maven
 
 ```bash
-curl -LO https://github.com/arieslab/jnose/releases/download/v2.4.4/jnose-2.4.4-standalone.jar
-java -jar jnose-2.4.4-standalone.jar
+mise exec -- mvn spring-boot:run
 ```
 
-### WAR (deploy to any servlet container)
+Open http://localhost:8080
+
+### Executable JAR
 
 ```bash
-curl -LO https://github.com/arieslab/jnose/releases/download/v2.4.4/jnose-2.4.4.war
-# Deploy to Tomcat/Jetty as usual
+curl -LO https://github.com/arieslab/jnose/releases/download/v2.4.4/jnose-2.4.4.jar
+java -jar jnose-2.4.4.jar
 ```
+
+### Building from source
+
+```bash
+git clone https://github.com/arieslab/jnose
+cd jnose
+mise exec -- mvn clean package -DskipTests
+java -jar target/jnose-2.4.4.jar
+```
+
+> JDK 25 is required. The project uses [`mise`](https://mise.jdx.dev) to manage the JDK version — `mise exec -- mvn <goal>` ensures the correct JDK.
 
 ### Using Docker
 
@@ -44,15 +54,6 @@ Or pull from Docker Hub:
 ```shell
 docker pull tassiovirginio/jnose
 docker run -dp "8080:8080" tassiovirginio/jnose
-```
-
-### Building from source
-
-```shell
-git clone https://github.com/arieslab/jnose
-cd jnose
-mvn clean package -DskipTests
-java -jar target/jnose-2.4.4-standalone.jar
 ```
 
 ### Maven Dependency
@@ -72,7 +73,6 @@ The project depends on [jnose-core](https://github.com/arieslab/jnose-core), ava
     <groupId>io.github.arieslab</groupId>
     <artifactId>jnose-core</artifactId>
     <version>0.9.4</version>
-
 </dependency>
 ```
 

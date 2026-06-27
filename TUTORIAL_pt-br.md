@@ -1,4 +1,4 @@
-<p align="center"><img src="https://github.com/tassiovirginio/jnose/blob/master/src/main/webapp/logo.png?raw=true" width="70"></p>
+<p align="center"><img src="https://github.com/arieslab/jnose/blob/main/src/main/resources/static/logo.png?raw=true" width="70"></p>
 
 # JNose - Tutorial
 Java TestSmells Detection
