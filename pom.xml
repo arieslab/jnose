@@ -43,6 +43,7 @@
         <junit-jupiter.version>5.10.0</junit-jupiter.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hibernate-core-version>7.4.1.Final</hibernate-core-version>
+        <kotlin.version>2.3.0</kotlin.version>
     </properties>
 
     <dependencyManagement>
@@ -185,10 +186,20 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-spring</artifactId>
             <version>${wicket.version}</version>
             <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.objenesis</groupId>
+            <artifactId>objenesis</artifactId>
+            <version>3.4</version>
         </dependency>
         <dependency>
             <groupId>de.agilecoders.wicket</groupId>
@@ -289,6 +300,38 @@
             </testResource>
         </testResources>
         <plugins>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                            </sourceDirs>
+                            <jvmTarget>25</jvmTarget>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>${project.basedir}/src/test/java</sourceDir>
+                            </sourceDirs>
+                            <jvmTarget>25</jvmTarget>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <inherited>true</inherited>
                 <groupId>org.apache.maven.plugins</groupId>
