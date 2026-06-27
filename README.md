@@ -27,8 +27,8 @@ Open http://localhost:8080
 ### Executable JAR
 
 ```bash
-curl -LO https://github.com/arieslab/jnose/releases/download/v2.4.4/jnose-2.4.4.jar
-java -jar jnose-2.4.4.jar
+curl -LO https://github.com/arieslab/jnose/releases/download/v2.5.0/jnose-2.5.0.jar
+java -jar jnose-2.5.0.jar
 ```
 
 ### Building from source
@@ -37,7 +37,7 @@ java -jar jnose-2.4.4.jar
 git clone https://github.com/arieslab/jnose
 cd jnose
 mise exec -- mvn clean package -DskipTests
-java -jar target/jnose-2.4.4.jar
+java -jar target/jnose-2.5.0.jar
 ```
 
 > JDK 25 is required. The project uses [`mise`](https://mise.jdx.dev) to manage the JDK version — `mise exec -- mvn <goal>` ensures the correct JDK.
@@ -62,7 +62,7 @@ docker run -dp "8080:8080" tassiovirginio/jnose
 <dependency>
     <groupId>io.github.arieslab</groupId>
     <artifactId>jnose</artifactId>
-    <version>2.4.4</version>
+    <version>2.5.0</version>
 </dependency>
 ```
 
