@@ -10,3 +10,8 @@ projects
 db
 /bin/
 *.db
+
+# Gradle
+.gradle/
+build/
+
