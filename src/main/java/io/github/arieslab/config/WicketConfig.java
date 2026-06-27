@@ -16,12 +16,12 @@ public class WicketConfig {
     @Bean
     public FilterRegistrationBean<WicketFilter> wicketFilter() {
         var filter = new WicketFilter();
-        filter.setFilterPath("/*");
         var registration = new FilterRegistrationBean<WicketFilter>();
         registration.setFilter(filter);
         registration.setInitParameters(Map.of(
             "applicationClassName", WicketApplication.class.getName(),
-            "applicationFactoryClassName", SpringWebApplicationFactory.class.getName()
+            "applicationFactoryClassName", SpringWebApplicationFactory.class.getName(),
+            "filterMappingUrlPattern", "/*"
         ));
         registration.addUrlPatterns("/*");
         registration.setDispatcherTypes(DispatcherType.REQUEST, DispatcherType.ERROR);
