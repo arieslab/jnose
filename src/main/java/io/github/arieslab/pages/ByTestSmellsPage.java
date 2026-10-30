@@ -45,6 +45,9 @@ public class ByTestSmellsPage extends BasePage {
     private List<ProjetoDTO> listaProjetos;
     private AjaxIndicatorAppender indicator;
     private ListView<ProjetoDTO> lvProjetos;
+    private WebMarkupContainer containerProjetos;
+    private boolean selectAll = true;
+    private AjaxCheckBox selectAllACB;
     private TotalProcessado totalProcessado;
     private Map<Integer, Integer> totalProgressBar;
     private Boolean processando;
@@ -139,6 +142,28 @@ public class ByTestSmellsPage extends BasePage {
      * Creates the project list view with checkboxes and progress indicators.
      */
     private void criarListaProjetos(){
+        selectAll = true;
+        selectAllACB = new AjaxCheckBox("selectAll", LambdaModel.of(() -> selectAll, (v) -> selectAll = v)) {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                for (ProjetoDTO p : listaProjetos) {
+                    p.setParaProcessar(selectAll);
+                }
+                int count = selectAll ? listaProjetos.size() : 0;
+                processarTodos.setEnabled(count > 0);
+                target.add(processarTodos);
+                lbProjetosSize.setDefaultModel(Model.of(count));
+                target.add(lbProjetosSize);
+                target.add(containerProjetos);
+            }
+        };
+        selectAllACB.setOutputMarkupId(true);
+        add(selectAllACB);
+
+        containerProjetos = new WebMarkupContainer("containerProjetos");
+        containerProjetos.setOutputMarkupId(true);
+        add(containerProjetos);
+
         lvProjetos = new ListView<ProjetoDTO>("lvProjetos", listaProjetos) {
             @Override
             protected void populateItem(ListItem<ProjetoDTO> item) {
@@ -161,10 +186,10 @@ public class ByTestSmellsPage extends BasePage {
                     protected void onUpdate(AjaxRequestTarget target) {
 
                         List<ProjetoDTO> listaProjetosProcessar = new ArrayList<>();
-                        for (ProjetoDTO projeto : listaProjetos)
-                            if (projeto.getParaProcessar()) listaProjetosProcessar.add(projeto);
+                        for (ProjetoDTO p : listaProjetos)
+                            if (p.getParaProcessar()) listaProjetosProcessar.add(p);
 
-                        if (listaProjetosProcessar.size() > 0) {
+                        if (!listaProjetosProcessar.isEmpty()) {
                             processarTodos.setEnabled(true);
                         } else {
                             processarTodos.setEnabled(false);
@@ -173,6 +198,9 @@ public class ByTestSmellsPage extends BasePage {
 
                         lbProjetosSize.setDefaultModel(Model.of(listaProjetosProcessar.size()));
                         target.add(lbProjetosSize);
+
+                        selectAll = !listaProjetos.isEmpty() && (listaProjetosProcessar.size() == listaProjetos.size());
+                        target.add(selectAllACB);
                     }
                 };
                 item.add(paraProcessarACB);
@@ -196,7 +224,7 @@ public class ByTestSmellsPage extends BasePage {
         };
         lvProjetos.setOutputMarkupId(true);
         lvProjetos.setOutputMarkupPlaceholderTag(true);
-        add(lvProjetos);
+        containerProjetos.add(lvProjetos);
     }
 
     /**
@@ -211,7 +239,9 @@ public class ByTestSmellsPage extends BasePage {
             listaProjetos.add(new ProjetoDTO(projeto));
         }
         lvProjetos.setList(listaProjetos);
-        processarTodos.setEnabled(true);
+        boolean hasProjects = !listaProjetos.isEmpty();
+        processarTodos.setEnabled(hasProjects);
+        selectAll = hasProjects;
         lbProjetosSize.setDefaultModel(Model.of(listaProjetos.size()));
     }
 

@@ -42,6 +42,9 @@ public class ByClassTestPage extends BasePage {
     private String pastaPathReport;
     private List<ProjetoDTO> listaProjetos;
     private ListView<ProjetoDTO> lvProjetos;
+    private WebMarkupContainer containerProjetos;
+    private boolean selectAll = true;
+    private AjaxCheckBox selectAllACB;
     private Label taLog;
     private TotalProcessado totalProcessado;
     private Boolean processando;
@@ -154,7 +157,9 @@ public class ByClassTestPage extends BasePage {
             listaProjetos.add(new ProjetoDTO(projeto));
         }
         lvProjetos.setList(listaProjetos);
-        processarTodos.setEnabled(true);
+        boolean hasProjects = !listaProjetos.isEmpty();
+        processarTodos.setEnabled(hasProjects);
+        selectAll = hasProjects;
     }
 
     /**
@@ -162,6 +167,26 @@ public class ByClassTestPage extends BasePage {
      */
     private void criarListaProjetos() {
         listaProjetos = new ArrayList<>();
+
+        selectAll = true;
+        selectAllACB = new AjaxCheckBox("selectAll", LambdaModel.of(() -> selectAll, (v) -> selectAll = v)) {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                for (ProjetoDTO projetoDTO : listaProjetos) {
+                    projetoDTO.setParaProcessar(selectAll);
+                }
+                boolean hasSelected = selectAll && !listaProjetos.isEmpty();
+                processarTodos.setEnabled(hasSelected);
+                target.add(processarTodos);
+                target.add(containerProjetos);
+            }
+        };
+        selectAllACB.setOutputMarkupId(true);
+        add(selectAllACB);
+
+        containerProjetos = new WebMarkupContainer("containerProjetos");
+        containerProjetos.setOutputMarkupId(true);
+        add(containerProjetos);
 
         lvProjetos = new ListView<ProjetoDTO>("lvProjetos", listaProjetos) {
             @Override
@@ -198,19 +223,21 @@ public class ByClassTestPage extends BasePage {
 
                         List<ProjetoDTO> listaProjetosProcessar = new ArrayList<>();
 
-                        for (ProjetoDTO projetoDTO : listaProjetos) {
-                            if (projetoDTO.getParaProcessar()) {
-                                listaProjetosProcessar.add(projetoDTO);
+                        for (ProjetoDTO p : listaProjetos) {
+                            if (p.getParaProcessar()) {
+                                listaProjetosProcessar.add(p);
                             }
-                            ;
                         }
 
-                        if (listaProjetosProcessar.size() > 0) {
+                        if (!listaProjetosProcessar.isEmpty()) {
                             processarTodos.setEnabled(true);
                         } else {
                             processarTodos.setEnabled(false);
                         }
                         target.add(processarTodos);
+
+                        selectAll = !listaProjetos.isEmpty() && (listaProjetosProcessar.size() == listaProjetos.size());
+                        target.add(selectAllACB);
                     }
                 };
                 item.add(paraProcessarACB);
@@ -249,7 +276,7 @@ public class ByClassTestPage extends BasePage {
         };
         lvProjetos.setOutputMarkupId(true);
         lvProjetos.setOutputMarkupPlaceholderTag(true);
-        add(lvProjetos);
+        containerProjetos.add(lvProjetos);
 
     }
 

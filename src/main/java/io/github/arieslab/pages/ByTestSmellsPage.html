@@ -7,14 +7,16 @@
                        style="width:100%; font-size: 14px;">
                     <thead>
                     <tr>
-                        <th scope="col"></th>
+                        <th scope="col">
+                            <input type="checkbox" wicket:id="selectAll" title="Select / Deselect all"/>
+                        </th>
                         <th scope="col">Name</th>
                         <th scope="col">Path</th>
                         <th scope="col" style="width:15%;">%</th>
                         <th scope="col" style="width:1%;"></th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody wicket:id="containerProjetos">
                     <tr wicket:id="lvProjetos">
                         <td scope="row">
                             <input type="checkbox" wicket:id="paraProcessarACB"/>

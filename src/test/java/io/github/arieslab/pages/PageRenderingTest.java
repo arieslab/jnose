@@ -30,6 +30,7 @@ class PageRenderingTest extends WicketTestBase {
     void testByClassTestPageRenders() {
         tester.startPage(ByClassTestPage.class);
         tester.assertRenderedPage(ByClassTestPage.class);
+        tester.assertComponent("selectAll", org.apache.wicket.ajax.markup.html.form.AjaxCheckBox.class);
         tester.assertNoErrorMessage();
     }
 
@@ -37,6 +38,7 @@ class PageRenderingTest extends WicketTestBase {
     void testByTestSmellsPageRenders() {
         tester.startPage(ByTestSmellsPage.class);
         tester.assertRenderedPage(ByTestSmellsPage.class);
+        tester.assertComponent("selectAll", org.apache.wicket.ajax.markup.html.form.AjaxCheckBox.class);
         tester.assertNoErrorMessage();
     }
 

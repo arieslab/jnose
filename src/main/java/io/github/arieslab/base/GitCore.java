@@ -37,17 +37,21 @@ public class GitCore {
      * @param repoLocal the local repository path
      * @return the number of stars, or 0 if unavailable
      */
-    public static Integer getStarts(String repoLocal){
-
-        String url = getURL(repoLocal);
-        String repoName = getNameByGithub(url);
-
+    public static Integer getStarts(String repoLocal) {
         Integer stars = 0;
         try {
+            String url = getURL(repoLocal);
+            if (url == null || url.isBlank()) {
+                return 0;
+            }
+            String repoName = getNameByGithub(url);
+            if (repoName == null || repoName.isBlank() || repoName.equals("/")) {
+                return 0;
+            }
             GitHub github = GitHub.connectAnonymously();
             GHRepository repo = github.getRepository(repoName);
             stars = repo.getStargazersCount();
-        } catch (IOException e) {
+        } catch (Throwable e) {
             LOGGER.log(Level.WARNING, "Failed to get stars for: " + repoLocal, e);
         }
         return stars;
@@ -60,19 +64,25 @@ public class GitCore {
      * @param path_ the git remote URL
      * @return the repository name in "owner/repo" format
      */
-    private static String getNameByGithub(String path_) {
-        String owner_ = "";
-
-        path_ = path_.replace(".git","");
-
-        if(path_.endsWith("/")){
-            path_ = path_.substring(0,path_.length()-1);
+    static String getNameByGithub(String path_) {
+        if (path_ == null || path_.isBlank()) {
+            return "";
         }
-
-        String projeto_ = path_.substring(path_.lastIndexOf("/")+1);
-        owner_ = path_.substring(0,path_.lastIndexOf("/"));
-        owner_ = owner_.substring(owner_.lastIndexOf("/")+1);
-
+        path_ = path_.replace(".git", "");
+        if (path_.endsWith("/")) {
+            path_ = path_.substring(0, path_.length() - 1);
+        }
+        int lastSlash = path_.lastIndexOf("/");
+        if (lastSlash < 0) {
+            return "";
+        }
+        String projeto_ = path_.substring(lastSlash + 1);
+        String prefix = path_.substring(0, lastSlash);
+        int prevSlash = prefix.lastIndexOf("/");
+        String owner_ = prevSlash >= 0 ? prefix.substring(prevSlash + 1) : prefix;
+        if (owner_.contains(":")) {
+            owner_ = owner_.substring(owner_.lastIndexOf(":") + 1);
+        }
         return owner_ + "/" + projeto_;
     }
 

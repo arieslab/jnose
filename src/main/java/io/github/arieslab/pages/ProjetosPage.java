@@ -85,7 +85,7 @@ public class ProjetosPage extends BasePage {
                 projeto2.setPath(projeto.getPath());
                 projeto2.setUrl(repoGit);
                 ArrayList<Commit> lista = GitCore.gitLogOneLine(projeto.getPath());
-                projeto2.setDateUpdate(lista.getFirst().date());
+                projeto2.setDateUpdate(!lista.isEmpty() ? lista.getFirst().date() : new java.util.Date());
                 projetoBusiness.save(projeto2);
 
                 setResponsePage(ProjetosPage.class);
