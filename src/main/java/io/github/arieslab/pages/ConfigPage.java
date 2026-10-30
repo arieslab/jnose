@@ -38,6 +38,10 @@ public class ConfigPage extends BasePage {
     public Boolean exceptionCatchingThrowing;
     public Boolean generalFixture;
     public Boolean mysteryGuest;
+    public Boolean testRunWar;
+    public Boolean indirectTest;
+    public Boolean forTestOnly;
+    public Boolean testCodeDuplication;
 
     public String verboseTestMaxStatements;
 
@@ -70,6 +74,10 @@ public class ConfigPage extends BasePage {
         dependentTest = TestSmellDetectorConfig.dependentTest;
         duplicateAssert = TestSmellDetectorConfig.duplicateAssert;
         eagerTest = TestSmellDetectorConfig.eagerTest;
+        testRunWar = TestSmellDetectorConfig.testRunWar;
+        indirectTest = TestSmellDetectorConfig.indirectTest;
+        forTestOnly = TestSmellDetectorConfig.forTestOnly;
+        testCodeDuplication = TestSmellDetectorConfig.testCodeDuplication;
 
         Form form = new Form<String>("form") {
             @Override
@@ -94,6 +102,10 @@ public class ConfigPage extends BasePage {
                 TestSmellDetectorConfig.dependentTest = dependentTest;
                 TestSmellDetectorConfig.duplicateAssert = duplicateAssert;
                 TestSmellDetectorConfig.eagerTest = eagerTest;
+                TestSmellDetectorConfig.testRunWar = testRunWar;
+                TestSmellDetectorConfig.indirectTest = indirectTest;
+                TestSmellDetectorConfig.forTestOnly = forTestOnly;
+                TestSmellDetectorConfig.testCodeDuplication = testCodeDuplication;
 
                 TestSmellDetectorConfig.verboseTest = verboseTest;
                 io.github.arieslab.core.testsmelldetector.testsmell.smell.VerboseTest.MAX_STATEMENTS = Integer.parseInt(verboseTestMaxStatements);
@@ -124,6 +136,10 @@ public class ConfigPage extends BasePage {
                 TestSmellDetectorConfig.dependentTest = true;
                 TestSmellDetectorConfig.duplicateAssert = true;
                 TestSmellDetectorConfig.eagerTest = true;
+                TestSmellDetectorConfig.testRunWar = true;
+                TestSmellDetectorConfig.indirectTest = true;
+                TestSmellDetectorConfig.forTestOnly = true;
+                TestSmellDetectorConfig.testCodeDuplication = true;
 
                 emptyTest = TestSmellDetectorConfig.emptyTest;
                 exceptionCatchingThrowing = TestSmellDetectorConfig.exceptionCatchingThrowing;
@@ -146,6 +162,10 @@ public class ConfigPage extends BasePage {
                 dependentTest = TestSmellDetectorConfig.dependentTest;
                 duplicateAssert = TestSmellDetectorConfig.duplicateAssert;
                 eagerTest = TestSmellDetectorConfig.eagerTest;
+                testRunWar = TestSmellDetectorConfig.testRunWar;
+                indirectTest = TestSmellDetectorConfig.indirectTest;
+                forTestOnly = TestSmellDetectorConfig.forTestOnly;
+                testCodeDuplication = TestSmellDetectorConfig.testCodeDuplication;
 
                 ConfigPage.this.setResponsePage(ConfigPage.class);
             }
@@ -175,6 +195,10 @@ public class ConfigPage extends BasePage {
                 TestSmellDetectorConfig.dependentTest = false;
                 TestSmellDetectorConfig.duplicateAssert = false;
                 TestSmellDetectorConfig.eagerTest = false;
+                TestSmellDetectorConfig.testRunWar = false;
+                TestSmellDetectorConfig.indirectTest = false;
+                TestSmellDetectorConfig.forTestOnly = false;
+                TestSmellDetectorConfig.testCodeDuplication = false;
 
                 emptyTest = TestSmellDetectorConfig.emptyTest;
                 exceptionCatchingThrowing = TestSmellDetectorConfig.exceptionCatchingThrowing;
@@ -197,6 +221,10 @@ public class ConfigPage extends BasePage {
                 dependentTest = TestSmellDetectorConfig.dependentTest;
                 duplicateAssert = TestSmellDetectorConfig.duplicateAssert;
                 eagerTest = TestSmellDetectorConfig.eagerTest;
+                testRunWar = TestSmellDetectorConfig.testRunWar;
+                indirectTest = TestSmellDetectorConfig.indirectTest;
+                forTestOnly = TestSmellDetectorConfig.forTestOnly;
+                testCodeDuplication = TestSmellDetectorConfig.testCodeDuplication;
 
                 ConfigPage.this.setResponsePage(ConfigPage.class);
             }
@@ -222,6 +250,10 @@ public class ConfigPage extends BasePage {
         form.add(new CheckBox("cbIgnoredTest", LambdaModel.of(() -> ignoredTest, (v) -> ignoredTest = v)));
         form.add(new CheckBox("cbUnknownTest", LambdaModel.of(() -> unknownTest, (v) -> unknownTest = v)));
         form.add(new CheckBox("cbLazyTest", LambdaModel.of(() -> lazyTest, (v) -> lazyTest = v)));
+        form.add(new CheckBox("cbTestRunWar", LambdaModel.of(() -> testRunWar, (v) -> testRunWar = v)));
+        form.add(new CheckBox("cbIndirectTest", LambdaModel.of(() -> indirectTest, (v) -> indirectTest = v)));
+        form.add(new CheckBox("cbForTestOnly", LambdaModel.of(() -> forTestOnly, (v) -> forTestOnly = v)));
+        form.add(new CheckBox("cbTestCodeDuplication", LambdaModel.of(() -> testCodeDuplication, (v) -> testCodeDuplication = v)));
 
         form.add(new CheckBox("cbVerboseTest", LambdaModel.of(() -> verboseTest, (v) -> verboseTest = v)));
         form.add(new TextField<String>("verboseTestMaxStatements", LambdaModel.of(() -> verboseTestMaxStatements, (v) -> verboseTestMaxStatements = v)));
@@ -351,6 +383,30 @@ public class ConfigPage extends BasePage {
             @Override
             public void onClick() {
                 setResponsePage(new SourcePage(new VerboseTest()));
+            }
+        });
+        form.add(new Link<String>("lkSourceTestRunWar") {
+            @Override
+            public void onClick() {
+                setResponsePage(new SourcePage(new TestRunWar()));
+            }
+        });
+        form.add(new Link<String>("lkSourceIndirectTest") {
+            @Override
+            public void onClick() {
+                setResponsePage(new SourcePage(new IndirectTest()));
+            }
+        });
+        form.add(new Link<String>("lkSourceForTestOnly") {
+            @Override
+            public void onClick() {
+                setResponsePage(new SourcePage(new ForTestOnly()));
+            }
+        });
+        form.add(new Link<String>("lkSourceTestCodeDuplication") {
+            @Override
+            public void onClick() {
+                setResponsePage(new SourcePage(new TestCodeDuplication()));
             }
         });
 

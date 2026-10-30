@@ -23,5 +23,9 @@ public class TestSmellDetectorConfig {
     public static Boolean ignoredTest = true;
     public static Boolean resourceOptimism = true;
     public static Boolean magicNumberTest = true;
+    public static Boolean testRunWar = true;
+    public static Boolean indirectTest = true;
+    public static Boolean forTestOnly = true;
+    public static Boolean testCodeDuplication = true;
 
 }

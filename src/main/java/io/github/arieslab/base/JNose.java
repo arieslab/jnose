@@ -96,6 +96,10 @@ public class JNose {
                 return TestSmellDetectorConfig.resourceOptimism;
             }
             public boolean magicNumberTest() {return TestSmellDetectorConfig.magicNumberTest;}
+            public boolean testRunWar() { return TestSmellDetectorConfig.testRunWar; }
+            public boolean indirectTest() { return TestSmellDetectorConfig.indirectTest; }
+            public boolean forTestOnly() { return TestSmellDetectorConfig.forTestOnly; }
+            public boolean testCodeDuplication() { return TestSmellDetectorConfig.testCodeDuplication; }
 
             @Override
             public int maxStatements() {

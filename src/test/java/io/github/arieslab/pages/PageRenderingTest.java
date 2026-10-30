@@ -16,6 +16,14 @@ class PageRenderingTest extends WicketTestBase {
     void testConfigPageRenders() {
         tester.startPage(ConfigPage.class);
         tester.assertRenderedPage(ConfigPage.class);
+        tester.assertComponent("form:cbTestRunWar", org.apache.wicket.markup.html.form.CheckBox.class);
+        tester.assertComponent("form:cbIndirectTest", org.apache.wicket.markup.html.form.CheckBox.class);
+        tester.assertComponent("form:cbForTestOnly", org.apache.wicket.markup.html.form.CheckBox.class);
+        tester.assertComponent("form:cbTestCodeDuplication", org.apache.wicket.markup.html.form.CheckBox.class);
+        tester.assertComponent("form:lkSourceTestRunWar", org.apache.wicket.markup.html.link.Link.class);
+        tester.assertComponent("form:lkSourceIndirectTest", org.apache.wicket.markup.html.link.Link.class);
+        tester.assertComponent("form:lkSourceForTestOnly", org.apache.wicket.markup.html.link.Link.class);
+        tester.assertComponent("form:lkSourceTestCodeDuplication", org.apache.wicket.markup.html.link.Link.class);
         tester.assertNoErrorMessage();
     }
 

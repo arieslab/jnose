@@ -307,6 +307,62 @@
                             </div>
                         </div>
                     </div>
+                    <br>
+                    <div class="custom-control custom-checkbox">
+                        <div class="card" style="background-color: #f5f5f5;">
+                            <div class="card-body">
+                                <input wicket:id="cbTestRunWar" type="checkbox">
+                                <label style="color: #000dfd;">TestRunWar: </label>
+                                Tests interfere with each other or external execution state by modifying global system properties, standard streams, writing to fixed file paths, or mutating static fields.
+                                <br>
+                                <div style="position: absolute;bottom: 2px;right: 0;width: 55px; font-size:12px;">
+                                    <a class="btn btn-danger btn-sm" style="height:20px; font-size: 10px;" target="_blank" wicket:id="lkSourceTestRunWar" href="">Source</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="custom-control custom-checkbox">
+                        <div class="card" style="background-color: #f5f5f5;">
+                            <div class="card-body">
+                                <input wicket:id="cbIndirectTest" type="checkbox">
+                                <label style="color: #000dfd;">IndirectTest: </label>
+                                Tests interact with collaborators or dependencies without directly interacting with the target System Under Test (SUT).
+                                <br>
+                                <div style="position: absolute;bottom: 2px;right: 0;width: 55px; font-size:12px;">
+                                    <a class="btn btn-danger btn-sm" style="height:20px; font-size: 10px;" target="_blank" wicket:id="lkSourceIndirectTest" href="">Source</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="custom-control custom-checkbox">
+                        <div class="card" style="background-color: #f5f5f5;">
+                            <div class="card-body">
+                                <input wicket:id="cbForTestOnly" type="checkbox">
+                                <label style="color: #000dfd;">ForTestOnly: </label>
+                                Production code exposes methods or constructors solely for testing purposes (e.g. @VisibleForTesting, @TestOnly, or *ForTest).
+                                <br>
+                                <div style="position: absolute;bottom: 2px;right: 0;width: 55px; font-size:12px;">
+                                    <a class="btn btn-danger btn-sm" style="height:20px; font-size: 10px;" target="_blank" wicket:id="lkSourceForTestOnly" href="">Source</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="custom-control custom-checkbox">
+                        <div class="card" style="background-color: #f5f5f5;">
+                            <div class="card-body">
+                                <input wicket:id="cbTestCodeDuplication" type="checkbox">
+                                <label style="color: #000dfd;">TestCodeDuplication: </label>
+                                Identical sequences of statements are duplicated across test methods instead of being refactored into fixtures or helper methods.
+                                <br>
+                                <div style="position: absolute;bottom: 2px;right: 0;width: 55px; font-size:12px;">
+                                    <a class="btn btn-danger btn-sm" style="height:20px; font-size: 10px;" target="_blank" wicket:id="lkSourceTestCodeDuplication" href="">Source</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
